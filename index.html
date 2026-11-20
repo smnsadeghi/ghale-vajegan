@@ -10,7 +10,7 @@
   <link rel="manifest" href="./manifest.json" />
   <link rel="icon" type="image/svg+xml" href="./icon.svg" />
   <link rel="apple-touch-icon" href="./icon.svg" />
-  <title>قلعه واژگان | ادبیات دهم هنرستان</title>
+  <title>قلعه واژگان</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -463,7 +463,7 @@
   <div id="viewAuth" class="pixel-box">
     <div style="text-align:center; margin-bottom:18px;">
       <div style="font-size:2.4rem; margin-bottom:4px;">🏰</div>
-      <h1 style="margin:0; font-size:1.45rem; font-weight:900; color:var(--gold);">قلعه واژگان هنرستان</h1>
+      <h1 style="margin:0; font-size:1.45rem; font-weight:900; color:var(--gold);">قلعه واژگان</h1>
       <p style="margin:4px 0 0; font-size:0.83rem; color:var(--text-muted);">یادگیری کارتی و مرحله‌ای ادبیات فارسی دهم</p>
     </div>
 
@@ -474,8 +474,8 @@
 
     <form id="authForm">
       <div class="form-group">
-        <label>کد دانش‌آموزی (یا کد ملی)</label>
-        <input type="text" id="authCode" class="pixel-input" placeholder="مثال: 4031025" required inputmode="numeric" />
+        <label>شماره تلفن همراه</label>
+        <input type="tel" id="authCode" class="pixel-input" placeholder="مثال: 09123456789" required inputmode="numeric" maxlength="11" />
       </div>
 
       <div id="registerFields" class="hidden">
@@ -484,7 +484,7 @@
           <input type="text" id="authName" class="pixel-input" placeholder="مثال: امیرحسین رضایی" />
         </div>
         <div class="form-group">
-          <label>رشته تحصیلی هنرستان</label>
+          <label>رشته تحصیلی</label>
           <select id="authMajor" class="pixel-input">
             <option value="شبکه و نرم‌افزار">شبکه و نرم‌افزار</option>
             <option value="معماری">معماری</option>
@@ -638,7 +638,7 @@
         <table>
           <thead>
             <tr>
-              <th>نام (کد)</th>
+              <th>نام (شماره تلفن)</th>
               <th>رشته</th>
               <th>امتیاز</th>
               <th>کلمات اشتباه</th>
@@ -682,7 +682,7 @@
   </div>
 
   <!-- Hidden Teacher Access Trigger (3 rapid clicks on version number) -->
-  <div class="footer-ver" id="versionTrigger">v2.7-pixel • ادبیات فارسی دهم هنرستان</div>
+  <div class="footer-ver" id="versionTrigger">v2.8-pixel</div>
 </div>
 
 <script>
@@ -993,6 +993,12 @@ document.getElementById("authForm").addEventListener("submit", async (e) => {
   const code = document.getElementById("authCode").value.trim();
   const pin = document.getElementById("authPin").value.trim();
 
+  if (!/^09\d{9}$/.test(code)) {
+    authError.textContent = "شماره تلفن همراه باید ۱۱ رقم بوده و با ۰۹ شروع شود.";
+    authError.classList.remove("hidden");
+    return;
+  }
+
   if (pin.length !== 4 || isNaN(pin)) {
     authError.textContent = "رمز عبور باید دقیقاً ۴ رقم عددی باشد.";
     authError.classList.remove("hidden");
@@ -1019,7 +1025,7 @@ document.getElementById("authForm").addEventListener("submit", async (e) => {
       return;
     }
     if (user && user.pinHash) {
-      authError.textContent = "این کد دانش‌آموزی قبلاً ثبت شده است. از تب «ورود به حساب» وارد شوید.";
+      authError.textContent = "این شماره تلفن قبلاً ثبت شده است. از تب «ورود به حساب» وارد شوید.";
       authError.classList.remove("hidden");
       return;
     }
@@ -1038,7 +1044,7 @@ document.getElementById("authForm").addEventListener("submit", async (e) => {
     await syncStudentToCloud(user);
   } else {
     if (!user) {
-      authError.textContent = "حسابی با این کد پیدا نشد. ابتدا از تب «ثبت‌نام جدید» حساب بسازید.";
+      authError.textContent = "حسابی با این شماره تلفن پیدا نشد. ابتدا از تب «ثبت‌نام جدید» حساب بسازید.";
       authError.classList.remove("hidden");
       return;
     }
@@ -1501,7 +1507,7 @@ document.getElementById("btnSaveSupabase").addEventListener("click", async () =>
 });
 
 document.getElementById("btnExportCSV").addEventListener("click", () => {
-  const rows = [["کد دانش آموزی", "نام و نام خانوادگی", "رشته", "امتیاز", "مراحل فتح شده", "کلمات اشتباه"]];
+  const rows = [["شماره تلفن", "نام و نام خانوادگی", "رشته", "امتیاز", "مراحل فتح شده", "کلمات اشتباه"]];
   Object.values(appState.students).forEach(s => {
     const mistakes = Object.entries(s.mistakes || {}).map(([k, v]) => `${k}:${v}`).join(" | ");
     rows.push([s.code, s.name, s.major, s.xp, (s.completedStages || []).join("-"), mistakes]);
@@ -1510,7 +1516,7 @@ document.getElementById("btnExportCSV").addEventListener("click", () => {
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = "gozaresh-adabiat-honarestan.csv";
+  link.download = "gozaresh-adabiat-ghale-vajegan.csv";
   link.click();
 });
 
