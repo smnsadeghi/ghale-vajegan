@@ -761,8 +761,8 @@ let appState = {
   stages: JSON.parse(localStorage.getItem("gv_stages")) || DEFAULT_STAGES,
   students: JSON.parse(localStorage.getItem("gv_students")) || {},
   classLock: localStorage.getItem("gv_classLock") || "",
-  sbUrl: localStorage.getItem("gv_sbUrl") || "",
-  sbKey: localStorage.getItem("gv_sbKey") || "",
+  sbUrl: localStorage.getItem("gv_sbUrl") || "https://lqwnjcnpizkdtowoezxi.supabase.co",
+  sbKey: localStorage.getItem("gv_sbKey") || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxd25qY25waXprZHRvd29lenhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUxMTk4MDMsImV4cCI6MjExMDY5NTgwM30.vv8FcpUXhYSVGgEQ2kt-1zsb9EvmGeANXi-7MKvTgik",
   currentUserCode: localStorage.getItem("gv_session_code") || null
 };
 
