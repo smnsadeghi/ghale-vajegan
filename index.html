@@ -682,7 +682,7 @@
   </div>
 
   <!-- Hidden Teacher Access Trigger (3 rapid clicks on version number) -->
-  <div class="footer-ver" id="versionTrigger">v2.6-pixel • ادبیات فارسی دهم هنرستان</div>
+  <div class="footer-ver" id="versionTrigger">v2.7-pixel • ادبیات فارسی دهم هنرستان</div>
 </div>
 
 <script>
@@ -772,8 +772,22 @@ function saveLocal() {
   localStorage.setItem("gv_classLock", appState.classLock);
 }
 
-// Optional Supabase Sync Helper
-async function syncCloud(action = "push") {
+// Scalable Cloud Sync Engine (Global Teacher Config + Per-Student REST)
+function mapStudentRow(row) {
+  if (!row) return null;
+  return {
+    code: String(row.code),
+    name: row.name || "",
+    major: row.major || "",
+    pinHash: row.pin_hash || null,
+    xp: Number(row.xp) || 0,
+    completedStages: Array.isArray(row.completed_stages) ? row.completed_stages : [],
+    mistakes: (row.mistakes && typeof row.mistakes === "object") ? row.mistakes : {}
+  };
+}
+
+// 1. Global Teacher Config Sync (stages and classLock only - never student data)
+async function syncGlobalState(action = "push") {
   if (!appState.sbUrl || !appState.sbKey) return;
   const headers = {
     "apikey": appState.sbKey,
@@ -786,20 +800,108 @@ async function syncCloud(action = "push") {
       await fetch(`${appState.sbUrl}/rest/v1/gv_state`, {
         method: "POST",
         headers,
-        body: JSON.stringify({ id: "global", payload: { stages: appState.stages, students: appState.students, classLock: appState.classLock } })
+        body: JSON.stringify({
+          id: "global",
+          payload: {
+            stages: appState.stages,
+            classLock: appState.classLock
+          }
+        })
       });
     } else {
-      const res = await fetch(`${appState.sbUrl}/rest/v1/gv_state?id=eq.global&select=payload`, { headers });
+      const res = await fetch(`${appState.sbUrl}/rest/v1/gv_state?id=eq.global&select=payload`, {
+        headers: {
+          "apikey": appState.sbKey,
+          "Authorization": `Bearer ${appState.sbKey}`
+        }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data[0] && data[0].payload) {
+          appState.stages = data[0].payload.stages || appState.stages;
+          appState.classLock = data[0].payload.classLock || "";
+          saveLocal();
+        }
+      }
+    }
+  } catch (e) {
+    console.warn("syncGlobalState offline:", e);
+  }
+}
+
+// 2. Per-Student Cloud Operations
+async function fetchStudentRecord(code) {
+  if (!appState.sbUrl || !appState.sbKey || !code) return null;
+  try {
+    const res = await fetch(`${appState.sbUrl}/rest/v1/gv_students?code=eq.${encodeURIComponent(code)}&select=*`, {
+      headers: {
+        "apikey": appState.sbKey,
+        "Authorization": `Bearer ${appState.sbKey}`
+      }
+    });
+    if (res.ok) {
       const data = await res.json();
-      if (data && data[0] && data[0].payload) {
-        appState.stages = data[0].payload.stages || appState.stages;
-        appState.students = { ...data[0].payload.students, ...appState.students };
-        appState.classLock = data[0].payload.classLock || "";
+      if (Array.isArray(data) && data.length > 0) {
+        const s = mapStudentRow(data[0]);
+        appState.students[s.code] = s;
+        saveLocal();
+        return s;
+      }
+    }
+  } catch (e) {
+    console.warn("fetchStudentRecord offline:", e);
+  }
+  return appState.students[code] || null;
+}
+
+async function syncStudentToCloud(student) {
+  if (!appState.sbUrl || !appState.sbKey || !student || !student.code) return;
+  const payload = {
+    code: String(student.code),
+    name: student.name || "",
+    major: student.major || "",
+    pin_hash: student.pinHash || null,
+    xp: Number(student.xp) || 0,
+    completed_stages: student.completedStages || [],
+    mistakes: student.mistakes || {}
+  };
+  try {
+    await fetch(`${appState.sbUrl}/rest/v1/gv_students?on_conflict=code`, {
+      method: "POST",
+      headers: {
+        "apikey": appState.sbKey,
+        "Authorization": `Bearer ${appState.sbKey}`,
+        "Content-Type": "application/json",
+        "Prefer": "resolution=merge-duplicates"
+      },
+      body: JSON.stringify(payload)
+    });
+  } catch (e) {
+    console.warn("syncStudentToCloud offline:", e);
+  }
+}
+
+async function fetchAllStudentsFromCloud() {
+  if (!appState.sbUrl || !appState.sbKey) return;
+  try {
+    const res = await fetch(`${appState.sbUrl}/rest/v1/gv_students?select=*&order=xp.desc`, {
+      headers: {
+        "apikey": appState.sbKey,
+        "Authorization": `Bearer ${appState.sbKey}`
+      }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        data.forEach(row => {
+          const s = mapStudentRow(row);
+          if (s) appState.students[s.code] = s;
+        });
         saveLocal();
       }
     }
   } catch (e) {
-    console.warn("Cloud sync offline fallback active");
+    console.warn("fetchAllStudentsFromCloud offline:", e);
   }
 }
 
@@ -897,7 +999,8 @@ document.getElementById("authForm").addEventListener("submit", async (e) => {
     return;
   }
 
-  await syncCloud("pull");
+  await syncGlobalState("pull");
+  let user = await fetchStudentRecord(code) || appState.students[code];
   const hashed = await hashPin(pin);
 
   if (isRegisterMode) {
@@ -915,23 +1018,25 @@ document.getElementById("authForm").addEventListener("submit", async (e) => {
       authError.classList.remove("hidden");
       return;
     }
-    if (appState.students[code] && appState.students[code].pinHash) {
+    if (user && user.pinHash) {
       authError.textContent = "این کد دانش‌آموزی قبلاً ثبت شده است. از تب «ورود به حساب» وارد شوید.";
       authError.classList.remove("hidden");
       return;
     }
 
-    appState.students[code] = {
+    user = {
       code,
       name,
       major,
       pinHash: hashed,
-      xp: 0,
-      completedStages: [],
-      mistakes: {}
+      xp: (user && user.xp) || 0,
+      completedStages: (user && user.completedStages) || [],
+      mistakes: (user && user.mistakes) || {}
     };
+    appState.students[code] = user;
+    saveLocal();
+    await syncStudentToCloud(user);
   } else {
-    const user = appState.students[code];
     if (!user) {
       authError.textContent = "حسابی با این کد پیدا نشد. ابتدا از تب «ثبت‌نام جدید» حساب بسازید.";
       authError.classList.remove("hidden");
@@ -945,12 +1050,13 @@ document.getElementById("authForm").addEventListener("submit", async (e) => {
       authError.classList.remove("hidden");
       return;
     }
+    appState.students[code] = user;
+    saveLocal();
+    await syncStudentToCloud(user);
   }
 
   appState.currentUserCode = code;
   localStorage.setItem("gv_session_code", code);
-  saveLocal();
-  syncCloud("push");
   playTone(523.25, 0.15);
   enterDashboard();
 });
@@ -1176,10 +1282,11 @@ function handleQuizAnswer(btn, isCorrect, item) {
     const progressPct = Math.max(0, ((masteredCount - 0.5) / totalInitialWords) * 92);
     updateKnightProgress(progressPct);
 
+    saveLocal();
+    syncStudentToCloud(user);
+
     setTimeout(renderNextQuizQuestion, 1350);
   }
-
-  saveLocal();
 }
 
 function completeStageVictory() {
@@ -1189,7 +1296,7 @@ function completeStageVictory() {
     user.xp += 25; // Castle conquest bonus
   }
   saveLocal();
-  syncCloud("push");
+  syncStudentToCloud(user);
 
   updateKnightProgress(92);
   document.getElementById("phaseQuiz").classList.add("hidden");
@@ -1208,7 +1315,7 @@ document.getElementById("btnVictoryContinue").addEventListener("click", enterDas
 // 7. LEADERBOARD VIEW
 // ==========================================
 document.getElementById("btnOpenLeaderboard").addEventListener("click", async () => {
-  await syncCloud("pull");
+  await fetchAllStudentsFromCloud();
   const sorted = Object.values(appState.students).sort((a, b) => b.xp - a.xp);
   const tbody = document.getElementById("studentLeaderboardBody");
   tbody.innerHTML = sorted.map((s, idx) => `
@@ -1247,7 +1354,8 @@ document.getElementById("versionTrigger").addEventListener("click", () => {
 });
 
 async function openTeacherPanel() {
-  await syncCloud("pull");
+  await syncGlobalState("pull");
+  await fetchAllStudentsFromCloud();
   document.getElementById("teacherClassLock").value = appState.classLock;
   document.getElementById("sbUrl").value = appState.sbUrl;
   document.getElementById("sbKey").value = appState.sbKey;
@@ -1267,10 +1375,10 @@ async function openTeacherPanel() {
         ${st.unlocked ? "باز است (قفل کن)" : "قفل است (باز کن)"}
       </button>
     `;
-    row.querySelector("button").addEventListener("click", () => {
+    row.querySelector("button").addEventListener("click", async () => {
       st.unlocked = !st.unlocked;
       saveLocal();
-      syncCloud("push");
+      await syncGlobalState("push");
       openTeacherPanel();
     });
     stageBox.appendChild(row);
@@ -1308,25 +1416,51 @@ async function openTeacherPanel() {
   showView("viewTeacher");
 }
 
-window.resetStudentPin = function(code) {
+window.resetStudentPin = async function(code) {
   if (appState.students[code]) {
     appState.students[code].pinHash = null;
     saveLocal();
-    syncCloud("push");
-    alert("رمز دانش‌آموز بازنشانی شد. در ورود بعدی می‌تواند رمز جدید انتخاب کند.");
   }
+  if (appState.sbUrl && appState.sbKey) {
+    try {
+      await fetch(`${appState.sbUrl}/rest/v1/gv_students?code=eq.${encodeURIComponent(code)}`, {
+        method: "PATCH",
+        headers: {
+          "apikey": appState.sbKey,
+          "Authorization": `Bearer ${appState.sbKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ pin_hash: null })
+      });
+    } catch (e) {
+      console.warn("resetStudentPin cloud error:", e);
+    }
+  }
+  alert("رمز دانش‌آموز بازنشانی شد. در ورود بعدی می‌تواند رمز جدید انتخاب کند.");
 };
 
-window.deleteStudent = function(code) {
+window.deleteStudent = async function(code) {
   if (confirm("آیا از حذف این حساب کاربری مطمئن هستید؟")) {
     delete appState.students[code];
     saveLocal();
-    syncCloud("push");
+    if (appState.sbUrl && appState.sbKey) {
+      try {
+        await fetch(`${appState.sbUrl}/rest/v1/gv_students?code=eq.${encodeURIComponent(code)}`, {
+          method: "DELETE",
+          headers: {
+            "apikey": appState.sbKey,
+            "Authorization": `Bearer ${appState.sbKey}`
+          }
+        });
+      } catch (e) {
+        console.warn("deleteStudent cloud error:", e);
+      }
+    }
     openTeacherPanel();
   }
 };
 
-document.getElementById("btnAddCustomWord").addEventListener("click", () => {
+document.getElementById("btnAddCustomWord").addEventListener("click", async () => {
   const stageId = Number(document.getElementById("newWordStage").value);
   const word = document.getElementById("newWordText").value.trim();
   const m1 = document.getElementById("newWordM1").value.trim();
@@ -1341,7 +1475,7 @@ document.getElementById("btnAddCustomWord").addEventListener("click", () => {
   if (stage) {
     stage.words.push({ word, meanings: [m1, m2], hint: "افزوده‌شده توسط دبیر" });
     saveLocal();
-    syncCloud("push");
+    await syncGlobalState("push");
     document.getElementById("newWordText").value = "";
     document.getElementById("newWordM1").value = "";
     document.getElementById("newWordM2").value = "";
@@ -1350,19 +1484,19 @@ document.getElementById("btnAddCustomWord").addEventListener("click", () => {
   }
 });
 
-document.getElementById("btnSaveClassLock").addEventListener("click", () => {
+document.getElementById("btnSaveClassLock").addEventListener("click", async () => {
   appState.classLock = document.getElementById("teacherClassLock").value.trim();
   saveLocal();
-  syncCloud("push");
+  await syncGlobalState("push");
   alert("کد کلاس ذخیره شد.");
 });
 
-document.getElementById("btnSaveSupabase").addEventListener("click", () => {
+document.getElementById("btnSaveSupabase").addEventListener("click", async () => {
   appState.sbUrl = document.getElementById("sbUrl").value.trim().replace(/\/$/, "");
   appState.sbKey = document.getElementById("sbKey").value.trim();
   localStorage.setItem("gv_sbUrl", appState.sbUrl);
   localStorage.setItem("gv_sbKey", appState.sbKey);
-  syncCloud("push");
+  await syncGlobalState("push");
   alert("تنظیمات ابری ذخیره و همگام‌سازی فعال شد.");
 });
 
@@ -1412,7 +1546,10 @@ document.getElementById("btnInstallApp").addEventListener("click", async () => {
 
 // Initial Session Check
 (async function init() {
-  await syncCloud("pull");
+  await syncGlobalState("pull");
+  if (appState.currentUserCode) {
+    await fetchStudentRecord(appState.currentUserCode);
+  }
   if (appState.currentUserCode && appState.students[appState.currentUserCode]) {
     enterDashboard();
   } else {
