@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#0d0f18" />
+  <meta name="theme-color" content="#0b0d12" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="قلعه واژگان" />
@@ -13,21 +13,23 @@
   <title>قلعه واژگان</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Vazirmatn:wght@500;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-deep: #0d0f18;
-      --bg-felt: #141826;
-      --card-bg: #1c2237;
-      --card-border: #334155;
-      --gold: #f59e0b;
-      --gold-light: #fcd34d;
-      --crimson: #ef4444;
-      --emerald: #10b981;
-      --cyan: #38bdf8;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --pixel-shadow: 0 6px 0 #07090f;
+      --bg: #0b0d12;
+      --panel: #141a26;
+      --line: #566c86;
+      --ink: #e8dcc0;
+      --amber: #f0b560;
+      --amber-hi: #ffd48a;
+      --amber-lo: #a8642a;
+      --wine: #7a2b2e;
+      --red: #b13e53;
+      --steel: #8a97a3;
+      --moon: #d8e2ee;
+      --xp: #73eff7;
+      --ok: #4ea66a;
+      --bad: #b13e53;
     }
 
     * {
@@ -40,16 +42,24 @@
       margin: 0;
       padding: 0;
       font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
-      background-color: var(--bg-deep);
-      background-image: 
-        radial-gradient(circle at 50% 0%, #1e253f 0%, var(--bg-deep) 75%),
-        repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 4px);
-      color: var(--text-main);
+      background-color: var(--bg);
+      color: var(--ink);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       overflow-x: hidden;
+      image-rendering: pixelated;
+    }
+
+    .pixel-num {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.85rem;
+      letter-spacing: -0.5px;
+    }
+
+    .hard-shadow {
+      text-shadow: 2px 2px 0 #0b0d12;
     }
 
     input, select, textarea {
@@ -59,635 +69,1157 @@
 
     .container {
       width: 100%;
-      max-width: 540px;
-      padding: 16px;
+      max-width: 480px;
+      padding: 12px;
       flex: 1;
       display: flex;
       flex-direction: column;
     }
 
-    /* Pixel Card Aesthetic (Balatro-inspired) */
-    .pixel-box {
-      background: var(--card-bg);
-      border: 3px solid var(--card-border);
-      border-radius: 14px;
-      box-shadow: var(--pixel-shadow), inset 0 2px 0 rgba(255,255,255,0.08);
-      padding: 20px;
-      position: relative;
+    /* Double-Layered Stepped Pixel Windows */
+    .pixel-window {
+      background: var(--ink);
+      padding: 4px;
+      margin-bottom: 14px;
+      clip-path: polygon(
+        0 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0,
+        calc(100% - 6px) 0, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px,
+        100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%,
+        6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0 calc(100% - 6px)
+      );
+      box-shadow: 0 6px 0 #07090f;
     }
 
+    .pixel-window.border-amber {
+      background: var(--amber);
+    }
+
+    .pixel-window.border-line {
+      background: var(--line);
+    }
+
+    .pixel-window.border-wine {
+      background: var(--wine);
+    }
+
+    .pixel-window-inner {
+      background: var(--panel);
+      padding: 16px;
+      clip-path: polygon(
+        0 4px, 2px 4px, 2px 2px, 4px 2px, 4px 0,
+        calc(100% - 4px) 0, calc(100% - 4px) 2px, calc(100% - 2px) 2px, calc(100% - 2px) 4px, 100% 4px,
+        100% calc(100% - 4px), calc(100% - 2px) calc(100% - 4px), calc(100% - 2px) calc(100% - 2px), calc(100% - 4px) calc(100% - 2px), calc(100% - 4px) 100%,
+        4px 100%, 4px calc(100% - 2px), 2px calc(100% - 2px), 2px calc(100% - 4px), 0 calc(100% - 4px)
+      );
+    }
+
+    /* Stepped Pixel Buttons */
     .pixel-btn {
       font-family: 'Vazirmatn', sans-serif;
       font-weight: 800;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       border: none;
-      border-radius: 10px;
-      padding: 12px 18px;
+      padding: 10px 16px;
       cursor: pointer;
-      transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.15s;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       color: #fff;
+      text-shadow: 2px 2px 0 #0b0d12;
+      clip-path: polygon(
+        0 4px, 4px 4px, 4px 0,
+        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
+      );
+      box-shadow: 0 4px 0 #07090f;
+      transition: none;
     }
 
     .pixel-btn:active {
-      transform: translateY(4px);
-      box-shadow: 0 1px 0 rgba(0,0,0,0.6) !important;
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #07090f;
     }
 
     .pixel-btn:disabled {
       opacity: 0.45;
       cursor: not-allowed;
-      transform: none;
+      transform: none !important;
+      box-shadow: 0 4px 0 #07090f !important;
     }
 
-    .btn-gold {
-      background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
-      box-shadow: 0 5px 0 #92400e;
-      color: #0d0f18;
+    .btn-amber {
+      background: var(--amber);
+      color: #0b0d12;
+      text-shadow: none;
+      font-weight: 900;
+    }
+
+    .btn-amber:hover {
+      background: var(--amber-hi);
+    }
+
+    .btn-wine {
+      background: var(--wine);
+      color: var(--ink);
     }
 
     .btn-emerald {
-      background: linear-gradient(180deg, #10b981 0%, #059669 100%);
-      box-shadow: 0 5px 0 #065f46;
+      background: var(--ok);
+      color: #fff;
     }
 
     .btn-crimson {
-      background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
-      box-shadow: 0 5px 0 #7f1d1d;
+      background: var(--red);
+      color: #fff;
     }
 
     .btn-slate {
-      background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
-      box-shadow: 0 5px 0 #0f172a;
-      border: 1px solid #475569;
+      background: #1b2434;
+      color: var(--ink);
+      border: 1px solid var(--line);
     }
 
-    .btn-cyan {
-      background: linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%);
-      box-shadow: 0 5px 0 #075985;
+    .btn-steel {
+      background: var(--steel);
+      color: #0b0d12;
+      text-shadow: none;
+      font-weight: 800;
     }
 
-    /* Top Bar */
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    /* Stepped Pixel Inputs */
+    .pixel-input {
+      font-family: 'Vazirmatn', sans-serif;
+      background: #0b0e14;
+      border: 2px solid var(--line);
+      color: var(--ink);
       padding: 10px 14px;
-      background: rgba(20, 24, 38, 0.9);
-      border: 2px solid #262e47;
-      border-radius: 12px;
-      margin-bottom: 16px;
-      backdrop-filter: blur(8px);
+      font-size: 0.9rem;
+      width: 100%;
+      outline: none;
+      clip-path: polygon(
+        0 3px, 3px 3px, 3px 0,
+        calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
+        100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
+        3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px)
+      );
     }
 
-    .badge {
-      font-size: 0.75rem;
-      padding: 4px 10px;
-      border-radius: 99px;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+    .pixel-input:focus {
+      border-color: var(--amber);
+      box-shadow: inset 0 0 0 1px var(--amber);
     }
 
-    .badge-sync {
-      background: rgba(16, 185, 129, 0.15);
-      color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.35);
-    }
-
-    .badge-gold {
-      background: rgba(245, 158, 11, 0.15);
-      color: #fbbf24;
-      border: 1px solid rgba(245, 158, 11, 0.35);
-    }
-
-    .dot-pulse {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #10b981;
-      box-shadow: 0 0 8px #10b981;
-    }
-
-    /* Form Controls */
     .form-group {
-      margin-bottom: 14px;
-      text-align: right;
+      margin-bottom: 12px;
     }
 
     .form-group label {
       display: block;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-      font-weight: 600;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--amber);
+      margin-bottom: 5px;
+      text-shadow: 1px 1px 0 #0b0d12;
     }
 
-    .pixel-input {
-      width: 100%;
-      background: #0f1320;
-      border: 2px solid #2e3856;
-      border-radius: 10px;
-      padding: 11px 14px;
-      color: var(--text-main);
-      font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.2s;
+    /* Top HUD */
+    .top-hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--panel);
+      border: 2px solid var(--line);
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      clip-path: polygon(
+        0 4px, 4px 4px, 4px 0,
+        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
+      );
+      box-shadow: 0 4px 0 #07090f;
     }
 
-    .pixel-input:focus {
-      border-color: var(--gold);
+    .hud-candles {
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    /* Playing Card 3D Flip (Balatro Joker Card Style) */
-    .card-scene {
-      width: 100%;
-      height: 290px;
-      perspective: 1000px;
-      margin: 14px 0;
-      cursor: pointer;
+    .hud-candle {
+      display: inline-block;
+      width: 14px;
+      height: 24px;
     }
 
-    .playing-card {
-      width: 100%;
-      height: 100%;
+    .hud-candle.extinguished {
+      opacity: 0.25;
+      filter: grayscale(1);
+    }
+
+    @keyframes flameFlicker {
+      0%, 100% { transform: scale(1) translate(0, 0); }
+      50% { transform: scale(1.15, 0.9) translate(1px, -1px); }
+    }
+
+    .candle-flame {
+      animation: flameFlicker 0.4s steps(2) infinite;
+      transform-origin: center bottom;
+    }
+
+    /* 312px STAGE SCENE ( معـمـای دروازه ) */
+    .stage-wrapper {
       position: relative;
-      transform-style: preserve-3d;
-      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .playing-card.flipped {
-      transform: rotateY(180deg);
-    }
-
-    .card-face {
-      position: absolute;
       width: 100%;
-      height: 100%;
-      backface-visibility: hidden;
-      border-radius: 18px;
-      border: 4px solid var(--gold);
-      background: linear-gradient(145deg, #222942 0%, #15192b 100%);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.55), inset 0 0 0 3px rgba(245, 158, 11, 0.2);
+      height: 312px;
+      border: 4px solid var(--ink);
+      box-shadow: 0 6px 0 #07090f;
+      margin-bottom: 14px;
+      overflow: hidden;
+      background: #0b0e14;
+    }
+
+    /* 5-Band Night Sky with Dithering Strips */
+    .stage-sky {
+      position: absolute;
+      inset: 0;
+      background: 
+        repeating-conic-gradient(#111826 0% 25%, #0b0e14 0% 50%) 0 48px / 4px 4px no-repeat,
+        repeating-conic-gradient(#18223a 0% 25%, #111826 0% 50%) 0 100px / 4px 4px no-repeat,
+        repeating-conic-gradient(#222e48 0% 25%, #18223a 0% 50%) 0 152px / 4px 4px no-repeat,
+        repeating-conic-gradient(#2d3b57 0% 25%, #222e48 0% 50%) 0 204px / 4px 4px no-repeat,
+        linear-gradient(
+          to bottom,
+          #0b0e14 0px, #0b0e14 48px,
+          #111826 48px, #111826 100px,
+          #18223a 100px, #18223a 152px,
+          #222e48 152px, #222e48 204px,
+          #2d3b57 204px, #2d3b57 260px,
+          #1e2535 260px, #1e2535 312px
+        );
+    }
+
+    /* CRT Scanlines Overlay */
+    .crt-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.38) 50%);
+      background-size: 100% 4px;
+      z-index: 15;
+    }
+
+    /* Pixel Moon */
+    .pixel-moon {
+      position: absolute;
+      top: 18px;
+      right: 22px;
+      width: 28px;
+      height: 28px;
+      background: var(--moon);
+      box-shadow: -4px 0 0 #0b0e14, 0 4px 0 #b0c2d8 inset;
+      clip-path: polygon(
+        4px 0, calc(100% - 4px) 0,
+        100% 4px, 100% calc(100% - 4px),
+        calc(100% - 4px) 100%, 4px 100%,
+        0 calc(100% - 4px), 0 4px
+      );
+    }
+
+    /* Pixel Stars */
+    @keyframes starBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.15; }
+    }
+
+    .pixel-star {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #fff;
+      animation: starBlink 1.4s steps(2) infinite;
+    }
+
+    /* Stepped Mountains */
+    .mountains-layer {
+      position: absolute;
+      bottom: 50px;
+      left: 0;
+      right: 0;
+      height: 90px;
+      pointer-events: none;
+    }
+
+    /* Black Castle Silhouette */
+    .castle-silhouette {
+      position: absolute;
+      bottom: 46px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 170px;
+      height: 120px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Waving Wine-Red Flag */
+    @keyframes flagWave {
+      0% { transform: scaleX(1); }
+      50% { transform: scaleX(0.75); }
+      100% { transform: scaleX(1); }
+    }
+
+    .castle-flag {
+      animation: flagWave 0.8s steps(2) infinite;
+      transform-origin: left center;
+    }
+
+    /* Gate Glow (Amber, widens on victory) */
+    .gate-glow {
+      position: absolute;
+      bottom: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 28px;
+      height: 38px;
+      background: var(--amber);
+      box-shadow: 0 0 16px 6px var(--amber);
+      opacity: 0.8;
+      z-index: 3;
+      transition: width 0.4s steps(4), height 0.4s steps(4), box-shadow 0.4s steps(4);
+    }
+
+    .gate-glow.gate-open {
+      width: 80px;
+      height: 54px;
+      background: var(--amber-hi);
+      box-shadow: 0 0 36px 16px var(--amber-hi);
+    }
+
+    /* Stone Road */
+    .stone-road {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: #141a26;
+      border-top: 4px solid #2d3b57;
+      z-index: 3;
+      background-image: repeating-linear-gradient(
+        90deg,
+        transparent 0, transparent 32px,
+        #0b0d12 32px, #0b0d12 36px
+      );
+    }
+
+    /* Hanging Wooden Board */
+    .hanging-board-wrap {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 24px;
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    .hanging-chains {
+      display: flex;
+      justify-content: space-between;
+      width: 150px;
+      height: 16px;
+    }
+
+    .chain-line {
+      width: 4px;
+      height: 16px;
+      background: repeating-linear-gradient(
+        to bottom,
+        var(--steel) 0px, var(--steel) 3px,
+        #0b0d12 3px, #0b0d12 5px
+      );
+    }
+
+    .hanging-board {
+      background: #3a2012;
+      border: 3px solid var(--amber-lo);
+      box-shadow: 0 5px 0 #130a05;
+      padding: 6px 20px;
+      min-width: 170px;
       text-align: center;
+      clip-path: polygon(
+        0 4px, 4px 4px, 4px 0,
+        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
+      );
     }
 
-    .card-face.back {
-      transform: rotateY(180deg);
-      border-color: var(--cyan);
-      background: linear-gradient(145deg, #18263b 0%, #111827 100%);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.55), inset 0 0 0 3px rgba(56, 189, 248, 0.2);
-    }
-
-    .card-corner {
-      position: absolute;
-      font-size: 0.75rem;
-      font-weight: 800;
-      color: var(--gold);
-      opacity: 0.85;
-    }
-    .corner-tl { top: 12px; left: 14px; }
-    .corner-br { bottom: 12px; right: 14px; }
-
-    .word-title {
-      font-size: 2.3rem;
+    .hanging-board .board-word {
+      color: #ffe3a3;
+      font-size: 1.55rem;
       font-weight: 900;
-      color: #fff;
-      text-shadow: 0 3px 0 #090b12;
-      margin: 8px 0;
+      text-shadow: 2px 2px 0 #130a05;
+      margin: 0;
     }
 
-    .meaning-pill {
-      background: rgba(56, 189, 248, 0.14);
-      border: 1.5px solid rgba(56, 189, 248, 0.4);
-      color: #e0f2fe;
-      padding: 8px 16px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 1.05rem;
-      margin: 5px 0;
-      width: 100%;
+    /* 10 Pixel Locks Row (Top-Left of Stage) */
+    .stage-locks-row {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      display: flex;
+      gap: 4px;
+      z-index: 6;
     }
 
-    /* Knight & Castle Track */
-    .quest-track {
-      background: #0e121f;
-      border: 2px solid #28314d;
-      border-radius: 12px;
-      padding: 12px 16px;
+    .stage-lock {
+      width: 11px;
+      height: 15px;
+      color: var(--amber);
+      transition: none;
+    }
+
+    @keyframes lockShatter {
+      0% { transform: scale(1) rotate(0deg); opacity: 1; }
+      50% { transform: scale(1.4) rotate(-15deg); opacity: 0.5; }
+      100% { transform: scale(0.9) rotate(0deg); opacity: 0.25; }
+    }
+
+    .stage-lock.broken {
+      color: var(--steel) !important;
+      opacity: 0.3;
+      animation: lockShatter 0.4s steps(3);
+    }
+
+    /* Pixel-Art Knight */
+    .knight-actor {
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
+      z-index: 5;
+      transform: scaleX(-1); /* Face left towards gate */
+      transition: right 0.3s steps(6);
+    }
+
+    /* Screen Shake Animation */
+    @keyframes screenShake {
+      0% { transform: translate(0, 0); }
+      20% { transform: translate(-6px, 3px); }
+      40% { transform: translate(5px, -4px); }
+      60% { transform: translate(-4px, -2px); }
+      80% { transform: translate(3px, 2px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    .shake-active {
+      animation: screenShake 0.35s steps(4);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .shake-active {
+        animation: none;
+      }
+      .candle-flame, .castle-flag, .pixel-star {
+        animation: none;
+      }
+    }
+
+    /* RPG DIALOG WINDOW */
+    .rpg-dialog {
+      background: var(--ink);
+      padding: 4px;
+      clip-path: polygon(
+        0 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0,
+        calc(100% - 6px) 0, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px,
+        100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%,
+        6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0 calc(100% - 6px)
+      );
+      box-shadow: 0 6px 0 #07090f;
       margin-bottom: 14px;
-      position: relative;
-      overflow: hidden;
     }
 
-    .track-road {
-      height: 10px;
-      background: #1e263d;
-      border-radius: 99px;
-      position: relative;
-      margin: 26px 14px 8px 14px;
+    .rpg-dialog-inner {
+      background: var(--panel);
+      padding: 16px;
+      clip-path: polygon(
+        0 4px, 2px 4px, 2px 2px, 4px 2px, 4px 0,
+        calc(100% - 4px) 0, calc(100% - 4px) 2px, calc(100% - 2px) 2px, calc(100% - 2px) 4px, 100% 4px,
+        100% calc(100% - 4px), calc(100% - 2px) calc(100% - 4px), calc(100% - 2px) calc(100% - 2px), calc(100% - 4px) calc(100% - 2px), calc(100% - 4px) 100%,
+        4px 100%, 4px calc(100% - 2px), 2px calc(100% - 2px), 2px calc(100% - 4px), 0 calc(100% - 4px)
+      );
     }
 
-    .track-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--gold), var(--emerald));
-      border-radius: 99px;
-      transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .knight-sprite {
-      position: absolute;
-      top: -26px;
-      transform: translateX(50%);
-      transition: right 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
-      font-size: 1.5rem;
-      filter: drop-shadow(0 3px 2px rgba(0,0,0,0.7));
-    }
-
-    .castle-sprite {
-      position: absolute;
-      top: -28px;
-      left: -6px;
-      font-size: 1.65rem;
-      filter: drop-shadow(0 3px 2px rgba(0,0,0,0.7));
-    }
-
-    /* Quiz Options */
-    .option-btn {
-      width: 100%;
-      text-align: right;
-      background: #181e33;
-      border: 2px solid #2f3b5c;
-      color: var(--text-main);
-      padding: 13px 16px;
-      border-radius: 11px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      cursor: pointer;
-      transition: all 0.15s;
+    .rpg-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-    }
-
-    .option-btn:hover:not(:disabled) {
-      border-color: var(--gold);
-      background: #202842;
-      transform: translateX(-3px);
-    }
-
-    .option-btn.correct {
-      background: rgba(16, 185, 129, 0.2);
-      border-color: var(--emerald);
-      color: #6ee7b7;
-    }
-
-    .option-btn.wrong {
-      background: rgba(239, 68, 68, 0.2);
-      border-color: var(--crimson);
-      color: #fca5a5;
-      animation: shake 0.35s ease;
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-6px); }
-      75% { transform: translateX(6px); }
-    }
-
-    /* Tower Map */
-    .tower-card {
-      background: #171c2e;
-      border: 2px solid #2d3754;
-      border-radius: 14px;
-      padding: 14px 16px;
+      align-items: center;
       margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: transform 0.15s, border-color 0.15s;
+      border-bottom: 2px solid #1c2638;
+      padding-bottom: 8px;
     }
 
-    .tower-card.unlocked:hover {
-      border-color: var(--gold);
-      transform: translateY(-2px);
+    .speaker-tag {
+      background: var(--amber);
+      color: #0b0d12;
+      font-weight: 900;
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      clip-path: polygon(
+        0 3px, 3px 3px, 3px 0,
+        calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
+        100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
+        3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px)
+      );
+    }
+
+    .rpg-stats {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .combo-badge {
+      background: var(--red);
+      color: #fff;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.7rem;
+      padding: 4px 8px;
+      box-shadow: 2px 2px 0 #0b0d12;
+      border: 1px solid #ff7b92;
+    }
+
+    .xp-readout {
+      color: var(--xp);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.82rem;
+      text-shadow: 2px 2px 0 #0b0d12;
+    }
+
+    .rpg-question {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1.5;
+      margin-bottom: 14px;
+      text-shadow: 1px 1px 0 #0b0d12;
+    }
+
+    @keyframes blinkCursor {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .pixel-cursor {
+      color: var(--amber);
+      font-family: monospace;
+      font-weight: 900;
+      animation: blinkCursor 0.8s steps(1) infinite;
+    }
+
+    /* 4 RPG Menu Options */
+    .rpg-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .rpg-option-btn {
+      min-height: 44px;
+      background: #0d121c;
+      border: 2px solid var(--line);
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      gap: 12px;
+      cursor: pointer;
+      text-align: right;
+      font-size: 0.88rem;
+      font-weight: 700;
+      clip-path: polygon(
+        0 4px, 4px 4px, 4px 0,
+        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
+      );
+      box-shadow: 0 3px 0 #07090f;
+      transition: none;
+    }
+
+    .rpg-option-btn .opt-box {
+      width: 28px;
+      height: 28px;
+      background: var(--line);
+      color: #0b0d12;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 0.82rem;
+      flex-shrink: 0;
+    }
+
+    .rpg-option-btn .opt-arrow {
+      display: none;
+      color: #0b0d12;
+      font-size: 0.85rem;
+      margin-left: 2px;
+    }
+
+    .rpg-option-btn.selected {
+      background: var(--amber);
+      color: #0b0d12;
+      border-color: var(--amber-hi);
+      text-shadow: none;
+    }
+
+    .rpg-option-btn.selected .opt-box {
+      background: #0b0d12;
+      color: var(--amber);
+    }
+
+    .rpg-option-btn.selected .opt-arrow {
+      display: inline-block;
+    }
+
+    .rpg-option-btn.correct {
+      background: var(--ok) !important;
+      color: #fff !important;
+      border-color: #7ee09b !important;
+      text-shadow: 1px 1px 0 #0b0d12;
+    }
+
+    .rpg-option-btn.wrong {
+      background: var(--bad) !important;
+      color: #fff !important;
+      border-color: #ff859b !important;
+      text-shadow: 1px 1px 0 #0b0d12;
+    }
+
+    /* Flashcard Meaning Boxes */
+    .fc-meaning-card {
+      background: #0b0e14;
+      border: 2px solid var(--line);
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      clip-path: polygon(
+        0 3px, 3px 3px, 3px 0,
+        calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
+        100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
+        3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px)
+      );
+    }
+
+    /* Tower Map Cards */
+    .tower-card {
+      background: #111724;
+      border: 3px solid var(--line);
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      clip-path: polygon(
+        0 4px, 4px 4px, 4px 0,
+        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
+      );
+      box-shadow: 0 4px 0 #07090f;
+    }
+
+    .tower-card.unlocked {
+      border-color: var(--amber);
+      cursor: pointer;
+    }
+
+    .tower-card.completed {
+      border-color: var(--ok);
     }
 
     .tower-card.locked {
       opacity: 0.55;
-      filter: grayscale(0.6);
+      cursor: not-allowed;
     }
 
-    /* Table */
+    /* Pixel Tables */
     .table-wrap {
       overflow-x: auto;
       margin-top: 10px;
+      border: 2px solid var(--line);
+      background: #0b0e14;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.82rem;
-    }
-    th, td {
-      padding: 9px 8px;
-      border-bottom: 1px solid #262f47;
+      font-size: 0.8rem;
       text-align: right;
     }
+
     th {
-      color: var(--gold);
+      background: #172033;
+      color: var(--amber);
+      padding: 9px 8px;
       font-weight: 800;
+      border-bottom: 2px solid var(--line);
     }
 
-    /* Install Banner */
-    #installBanner {
-      display: none;
-      background: linear-gradient(90deg, #1e293b, #0f172a);
-      border: 2px solid var(--gold);
-      border-radius: 12px;
-      padding: 10px 14px;
-      margin-bottom: 14px;
+    td {
+      padding: 8px;
+      border-bottom: 1px solid #1a2438;
+      color: var(--ink);
+    }
+
+    /* Rank Badges */
+    .rank-badge {
+      display: inline-flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.65rem;
+      font-weight: 900;
+      box-shadow: 2px 2px 0 #0b0d12;
     }
 
-    .hidden { display: none !important; }
+    .rank-1 { background: var(--amber); color: #0b0d12; }
+    .rank-2 { background: var(--moon); color: #0b0d12; }
+    .rank-3 { background: var(--amber-lo); color: #fff; }
 
-    /* Footer version trigger */
+    /* Footer */
     .footer-ver {
-      margin-top: auto;
-      padding: 16px 0 6px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.68rem;
+      color: var(--steel);
       text-align: center;
-      font-size: 0.72rem;
-      color: #475569;
-      cursor: default;
+      margin-top: 16px;
+      padding: 10px;
+      cursor: pointer;
+      user-select: none;
+      letter-spacing: 0.5px;
+    }
+
+    .footer-ver:hover {
+      color: var(--amber);
+    }
+
+    .hidden {
+      display: none !important;
     }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <!-- PWA Install Prompt Banner -->
-  <div id="installBanner">
-    <div style="font-size: 0.82rem;">
-      <strong style="color: var(--gold);">نصب اپلیکیشن روی گوشی</strong>
-      <div style="color: var(--text-muted); font-size: 0.75rem;">اجرای تمام‌صفحه و سریع بدون نیاز به مرورگر</div>
-    </div>
-    <button id="btnInstallApp" class="pixel-btn btn-gold" style="padding: 7px 12px; font-size: 0.8rem;">نصب برنامه</button>
-  </div>
+<div class="container" id="appRoot">
 
-  <!-- Top Navigation Bar -->
-  <div id="topBar" class="topbar hidden">
+  <!-- TOP HUD BAR (Active when logged in) -->
+  <div id="topBar" class="top-hud hidden">
     <div style="display:flex; align-items:center; gap:8px;">
-      <span id="userGreeting" style="font-weight:800; font-size:0.9rem;"></span>
-      <span class="badge badge-sync"><span class="dot-pulse"></span><span id="syncLabel">ذخیره فعال</span></span>
+      <span id="userGreeting" style="font-weight:800; font-size:0.85rem; color:var(--ink);"></span>
+      <span style="font-size:0.7rem; color:var(--ok); font-weight:800;">[ابری فعال]</span>
     </div>
-    <div style="display:flex; align-items:center; gap:6px;">
-      <span class="badge badge-gold">🏆 <span id="userXP">0</span></span>
-      <button id="btnAudio" class="pixel-btn btn-slate" style="padding:6px 10px; font-size:0.85rem;" title="موسیقی پس‌زمینه">🔇</button>
-      <button id="btnLogout" class="pixel-btn btn-slate" style="padding:6px 10px; font-size:0.78rem;">خروج</button>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span class="xp-readout"><span id="userXP">0</span> XP</span>
+      <button id="btnAudio" class="pixel-btn btn-slate" style="padding:4px 8px; font-size:0.75rem;" title="تغییر صدا">
+        <svg id="svgSoundIcon" viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+          <polygon points="1,5 5,5 9,2 9,14 5,11 1,11" />
+          <path d="M12,4 C13.5,6 13.5,10 12,12 M14,2 C16.5,5.5 16.5,10.5 14,14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" />
+        </svg>
+      </button>
+      <button id="btnLogout" class="pixel-btn btn-wine" style="padding:4px 8px; font-size:0.75rem;">خروج</button>
     </div>
   </div>
 
-  <!-- VIEW 1: LOGIN / REGISTER -->
-  <div id="viewAuth" class="pixel-box">
-    <div style="text-align:center; margin-bottom:18px;">
-      <div style="font-size:2.4rem; margin-bottom:4px;">🏰</div>
-      <h1 style="margin:0; font-size:1.45rem; font-weight:900; color:var(--gold);">قلعه واژگان</h1>
-      <p style="margin:4px 0 0; font-size:0.83rem; color:var(--text-muted);">یادگیری کارتی و مرحله‌ای ادبیات فارسی دهم</p>
+  <!-- VIEW 1: AUTH (LOGIN & REGISTRATION) -->
+  <div id="viewAuth" class="pixel-window border-amber">
+    <div class="pixel-window-inner">
+      <div style="text-align:center; margin-bottom:16px;">
+        <!-- Pixel Castle SVG Icon -->
+        <svg viewBox="0 0 32 32" width="44" height="44" style="margin-bottom:4px;" shape-rendering="crispEdges">
+          <rect x="2" y="10" width="6" height="18" fill="#566c86" />
+          <rect x="2" y="6" width="2" height="4" fill="#566c86" />
+          <rect x="6" y="6" width="2" height="4" fill="#566c86" />
+          <rect x="24" y="10" width="6" height="18" fill="#566c86" />
+          <rect x="24" y="6" width="2" height="4" fill="#566c86" />
+          <rect x="28" y="6" width="2" height="4" fill="#566c86" />
+          <rect x="8" y="14" width="16" height="14" fill="#3a4759" />
+          <rect x="10" y="8" width="12" height="6" fill="#566c86" />
+          <rect x="10" y="4" width="2" height="4" fill="#566c86" />
+          <rect x="15" y="4" width="2" height="4" fill="#566c86" />
+          <rect x="20" y="4" width="2" height="4" fill="#566c86" />
+          <rect x="13" y="18" width="6" height="10" fill="#f0b560" />
+          <rect x="4" y="14" width="2" height="3" fill="#ffd48a" />
+          <rect x="26" y="14" width="2" height="3" fill="#ffd48a" />
+        </svg>
+        <h1 style="margin:0; font-size:1.45rem; font-weight:900; color:var(--amber);" class="hard-shadow">قلعه واژگان</h1>
+        <p style="margin:4px 0 0; font-size:0.8rem; color:var(--steel);">معمای دروازه • یادگیری واژه‌های ادبیات فارسی دهم</p>
+      </div>
+
+      <div style="display:flex; gap:6px; margin-bottom:14px;">
+        <button id="tabLogin" class="pixel-btn btn-amber" style="flex:1;">ورود به حساب</button>
+        <button id="tabRegister" class="pixel-btn btn-slate" style="flex:1;">ثبت‌نام جدید</button>
+      </div>
+
+      <form id="authForm">
+        <div class="form-group">
+          <label>شماره تلفن همراه</label>
+          <input type="tel" id="authCode" class="pixel-input" placeholder="مثال: 09123456789" required inputmode="numeric" maxlength="11" />
+        </div>
+
+        <div id="registerFields" class="hidden">
+          <div class="form-group">
+            <label>نام و نام خانوادگی</label>
+            <input type="text" id="authName" class="pixel-input" placeholder="مثال: امیرحسین رضایی" />
+          </div>
+          <div class="form-group">
+            <label>رشته تحصیلی</label>
+            <select id="authMajor" class="pixel-input">
+              <option value="شبکه و نرم‌افزار">شبکه و نرم‌افزار</option>
+              <option value="معماری">معماری</option>
+              <option value="حسابداری">حسابداری</option>
+              <option value="مکانیک">مکانیک</option>
+              <option value="علوم تجربی">علوم تجربی</option>
+              <option value="ریاضی و فیزیک">ریاضی و فیزیک</option>
+              <option value="ادبیات و علوم انسانی">ادبیات و علوم انسانی</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>کد کلاس (در صورت اعلام دبیر)</label>
+            <input type="text" id="authClassCode" class="pixel-input" placeholder="اختیاری (مثلاً: 101)" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>رمز عبور ۴ رقمی شخصی</label>
+          <input type="password" id="authPin" class="pixel-input" placeholder="••••" maxlength="4" required inputmode="numeric" />
+        </div>
+
+        <div id="authError" style="background:var(--wine); color:#fff; padding:8px 10px; margin-bottom:12px; font-size:0.8rem; font-weight:800; border:1px solid #ff7b92;" class="hidden"></div>
+
+        <button type="submit" id="authSubmitBtn" class="pixel-btn btn-amber" style="width:100%; font-size:0.95rem;">ورود به قلعه</button>
+      </form>
     </div>
-
-    <div style="display:flex; gap:8px; margin-bottom:16px;">
-      <button id="tabLogin" class="pixel-btn btn-gold" style="flex:1; padding:9px;">ورود به حساب</button>
-      <button id="tabRegister" class="pixel-btn btn-slate" style="flex:1; padding:9px;">ثبت‌نام جدید</button>
-    </div>
-
-    <form id="authForm">
-      <div class="form-group">
-        <label>شماره تلفن همراه</label>
-        <input type="tel" id="authCode" class="pixel-input" placeholder="مثال: 09123456789" required inputmode="numeric" maxlength="11" />
-      </div>
-
-      <div id="registerFields" class="hidden">
-        <div class="form-group">
-          <label>نام و نام خانوادگی</label>
-          <input type="text" id="authName" class="pixel-input" placeholder="مثال: امیرحسین رضایی" />
-        </div>
-        <div class="form-group">
-          <label>رشته تحصیلی</label>
-          <select id="authMajor" class="pixel-input">
-            <option value="شبکه و نرم‌افزار">شبکه و نرم‌افزار</option>
-            <option value="معماری">معماری</option>
-            <option value="حسابداری">حسابداری</option>
-            <option value="مکانیک">مکانیک</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>کد کلاس (در صورت اعلام دبیر)</label>
-          <input type="text" id="authClassCode" class="pixel-input" placeholder="اختیاری (مثلاً: 101)" />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>رمز عبور ۴ رقمی شخصی</label>
-        <input type="password" id="authPin" class="pixel-input" placeholder="••••" maxlength="4" required inputmode="numeric" />
-      </div>
-
-      <div id="authError" style="color:var(--crimson); font-size:0.82rem; margin-bottom:10px; font-weight:700;" class="hidden"></div>
-
-      <button type="submit" id="authSubmitBtn" class="pixel-btn btn-emerald" style="width:100%;">ورود به قلعه</button>
-    </form>
   </div>
 
   <!-- VIEW 2: TOWER MAP (DASHBOARD) -->
   <div id="viewMap" class="hidden">
-    <div class="pixel-box" style="margin-bottom:14px; padding:16px;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <div style="font-size:0.8rem; color:var(--text-muted);">رشته: <strong id="mapMajor" style="color:var(--cyan);"></strong></div>
-          <div style="font-size:1.05rem; font-weight:900; margin-top:2px;">نقشه فتح برج‌های ادبیات</div>
+    <div class="pixel-window border-line">
+      <div class="pixel-window-inner" style="padding:12px 14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:0.75rem; color:var(--steel);">رشته: <strong id="mapMajor" style="color:var(--xp);"></strong></div>
+            <div style="font-size:1.05rem; font-weight:900; color:var(--ink); margin-top:2px;" class="hard-shadow">نقشه فتح برج‌های دروازه</div>
+          </div>
+          <button id="btnOpenLeaderboard" class="pixel-btn btn-amber" style="padding:7px 12px; font-size:0.78rem;">جدول رتبه‌ها</button>
         </div>
-        <button id="btnOpenLeaderboard" class="pixel-btn btn-slate" style="padding:8px 12px; font-size:0.8rem;">📊 جدول رتبه‌ها</button>
       </div>
     </div>
 
     <div id="towersList"></div>
   </div>
 
-  <!-- VIEW 3: FLASHCARD & KNIGHT QUEST ARENA -->
+  <!-- VIEW 3: MAIN ARENA SCREEN ( معمای دروازه ) -->
   <div id="viewArena" class="hidden">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-      <button id="btnBackToMap" class="pixel-btn btn-slate" style="padding:7px 12px; font-size:0.8rem;">→ بازگشت به نقشه</button>
-      <span id="arenaStageTitle" style="font-weight:800; font-size:0.9rem; color:var(--gold);"></span>
-      <span id="arenaModeBadge" class="badge badge-gold">فاز ۱: مرور کارت</span>
+    <!-- Arena HUD -->
+    <div class="top-hud">
+      <button id="btnBackToMap" class="pixel-btn btn-slate" style="padding:5px 9px; font-size:0.75rem;">← نقشه</button>
+
+      <!-- 3 Pixel-Art SVG Candles -->
+      <div class="hud-candles" id="candlesHud">
+        <svg id="candle1" class="hud-candle" viewBox="0 0 16 32" shape-rendering="crispEdges">
+          <rect class="candle-flame" x="6" y="2" width="4" height="6" fill="#ffd48a" />
+          <rect class="candle-core" x="7" y="4" width="2" height="4" fill="#f0b560" />
+          <rect x="7" y="8" width="2" height="3" fill="#0b0d12" />
+          <rect x="4" y="11" width="8" height="17" fill="#e8dcc0" />
+          <rect x="4" y="15" width="2" height="4" fill="#d8e2ee" />
+          <rect x="2" y="28" width="12" height="4" fill="#566c86" />
+        </svg>
+        <svg id="candle2" class="hud-candle" viewBox="0 0 16 32" shape-rendering="crispEdges">
+          <rect class="candle-flame" x="6" y="2" width="4" height="6" fill="#ffd48a" />
+          <rect class="candle-core" x="7" y="4" width="2" height="4" fill="#f0b560" />
+          <rect x="7" y="8" width="2" height="3" fill="#0b0d12" />
+          <rect x="4" y="11" width="8" height="17" fill="#e8dcc0" />
+          <rect x="4" y="15" width="2" height="4" fill="#d8e2ee" />
+          <rect x="2" y="28" width="12" height="4" fill="#566c86" />
+        </svg>
+        <svg id="candle3" class="hud-candle" viewBox="0 0 16 32" shape-rendering="crispEdges">
+          <rect class="candle-flame" x="6" y="2" width="4" height="6" fill="#ffd48a" />
+          <rect class="candle-core" x="7" y="4" width="2" height="4" fill="#f0b560" />
+          <rect x="7" y="8" width="2" height="3" fill="#0b0d12" />
+          <rect x="4" y="11" width="8" height="17" fill="#e8dcc0" />
+          <rect x="4" y="15" width="2" height="4" fill="#d8e2ee" />
+          <rect x="2" y="28" width="12" height="4" fill="#566c86" />
+        </svg>
+      </div>
+
+      <div style="font-weight:900; font-size:0.85rem; color:var(--amber);" id="arenaStageTitle">برج اول</div>
+      <div class="pixel-num" id="arenaCounter" style="color:var(--moon);">0/10</div>
     </div>
 
-    <!-- Knight & Castle Progress -->
-    <div class="quest-track">
-      <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
-        <span>پیشروی شوالیه به قلعه</span>
-        <span id="queueCounter">کارت ۱ از ۱۰</span>
-      </div>
-      <div class="track-road">
-        <div id="trackFill" class="track-fill" style="width:0%;"></div>
-        <div id="knightSprite" class="knight-sprite" style="right:0%;">🤺</div>
-        <div class="castle-sprite">🏰</div>
-      </div>
-    </div>
+    <!-- 312px STAGE SCENE -->
+    <div class="stage-wrapper" id="stageScene">
+      <div class="crt-overlay"></div>
+      <div class="stage-sky"></div>
 
-    <!-- PHASE 1: FLASHCARD STUDY -->
-    <div id="phaseFlashcard">
-      <div class="card-scene" id="flashcardScene">
-        <div class="playing-card" id="playingCard">
-          <div class="card-face front">
-            <span class="card-corner corner-tl">♠ ایهام</span>
-            <span style="font-size:0.8rem; color:var(--gold); font-weight:700;">واژه ادبی</span>
-            <div class="word-title" id="fcWord">آهو</div>
-            <p style="font-size:0.8rem; color:var(--text-muted); margin-top:12px;">برای مشاهده معانی دوگانه لمس کنید ↻</p>
-            <span class="card-corner corner-br">دهم ♠</span>
-          </div>
-          <div class="card-face back">
-            <span class="card-corner corner-tl" style="color:var(--cyan);">♦ معانی</span>
-            <div id="fcMeanings" style="width:100%;"></div>
-            <p id="fcHint" style="font-size:0.78rem; color:#94a3b8; margin-top:10px; line-height:1.5;"></p>
-            <span class="card-corner corner-br" style="color:var(--cyan);">دهم ♦</span>
-          </div>
+      <!-- Stars -->
+      <div class="pixel-star" style="top:25px; left:40px;"></div>
+      <div class="pixel-star" style="top:55px; left:120px; animation-delay:0.5s;"></div>
+      <div class="pixel-star" style="top:35px; left:210px; animation-delay:1s;"></div>
+      <div class="pixel-star" style="top:70px; left:310px; animation-delay:0.3s;"></div>
+      <div class="pixel-star" style="top:20px; right:80px; animation-delay:0.8s;"></div>
+
+      <!-- Moon -->
+      <div class="pixel-moon"></div>
+
+      <!-- Distant Stepped Mountains -->
+      <svg class="mountains-layer" viewBox="0 0 400 90" preserveAspectRatio="none" shape-rendering="crispEdges">
+        <polygon points="0,90 0,40 40,40 40,24 80,24 80,48 140,48 140,16 190,16 190,56 260,56 260,32 320,32 320,60 400,60 400,90" fill="#141a26" />
+        <polygon points="20,90 20,60 60,60 60,45 110,45 110,65 170,65 170,38 230,38 230,70 300,70 300,48 370,48 370,90" fill="#0e131d" />
+      </svg>
+
+      <!-- Castle Silhouette & Glowing Gate -->
+      <svg class="castle-silhouette" viewBox="0 0 170 120" shape-rendering="crispEdges">
+        <!-- Main Keep Body -->
+        <rect x="35" y="30" width="100" height="90" fill="#07090e" />
+        <!-- Battlements -->
+        <rect x="35" y="20" width="16" height="10" fill="#07090e" />
+        <rect x="59" y="20" width="16" height="10" fill="#07090e" />
+        <rect x="83" y="20" width="16" height="10" fill="#07090e" />
+        <rect x="107" y="20" width="16" height="10" fill="#07090e" />
+        <rect x="119" y="20" width="16" height="10" fill="#07090e" />
+        <!-- Towers Left & Right -->
+        <rect x="15" y="10" width="24" height="110" fill="#07090e" />
+        <rect x="15" y="2" width="6" height="8" fill="#07090e" />
+        <rect x="25" y="2" width="6" height="8" fill="#07090e" />
+        <rect x="33" y="2" width="6" height="8" fill="#07090e" />
+        <rect x="131" y="10" width="24" height="110" fill="#07090e" />
+        <rect x="131" y="2" width="6" height="8" fill="#07090e" />
+        <rect x="139" y="2" width="6" height="8" fill="#07090e" />
+        <rect x="149" y="2" width="6" height="8" fill="#07090e" />
+        <!-- Flag pole & waving wine flag -->
+        <rect x="26" y="-12" width="2" height="14" fill="#566c86" />
+        <polygon class="castle-flag" points="28,-12 46,-7 28,-2" fill="#7a2b2e" />
+        <!-- Windows with amber glow -->
+        <rect x="48" y="45" width="8" height="12" fill="#f0b560" />
+        <rect x="114" y="45" width="8" height="12" fill="#f0b560" />
+        <rect x="81" y="38" width="8" height="12" fill="#f0b560" />
+        <rect x="23" y="30" width="6" height="10" fill="#f0b560" />
+        <rect x="140" y="30" width="6" height="10" fill="#f0b560" />
+        <!-- Gate Arch Frame -->
+        <rect x="71" y="80" width="28" height="40" fill="#141a26" />
+      </svg>
+
+      <!-- Warm Amber Gate Glow -->
+      <div id="gateGlow" class="gate-glow"></div>
+
+      <!-- Hanging Wooden Board with 2 chains -->
+      <div class="hanging-board-wrap">
+        <div class="hanging-chains">
+          <div class="chain-line"></div>
+          <div class="chain-line"></div>
+        </div>
+        <div class="hanging-board">
+          <div class="board-word" id="stageTargetWord">آهو</div>
         </div>
       </div>
 
-      <div style="display:flex; gap:10px; margin-top:10px;">
-        <button id="btnFcRepeat" class="pixel-btn btn-crimson" style="flex:1;">نیاز به تکرار دارم</button>
-        <button id="btnFcKnown" class="pixel-btn btn-emerald" style="flex:1;">یاد گرفتم ✓</button>
+      <!-- 10 Pixel Locks Row -->
+      <div class="stage-locks-row" id="locksRow"></div>
+
+      <!-- Stone Road -->
+      <div class="stone-road"></div>
+
+      <!-- Pixel Knight Actor (Cloak + Sword) -->
+      <div id="knightActor" class="knight-actor">
+        <svg viewBox="0 0 24 32" width="28" height="36" shape-rendering="crispEdges">
+          <rect x="9" y="2" width="6" height="3" fill="#b13e53" />
+          <rect x="8" y="5" width="8" height="7" fill="#8a97a3" />
+          <rect x="10" y="8" width="6" height="2" fill="#0b0d12" />
+          <rect x="6" y="12" width="12" height="10" fill="#7a2b2e" />
+          <rect x="9" y="12" width="6" height="8" fill="#d8e2ee" />
+          <rect x="8" y="20" width="8" height="2" fill="#f0b560" />
+          <rect x="8" y="22" width="3" height="7" fill="#566c86" />
+          <rect x="13" y="22" width="3" height="7" fill="#566c86" />
+          <rect x="7" y="29" width="4" height="3" fill="#0b0d12" />
+          <rect x="13" y="29" width="4" height="3" fill="#0b0d12" />
+          <rect x="19" y="9" width="2" height="15" fill="#73eff7" />
+          <rect x="17" y="15" width="6" height="2" fill="#f0b560" />
+          <rect x="19" y="17" width="2" height="4" fill="#a8642a" />
+        </svg>
       </div>
     </div>
 
-    <!-- PHASE 2: SPACED REPETITION QUIZ -->
-    <div id="phaseQuiz" class="hidden">
-      <div class="pixel-box" style="text-align:center; margin-bottom:12px; border-color:var(--gold);">
-        <div style="font-size:0.78rem; color:var(--gold); font-weight:700;">کدام گزینه معانی صحیح این واژه است؟</div>
-        <div class="word-title" id="qzWord" style="font-size:2rem; margin:10px 0 4px;"></div>
-        <div id="qzRetryTag" class="hidden" style="font-size:0.75rem; color:var(--crimson); font-weight:700;">🔄 تکرار هوشمند (قبلاً اشتباه پاسخ داده شد)</div>
+    <!-- RPG DIALOG WINDOW -->
+    <div class="rpg-dialog" id="rpgDialog">
+      <div class="rpg-dialog-inner">
+        <div class="rpg-header">
+          <span class="speaker-tag" id="speakerTag">نگهبان دروازه</span>
+          <div class="rpg-stats">
+            <span id="comboBadge" class="combo-badge hidden">x3 COMBO</span>
+            <span class="xp-readout" id="dialogXP">0 XP</span>
+          </div>
+        </div>
+
+        <!-- PHASE 1: FLASHCARD STUDY MODE -->
+        <div id="phaseFlashcard">
+          <div style="font-size:0.8rem; color:var(--amber); font-weight:800; margin-bottom:10px;">
+            معانی ایهام‌دار و راز واژه در ادبیات فارسی دهم:
+          </div>
+          <div id="fcMeanings"></div>
+          <div id="fcHint" style="font-size:0.8rem; color:var(--steel); margin:10px 0 14px; line-height:1.5;"></div>
+          <div style="display:flex; gap:8px;">
+            <button id="btnFcRepeat" class="pixel-btn btn-wine" style="flex:1;">نیاز به تکرار دارم</button>
+            <button id="btnFcKnown" class="pixel-btn btn-emerald" style="flex:1;">یاد گرفتم (ادامه)</button>
+          </div>
+        </div>
+
+        <!-- PHASE 2: QUIZ & GATE RIDDLE -->
+        <div id="phaseQuiz" class="hidden">
+          <div id="qzRetryTag" class="hidden" style="color:var(--red); font-size:0.75rem; font-weight:900; margin-bottom:4px;">
+            [تکرار هوشمند • واژه دارای چالش]
+          </div>
+          <div class="rpg-question">
+            <span id="qzPrompt">کدام گزینه معانی صحیح این واژه است؟</span>
+            <span class="pixel-cursor">█</span>
+          </div>
+
+          <!-- 4 RPG Options (الف، ب، ج، د) -->
+          <div class="rpg-options-list" id="qzOptions"></div>
+
+          <!-- Stepped Confirm Answer Button -->
+          <button id="btnConfirmAnswer" class="pixel-btn btn-amber" style="width:100%; font-size:0.95rem;" disabled>
+            تأیید پاسخ
+          </button>
+        </div>
+
+        <!-- PHASE 3: VICTORY SCREEN -->
+        <div id="phaseVictory" class="hidden" style="text-align:center; padding:10px 0;">
+          <h2 style="margin:0 0 8px; color:var(--ok); font-weight:900; font-size:1.4rem;" class="hard-shadow">
+            دروازه فتح شد!
+          </h2>
+          <p id="victoryStats" style="color:var(--ink); font-size:0.85rem; line-height:1.6; margin-bottom:16px;"></p>
+          <button id="btnVictoryContinue" class="pixel-btn btn-amber" style="width:100%; font-size:0.95rem;">
+            ادامه و بازگشت به نقشه
+          </button>
+        </div>
       </div>
-
-      <div id="qzOptions"></div>
-    </div>
-
-    <!-- PHASE 3: VICTORY SCREEN -->
-    <div id="phaseVictory" class="pixel-box hidden" style="text-align:center; border-color:var(--emerald);">
-      <div style="font-size:3rem; margin-bottom:8px;">🏆🏰</div>
-      <h2 style="margin:0; color:var(--emerald); font-weight:900;">قلعه فتح شد!</h2>
-      <p id="victoryStats" style="color:var(--text-muted); font-size:0.9rem; margin:10px 0 18px;"></p>
-      <button id="btnVictoryContinue" class="pixel-btn btn-gold" style="width:100%;">ادامه و بازگشت به نقشه</button>
     </div>
   </div>
 
   <!-- VIEW 4: STUDENT LEADERBOARD -->
-  <div id="viewLeaderboard" class="pixel-box hidden">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-      <h3 style="margin:0; color:var(--gold);">🏆 رتبه‌بندی شوالیه‌های کلاس</h3>
-      <button id="btnCloseLeaderboard" class="pixel-btn btn-slate" style="padding:6px 12px; font-size:0.8rem;">بستن</button>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>رتبه</th>
-            <th>نام دانش‌آموز</th>
-            <th>رشته</th>
-            <th>امتیاز</th>
-          </tr>
-        </thead>
-        <tbody id="studentLeaderboardBody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- VIEW 5: HIDDEN TEACHER ADMIN PANEL -->
-  <div id="viewTeacher" class="pixel-box hidden" style="border-color:var(--crimson);">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-      <div>
-        <h3 style="margin:0; color:var(--crimson);">🛡️ پنل مدیریت دبیر</h3>
-        <span style="font-size:0.75rem; color:var(--text-muted);">کنترل مراحل، پیگیری دانش‌آموزان و افزودن محتوا</span>
+  <div id="viewLeaderboard" class="pixel-window border-amber hidden">
+    <div class="pixel-window-inner">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h3 style="margin:0; color:var(--amber); font-weight:900; font-size:1.05rem;" class="hard-shadow">
+          رتبه‌بندی شوالیه‌های کلاس
+        </h3>
+        <button id="btnCloseLeaderboard" class="pixel-btn btn-slate" style="padding:5px 10px; font-size:0.78rem;">بستن</button>
       </div>
-      <button id="btnExitTeacher" class="pixel-btn btn-slate" style="padding:6px 12px; font-size:0.8rem;">خروج از پنل</button>
-    </div>
 
-    <!-- Stage Lock/Unlock Controls -->
-    <div style="background:#0f1320; padding:12px; border-radius:10px; margin-bottom:14px;">
-      <div style="font-weight:800; font-size:0.85rem; color:var(--gold); margin-bottom:8px;">۱. مدیریت باز/قفل بودن مراحل:</div>
-      <div id="teacherStagesControl"></div>
-    </div>
-
-    <!-- Student Performance & Export -->
-    <div style="background:#0f1320; padding:12px; border-radius:10px; margin-bottom:14px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-weight:800; font-size:0.85rem; color:var(--cyan);">۲. عملکرد دانش‌آموزان و کلمات چالشی:</span>
-        <button id="btnExportCSV" class="pixel-btn btn-emerald" style="padding:5px 10px; font-size:0.75rem;">📥 خروجی اکسل</button>
-      </div>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
+              <th>رتبه</th>
               <th>نام (شماره تلفن)</th>
               <th>رشته</th>
               <th>امتیاز</th>
-              <th>کلمات اشتباه</th>
-              <th>عملیات</th>
             </tr>
           </thead>
-          <tbody id="teacherStudentsBody"></tbody>
+          <tbody id="studentLeaderboardBody"></tbody>
         </table>
       </div>
     </div>
+  </div>
 
-    <!-- Add Custom Topic / Word Module -->
-    <div style="background:#0f1320; padding:12px; border-radius:10px; margin-bottom:14px;">
-      <div style="font-weight:800; font-size:0.85rem; color:var(--emerald); margin-bottom:8px;">۳. افزودن واژه یا مبحث جدید به مرحله:</div>
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
-        <select id="newWordStage" class="pixel-input" style="padding:8px; font-size:0.82rem;"></select>
-        <input type="text" id="newWordText" class="pixel-input" placeholder="واژه (مثلاً: شیر)" style="padding:8px; font-size:0.82rem;" />
+  <!-- VIEW 5: HIDDEN TEACHER ADMIN PANEL -->
+  <div id="viewTeacher" class="pixel-window border-wine hidden">
+    <div class="pixel-window-inner">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:2px solid var(--line); padding-bottom:8px;">
+        <div>
+          <h3 style="margin:0; color:var(--red); font-weight:900; font-size:1.1rem;">پنل مدیریت دبیر</h3>
+          <span style="font-size:0.75rem; color:var(--steel);">کنترل مراحل، پیگیری دانش‌آموزان و تنظیمات ابری</span>
+        </div>
+        <button id="btnExitTeacher" class="pixel-btn btn-slate" style="padding:6px 12px; font-size:0.78rem;">خروج از پنل</button>
       </div>
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
-        <input type="text" id="newWordM1" class="pixel-input" placeholder="معنای اول (مثلاً: حیوان درنده)" style="padding:8px; font-size:0.82rem;" />
-        <input type="text" id="newWordM2" class="pixel-input" placeholder="معنای دوم (مثلاً: نوشیدنی)" style="padding:8px; font-size:0.82rem;" />
-      </div>
-      <button id="btnAddCustomWord" class="pixel-btn btn-cyan" style="width:100%; padding:8px; font-size:0.82rem;">+ افزودن واژه به بازی</button>
-    </div>
 
-    <!-- Class Code & Cloud Sync Settings -->
-    <div style="background:#0f1320; padding:12px; border-radius:10px;">
-      <div style="font-weight:800; font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">۴. تنظیمات امنیتی و همگام‌سازی ابری (اختیاری):</div>
-      <div style="display:flex; gap:8px; margin-bottom:8px;">
-        <input type="text" id="teacherClassLock" class="pixel-input" placeholder="کد کلاس اجباری (خالی = آزاد)" style="padding:8px; font-size:0.8rem;" />
-        <button id="btnSaveClassLock" class="pixel-btn btn-gold" style="padding:8px 12px; font-size:0.8rem;">ذخیره</button>
+      <!-- 1. Stage Locks Control -->
+      <div style="background:#0b0e14; padding:12px; margin-bottom:12px; border:2px solid var(--line);">
+        <div style="font-weight:900; font-size:0.85rem; color:var(--amber); margin-bottom:8px;">۱. وضعیت قفل برج‌ها و فصول:</div>
+        <div id="teacherStagesControl"></div>
       </div>
-      <details style="font-size:0.78rem; color:var(--text-muted); margin-top:6px;">
-        <summary style="cursor:pointer; color:var(--cyan);">اتصال دیتابیس ابری زنده بین همه گوشی‌ها (Supabase)</summary>
-        <p style="margin:6px 0; line-height:1.5;">برای اینکه امتیازهای دانش‌آموزان از گوشی‌های مختلف در یک جدول واحد جمع شود، آدرس URL و کلید Anon پروژه رایگان Supabase خود را وارد کنید:</p>
-        <input type="text" id="sbUrl" class="pixel-input" placeholder="https://xyz.supabase.co" style="padding:7px; font-size:0.78rem; margin-bottom:6px;" />
-        <input type="text" id="sbKey" class="pixel-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..." style="padding:7px; font-size:0.78rem; margin-bottom:6px;" />
-        <button id="btnSaveSupabase" class="pixel-btn btn-emerald" style="width:100%; padding:7px; font-size:0.78rem;">فعال‌سازی همگام‌سازی ابری</button>
-      </details>
+
+      <!-- 2. Students Analytics & CSV Export -->
+      <div style="background:#0b0e14; padding:12px; margin-bottom:12px; border:2px solid var(--line);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-weight:900; font-size:0.85rem; color:var(--xp);">۲. عملکرد دانش‌آموزان و واژه‌های چالشی:</span>
+          <button id="btnExportCSV" class="pixel-btn btn-emerald" style="padding:4px 9px; font-size:0.75rem;">خروجی فایل CSV</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>نام (شماره تلفن)</th>
+                <th>رشته</th>
+                <th>امتیاز</th>
+                <th>کلمات اشتباه</th>
+                <th>عملیات</th>
+              </tr>
+            </thead>
+            <tbody id="teacherStudentsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 3. Add Custom Word -->
+      <div style="background:#0b0e14; padding:12px; margin-bottom:12px; border:2px solid var(--line);">
+        <div style="font-weight:900; font-size:0.85rem; color:var(--ok); margin-bottom:8px;">۳. افزودن واژه جدید به برج:</div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+          <select id="newWordStage" class="pixel-input" style="padding:7px; font-size:0.8rem;"></select>
+          <input type="text" id="newWordText" class="pixel-input" placeholder="واژه (مثلاً: چنگ)" style="padding:7px; font-size:0.8rem;" />
+        </div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+          <input type="text" id="newWordM1" class="pixel-input" placeholder="معنای اول" style="padding:7px; font-size:0.8rem;" />
+          <input type="text" id="newWordM2" class="pixel-input" placeholder="معنای دوم" style="padding:7px; font-size:0.8rem;" />
+        </div>
+        <button id="btnAddCustomWord" class="pixel-btn btn-amber" style="width:100%; padding:8px; font-size:0.82rem;">+ ثبت واژه در بازی</button>
+      </div>
+
+      <!-- 4. Class Code & Supabase Settings -->
+      <div style="background:#0b0e14; padding:12px; border:2px solid var(--line);">
+        <div style="font-weight:900; font-size:0.85rem; color:var(--steel); margin-bottom:8px;">۴. قفل کلاس و اتصال دیتابیس Supabase:</div>
+        <div style="display:flex; gap:8px; margin-bottom:8px;">
+          <input type="text" id="teacherClassLock" class="pixel-input" placeholder="کد کلاس الزامی (خالی = آزاد)" style="padding:7px; font-size:0.8rem;" />
+          <button id="btnSaveClassLock" class="pixel-btn btn-amber" style="padding:7px 12px; font-size:0.8rem;">ذخیره کد کلاس</button>
+        </div>
+        <details style="font-size:0.75rem; color:var(--steel); margin-top:6px;">
+          <summary style="cursor:pointer; color:var(--xp); font-weight:800;">تنظیمات دیتابیس Supabase</summary>
+          <p style="margin:6px 0; line-height:1.5;">آدرس URL و کلید Anon پروژه Supabase جهت همگام‌سازی ابری:</p>
+          <input type="text" id="sbUrl" class="pixel-input" style="padding:6px; font-size:0.75rem; margin-bottom:6px;" />
+          <input type="text" id="sbKey" class="pixel-input" style="padding:6px; font-size:0.75rem; margin-bottom:6px;" />
+          <button id="btnSaveSupabase" class="pixel-btn btn-emerald" style="width:100%; padding:6px; font-size:0.75rem;">ذخیره تنظیمات دیتابیس</button>
+        </details>
+      </div>
     </div>
   </div>
 
   <!-- Hidden Teacher Access Trigger (3 rapid clicks on version number) -->
-  <div class="footer-ver" id="versionTrigger">v2.8-pixel</div>
+  <div class="footer-ver" id="versionTrigger">v3.0-pixel</div>
+
 </div>
 
 <script>
 // ==========================================
-// 1. DEFAULT CURRICULUM DATA (10th Grade Technical & Vocational Literature)
+// 1. DEFAULT CURRICULUM DATA
 // ==========================================
 const DEFAULT_STAGES = [
   {
@@ -695,59 +1227,84 @@ const DEFAULT_STAGES = [
     title: "برج اول: درس‌های ۱ تا ۳ (ایهام‌های پایه)",
     unlocked: true,
     words: [
-      { word: "آهو", meanings: ["غزال", "عیب و نقص"], hint: "در شعر حافظ: «آهو داشتن» به معنای عیب داشتن است." },
-      { word: "بو", meanings: ["رایحه و عطر", "آرزو و امید"], hint: "به بوی (امید) دیدن دوست" },
-      { word: "بار", meanings: ["مرتبه و دفعه", "اجازه ورود به مجلس"], hint: "بار عام دادن پادشاه یعنی اجازه ملاقات دادن" },
-      { word: "پروانه", meanings: ["اجازه و مجوز", "حشره بالدار"], hint: "پروانه عبور یا پروانه شمع" },
-      { word: "روان", meanings: ["جاری و رونده", "روح و جان"], hint: "آب روان / آرامش روان" },
-      { word: "چین", meanings: ["پیچ و تاب زلف", "کشور چین"], hint: "چین و شکن موی معشوق" },
-      { word: "دوش", meanings: ["دیشب", "شانه و کتف"], hint: "دوش وقت سحر از غصه نجاتم دادند" },
-      { word: "راست", meanings: ["درست و صحیح", "سمت راست"], hint: "سخن راست و راه راست" }
+      { word: "آهو", meanings: ["غزال و حیوان زیبا", "عیب، نقص و گناه"], hint: "در بیت حافظ: گر آن شکرلب بازآید ز آهوی او چه باک؟" },
+      { word: "شیرین", meanings: ["محبوب و معشوقه خسرو", "شهد و طعم گوارا"], hint: "شیرین‌دهنان و معشوقه باستانی" },
+      { word: "مهر", meanings: ["عشق، محبت و دوستی", "خورشید تابان"], hint: "پرتو مهر و مهر مادری" },
+      { word: "دام", meanings: ["تله صیاد", "حیوان و چهارپا"], hint: "دام و دد در بیابان" },
+      { word: "مدام", meanings: ["همیشگی و پیوسته", "می و شراب دیرینه"], hint: "در باده‌نوشی و ذکر مدام" },
+      { word: "دوش", meanings: ["شانه و کتف", "دیشب و شامگاه گذشته"], hint: "دوش بر دوش و دوش وقت سحر" },
+      { word: "بو", meanings: ["رایحه و عطر", "امید، آرزو و توقع"], hint: "بوی وصال و رایحه گل" },
+      { word: "راست", meanings: ["درست و صادق", "سمت راست (جهت)"], hint: "راست‌گویی و دست راست" },
+      { word: "روان", meanings: ["جاری و رونده", "جان، روح و نفس"], hint: "آب روان و روان پاک" },
+      { word: "پرده", meanings: ["حجاب و پوشش", "نغمه و مقام موسیقی"], hint: "پرده‌نشین و پرده عشاق" }
     ]
   },
   {
     id: 2,
-    title: "برج دوم: درس‌های ۴ تا ۶ (آرایه و موسیقی)",
+    title: "برج دوم: درس‌های ۴ تا ۷ (ایهام در شعر کهن)",
     unlocked: false,
     words: [
-      { word: "تار", meanings: ["تاریک", "رشته مو", "ساز موسیقی"], hint: "شب تار و تار گیسو" },
-      { word: "پرده", meanings: ["حجاب و پوشش", "راز", "دستگاه موسیقی"], hint: "پرده دریدن به معنای فاش کردن راز است" },
-      { word: "چنگ", meanings: ["ساز موسیقی", "پنجه و دست"], hint: "در چنگ کسی اسیر شدن" },
-      { word: "نوا", meanings: ["صدا و آواز", "دستگاه موسیقی"], hint: "نوای خوش و بی‌نوایی" },
-      { word: "شور", meanings: ["هیجان و غوغا", "مزه شور", "دستگاه موسیقی"], hint: "شور عشق و اشک شور" },
-      { word: "عود", meanings: ["ساز موسیقی", "چوب خوش‌بو"], hint: "سوختن عود در مجمر" },
-      { word: "گوشمال", meanings: ["کوک کردن ساز", "تنبیه کردن"], hint: "گوشمال دادن تار و تنبور" },
-      { word: "رود", meanings: ["رودخانه", "ساز زهی"], hint: "ناله رود و آب رود" }
+      { word: "گور", meanings: ["قبر و آرامگاه", "گورخر وحشی"], hint: "بهرام که گور می‌گرفتی همه عمر..." },
+      { word: "چنگ", meanings: ["ساز موسیقی زهی", "پنجه دست و پنجه درنده"], hint: "دست در چنگ زدن" },
+      { word: "هوا", meanings: ["اتمسفر و باد", "میل، آرزو و هوس دل"], hint: "هوای بهاری و هوای کوی یار" },
+      { word: "گلاب", meanings: ["عصاره گل محمدی", "اشک چشم جاری"], hint: "گلاب ریختن بر رخسار" },
+      { word: "خط", meanings: ["نوشته و کتابت", "موی تازه دمیده چهره"], hint: "خط خوش و خط سبز رخ" },
+      { word: "قربان", meanings: ["فدا و ذبح شده", "تیردان کماندار"], hint: "قربانی کوی تو و تیر در قربان" },
+      { word: "شام", meanings: ["وعده غذای شب", "کشور و سرزمین سوریه"], hint: "شام غریبان و ملک شام" },
+      { word: "مردم", meanings: ["انسان‌ها و خلق", "مردمک چشم"], hint: "مردم دیده من غرق شد در خون" },
+      { word: "لبریز", meanings: ["پر و سرشار", "جویبار پرآب"], hint: "کاسه لبریز" },
+      { word: "چشمه", meanings: ["محل جوشش آب", "چشم بیننده"], hint: "چشمه خورشید و چشمه آب حیات" }
     ]
   },
   {
     id: 3,
-    title: "برج سوم: درس‌های ۷ تا ۹ (شطرنج و نجوم)",
+    title: "برج سوم: درس‌های ۸ تا ۱۱ (آرایه‌های کنایی)",
     unlocked: false,
     words: [
-      { word: "رخ", meanings: ["چهره و صورت", "مهره قلعه در شطرنج"], hint: "رخ نمودن معشوق" },
-      { word: "پیاده", meanings: ["غیرسواره", "مهره سرباز شطرنج"], hint: "پیاده و سوار در میدان" },
-      { word: "نطع", meanings: ["سفره چرمی", "صفحه شطرنج"], hint: "نطع بازی و شطرنج" },
-      { word: "مشتری", meanings: ["خریدار", "سیاره مشتری (برجیس)"], hint: "مشتری و ماه در آسمان" },
-      { word: "تیر", meanings: ["پیکان", "سیاره عطارد"], hint: "تیر کمان و ستاره تیر" },
-      { word: "مهر", meanings: ["محبت", "خورشید"], hint: "تابش مهر در آسمان" },
-      { word: "ماه", meanings: ["قمر آسمان", "مدت سی روز"], hint: "ماه تابان" },
-      { word: "سو", meanings: ["سمت و جهت", "نور و روشنایی"], hint: "سوی چشم (نور چشم)" }
+      { word: "باد", meanings: ["نسیم وزان", "غرور و تکبر"], hint: "باد در سر داشتن" },
+      { word: "لبخند", meanings: ["تبسم شیرین", "شکفتن غنچه گل"], hint: "خنده گل در چمن" },
+      { word: "پای", meanings: ["اندام حرکتی", "اساس و بنیاد پایدار"], hint: "پای‌برجا بودن" },
+      { word: "دست", meanings: ["اندام گیرنده", "قدرت، نفوذ و تسلط"], hint: "دست بالا دست بسیار است" },
+      { word: "سایه", meanings: ["تاریکی ناشی از جسم", "حمایت، پناه و لطف"], hint: "سایه‌ات کم مباد" },
+      { word: "سر", meanings: ["کله و عضو فوقانی", "راز نهان و اندیشه"], hint: "سر در گریبان و سر عشق" },
+      { word: "آتش", meanings: ["شعله سوزان", "خشم، عشق و سوز دل"], hint: "آتش درون سینه" },
+      { word: "خاک", meanings: ["زمین و تربت", "تواضع، افتادگی و ناچیزی"], hint: "خاک پای دوستان بودن" },
+      { word: "خون", meanings: ["مایع سرخ حیات", "کشتن، جان‌فشانی و رنج"], hint: "خون دل خوردن" },
+      { word: "پروانه", meanings: ["حشره عاشق شمع", "اجازه‌نامه و رخصت"], hint: "پروانه حضور داشتن" }
     ]
   },
   {
     id: 4,
-    title: "برج چهارم: درس‌های ۱۰ تا ۱۲ (حماسه و عرفان)",
+    title: "برج چهارم: درس‌های ۱۲ تا ۱۴ (تناسب و ایهام تناسب)",
     unlocked: false,
     words: [
-      { word: "دستان", meanings: ["لقب زال پدر رستم", "دست‌ها"], hint: "رستم دستان در شاهنامه" },
-      { word: "زال", meanings: ["پیرزن", "پدر رستم"], hint: "زال زر و زال پیر" },
-      { word: "خسرو", meanings: ["پادشاه", "خسرو پرویز"], hint: "خسرو و شیرین" },
-      { word: "شیرین", meanings: ["مزه شیرین", "معشوقه فرهاد"], hint: "سخن شیرین" },
-      { word: "شکر", meanings: ["ماده خوراکی", "معشوقه خسرو پرویز"], hint: "شکر و شیرین" },
-      { word: "قلب", meanings: ["عضو بدن", "میانه لشکر", "تقلبی"], hint: "زدن بر قلب سپاه دشمن" },
-      { word: "دارا", meanings: ["ثروتمند", "داریوش پادشاه"], hint: "دارا و سکندر" },
-      { word: "مدام", meanings: ["همواره و همیشه", "شراب"], hint: "باده مدام" }
+      { word: "خسرو", meanings: ["پادشاه ساسانی", "شاه و فرمانروا"], hint: "خسرو و شیرین نظامی" },
+      { word: "عیسی", meanings: ["پیامبر اهل معجزه", "شفابخش و زنده‌کننده"], hint: "دم عیسوی داشتن" },
+      { word: "سلیمان", meanings: ["پیامبر حاکم بر باد و مور", "انسان صاحب شوکت"], hint: "ملک سلیمان و خاتم او" },
+      { word: "یوسف", meanings: ["پیامبر نماد زیبایی", "عزیز مصر و گمگشته"], hint: "یوسف گمگشته بازآید به کنعان" },
+      { word: "مجنون", meanings: ["عاشق شیدای لیلی", "دیوانه و بی‌قرار"], hint: "مجنون عامری" },
+      { word: "بلبل", meanings: ["پرنده خوش‌آواز چمن", "نغمه‌سرای عاشق گل"], hint: "ناله بلبل سحری" },
+      { word: "شمع", meanings: ["موم روشنایی‌بخش", "معشوق و مراد جمع"], hint: "شمع محفل‌افروز" },
+      { word: "پرویز", meanings: ["لقب خسرو دوم ساسانی", "پیروزمند و مظفر"], hint: "خسرو پرویز" },
+      { word: "نادر", meanings: ["کمیاب و بی‌نظیر", "پادشاه افشاری"], hint: "گوهر نادر" },
+      { word: "فرهاد", meanings: ["عاشق کوه‌کن شیرین", "مرد زحمتکش پرشور"], hint: "تیشه فرهاد بر بیستون" }
+    ]
+  },
+  {
+    id: 5,
+    title: "برج پنجم: درس‌های ۱۵ تا ۱۸ (واژگان پیشرفته ترم دوم)",
+    unlocked: false,
+    words: [
+      { word: "سودا", meanings: ["عشق، شور و تفکر عمیق", "تجارت، داد و ستد"], hint: "سودای عشق در سر" },
+      { word: "نوا", meanings: ["آهنگ و نغمه موسیقی", "ساز، برگ و توشه زندگی"], hint: "بی‌برگ و بینوا" },
+      { word: "هزار", meanings: ["عدد ریاضی ۱۰۰۰", "پرنده بلبل (هزاردستان)"], hint: "هزاردستان در باغ" },
+      { word: "گوشه", meanings: ["کنج و خلوتگاه", "گوشه دستگاه موسیقی ایرانی"], hint: "گوشه‌نشین و گوشه نیوا" },
+      { word: "ساز", meanings: ["آلت موسیقی", "آمادگی، سازوبرگ"], hint: "ساز کردن آهنگ" },
+      { word: "باز", meanings: ["پرنده شکاری تیزبین", "گشوده و دوباره"], hint: "کبوتر با کبوتر، باز با باز" },
+      { word: "تیر", meanings: ["تیر کمان", "ماه چهارم و سیاره عطارد"], hint: "تیر پرتابی و تیر آسمان" },
+      { word: "زهره", meanings: ["سیاره ناهید و نوازنده فلک", "شجاعت و جرأت"], hint: "زهره چنگ‌نواز" },
+      { word: "بهار", meanings: ["فصل سرسبزی طبیعت", "بتخانه و جایگاه زیبا"], hint: "نوبهار و بهارستان" },
+      { word: "دیوان", meanings: ["دفتر اشعار منظوم", "دادگاه، اداره و جایگاه دیوها"], hint: "دیوان حافظ و دیوان محاسبات" }
     ]
   }
 ];
@@ -755,7 +1312,7 @@ const DEFAULT_STAGES = [
 const TEACHER_PASS = "431380";
 
 // ==========================================
-// 2. STATE & STORAGE ENGINE (Local + Optional Supabase Cloud)
+// 2. STATE & STORAGE ENGINE
 // ==========================================
 let appState = {
   stages: JSON.parse(localStorage.getItem("gv_stages")) || DEFAULT_STAGES,
@@ -772,7 +1329,7 @@ function saveLocal() {
   localStorage.setItem("gv_classLock", appState.classLock);
 }
 
-// Scalable Cloud Sync Engine (Global Teacher Config + Per-Student REST)
+// Map Database row to Client Model
 function mapStudentRow(row) {
   if (!row) return null;
   return {
@@ -786,7 +1343,7 @@ function mapStudentRow(row) {
   };
 }
 
-// 1. Global Teacher Config Sync (stages and classLock only - never student data)
+// 1. Global Teacher Config Sync (gv_state: id=global, stages + classLock only)
 async function syncGlobalState(action = "push") {
   if (!appState.sbUrl || !appState.sbKey) return;
   const headers = {
@@ -829,7 +1386,7 @@ async function syncGlobalState(action = "push") {
   }
 }
 
-// 2. Per-Student Cloud Operations
+// 2. Per-Student Cloud Operations (gv_students table)
 async function fetchStudentRecord(code) {
   if (!appState.sbUrl || !appState.sbKey || !code) return null;
   try {
@@ -912,55 +1469,124 @@ async function hashPin(pin) {
 }
 
 // ==========================================
-// 3. LO-FI CHIPTUNE AUDIO SYNTHESIZER (Web Audio API)
+// 3. 8-BIT RETRO SYNTHESIZER & SOUND SYSTEM
 // ==========================================
 let audioCtx = null;
-let bgmInterval = null;
-let audioEnabled = false;
+let isAudioMuted = localStorage.getItem("gv_sound_muted") === "true";
 
 function initAudio() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-}
-
-function playTone(freq, dur = 0.12, type = "triangle", vol = 0.06) {
-  if (!audioEnabled) return;
-  initAudio();
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.type = type;
-  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-  gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  osc.start();
-  osc.stop(audioCtx.currentTime + dur);
-}
-
-function toggleMusic() {
-  audioEnabled = !audioEnabled;
-  const btn = document.getElementById("btnAudio");
-  if (audioEnabled) {
-    btn.textContent = "🔊";
-    initAudio();
-    const notes = [261.63, 329.63, 392.00, 493.88, 392.00, 329.63, 293.66, 349.23];
-    let step = 0;
-    bgmInterval = setInterval(() => {
-      if (audioEnabled) {
-        playTone(notes[step % notes.length], 0.35, "sine", 0.025);
-        step++;
-      }
-    }, 520);
-  } else {
-    btn.textContent = "🔇";
-    clearInterval(bgmInterval);
+  if (!audioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (AudioContext) audioCtx = new AudioContext();
+  }
+  if (audioCtx && audioCtx.state === "suspended") {
+    audioCtx.resume();
   }
 }
 
-document.getElementById("btnAudio").addEventListener("click", toggleMusic);
+function playTone(freq, dur = 0.1, type = "square") {
+  if (isAudioMuted) return;
+  try {
+    initAudio();
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + dur);
+  } catch (e) {}
+}
+
+function playSelectSound() {
+  playTone(587.33, 0.05, "square");
+}
+
+function playCorrectSound() {
+  if (isAudioMuted) return;
+  try {
+    initAudio();
+    if (!audioCtx) return;
+    const now = audioCtx.currentTime;
+    [523.25, 659.25, 783.99, 1046.50].forEach((f, idx) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "square";
+      osc.frequency.setValueAtTime(f, now + idx * 0.06);
+      gain.gain.setValueAtTime(0.12, now + idx * 0.06);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.12);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now + idx * 0.06);
+      osc.stop(now + idx * 0.06 + 0.12);
+    });
+  } catch (e) {}
+}
+
+function playWrongSound() {
+  if (isAudioMuted) return;
+  try {
+    initAudio();
+    if (!audioCtx) return;
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(160, now);
+    osc.frequency.exponentialRampToValueAtTime(95, now + 0.25);
+    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 0.25);
+  } catch (e) {}
+}
+
+function playVictorySound() {
+  if (isAudioMuted) return;
+  try {
+    initAudio();
+    if (!audioCtx) return;
+    const now = audioCtx.currentTime;
+    [523.25, 659.25, 783.99, 1046.50, 1318.51].forEach((f, idx) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "square";
+      osc.frequency.setValueAtTime(f, now + idx * 0.1);
+      gain.gain.setValueAtTime(0.15, now + idx * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.2);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now + idx * 0.1);
+      osc.stop(now + idx * 0.1 + 0.2);
+    });
+  } catch (e) {}
+}
+
+function updateAudioUI() {
+  const icon = document.getElementById("svgSoundIcon");
+  if (isAudioMuted) {
+    icon.innerHTML = '<polygon points="1,5 5,5 9,2 9,14 5,11 1,11" /><line x1="12" y1="4" x2="16" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="square"/><line x1="16" y1="4" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="square"/>';
+  } else {
+    icon.innerHTML = '<polygon points="1,5 5,5 9,2 9,14 5,11 1,11" /><path d="M12,4 C13.5,6 13.5,10 12,12 M14,2 C16.5,5.5 16.5,10.5 14,14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" />';
+  }
+}
+
+document.getElementById("btnAudio").addEventListener("click", () => {
+  initAudio();
+  isAudioMuted = !isAudioMuted;
+  localStorage.setItem("gv_sound_muted", isAudioMuted);
+  updateAudioUI();
+});
+updateAudioUI();
 
 // ==========================================
-// 4. AUTHENTICATION FLOW
+// 4. AUTHENTICATION & LOGIN/REGISTER VIEW
 // ==========================================
 let isRegisterMode = false;
 const tabLogin = document.getElementById("tabLogin");
@@ -971,24 +1597,27 @@ const authError = document.getElementById("authError");
 
 tabLogin.addEventListener("click", () => {
   isRegisterMode = false;
-  tabLogin.className = "pixel-btn btn-gold";
+  tabLogin.className = "pixel-btn btn-amber";
   tabRegister.className = "pixel-btn btn-slate";
   registerFields.classList.add("hidden");
   authSubmitBtn.textContent = "ورود به قلعه";
   authError.classList.add("hidden");
+  playSelectSound();
 });
 
 tabRegister.addEventListener("click", () => {
   isRegisterMode = true;
-  tabRegister.className = "pixel-btn btn-gold";
+  tabRegister.className = "pixel-btn btn-amber";
   tabLogin.className = "pixel-btn btn-slate";
   registerFields.classList.remove("hidden");
   authSubmitBtn.textContent = "ساخت حساب و شروع بازی";
   authError.classList.add("hidden");
+  playSelectSound();
 });
 
 document.getElementById("authForm").addEventListener("submit", async (e) => {
   e.preventDefault();
+  initAudio();
   authError.classList.add("hidden");
   const code = document.getElementById("authCode").value.trim();
   const pin = document.getElementById("authPin").value.trim();
@@ -996,12 +1625,14 @@ document.getElementById("authForm").addEventListener("submit", async (e) => {
   if (!/^09\d{9}$/.test(code)) {
     authError.textContent = "شماره تلفن همراه باید ۱۱ رقم بوده و با ۰۹ شروع شود.";
     authError.classList.remove("hidden");
+    playWrongSound();
     return;
   }
 
   if (pin.length !== 4 || isNaN(pin)) {
     authError.textContent = "رمز عبور باید دقیقاً ۴ رقم عددی باشد.";
     authError.classList.remove("hidden");
+    playWrongSound();
     return;
   }
 
@@ -1017,16 +1648,19 @@ document.getElementById("authForm").addEventListener("submit", async (e) => {
     if (!name) {
       authError.textContent = "لطفاً نام و نام خانوادگی خود را وارد کنید.";
       authError.classList.remove("hidden");
+      playWrongSound();
       return;
     }
     if (appState.classLock && classCode !== appState.classLock) {
       authError.textContent = "کد کلاس وارد شده صحیح نیست. از دبیر خود بپرسید.";
       authError.classList.remove("hidden");
+      playWrongSound();
       return;
     }
     if (user && user.pinHash) {
       authError.textContent = "این شماره تلفن قبلاً ثبت شده است. از تب «ورود به حساب» وارد شوید.";
       authError.classList.remove("hidden");
+      playWrongSound();
       return;
     }
 
@@ -1046,14 +1680,15 @@ document.getElementById("authForm").addEventListener("submit", async (e) => {
     if (!user) {
       authError.textContent = "حسابی با این شماره تلفن پیدا نشد. ابتدا از تب «ثبت‌نام جدید» حساب بسازید.";
       authError.classList.remove("hidden");
+      playWrongSound();
       return;
     }
     if (!user.pinHash) {
-      // Teacher reset PIN -> set new PIN automatically
       user.pinHash = hashed;
     } else if (user.pinHash !== hashed) {
       authError.textContent = "رمز ۴ رقمی اشتباه است.";
       authError.classList.remove("hidden");
+      playWrongSound();
       return;
     }
     appState.students[code] = user;
@@ -1063,7 +1698,7 @@ document.getElementById("authForm").addEventListener("submit", async (e) => {
 
   appState.currentUserCode = code;
   localStorage.setItem("gv_session_code", code);
-  playTone(523.25, 0.15);
+  playCorrectSound();
   enterDashboard();
 });
 
@@ -1090,117 +1725,193 @@ function enterDashboard() {
     showView("viewAuth");
     return;
   }
+
   document.getElementById("topBar").classList.remove("hidden");
-  document.getElementById("userGreeting").textContent = user.name;
+  document.getElementById("userGreeting").textContent = `شوالیه ${user.name}`;
   document.getElementById("userXP").textContent = user.xp;
   document.getElementById("mapMajor").textContent = user.major;
 
-  renderTowers();
+  renderTowerMap();
   showView("viewMap");
 }
 
-function renderTowers() {
-  const user = appState.students[appState.currentUserCode];
+function renderTowerMap() {
   const list = document.getElementById("towersList");
   list.innerHTML = "";
+  const user = appState.students[appState.currentUserCode] || {};
+  const completed = user.completedStages || [];
 
-  appState.stages.forEach((stage) => {
-    const isDone = user.completedStages.includes(stage.id);
+  appState.stages.forEach((st, idx) => {
+    const isCompleted = completed.includes(st.id);
+    const prevCompleted = idx === 0 || completed.includes(appState.stages[idx - 1].id);
+    const isUnlocked = st.unlocked && (idx === 0 || prevCompleted);
+
     const card = document.createElement("div");
-    card.className = `tower-card ${stage.unlocked ? "unlocked" : "locked"}`;
+    card.className = `tower-card ${isCompleted ? "completed" : (isUnlocked ? "unlocked" : "locked")}`;
     card.innerHTML = `
       <div>
-        <div style="font-weight:900; font-size:0.95rem; color:${stage.unlocked ? "#fff" : "#94a3b8"};">
-          ${stage.unlocked ? (isDone ? "✅" : "🏰") : "🔒"} ${stage.title}
+        <div style="font-weight:900; font-size:0.92rem; color:${isCompleted ? "var(--ok)" : (isUnlocked ? "var(--amber)" : "var(--steel)")};">
+          ${st.title}
         </div>
-        <div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;">
-          تعداد کارت‌ها: ${stage.words.length} واژه • ${isDone ? "فتح شده" : (stage.unlocked ? "آماده نبرد" : "قفل توسط دبیر")}
+        <div style="font-size:0.75rem; color:var(--steel); margin-top:3px;">
+          تعداد واژگان: ${st.words.length} • وضعیت: ${isCompleted ? "فتح شده" : (isUnlocked ? "آماده ورود به دروازه" : "قفل برج قبلی")}
         </div>
       </div>
-      <button class="pixel-btn ${stage.unlocked ? (isDone ? "btn-emerald" : "btn-gold") : "btn-slate"}" 
-              style="padding:8px 14px; font-size:0.82rem;" ${stage.unlocked ? "" : "disabled"}>
-        ${stage.unlocked ? (isDone ? "تمرین مجدد" : "شروع") : "قفل"}
-      </button>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span class="pixel-num" style="font-size:0.7rem; color:${isCompleted ? "var(--ok)" : (isUnlocked ? "var(--amber)" : "var(--steel)")};">
+          ${isCompleted ? "[فتح]" : (isUnlocked ? "[ورود]" : "[قفل]")}
+        </span>
+      </div>
     `;
-    if (stage.unlocked) {
-      card.querySelector("button").addEventListener("click", () => startStage(stage));
+
+    if (isUnlocked) {
+      card.addEventListener("click", () => {
+        playSelectSound();
+        startStage(st);
+      });
     }
     list.appendChild(card);
   });
 }
 
 // ==========================================
-// 6. FLASHCARD + SPACED REPETITION KNIGHT QUEST
+// 6. MAIN ARENA ENGINE ("معمای دروازه")
 // ==========================================
 let currentStage = null;
-let fcQueue = [];
+let flashcardQueue = [];
 let quizQueue = [];
-let totalInitialWords = 0;
 let masteredCount = 0;
-let isCardFlipped = false;
+let totalInitialWords = 0;
+let mistakesThisStage = 0;
+let comboCount = 0;
+let selectedOptionIdx = -1;
+let currentQuizItem = null;
+
+function triggerScreenShake() {
+  const sc = document.getElementById("stageScene");
+  const rd = document.getElementById("rpgDialog");
+  sc.classList.add("shake-active");
+  rd.classList.add("shake-active");
+  setTimeout(() => {
+    sc.classList.remove("shake-active");
+    rd.classList.remove("shake-active");
+  }, 360);
+}
+
+function updateCandlesHUD() {
+  for (let i = 1; i <= 3; i++) {
+    const el = document.getElementById("candle" + i);
+    if (el) {
+      if (i <= 3 - mistakesThisStage) {
+        el.classList.remove("extinguished");
+      } else {
+        el.classList.add("extinguished");
+      }
+    }
+  }
+}
+
+function updateKnightPosition(progressPct) {
+  const actor = document.getElementById("knightActor");
+  if (actor) {
+    // Knight walks from right:24px to right:calc(50% - 14px) towards gate
+    const offset = 24 + (progressPct / 100) * 170;
+    actor.style.right = `${offset}px`;
+  }
+}
+
+function updateLocksRow(mastered, total) {
+  const row = document.getElementById("locksRow");
+  if (!row) return;
+  row.innerHTML = "";
+  for (let i = 0; i < total; i++) {
+    const isBroken = i < mastered;
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", `stage-lock ${isBroken ? "broken" : ""}`);
+    svg.setAttribute("viewBox", "0 0 12 16");
+    svg.setAttribute("shape-rendering", "crispEdges");
+    svg.innerHTML = `
+      <rect x="3" y="1" width="6" height="6" fill="none" stroke="currentColor" stroke-width="2" />
+      <rect x="1" y="7" width="10" height="8" fill="currentColor" />
+      <rect x="5" y="10" width="2" height="3" fill="#0b0d12" />
+    `;
+    row.appendChild(svg);
+  }
+}
+
+function updateComboBadge() {
+  const badge = document.getElementById("comboBadge");
+  if (comboCount >= 3) {
+    badge.textContent = `x3 COMBO (${comboCount})`;
+    badge.classList.remove("hidden");
+  } else {
+    badge.classList.add("hidden");
+  }
+}
 
 function startStage(stage) {
   currentStage = stage;
-  fcQueue = [...stage.words];
-  quizQueue = [];
-  totalInitialWords = stage.words.length;
+  flashcardQueue = [...stage.words];
+  quizQueue = [...stage.words];
   masteredCount = 0;
+  totalInitialWords = stage.words.length;
+  mistakesThisStage = 0;
+  comboCount = 0;
+  selectedOptionIdx = -1;
 
-  document.getElementById("arenaStageTitle").textContent = stage.title;
-  document.getElementById("phaseVictory").classList.add("hidden");
-  document.getElementById("phaseQuiz").classList.add("hidden");
-  document.getElementById("phaseFlashcard").classList.remove("hidden");
-  document.getElementById("arenaModeBadge").textContent = "فاز ۱: مرور فلش‌کارت";
+  document.getElementById("arenaStageTitle").textContent = stage.title.split(":")[0];
+  document.getElementById("arenaCounter").textContent = `0/${totalInitialWords}`;
+  document.getElementById("gateGlow").classList.remove("gate-open");
 
-  updateKnightProgress(0);
-  renderNextFlashcard();
+  const user = appState.students[appState.currentUserCode];
+  document.getElementById("dialogXP").textContent = `${user ? user.xp : 0} XP`;
+
+  updateCandlesHUD();
+  updateComboBadge();
+  updateKnightPosition(0);
+  updateLocksRow(0, totalInitialWords);
+
   showView("viewArena");
-  playTone(440, 0.12);
+  renderNextFlashcard();
 }
 
-function updateKnightProgress(pct) {
-  const clamped = Math.max(0, Math.min(92, pct));
-  document.getElementById("trackFill").style.width = clamped + "%";
-  document.getElementById("knightSprite").style.right = clamped + "%";
-}
-
+// Phase 1: Flashcards
 function renderNextFlashcard() {
-  if (fcQueue.length === 0) {
-    // Transition to Phase 2: Spaced Repetition Quiz
+  document.getElementById("phaseFlashcard").classList.remove("hidden");
+  document.getElementById("phaseQuiz").classList.add("hidden");
+  document.getElementById("phaseVictory").classList.add("hidden");
+  document.getElementById("speakerTag").textContent = "حکیم قلعه";
+
+  if (flashcardQueue.length === 0) {
+    // All cards reviewed -> Enter Phase 2: Quiz
     startQuizPhase();
     return;
   }
 
-  const item = fcQueue[0];
-  isCardFlipped = false;
-  document.getElementById("playingCard").classList.remove("flipped");
-  document.getElementById("fcWord").textContent = item.word;
-  document.getElementById("fcHint").textContent = item.hint || "";
-  document.getElementById("queueCounter").textContent = `باقی‌مانده مرور: ${fcQueue.length} کارت`;
+  const item = flashcardQueue[0];
+  document.getElementById("stageTargetWord").textContent = item.word;
 
-  const meaningsContainer = document.getElementById("fcMeanings");
-  meaningsContainer.innerHTML = item.meanings
-    .map((m, i) => `<div class="meaning-pill">${i + 1}. ${m}</div>`)
-    .join("");
+  const mBox = document.getElementById("fcMeanings");
+  mBox.innerHTML = item.meanings.map((m, idx) => `
+    <div class="fc-meaning-card">
+      <span style="color:var(--amber); font-weight:900;">معنای ${idx + 1}:</span> ${m}
+    </div>
+  `).join("");
+
+  document.getElementById("fcHint").textContent = item.hint || "";
+  document.getElementById("arenaCounter").textContent = `کارت ${totalInitialWords - flashcardQueue.length + 1}/${totalInitialWords}`;
 }
 
-document.getElementById("flashcardScene").addEventListener("click", () => {
-  isCardFlipped = !isCardFlipped;
-  document.getElementById("playingCard").classList.toggle("flipped", isCardFlipped);
-  playTone(587.33, 0.08);
-});
-
 document.getElementById("btnFcKnown").addEventListener("click", () => {
-  const item = fcQueue.shift();
-  quizQueue.push({ ...item, isRetry: false });
-  playTone(659.25, 0.1);
+  playCorrectSound();
+  flashcardQueue.shift();
   renderNextFlashcard();
 });
 
 document.getElementById("btnFcRepeat").addEventListener("click", () => {
-  const item = fcQueue.shift();
-  fcQueue.push(item); // Send to back of flashcard queue
-  playTone(311.13, 0.12);
+  playSelectSound();
+  const f = flashcardQueue.shift();
+  flashcardQueue.push(f);
   renderNextFlashcard();
 });
 
@@ -1208,9 +1919,9 @@ document.getElementById("btnFcRepeat").addEventListener("click", () => {
 function startQuizPhase() {
   document.getElementById("phaseFlashcard").classList.add("hidden");
   document.getElementById("phaseQuiz").classList.remove("hidden");
-  document.getElementById("arenaModeBadge").textContent = "فاز ۲: نبرد قلعه";
-  // Shuffle quiz queue
-  quizQueue.sort(() => Math.random() - 0.5);
+  document.getElementById("phaseVictory").classList.add("hidden");
+  document.getElementById("speakerTag").textContent = "نگهبان دروازه";
+
   renderNextQuizQuestion();
 }
 
@@ -1220,57 +1931,110 @@ function renderNextQuizQuestion() {
     return;
   }
 
-  const current = quizQueue[0];
-  document.getElementById("qzWord").textContent = current.word;
-  document.getElementById("queueCounter").textContent = `تسلط: ${masteredCount} از ${totalInitialWords}`;
-  document.getElementById("qzRetryTag").classList.toggle("hidden", !current.isRetry);
+  currentQuizItem = quizQueue[0];
+  document.getElementById("stageTargetWord").textContent = currentQuizItem.word;
+  selectedOptionIdx = -1;
 
-  const correctText = current.meanings.join(" / ");
-  // Generate 3 realistic distractors from other words
-  const allWords = appState.stages.flatMap(s => s.words).filter(w => w.word !== current.word);
-  const shuffledDistractors = allWords
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 3)
-    .map(w => w.meanings.join(" / "));
+  const retryTag = document.getElementById("qzRetryTag");
+  if (currentQuizItem.isRetry) {
+    retryTag.classList.remove("hidden");
+  } else {
+    retryTag.classList.add("hidden");
+  }
 
-  const options = [correctText, ...shuffledDistractors].sort(() => Math.random() - 0.5);
-  const optionsBox = document.getElementById("qzOptions");
-  optionsBox.innerHTML = "";
+  // Generate 4 options (1 correct + 3 distractors)
+  const allOtherWords = currentStage.words.filter(w => w.word !== currentQuizItem.word);
+  const shuffledOthers = [...allOtherWords].sort(() => 0.5 - Math.random());
+  const distractors = shuffledOthers.slice(0, 3).map(w => w.meanings.join(" / "));
+  const correctChoice = currentQuizItem.meanings.join(" / ");
+  const allChoices = [correctChoice, ...distractors].sort(() => 0.5 - Math.random());
 
-  options.forEach(opt => {
-    const btn = document.createElement("button");
-    btn.className = "option-btn";
-    btn.innerHTML = `<span>${opt}</span><span>⚔️</span>`;
-    btn.addEventListener("click", () => handleQuizAnswer(btn, opt === correctText, current));
-    optionsBox.appendChild(btn);
+  const optContainer = document.getElementById("qzOptions");
+  optContainer.innerHTML = "";
+  const letters = ["الف", "ب", "ج", "د"];
+
+  allChoices.forEach((choiceText, idx) => {
+    const btn = document.createElement("div");
+    btn.className = "rpg-option-btn";
+    btn.innerHTML = `
+      <span class="opt-box">${letters[idx]}</span>
+      <span style="flex:1;">${choiceText}</span>
+      <span class="opt-arrow">▶</span>
+    `;
+
+    btn.addEventListener("click", () => {
+      playSelectSound();
+      selectedOptionIdx = idx;
+      document.querySelectorAll(".rpg-option-btn").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      document.getElementById("btnConfirmAnswer").disabled = false;
+    });
+
+    optContainer.appendChild(btn);
   });
+
+  const confirmBtn = document.getElementById("btnConfirmAnswer");
+  confirmBtn.disabled = true;
+  confirmBtn.textContent = "تأیید پاسخ";
+
+  document.getElementById("arenaCounter").textContent = `${masteredCount}/${totalInitialWords}`;
 }
 
-function handleQuizAnswer(btn, isCorrect, item) {
-  const allBtns = document.querySelectorAll("#qzOptions .option-btn");
-  allBtns.forEach(b => b.disabled = true);
+document.getElementById("btnConfirmAnswer").addEventListener("click", () => {
+  if (selectedOptionIdx === -1 || !currentQuizItem) return;
+
+  const optBtns = document.querySelectorAll(".rpg-option-btn");
+  const selectedBtn = optBtns[selectedOptionIdx];
+  if (!selectedBtn) return;
+
+  const selectedText = selectedBtn.querySelector("span:nth-child(2)").textContent.trim();
+  const correctText = currentQuizItem.meanings.join(" / ");
+  const isCorrect = selectedText === correctText;
+
+  handleQuizAnswer(selectedBtn, isCorrect, currentQuizItem, optBtns);
+});
+
+function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
+  allBtns.forEach(b => b.style.pointerEvents = "none");
+  document.getElementById("btnConfirmAnswer").disabled = true;
 
   const user = appState.students[appState.currentUserCode];
 
   if (isCorrect) {
-    btn.classList.add("correct");
-    playTone(523.25, 0.09);
-    setTimeout(() => playTone(783.99, 0.14), 90);
+    selectedBtn.classList.add("correct");
+    comboCount++;
+    updateComboBadge();
 
+    let earnedXP = item.isRetry ? 5 : 10;
+    if (comboCount >= 3) {
+      earnedXP *= 3; // x3 Combo multiplier
+    }
+    user.xp += earnedXP;
+    document.getElementById("userXP").textContent = user.xp;
+    document.getElementById("dialogXP").textContent = `${user.xp} XP`;
+
+    playCorrectSound();
     quizQueue.shift();
     masteredCount++;
-    user.xp += item.isRetry ? 5 : 10;
-    document.getElementById("userXP").textContent = user.xp;
 
-    const progressPct = (masteredCount / totalInitialWords) * 92;
-    updateKnightProgress(progressPct);
+    const progressPct = (masteredCount / totalInitialWords) * 100;
+    updateKnightPosition(progressPct);
+    updateLocksRow(masteredCount, totalInitialWords);
+    document.getElementById("arenaCounter").textContent = `${masteredCount}/${totalInitialWords}`;
 
-    setTimeout(renderNextQuizQuestion, 650);
+    saveLocal();
+    setTimeout(renderNextQuizQuestion, 600);
   } else {
-    btn.classList.add("wrong");
-    playTone(220, 0.22, "sawtooth");
+    selectedBtn.classList.add("wrong");
+    comboCount = 0;
+    updateComboBadge();
 
-    // Record mistake for teacher analytics
+    mistakesThisStage = Math.min(3, mistakesThisStage + 1);
+    updateCandlesHUD();
+    triggerScreenShake();
+    playWrongSound();
+
+    // Record mistake for student & teacher analytics
     user.mistakes[item.word] = (user.mistakes[item.word] || 0) + 1;
 
     // Highlight correct answer
@@ -1279,19 +2043,15 @@ function handleQuizAnswer(btn, isCorrect, item) {
       if (b.textContent.includes(correctText)) b.classList.add("correct");
     });
 
-    // Spaced repetition: push back to end of queue
+    // Spaced repetition
     const failed = quizQueue.shift();
     failed.isRetry = true;
     quizQueue.push(failed);
 
-    // Knight steps back slightly
-    const progressPct = Math.max(0, ((masteredCount - 0.5) / totalInitialWords) * 92);
-    updateKnightProgress(progressPct);
-
     saveLocal();
     syncStudentToCloud(user);
 
-    setTimeout(renderNextQuizQuestion, 1350);
+    setTimeout(renderNextQuizQuestion, 1400);
   }
 }
 
@@ -1304,14 +2064,19 @@ function completeStageVictory() {
   saveLocal();
   syncStudentToCloud(user);
 
-  updateKnightProgress(92);
+  playVictorySound();
+  document.getElementById("gateGlow").classList.add("gate-open");
+  updateKnightPosition(100);
+  updateLocksRow(totalInitialWords, totalInitialWords);
+
   document.getElementById("phaseQuiz").classList.add("hidden");
   document.getElementById("phaseVictory").classList.remove("hidden");
+  document.getElementById("speakerTag").textContent = "فتح دروازه";
   document.getElementById("userXP").textContent = user.xp;
-  document.getElementById("victoryStats").textContent = `تمام ${totalInitialWords} واژه «${currentStage.title}» با موفقیت فتح شدند و ۲۵ امتیاز پاداش فتح قلعه دریافت کردید!`;
-  playTone(523.25, 0.12);
-  setTimeout(() => playTone(659.25, 0.12), 120);
-  setTimeout(() => playTone(783.99, 0.25), 240);
+  document.getElementById("dialogXP").textContent = `${user.xp} XP`;
+
+  document.getElementById("victoryStats").textContent = 
+    `تمام ${totalInitialWords} واژه ایهام‌دار «${currentStage.title}» با موفقیت فتح شدند و ۲۵ امتیاز پاداش فتح قلعه دریافت کردید!`;
 }
 
 document.getElementById("btnBackToMap").addEventListener("click", enterDashboard);
@@ -1324,21 +2089,28 @@ document.getElementById("btnOpenLeaderboard").addEventListener("click", async ()
   await fetchAllStudentsFromCloud();
   const sorted = Object.values(appState.students).sort((a, b) => b.xp - a.xp);
   const tbody = document.getElementById("studentLeaderboardBody");
-  tbody.innerHTML = sorted.map((s, idx) => `
-    <tr style="${s.code === appState.currentUserCode ? "background:rgba(245,158,11,0.12);" : ""}">
-      <td>${idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : idx + 1}</td>
-      <td style="font-weight:700;">${s.name}</td>
-      <td style="color:var(--cyan);">${s.major}</td>
-      <td style="font-weight:900; color:var(--gold);">${s.xp}</td>
-    </tr>
-  `).join("") || `<tr><td colspan="4" style="text-align:center;">هنوز دانش‌آموزی ثبت نشده است.</td></tr>`;
+  tbody.innerHTML = sorted.map((s, idx) => {
+    let rankHtml = `${idx + 1}`;
+    if (idx === 0) rankHtml = '<span class="rank-badge rank-1">1</span>';
+    else if (idx === 1) rankHtml = '<span class="rank-badge rank-2">2</span>';
+    else if (idx === 2) rankHtml = '<span class="rank-badge rank-3">3</span>';
+
+    return `
+      <tr style="${s.code === appState.currentUserCode ? "background:rgba(240,181,96,0.14);" : ""}">
+        <td>${rankHtml}</td>
+        <td><strong>${s.name}</strong><br><span style="color:var(--steel); font-size:0.7rem;">${s.code}</span></td>
+        <td style="color:var(--xp);">${s.major}</td>
+        <td class="pixel-num" style="color:var(--amber); font-weight:900;">${s.xp}</td>
+      </tr>
+    `;
+  }).join("") || `<tr><td colspan="4" style="text-align:center;">هنوز شوالیه‌ای ثبت نشده است.</td></tr>`;
   showView("viewLeaderboard");
 });
 
 document.getElementById("btnCloseLeaderboard").addEventListener("click", enterDashboard);
 
 // ==========================================
-// 8. HIDDEN TEACHER ADMIN PANEL (3 CLICKS ON VERSION + PASS 431380)
+// 8. HIDDEN TEACHER ADMIN PANEL (3 CLICKS + 431380)
 // ==========================================
 let verClickCount = 0;
 let verClickTimer = null;
@@ -1366,7 +2138,7 @@ async function openTeacherPanel() {
   document.getElementById("sbUrl").value = appState.sbUrl;
   document.getElementById("sbKey").value = appState.sbKey;
 
-  // Populate stages toggle
+  // Stages Toggle Control
   const stageBox = document.getElementById("teacherStagesControl");
   const stageSelect = document.getElementById("newWordStage");
   stageBox.innerHTML = "";
@@ -1374,9 +2146,9 @@ async function openTeacherPanel() {
 
   appState.stages.forEach(st => {
     const row = document.createElement("div");
-    row.style.cssText = "display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #1e293b;";
+    row.style.cssText = "display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #1a2438;";
     row.innerHTML = `
-      <span style="font-size:0.8rem;">${st.title} (${st.words.length} واژه)</span>
+      <span style="font-size:0.8rem; color:var(--ink);">${st.title} (${st.words.length} واژه)</span>
       <button class="pixel-btn ${st.unlocked ? "btn-emerald" : "btn-crimson"}" style="padding:4px 10px; font-size:0.75rem;">
         ${st.unlocked ? "باز است (قفل کن)" : "قفل است (باز کن)"}
       </button>
@@ -1395,7 +2167,7 @@ async function openTeacherPanel() {
     stageSelect.appendChild(opt);
   });
 
-  // Populate students analytics
+  // Students Performance Table
   const tbody = document.getElementById("teacherStudentsBody");
   const studentsList = Object.values(appState.students).sort((a, b) => b.xp - a.xp);
   tbody.innerHTML = studentsList.map(s => {
@@ -1407,13 +2179,13 @@ async function openTeacherPanel() {
 
     return `
       <tr>
-        <td><strong>${s.name}</strong><br><span style="color:var(--text-muted); font-size:0.72rem;">${s.code}</span></td>
+        <td><strong>${s.name}</strong><br><span style="color:var(--steel); font-size:0.7rem;">${s.code}</span></td>
         <td>${s.major}</td>
-        <td style="color:var(--gold); font-weight:800;">${s.xp}</td>
-        <td style="color:var(--crimson); font-size:0.75rem;">${topMistakes}</td>
+        <td class="pixel-num" style="color:var(--amber);">${s.xp}</td>
+        <td style="color:var(--red); font-size:0.75rem;">${topMistakes}</td>
         <td>
-          <button onclick="resetStudentPin('${s.code}')" class="pixel-btn btn-slate" style="padding:3px 7px; font-size:0.7rem;" title="بازنشانی رمز">🔑</button>
-          <button onclick="deleteStudent('${s.code}')" class="pixel-btn btn-crimson" style="padding:3px 7px; font-size:0.7rem;" title="حذف">🗑️</button>
+          <button onclick="resetStudentPin('${s.code}')" class="pixel-btn btn-slate" style="padding:3px 7px; font-size:0.7rem;" title="بازنشانی رمز">کلید</button>
+          <button onclick="deleteStudent('${s.code}')" class="pixel-btn btn-crimson" style="padding:3px 7px; font-size:0.7rem;" title="حذف">حذف</button>
         </td>
       </tr>
     `;
@@ -1526,29 +2298,13 @@ document.getElementById("btnExitTeacher").addEventListener("click", () => {
 });
 
 // ==========================================
-// 9. PWA SERVICE WORKER & INSTALL PROMPT
+// 9. PWA SERVICE WORKER
 // ==========================================
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./sw.js").catch(() => {});
   });
 }
-
-let deferredPrompt;
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  const banner = document.getElementById("installBanner");
-  banner.style.display = "flex";
-});
-
-document.getElementById("btnInstallApp").addEventListener("click", async () => {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt = null;
-  document.getElementById("installBanner").style.display = "none";
-});
 
 // Initial Session Check
 (async function init() {
