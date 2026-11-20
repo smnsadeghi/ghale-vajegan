@@ -1,0 +1,20 @@
+{
+  "name": "قلعه واژگان | ادبیات دهم هنرستان",
+  "short_name": "قلعه واژگان",
+  "description": "بازی کارتی پیکسلی و فلش‌کارت هوشمند یادگیری واژه‌های ایهام‌دار و آرایه‌های ادبی دهم هنرستان",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d0f18",
+  "theme_color": "#0d0f18",
+  "dir": "rtl",
+  "lang": "fa",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

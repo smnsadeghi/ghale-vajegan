@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0d0f18" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="قلعه واژگان" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+  <link rel="apple-touch-icon" href="./icon.svg" />
+  <title>قلعه واژگان | ادبیات دهم هنرستان</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #0d0f18;
+      --bg-felt: #141826;
+      --card-bg: #1c2237;
+      --card-border: #334155;
+      --gold: #f59e0b;
+      --gold-light: #fcd34d;
+      --crimson: #ef4444;
+      --emerald: #10b981;
+      --cyan: #38bdf8;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --pixel-shadow: 0 6px 0 #07090f;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-deep);
+      background-image: 
+        radial-gradient(circle at 50% 0%, #1e253f 0%, var(--bg-deep) 75%),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 4px);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    input, select, textarea {
+      user-select: text;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 540px;
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Pixel Card Aesthetic (Balatro-inspired) */
+    .pixel-box {
+      background: var(--card-bg);
+      border: 3px solid var(--card-border);
+      border-radius: 14px;
+      box-shadow: var(--pixel-shadow), inset 0 2px 0 rgba(255,255,255,0.08);
+      padding: 20px;
+      position: relative;
+    }
+
+    .pixel-btn {
+      font-family: 'Vazirmatn', sans-serif;
+      font-weight: 800;
+      font-size: 0.95rem;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 18px;
+      cursor: pointer;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.15s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #fff;
+    }
+
+    .pixel-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.6) !important;
+    }
+
+    .pixel-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-gold {
+      background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+      box-shadow: 0 5px 0 #92400e;
+      color: #0d0f18;
+    }
+
+    .btn-emerald {
+      background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+      box-shadow: 0 5px 0 #065f46;
+    }
+
+    .btn-crimson {
+      background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
+      box-shadow: 0 5px 0 #7f1d1d;
+    }
+
+    .btn-slate {
+      background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
+      box-shadow: 0 5px 0 #0f172a;
+      border: 1px solid #475569;
+    }
+
+    .btn-cyan {
+      background: linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%);
+      box-shadow: 0 5px 0 #075985;
+    }
+
+    /* Top Bar */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: rgba(20, 24, 38, 0.9);
+      border: 2px solid #262e47;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(8px);
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-sync {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+
+    .badge-gold {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+
+    .dot-pulse {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    /* Form Controls */
+    .form-group {
+      margin-bottom: 14px;
+      text-align: right;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .pixel-input {
+      width: 100%;
+      background: #0f1320;
+      border: 2px solid #2e3856;
+      border-radius: 10px;
+      padding: 11px 14px;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .pixel-input:focus {
+      border-color: var(--gold);
+    }
+
+    /* Playing Card 3D Flip (Balatro Joker Card Style) */
+    .card-scene {
+      width: 100%;
+      height: 290px;
+      perspective: 1000px;
+      margin: 14px 0;
+      cursor: pointer;
+    }
+
+    .playing-card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .playing-card.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 18px;
+      border: 4px solid var(--gold);
+      background: linear-gradient(145deg, #222942 0%, #15192b 100%);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.55), inset 0 0 0 3px rgba(245, 158, 11, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .card-face.back {
+      transform: rotateY(180deg);
+      border-color: var(--cyan);
+      background: linear-gradient(145deg, #18263b 0%, #111827 100%);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.55), inset 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+
+    .card-corner {
+      position: absolute;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--gold);
+      opacity: 0.85;
+    }
+    .corner-tl { top: 12px; left: 14px; }
+    .corner-br { bottom: 12px; right: 14px; }
+
+    .word-title {
+      font-size: 2.3rem;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 3px 0 #090b12;
+      margin: 8px 0;
+    }
+
+    .meaning-pill {
+      background: rgba(56, 189, 248, 0.14);
+      border: 1.5px solid rgba(56, 189, 248, 0.4);
+      color: #e0f2fe;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin: 5px 0;
+      width: 100%;
+    }
+
+    /* Knight & Castle Track */
+    .quest-track {
+      background: #0e121f;
+      border: 2px solid #28314d;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .track-road {
+      height: 10px;
+      background: #1e263d;
+      border-radius: 99px;
+      position: relative;
+      margin: 26px 14px 8px 14px;
+    }
+
+    .track-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--emerald));
+      border-radius: 99px;
+      transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .knight-sprite {
+      position: absolute;
+      top: -26px;
+      transform: translateX(50%);
+      transition: right 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+      font-size: 1.5rem;
+      filter: drop-shadow(0 3px 2px rgba(0,0,0,0.7));
+    }
+
+    .castle-sprite {
+      position: absolute;
+      top: -28px;
+      left: -6px;
+      font-size: 1.65rem;
+      filter: drop-shadow(0 3px 2px rgba(0,0,0,0.7));
+    }
+
+    /* Quiz Options */
+    .option-btn {
+      width: 100%;
+      text-align: right;
+      background: #181e33;
+      border: 2px solid #2f3b5c;
+      color: var(--text-main);
+      padding: 13px 16px;
+      border-radius: 11px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--gold);
+      background: #202842;
+      transform: translateX(-3px);
+    }
+
+    .option-btn.correct {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: var(--emerald);
+      color: #6ee7b7;
+    }
+
+    .option-btn.wrong {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: var(--crimson);
+      color: #fca5a5;
+      animation: shake 0.35s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    /* Tower Map */
+    .tower-card {
+      background: #171c2e;
+      border: 2px solid #2d3754;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .tower-card.unlocked:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .tower-card.locked {
+      opacity: 0.55;
+      filter: grayscale(0.6);
+    }
+
+    /* Table */
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    th, td {
+      padding: 9px 8px;
+      border-bottom: 1px solid #262f47;
+      text-align: right;
+    }
+    th {
+      color: var(--gold);
+      font-weight: 800;
+    }
+
+    /* Install Banner */
+    #installBanner {
+      display: none;
+      background: linear-gradient(90deg, #1e293b, #0f172a);
+      border: 2px solid var(--gold);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .hidden { display: none !important; }
+
+    /* Footer version trigger */
+    .footer-ver {
+      margin-top: auto;
+      padding: 16px 0 6px;
+      text-align: center;
+      font-size: 0.72rem;
+      color: #475569;
+      cursor: default;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- PWA Install Prompt Banner -->
+  <div id="installBanner">
+    <div style="font-size: 0.82rem;">
+      <strong style="color: var(--gold);">نصب اپلیکیشن روی گوشی</strong>
+      <div style="color: var(--text-muted); font-size: 0.75rem;">اجرای تمام‌صفحه و سریع بدون نیاز به مرورگر</div>
+    </div>
+    <button id="btnInstallApp" class="pixel-btn btn-gold" style="padding: 7px 12px; font-size: 0.8rem;">نصب برنامه</button>
+  </div>
+
+  <!-- Top Navigation Bar -->
+  <div id="topBar" class="topbar hidden">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span id="userGreeting" style="font-weight:800; font-size:0.9rem;"></span>
+      <span class="badge badge-sync"><span class="dot-pulse"></span><span id="syncLabel">ذخیره فعال</span></span>
+    </div>
+    <div style="display:flex; align-items:center; gap:6px;">
+      <span class="badge badge-gold">🏆 <span id="userXP">0</span></span>
+      <button id="btnAudio" class="pixel-btn btn-slate" style="padding:6px 10px; font-size:0.85rem;" title="موسیقی پس‌زمینه">🔇</button>
+      <button id="btnLogout" class="pixel-btn btn-slate" style="padding:6px 10px; font-size:0.78rem;">خروج</button>
+    </div>
+  </div>
+
+  <!-- VIEW 1: LOGIN / REGISTER -->
+  <div id="viewAuth" class="pixel-box">
+    <div style="text-align:center; margin-bottom:18px;">
+      <div style="font-size:2.4rem; margin-bottom:4px;">🏰</div>
+      <h1 style="margin:0; font-size:1.45rem; font-weight:900; color:var(--gold);">قلعه واژگان هنرستان</h1>
+      <p style="margin:4px 0 0; font-size:0.83rem; color:var(--text-muted);">یادگیری کارتی و مرحله‌ای ادبیات فارسی دهم</p>
+    </div>
+
+    <div style="display:flex; gap:8px; margin-bottom:16px;">
+      <button id="tabLogin" class="pixel-btn btn-gold" style="flex:1; padding:9px;">ورود به حساب</button>
+      <button id="tabRegister" class="pixel-btn btn-slate" style="flex:1; padding:9px;">ثبت‌نام جدید</button>
+    </div>
+
+    <form id="authForm">
+      <div class="form-group">
+        <label>کد دانش‌آموزی (یا کد ملی)</label>
+        <input type="text" id="authCode" class="pixel-input" placeholder="مثال: 4031025" required inputmode="numeric" />
+      </div>
+
+      <div id="registerFields" class="hidden">
+        <div class="form-group">
+          <label>نام و نام خانوادگی</label>
+          <input type="text" id="authName" class="pixel-input" placeholder="مثال: امیرحسین رضایی" />
+        </div>
+        <div class="form-group">
+          <label>رشته تحصیلی هنرستان</label>
+          <select id="authMajor" class="pixel-input">
+            <option value="شبکه و نرم‌افزار">شبکه و نرم‌افزار</option>
+            <option value="معماری">معماری</option>
+            <option value="حسابداری">حسابداری</option>
+            <option value="مکانیک">مکانیک</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>کد کلاس (در صورت اعلام دبیر)</label>
+          <input type="text" id="authClassCode" class="pixel-input" placeholder="اختیاری (مثلاً: 101)" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>رمز عبور ۴ رقمی شخصی</label>
+        <input type="password" id="authPin" class="pixel-input" placeholder="••••" maxlength="4" required inputmode="numeric" />
+      </div>
+
+      <div id="authError" style="color:var(--crimson); font-size:0.82rem; margin-bottom:10px; font-weight:700;" class="hidden"></div>
+
+      <button type="submit" id="authSubmitBtn" class="pixel-btn btn-emerald" style="width:100%;">ورود به قلعه</button>
+    </form>
+  </div>
+
+  <!-- VIEW 2: TOWER MAP (DASHBOARD) -->
+  <div id="viewMap" class="hidden">
+    <div class="pixel-box" style="margin-bottom:14px; padding:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="font-size:0.8rem; color:var(--text-muted);">رشته: <strong id="mapMajor" style="color:var(--cyan);"></strong></div>
+          <div style="font-size:1.05rem; font-weight:900; margin-top:2px;">نقشه فتح برج‌های ادبیات</div>
+        </div>
+        <button id="btnOpenLeaderboard" class="pixel-btn btn-slate" style="padding:8px 12px; font-size:0.8rem;">📊 جدول رتبه‌ها</button>
+      </div>
+    </div>
+
+    <div id="towersList"></div>
+  </div>
+
+  <!-- VIEW 3: FLASHCARD & KNIGHT QUEST ARENA -->
+  <div id="viewArena" class="hidden">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <button id="btnBackToMap" class="pixel-btn btn-slate" style="padding:7px 12px; font-size:0.8rem;">→ بازگشت به نقشه</button>
+      <span id="arenaStageTitle" style="font-weight:800; font-size:0.9rem; color:var(--gold);"></span>
+      <span id="arenaModeBadge" class="badge badge-gold">فاز ۱: مرور کارت</span>
+    </div>
+
+    <!-- Knight & Castle Progress -->
+    <div class="quest-track">
+      <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
+        <span>پیشروی شوالیه به قلعه</span>
+        <span id="queueCounter">کارت ۱ از ۱۰</span>
+      </div>
+      <div class="track-road">
+        <div id="trackFill" class="track-fill" style="width:0%;"></div>
+        <div id="knightSprite" class="knight-sprite" style="right:0%;">🤺</div>
+        <div class="castle-sprite">🏰</div>
+      </div>
+    </div>
+
+    <!-- PHASE 1: FLASHCARD STUDY -->
+    <div id="phaseFlashcard">
+      <div class="card-scene" id="flashcardScene">
+        <div class="playing-card" id="playingCard">
+          <div class="card-face front">
+            <span class="card-corner corner-tl">♠ ایهام</span>
+            <span style="font-size:0.8rem; color:var(--gold); font-weight:700;">واژه ادبی</span>
+            <div class="word-title" id="fcWord">آهو</div>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-top:12px;">برای مشاهده معانی دوگانه لمس کنید ↻</p>
+            <span class="card-corner corner-br">دهم ♠</span>
+          </div>
+          <div class="card-face back">
+            <span class="card-corner corner-tl" style="color:var(--cyan);">♦ معانی</span>
+            <div id="fcMeanings" style="width:100%;"></div>
+            <p id="fcHint" style="font-size:0.78rem; color:#94a3b8; margin-top:10px; line-height:1.5;"></p>
+            <span class="card-corner corner-br" style="color:var(--cyan);">دهم ♦</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top:10px;">
+        <button id="btnFcRepeat" class="pixel-btn btn-crimson" style="flex:1;">نیاز به تکرار دارم</button>
+        <button id="btnFcKnown" class="pixel-btn btn-emerald" style="flex:1;">یاد گرفتم ✓</button>
+      </div>
+    </div>
+
+    <!-- PHASE 2: SPACED REPETITION QUIZ -->
+    <div id="phaseQuiz" class="hidden">
+      <div class="pixel-box" style="text-align:center; margin-bottom:12px; border-color:var(--gold);">
+        <div style="font-size:0.78rem; color:var(--gold); font-weight:700;">کدام گزینه معانی صحیح این واژه است؟</div>
+        <div class="word-title" id="qzWord" style="font-size:2rem; margin:10px 0 4px;"></div>
+        <div id="qzRetryTag" class="hidden" style="font-size:0.75rem; color:var(--crimson); font-weight:700;">🔄 تکرار هوشمند (قبلاً اشتباه پاسخ داده شد)</div>
+      </div>
+
+      <div id="qzOptions"></div>
+    </div>
+
+    <!-- PHASE 3: VICTORY SCREEN -->
+    <div id="phaseVictory" class="pixel-box hidden" style="text-align:center; border-color:var(--emerald);">
+      <div style="font-size:3rem; margin-bottom:8px;">🏆🏰</div>
+      <h2 style="margin:0; color:var(--emerald); font-weight:900;">قلعه فتح شد!</h2>
+      <p id="victoryStats" style="color:var(--text-muted); font-size:0.9rem; margin:10px 0 18px;"></p>
+      <button id="btnVictoryContinue" class="pixel-btn btn-gold" style="width:100%;">ادامه و بازگشت به نقشه</button>
+    </div>
+  </div>
+
+  <!-- VIEW 4: STUDENT LEADERBOARD -->
+  <div id="viewLeaderboard" class="pixel-box hidden">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+      <h3 style="margin:0; color:var(--gold);">🏆 رتبه‌بندی شوالیه‌های کلاس</h3>
+      <button id="btnCloseLeaderboard" class="pixel-btn btn-slate" style="padding:6px 12px; font-size:0.8rem;">بستن</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>رتبه</th>
+            <th>نام دانش‌آموز</th>
+            <th>رشته</th>
+            <th>امتیاز</th>
+          </tr>
+        </thead>
+        <tbody id="studentLeaderboardBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- VIEW 5: HIDDEN TEACHER ADMIN PANEL -->
+  <div id="viewTeacher" class="pixel-box hidden" style="border-color:var(--crimson);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+      <div>
+        <h3 style="margin:0; color:var(--crimson);">🛡️ پنل مدیریت دبیر</h3>
+        <span style="font-size:0.75rem; color:var(--text-muted);">کنترل مراحل، پیگیری دانش‌آموزان و افزودن محتوا</span>
+      </div>
+      <button id="btnExitTeacher" class="pixel-btn btn-slate" style="padding:6px 12px; font-size:0.8rem;">خروج از پنل</button>
+    </div>
+
+    <!-- Stage Lock/Unlock Controls -->
+    <div style="background:#0f1320; padding:12px; border-radius:10px; margin-bottom:14px;">
+      <div style="font-weight:800; font-size:0.85rem; color:var(--gold); margin-bottom:8px;">۱. مدیریت باز/قفل بودن مراحل:</div>
+      <div id="teacherStagesControl"></div>
+    </div>
+
+    <!-- Student Performance & Export -->
+    <div style="background:#0f1320; padding:12px; border-radius:10px; margin-bottom:14px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-weight:800; font-size:0.85rem; color:var(--cyan);">۲. عملکرد دانش‌آموزان و کلمات چالشی:</span>
+        <button id="btnExportCSV" class="pixel-btn btn-emerald" style="padding:5px 10px; font-size:0.75rem;">📥 خروجی اکسل</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>نام (کد)</th>
+              <th>رشته</th>
+              <th>امتیاز</th>
+              <th>کلمات اشتباه</th>
+              <th>عملیات</th>
+            </tr>
+          </thead>
+          <tbody id="teacherStudentsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Add Custom Topic / Word Module -->
+    <div style="background:#0f1320; padding:12px; border-radius:10px; margin-bottom:14px;">
+      <div style="font-weight:800; font-size:0.85rem; color:var(--emerald); margin-bottom:8px;">۳. افزودن واژه یا مبحث جدید به مرحله:</div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+        <select id="newWordStage" class="pixel-input" style="padding:8px; font-size:0.82rem;"></select>
+        <input type="text" id="newWordText" class="pixel-input" placeholder="واژه (مثلاً: شیر)" style="padding:8px; font-size:0.82rem;" />
+      </div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+        <input type="text" id="newWordM1" class="pixel-input" placeholder="معنای اول (مثلاً: حیوان درنده)" style="padding:8px; font-size:0.82rem;" />
+        <input type="text" id="newWordM2" class="pixel-input" placeholder="معنای دوم (مثلاً: نوشیدنی)" style="padding:8px; font-size:0.82rem;" />
+      </div>
+      <button id="btnAddCustomWord" class="pixel-btn btn-cyan" style="width:100%; padding:8px; font-size:0.82rem;">+ افزودن واژه به بازی</button>
+    </div>
+
+    <!-- Class Code & Cloud Sync Settings -->
+    <div style="background:#0f1320; padding:12px; border-radius:10px;">
+      <div style="font-weight:800; font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">۴. تنظیمات امنیتی و همگام‌سازی ابری (اختیاری):</div>
+      <div style="display:flex; gap:8px; margin-bottom:8px;">
+        <input type="text" id="teacherClassLock" class="pixel-input" placeholder="کد کلاس اجباری (خالی = آزاد)" style="padding:8px; font-size:0.8rem;" />
+        <button id="btnSaveClassLock" class="pixel-btn btn-gold" style="padding:8px 12px; font-size:0.8rem;">ذخیره</button>
+      </div>
+      <details style="font-size:0.78rem; color:var(--text-muted); margin-top:6px;">
+        <summary style="cursor:pointer; color:var(--cyan);">اتصال دیتابیس ابری زنده بین همه گوشی‌ها (Supabase)</summary>
+        <p style="margin:6px 0; line-height:1.5;">برای اینکه امتیازهای دانش‌آموزان از گوشی‌های مختلف در یک جدول واحد جمع شود، آدرس URL و کلید Anon پروژه رایگان Supabase خود را وارد کنید:</p>
+        <input type="text" id="sbUrl" class="pixel-input" placeholder="https://xyz.supabase.co" style="padding:7px; font-size:0.78rem; margin-bottom:6px;" />
+        <input type="text" id="sbKey" class="pixel-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..." style="padding:7px; font-size:0.78rem; margin-bottom:6px;" />
+        <button id="btnSaveSupabase" class="pixel-btn btn-emerald" style="width:100%; padding:7px; font-size:0.78rem;">فعال‌سازی همگام‌سازی ابری</button>
+      </details>
+    </div>
+  </div>
+
+  <!-- Hidden Teacher Access Trigger (3 rapid clicks on version number) -->
+  <div class="footer-ver" id="versionTrigger">v2.6-pixel • ادبیات فارسی دهم هنرستان</div>
+</div>
+
+<script>
+// ==========================================
+// 1. DEFAULT CURRICULUM DATA (10th Grade Technical & Vocational Literature)
+// ==========================================
+const DEFAULT_STAGES = [
+  {
+    id: 1,
+    title: "برج اول: درس‌های ۱ تا ۳ (ایهام‌های پایه)",
+    unlocked: true,
+    words: [
+      { word: "آهو", meanings: ["غزال", "عیب و نقص"], hint: "در شعر حافظ: «آهو داشتن» به معنای عیب داشتن است." },
+      { word: "بو", meanings: ["رایحه و عطر", "آرزو و امید"], hint: "به بوی (امید) دیدن دوست" },
+      { word: "بار", meanings: ["مرتبه و دفعه", "اجازه ورود به مجلس"], hint: "بار عام دادن پادشاه یعنی اجازه ملاقات دادن" },
+      { word: "پروانه", meanings: ["اجازه و مجوز", "حشره بالدار"], hint: "پروانه عبور یا پروانه شمع" },
+      { word: "روان", meanings: ["جاری و رونده", "روح و جان"], hint: "آب روان / آرامش روان" },
+      { word: "چین", meanings: ["پیچ و تاب زلف", "کشور چین"], hint: "چین و شکن موی معشوق" },
+      { word: "دوش", meanings: ["دیشب", "شانه و کتف"], hint: "دوش وقت سحر از غصه نجاتم دادند" },
+      { word: "راست", meanings: ["درست و صحیح", "سمت راست"], hint: "سخن راست و راه راست" }
+    ]
+  },
+  {
+    id: 2,
+    title: "برج دوم: درس‌های ۴ تا ۶ (آرایه و موسیقی)",
+    unlocked: false,
+    words: [
+      { word: "تار", meanings: ["تاریک", "رشته مو", "ساز موسیقی"], hint: "شب تار و تار گیسو" },
+      { word: "پرده", meanings: ["حجاب و پوشش", "راز", "دستگاه موسیقی"], hint: "پرده دریدن به معنای فاش کردن راز است" },
+      { word: "چنگ", meanings: ["ساز موسیقی", "پنجه و دست"], hint: "در چنگ کسی اسیر شدن" },
+      { word: "نوا", meanings: ["صدا و آواز", "دستگاه موسیقی"], hint: "نوای خوش و بی‌نوایی" },
+      { word: "شور", meanings: ["هیجان و غوغا", "مزه شور", "دستگاه موسیقی"], hint: "شور عشق و اشک شور" },
+      { word: "عود", meanings: ["ساز موسیقی", "چوب خوش‌بو"], hint: "سوختن عود در مجمر" },
+      { word: "گوشمال", meanings: ["کوک کردن ساز", "تنبیه کردن"], hint: "گوشمال دادن تار و تنبور" },
+      { word: "رود", meanings: ["رودخانه", "ساز زهی"], hint: "ناله رود و آب رود" }
+    ]
+  },
+  {
+    id: 3,
+    title: "برج سوم: درس‌های ۷ تا ۹ (شطرنج و نجوم)",
+    unlocked: false,
+    words: [
+      { word: "رخ", meanings: ["چهره و صورت", "مهره قلعه در شطرنج"], hint: "رخ نمودن معشوق" },
+      { word: "پیاده", meanings: ["غیرسواره", "مهره سرباز شطرنج"], hint: "پیاده و سوار در میدان" },
+      { word: "نطع", meanings: ["سفره چرمی", "صفحه شطرنج"], hint: "نطع بازی و شطرنج" },
+      { word: "مشتری", meanings: ["خریدار", "سیاره مشتری (برجیس)"], hint: "مشتری و ماه در آسمان" },
+      { word: "تیر", meanings: ["پیکان", "سیاره عطارد"], hint: "تیر کمان و ستاره تیر" },
+      { word: "مهر", meanings: ["محبت", "خورشید"], hint: "تابش مهر در آسمان" },
+      { word: "ماه", meanings: ["قمر آسمان", "مدت سی روز"], hint: "ماه تابان" },
+      { word: "سو", meanings: ["سمت و جهت", "نور و روشنایی"], hint: "سوی چشم (نور چشم)" }
+    ]
+  },
+  {
+    id: 4,
+    title: "برج چهارم: درس‌های ۱۰ تا ۱۲ (حماسه و عرفان)",
+    unlocked: false,
+    words: [
+      { word: "دستان", meanings: ["لقب زال پدر رستم", "دست‌ها"], hint: "رستم دستان در شاهنامه" },
+      { word: "زال", meanings: ["پیرزن", "پدر رستم"], hint: "زال زر و زال پیر" },
+      { word: "خسرو", meanings: ["پادشاه", "خسرو پرویز"], hint: "خسرو و شیرین" },
+      { word: "شیرین", meanings: ["مزه شیرین", "معشوقه فرهاد"], hint: "سخن شیرین" },
+      { word: "شکر", meanings: ["ماده خوراکی", "معشوقه خسرو پرویز"], hint: "شکر و شیرین" },
+      { word: "قلب", meanings: ["عضو بدن", "میانه لشکر", "تقلبی"], hint: "زدن بر قلب سپاه دشمن" },
+      { word: "دارا", meanings: ["ثروتمند", "داریوش پادشاه"], hint: "دارا و سکندر" },
+      { word: "مدام", meanings: ["همواره و همیشه", "شراب"], hint: "باده مدام" }
+    ]
+  }
+];
+
+const TEACHER_PASS = "431380";
+
+// ==========================================
+// 2. STATE & STORAGE ENGINE (Local + Optional Supabase Cloud)
+// ==========================================
+let appState = {
+  stages: JSON.parse(localStorage.getItem("gv_stages")) || DEFAULT_STAGES,
+  students: JSON.parse(localStorage.getItem("gv_students")) || {},
+  classLock: localStorage.getItem("gv_classLock") || "",
+  sbUrl: localStorage.getItem("gv_sbUrl") || "",
+  sbKey: localStorage.getItem("gv_sbKey") || "",
+  currentUserCode: localStorage.getItem("gv_session_code") || null
+};
+
+function saveLocal() {
+  localStorage.setItem("gv_stages", JSON.stringify(appState.stages));
+  localStorage.setItem("gv_students", JSON.stringify(appState.students));
+  localStorage.setItem("gv_classLock", appState.classLock);
+}
+
+// Optional Supabase Sync Helper
+async function syncCloud(action = "push") {
+  if (!appState.sbUrl || !appState.sbKey) return;
+  const headers = {
+    "apikey": appState.sbKey,
+    "Authorization": `Bearer ${appState.sbKey}`,
+    "Content-Type": "application/json",
+    "Prefer": "resolution=merge-duplicates"
+  };
+  try {
+    if (action === "push") {
+      await fetch(`${appState.sbUrl}/rest/v1/gv_state`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ id: "global", payload: { stages: appState.stages, students: appState.students, classLock: appState.classLock } })
+      });
+    } else {
+      const res = await fetch(`${appState.sbUrl}/rest/v1/gv_state?id=eq.global&select=payload`, { headers });
+      const data = await res.json();
+      if (data && data[0] && data[0].payload) {
+        appState.stages = data[0].payload.stages || appState.stages;
+        appState.students = { ...data[0].payload.students, ...appState.students };
+        appState.classLock = data[0].payload.classLock || "";
+        saveLocal();
+      }
+    }
+  } catch (e) {
+    console.warn("Cloud sync offline fallback active");
+  }
+}
+
+// SHA-256 PIN Hashing
+async function hashPin(pin) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("gv_" + pin));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+// ==========================================
+// 3. LO-FI CHIPTUNE AUDIO SYNTHESIZER (Web Audio API)
+// ==========================================
+let audioCtx = null;
+let bgmInterval = null;
+let audioEnabled = false;
+
+function initAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+function playTone(freq, dur = 0.12, type = "triangle", vol = 0.06) {
+  if (!audioEnabled) return;
+  initAudio();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+  gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + dur);
+}
+
+function toggleMusic() {
+  audioEnabled = !audioEnabled;
+  const btn = document.getElementById("btnAudio");
+  if (audioEnabled) {
+    btn.textContent = "🔊";
+    initAudio();
+    const notes = [261.63, 329.63, 392.00, 493.88, 392.00, 329.63, 293.66, 349.23];
+    let step = 0;
+    bgmInterval = setInterval(() => {
+      if (audioEnabled) {
+        playTone(notes[step % notes.length], 0.35, "sine", 0.025);
+        step++;
+      }
+    }, 520);
+  } else {
+    btn.textContent = "🔇";
+    clearInterval(bgmInterval);
+  }
+}
+
+document.getElementById("btnAudio").addEventListener("click", toggleMusic);
+
+// ==========================================
+// 4. AUTHENTICATION FLOW
+// ==========================================
+let isRegisterMode = false;
+const tabLogin = document.getElementById("tabLogin");
+const tabRegister = document.getElementById("tabRegister");
+const registerFields = document.getElementById("registerFields");
+const authSubmitBtn = document.getElementById("authSubmitBtn");
+const authError = document.getElementById("authError");
+
+tabLogin.addEventListener("click", () => {
+  isRegisterMode = false;
+  tabLogin.className = "pixel-btn btn-gold";
+  tabRegister.className = "pixel-btn btn-slate";
+  registerFields.classList.add("hidden");
+  authSubmitBtn.textContent = "ورود به قلعه";
+  authError.classList.add("hidden");
+});
+
+tabRegister.addEventListener("click", () => {
+  isRegisterMode = true;
+  tabRegister.className = "pixel-btn btn-gold";
+  tabLogin.className = "pixel-btn btn-slate";
+  registerFields.classList.remove("hidden");
+  authSubmitBtn.textContent = "ساخت حساب و شروع بازی";
+  authError.classList.add("hidden");
+});
+
+document.getElementById("authForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  authError.classList.add("hidden");
+  const code = document.getElementById("authCode").value.trim();
+  const pin = document.getElementById("authPin").value.trim();
+
+  if (pin.length !== 4 || isNaN(pin)) {
+    authError.textContent = "رمز عبور باید دقیقاً ۴ رقم عددی باشد.";
+    authError.classList.remove("hidden");
+    return;
+  }
+
+  await syncCloud("pull");
+  const hashed = await hashPin(pin);
+
+  if (isRegisterMode) {
+    const name = document.getElementById("authName").value.trim();
+    const major = document.getElementById("authMajor").value;
+    const classCode = document.getElementById("authClassCode").value.trim();
+
+    if (!name) {
+      authError.textContent = "لطفاً نام و نام خانوادگی خود را وارد کنید.";
+      authError.classList.remove("hidden");
+      return;
+    }
+    if (appState.classLock && classCode !== appState.classLock) {
+      authError.textContent = "کد کلاس وارد شده صحیح نیست. از دبیر خود بپرسید.";
+      authError.classList.remove("hidden");
+      return;
+    }
+    if (appState.students[code] && appState.students[code].pinHash) {
+      authError.textContent = "این کد دانش‌آموزی قبلاً ثبت شده است. از تب «ورود به حساب» وارد شوید.";
+      authError.classList.remove("hidden");
+      return;
+    }
+
+    appState.students[code] = {
+      code,
+      name,
+      major,
+      pinHash: hashed,
+      xp: 0,
+      completedStages: [],
+      mistakes: {}
+    };
+  } else {
+    const user = appState.students[code];
+    if (!user) {
+      authError.textContent = "حسابی با این کد پیدا نشد. ابتدا از تب «ثبت‌نام جدید» حساب بسازید.";
+      authError.classList.remove("hidden");
+      return;
+    }
+    if (!user.pinHash) {
+      // Teacher reset PIN -> set new PIN automatically
+      user.pinHash = hashed;
+    } else if (user.pinHash !== hashed) {
+      authError.textContent = "رمز ۴ رقمی اشتباه است.";
+      authError.classList.remove("hidden");
+      return;
+    }
+  }
+
+  appState.currentUserCode = code;
+  localStorage.setItem("gv_session_code", code);
+  saveLocal();
+  syncCloud("push");
+  playTone(523.25, 0.15);
+  enterDashboard();
+});
+
+document.getElementById("btnLogout").addEventListener("click", () => {
+  appState.currentUserCode = null;
+  localStorage.removeItem("gv_session_code");
+  showView("viewAuth");
+  document.getElementById("topBar").classList.add("hidden");
+});
+
+// ==========================================
+// 5. VIEW NAVIGATION & DASHBOARD
+// ==========================================
+function showView(viewId) {
+  ["viewAuth", "viewMap", "viewArena", "viewLeaderboard", "viewTeacher"].forEach(id => {
+    document.getElementById(id).classList.add("hidden");
+  });
+  document.getElementById(viewId).classList.remove("hidden");
+}
+
+function enterDashboard() {
+  const user = appState.students[appState.currentUserCode];
+  if (!user) {
+    showView("viewAuth");
+    return;
+  }
+  document.getElementById("topBar").classList.remove("hidden");
+  document.getElementById("userGreeting").textContent = user.name;
+  document.getElementById("userXP").textContent = user.xp;
+  document.getElementById("mapMajor").textContent = user.major;
+
+  renderTowers();
+  showView("viewMap");
+}
+
+function renderTowers() {
+  const user = appState.students[appState.currentUserCode];
+  const list = document.getElementById("towersList");
+  list.innerHTML = "";
+
+  appState.stages.forEach((stage) => {
+    const isDone = user.completedStages.includes(stage.id);
+    const card = document.createElement("div");
+    card.className = `tower-card ${stage.unlocked ? "unlocked" : "locked"}`;
+    card.innerHTML = `
+      <div>
+        <div style="font-weight:900; font-size:0.95rem; color:${stage.unlocked ? "#fff" : "#94a3b8"};">
+          ${stage.unlocked ? (isDone ? "✅" : "🏰") : "🔒"} ${stage.title}
+        </div>
+        <div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;">
+          تعداد کارت‌ها: ${stage.words.length} واژه • ${isDone ? "فتح شده" : (stage.unlocked ? "آماده نبرد" : "قفل توسط دبیر")}
+        </div>
+      </div>
+      <button class="pixel-btn ${stage.unlocked ? (isDone ? "btn-emerald" : "btn-gold") : "btn-slate"}" 
+              style="padding:8px 14px; font-size:0.82rem;" ${stage.unlocked ? "" : "disabled"}>
+        ${stage.unlocked ? (isDone ? "تمرین مجدد" : "شروع") : "قفل"}
+      </button>
+    `;
+    if (stage.unlocked) {
+      card.querySelector("button").addEventListener("click", () => startStage(stage));
+    }
+    list.appendChild(card);
+  });
+}
+
+// ==========================================
+// 6. FLASHCARD + SPACED REPETITION KNIGHT QUEST
+// ==========================================
+let currentStage = null;
+let fcQueue = [];
+let quizQueue = [];
+let totalInitialWords = 0;
+let masteredCount = 0;
+let isCardFlipped = false;
+
+function startStage(stage) {
+  currentStage = stage;
+  fcQueue = [...stage.words];
+  quizQueue = [];
+  totalInitialWords = stage.words.length;
+  masteredCount = 0;
+
+  document.getElementById("arenaStageTitle").textContent = stage.title;
+  document.getElementById("phaseVictory").classList.add("hidden");
+  document.getElementById("phaseQuiz").classList.add("hidden");
+  document.getElementById("phaseFlashcard").classList.remove("hidden");
+  document.getElementById("arenaModeBadge").textContent = "فاز ۱: مرور فلش‌کارت";
+
+  updateKnightProgress(0);
+  renderNextFlashcard();
+  showView("viewArena");
+  playTone(440, 0.12);
+}
+
+function updateKnightProgress(pct) {
+  const clamped = Math.max(0, Math.min(92, pct));
+  document.getElementById("trackFill").style.width = clamped + "%";
+  document.getElementById("knightSprite").style.right = clamped + "%";
+}
+
+function renderNextFlashcard() {
+  if (fcQueue.length === 0) {
+    // Transition to Phase 2: Spaced Repetition Quiz
+    startQuizPhase();
+    return;
+  }
+
+  const item = fcQueue[0];
+  isCardFlipped = false;
+  document.getElementById("playingCard").classList.remove("flipped");
+  document.getElementById("fcWord").textContent = item.word;
+  document.getElementById("fcHint").textContent = item.hint || "";
+  document.getElementById("queueCounter").textContent = `باقی‌مانده مرور: ${fcQueue.length} کارت`;
+
+  const meaningsContainer = document.getElementById("fcMeanings");
+  meaningsContainer.innerHTML = item.meanings
+    .map((m, i) => `<div class="meaning-pill">${i + 1}. ${m}</div>`)
+    .join("");
+}
+
+document.getElementById("flashcardScene").addEventListener("click", () => {
+  isCardFlipped = !isCardFlipped;
+  document.getElementById("playingCard").classList.toggle("flipped", isCardFlipped);
+  playTone(587.33, 0.08);
+});
+
+document.getElementById("btnFcKnown").addEventListener("click", () => {
+  const item = fcQueue.shift();
+  quizQueue.push({ ...item, isRetry: false });
+  playTone(659.25, 0.1);
+  renderNextFlashcard();
+});
+
+document.getElementById("btnFcRepeat").addEventListener("click", () => {
+  const item = fcQueue.shift();
+  fcQueue.push(item); // Send to back of flashcard queue
+  playTone(311.13, 0.12);
+  renderNextFlashcard();
+});
+
+// Phase 2: Spaced Repetition Quiz
+function startQuizPhase() {
+  document.getElementById("phaseFlashcard").classList.add("hidden");
+  document.getElementById("phaseQuiz").classList.remove("hidden");
+  document.getElementById("arenaModeBadge").textContent = "فاز ۲: نبرد قلعه";
+  // Shuffle quiz queue
+  quizQueue.sort(() => Math.random() - 0.5);
+  renderNextQuizQuestion();
+}
+
+function renderNextQuizQuestion() {
+  if (quizQueue.length === 0) {
+    completeStageVictory();
+    return;
+  }
+
+  const current = quizQueue[0];
+  document.getElementById("qzWord").textContent = current.word;
+  document.getElementById("queueCounter").textContent = `تسلط: ${masteredCount} از ${totalInitialWords}`;
+  document.getElementById("qzRetryTag").classList.toggle("hidden", !current.isRetry);
+
+  const correctText = current.meanings.join(" / ");
+  // Generate 3 realistic distractors from other words
+  const allWords = appState.stages.flatMap(s => s.words).filter(w => w.word !== current.word);
+  const shuffledDistractors = allWords
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 3)
+    .map(w => w.meanings.join(" / "));
+
+  const options = [correctText, ...shuffledDistractors].sort(() => Math.random() - 0.5);
+  const optionsBox = document.getElementById("qzOptions");
+  optionsBox.innerHTML = "";
+
+  options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.className = "option-btn";
+    btn.innerHTML = `<span>${opt}</span><span>⚔️</span>`;
+    btn.addEventListener("click", () => handleQuizAnswer(btn, opt === correctText, current));
+    optionsBox.appendChild(btn);
+  });
+}
+
+function handleQuizAnswer(btn, isCorrect, item) {
+  const allBtns = document.querySelectorAll("#qzOptions .option-btn");
+  allBtns.forEach(b => b.disabled = true);
+
+  const user = appState.students[appState.currentUserCode];
+
+  if (isCorrect) {
+    btn.classList.add("correct");
+    playTone(523.25, 0.09);
+    setTimeout(() => playTone(783.99, 0.14), 90);
+
+    quizQueue.shift();
+    masteredCount++;
+    user.xp += item.isRetry ? 5 : 10;
+    document.getElementById("userXP").textContent = user.xp;
+
+    const progressPct = (masteredCount / totalInitialWords) * 92;
+    updateKnightProgress(progressPct);
+
+    setTimeout(renderNextQuizQuestion, 650);
+  } else {
+    btn.classList.add("wrong");
+    playTone(220, 0.22, "sawtooth");
+
+    // Record mistake for teacher analytics
+    user.mistakes[item.word] = (user.mistakes[item.word] || 0) + 1;
+
+    // Highlight correct answer
+    const correctText = item.meanings.join(" / ");
+    allBtns.forEach(b => {
+      if (b.textContent.includes(correctText)) b.classList.add("correct");
+    });
+
+    // Spaced repetition: push back to end of queue
+    const failed = quizQueue.shift();
+    failed.isRetry = true;
+    quizQueue.push(failed);
+
+    // Knight steps back slightly
+    const progressPct = Math.max(0, ((masteredCount - 0.5) / totalInitialWords) * 92);
+    updateKnightProgress(progressPct);
+
+    setTimeout(renderNextQuizQuestion, 1350);
+  }
+
+  saveLocal();
+}
+
+function completeStageVictory() {
+  const user = appState.students[appState.currentUserCode];
+  if (!user.completedStages.includes(currentStage.id)) {
+    user.completedStages.push(currentStage.id);
+    user.xp += 25; // Castle conquest bonus
+  }
+  saveLocal();
+  syncCloud("push");
+
+  updateKnightProgress(92);
+  document.getElementById("phaseQuiz").classList.add("hidden");
+  document.getElementById("phaseVictory").classList.remove("hidden");
+  document.getElementById("userXP").textContent = user.xp;
+  document.getElementById("victoryStats").textContent = `تمام ${totalInitialWords} واژه «${currentStage.title}» با موفقیت فتح شدند و ۲۵ امتیاز پاداش فتح قلعه دریافت کردید!`;
+  playTone(523.25, 0.12);
+  setTimeout(() => playTone(659.25, 0.12), 120);
+  setTimeout(() => playTone(783.99, 0.25), 240);
+}
+
+document.getElementById("btnBackToMap").addEventListener("click", enterDashboard);
+document.getElementById("btnVictoryContinue").addEventListener("click", enterDashboard);
+
+// ==========================================
+// 7. LEADERBOARD VIEW
+// ==========================================
+document.getElementById("btnOpenLeaderboard").addEventListener("click", async () => {
+  await syncCloud("pull");
+  const sorted = Object.values(appState.students).sort((a, b) => b.xp - a.xp);
+  const tbody = document.getElementById("studentLeaderboardBody");
+  tbody.innerHTML = sorted.map((s, idx) => `
+    <tr style="${s.code === appState.currentUserCode ? "background:rgba(245,158,11,0.12);" : ""}">
+      <td>${idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : idx + 1}</td>
+      <td style="font-weight:700;">${s.name}</td>
+      <td style="color:var(--cyan);">${s.major}</td>
+      <td style="font-weight:900; color:var(--gold);">${s.xp}</td>
+    </tr>
+  `).join("") || `<tr><td colspan="4" style="text-align:center;">هنوز دانش‌آموزی ثبت نشده است.</td></tr>`;
+  showView("viewLeaderboard");
+});
+
+document.getElementById("btnCloseLeaderboard").addEventListener("click", enterDashboard);
+
+// ==========================================
+// 8. HIDDEN TEACHER ADMIN PANEL (3 CLICKS ON VERSION + PASS 431380)
+// ==========================================
+let verClickCount = 0;
+let verClickTimer = null;
+
+document.getElementById("versionTrigger").addEventListener("click", () => {
+  verClickCount++;
+  clearTimeout(verClickTimer);
+  verClickTimer = setTimeout(() => { verClickCount = 0; }, 1200);
+
+  if (verClickCount >= 3) {
+    verClickCount = 0;
+    const pass = prompt("رمز مدیریت دبیر را وارد کنید:");
+    if (pass === TEACHER_PASS) {
+      openTeacherPanel();
+    } else if (pass !== null) {
+      alert("رمز عبور اشتباه است.");
+    }
+  }
+});
+
+async function openTeacherPanel() {
+  await syncCloud("pull");
+  document.getElementById("teacherClassLock").value = appState.classLock;
+  document.getElementById("sbUrl").value = appState.sbUrl;
+  document.getElementById("sbKey").value = appState.sbKey;
+
+  // Populate stages toggle
+  const stageBox = document.getElementById("teacherStagesControl");
+  const stageSelect = document.getElementById("newWordStage");
+  stageBox.innerHTML = "";
+  stageSelect.innerHTML = "";
+
+  appState.stages.forEach(st => {
+    const row = document.createElement("div");
+    row.style.cssText = "display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #1e293b;";
+    row.innerHTML = `
+      <span style="font-size:0.8rem;">${st.title} (${st.words.length} واژه)</span>
+      <button class="pixel-btn ${st.unlocked ? "btn-emerald" : "btn-crimson"}" style="padding:4px 10px; font-size:0.75rem;">
+        ${st.unlocked ? "باز است (قفل کن)" : "قفل است (باز کن)"}
+      </button>
+    `;
+    row.querySelector("button").addEventListener("click", () => {
+      st.unlocked = !st.unlocked;
+      saveLocal();
+      syncCloud("push");
+      openTeacherPanel();
+    });
+    stageBox.appendChild(row);
+
+    const opt = document.createElement("option");
+    opt.value = st.id;
+    opt.textContent = st.title;
+    stageSelect.appendChild(opt);
+  });
+
+  // Populate students analytics
+  const tbody = document.getElementById("teacherStudentsBody");
+  const studentsList = Object.values(appState.students).sort((a, b) => b.xp - a.xp);
+  tbody.innerHTML = studentsList.map(s => {
+    const topMistakes = Object.entries(s.mistakes || {})
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([w, c]) => `${w}(${c})`)
+      .join("، ") || "—";
+
+    return `
+      <tr>
+        <td><strong>${s.name}</strong><br><span style="color:var(--text-muted); font-size:0.72rem;">${s.code}</span></td>
+        <td>${s.major}</td>
+        <td style="color:var(--gold); font-weight:800;">${s.xp}</td>
+        <td style="color:var(--crimson); font-size:0.75rem;">${topMistakes}</td>
+        <td>
+          <button onclick="resetStudentPin('${s.code}')" class="pixel-btn btn-slate" style="padding:3px 7px; font-size:0.7rem;" title="بازنشانی رمز">🔑</button>
+          <button onclick="deleteStudent('${s.code}')" class="pixel-btn btn-crimson" style="padding:3px 7px; font-size:0.7rem;" title="حذف">🗑️</button>
+        </td>
+      </tr>
+    `;
+  }).join("") || `<tr><td colspan="5" style="text-align:center;">دانش‌آموزی ثبت نشده است.</td></tr>`;
+
+  showView("viewTeacher");
+}
+
+window.resetStudentPin = function(code) {
+  if (appState.students[code]) {
+    appState.students[code].pinHash = null;
+    saveLocal();
+    syncCloud("push");
+    alert("رمز دانش‌آموز بازنشانی شد. در ورود بعدی می‌تواند رمز جدید انتخاب کند.");
+  }
+};
+
+window.deleteStudent = function(code) {
+  if (confirm("آیا از حذف این حساب کاربری مطمئن هستید؟")) {
+    delete appState.students[code];
+    saveLocal();
+    syncCloud("push");
+    openTeacherPanel();
+  }
+};
+
+document.getElementById("btnAddCustomWord").addEventListener("click", () => {
+  const stageId = Number(document.getElementById("newWordStage").value);
+  const word = document.getElementById("newWordText").value.trim();
+  const m1 = document.getElementById("newWordM1").value.trim();
+  const m2 = document.getElementById("newWordM2").value.trim();
+
+  if (!word || !m1 || !m2) {
+    alert("لطفاً واژه و حداقل دو معنا را وارد کنید.");
+    return;
+  }
+
+  const stage = appState.stages.find(s => s.id === stageId);
+  if (stage) {
+    stage.words.push({ word, meanings: [m1, m2], hint: "افزوده‌شده توسط دبیر" });
+    saveLocal();
+    syncCloud("push");
+    document.getElementById("newWordText").value = "";
+    document.getElementById("newWordM1").value = "";
+    document.getElementById("newWordM2").value = "";
+    alert(`واژه «${word}» به ${stage.title} اضافه شد.`);
+    openTeacherPanel();
+  }
+});
+
+document.getElementById("btnSaveClassLock").addEventListener("click", () => {
+  appState.classLock = document.getElementById("teacherClassLock").value.trim();
+  saveLocal();
+  syncCloud("push");
+  alert("کد کلاس ذخیره شد.");
+});
+
+document.getElementById("btnSaveSupabase").addEventListener("click", () => {
+  appState.sbUrl = document.getElementById("sbUrl").value.trim().replace(/\/$/, "");
+  appState.sbKey = document.getElementById("sbKey").value.trim();
+  localStorage.setItem("gv_sbUrl", appState.sbUrl);
+  localStorage.setItem("gv_sbKey", appState.sbKey);
+  syncCloud("push");
+  alert("تنظیمات ابری ذخیره و همگام‌سازی فعال شد.");
+});
+
+document.getElementById("btnExportCSV").addEventListener("click", () => {
+  const rows = [["کد دانش آموزی", "نام و نام خانوادگی", "رشته", "امتیاز", "مراحل فتح شده", "کلمات اشتباه"]];
+  Object.values(appState.students).forEach(s => {
+    const mistakes = Object.entries(s.mistakes || {}).map(([k, v]) => `${k}:${v}`).join(" | ");
+    rows.push([s.code, s.name, s.major, s.xp, (s.completedStages || []).join("-"), mistakes]);
+  });
+  const csvContent = "\uFEFF" + rows.map(r => r.map(c => `"${c}"`).join(",")).join("\n");
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "gozaresh-adabiat-honarestan.csv";
+  link.click();
+});
+
+document.getElementById("btnExitTeacher").addEventListener("click", () => {
+  if (appState.currentUserCode) enterDashboard();
+  else showView("viewAuth");
+});
+
+// ==========================================
+// 9. PWA SERVICE WORKER & INSTALL PROMPT
+// ==========================================
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}
+
+let deferredPrompt;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const banner = document.getElementById("installBanner");
+  banner.style.display = "flex";
+});
+
+document.getElementById("btnInstallApp").addEventListener("click", async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById("installBanner").style.display = "none";
+});
+
+// Initial Session Check
+(async function init() {
+  await syncCloud("pull");
+  if (appState.currentUserCode && appState.students[appState.currentUserCode]) {
+    enterDashboard();
+  } else {
+    showView("viewAuth");
+  }
+})();
+</script>
+</body>
+</html>
