@@ -90,17 +90,9 @@
       box-shadow: 0 6px 0 #07090f;
     }
 
-    .pixel-window.border-amber {
-      background: var(--amber);
-    }
-
-    .pixel-window.border-line {
-      background: var(--line);
-    }
-
-    .pixel-window.border-wine {
-      background: var(--wine);
-    }
+    .pixel-window.border-amber { background: var(--amber); }
+    .pixel-window.border-line { background: var(--line); }
+    .pixel-window.border-wine { background: var(--wine); }
 
     .pixel-window-inner {
       background: var(--panel);
@@ -155,37 +147,14 @@
       text-shadow: none;
       font-weight: 900;
     }
-
-    .btn-amber:hover {
-      background: var(--amber-hi);
-    }
-
-    .btn-wine {
-      background: var(--wine);
-      color: var(--ink);
-    }
-
-    .btn-emerald {
-      background: var(--ok);
-      color: #fff;
-    }
-
-    .btn-crimson {
-      background: var(--red);
-      color: #fff;
-    }
-
+    .btn-amber:hover { background: var(--amber-hi); }
+    .btn-wine { background: var(--wine); color: var(--ink); }
+    .btn-emerald { background: var(--ok); color: #fff; }
+    .btn-crimson { background: var(--red); color: #fff; }
     .btn-slate {
       background: #1b2434;
       color: var(--ink);
       border: 1px solid var(--line);
-    }
-
-    .btn-steel {
-      background: var(--steel);
-      color: #0b0d12;
-      text-shadow: none;
-      font-weight: 800;
     }
 
     /* Stepped Pixel Inputs */
@@ -205,7 +174,6 @@
         3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px)
       );
     }
-
     .pixel-input:focus {
       border-color: var(--amber);
       box-shadow: inset 0 0 0 1px var(--amber);
@@ -214,7 +182,6 @@
     .form-group {
       margin-bottom: 12px;
     }
-
     .form-group label {
       display: block;
       font-size: 0.8rem;
@@ -247,29 +214,25 @@
       align-items: center;
       gap: 6px;
     }
-
     .hud-candle {
       display: inline-block;
       width: 14px;
       height: 24px;
     }
-
     .hud-candle.extinguished {
       opacity: 0.25;
       filter: grayscale(1);
     }
-
     @keyframes flameFlicker {
       0%, 100% { transform: scale(1) translate(0, 0); }
       50% { transform: scale(1.15, 0.9) translate(1px, -1px); }
     }
-
     .candle-flame {
       animation: flameFlicker 0.4s steps(2) infinite;
       transform-origin: center bottom;
     }
 
-    /* 312px STAGE SCENE ( معـمـای دروازه ) */
+    /* 312px STAGE SCENE (معمای دروازه) */
     .stage-wrapper {
       position: relative;
       width: 100%;
@@ -281,7 +244,6 @@
       background: #0b0e14;
     }
 
-    /* 5-Band Night Sky with Dithering Strips */
     .stage-sky {
       position: absolute;
       inset: 0;
@@ -301,7 +263,6 @@
         );
     }
 
-    /* CRT Scanlines Overlay */
     .crt-overlay {
       position: absolute;
       inset: 0;
@@ -311,7 +272,6 @@
       z-index: 15;
     }
 
-    /* Pixel Moon */
     .pixel-moon {
       position: absolute;
       top: 18px;
@@ -319,7 +279,7 @@
       width: 28px;
       height: 28px;
       background: var(--moon);
-      box-shadow: -4px 0 0 #0b0e14, 0 4px 0 #b0c2d8 inset;
+      box-shadow: -4px 0 0 #0b0d12, 0 4px 0 #b0c2d8 inset;
       clip-path: polygon(
         4px 0, calc(100% - 4px) 0,
         100% 4px, 100% calc(100% - 4px),
@@ -328,12 +288,10 @@
       );
     }
 
-    /* Pixel Stars */
     @keyframes starBlink {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.15; }
     }
-
     .pixel-star {
       position: absolute;
       width: 4px;
@@ -342,7 +300,6 @@
       animation: starBlink 1.4s steps(2) infinite;
     }
 
-    /* Stepped Mountains */
     .mountains-layer {
       position: absolute;
       bottom: 50px;
@@ -352,7 +309,6 @@
       pointer-events: none;
     }
 
-    /* Black Castle Silhouette */
     .castle-silhouette {
       position: absolute;
       bottom: 46px;
@@ -364,19 +320,16 @@
       z-index: 2;
     }
 
-    /* Waving Wine-Red Flag */
     @keyframes flagWave {
       0% { transform: scaleX(1); }
       50% { transform: scaleX(0.75); }
       100% { transform: scaleX(1); }
     }
-
     .castle-flag {
       animation: flagWave 0.8s steps(2) infinite;
       transform-origin: left center;
     }
 
-    /* Gate Glow (Amber, widens on victory) */
     .gate-glow {
       position: absolute;
       bottom: 48px;
@@ -390,7 +343,6 @@
       z-index: 3;
       transition: width 0.4s steps(4), height 0.4s steps(4), box-shadow 0.4s steps(4);
     }
-
     .gate-glow.gate-open {
       width: 80px;
       height: 54px;
@@ -398,7 +350,6 @@
       box-shadow: 0 0 36px 16px var(--amber-hi);
     }
 
-    /* Stone Road */
     .stone-road {
       position: absolute;
       bottom: 0;
@@ -415,7 +366,6 @@
       );
     }
 
-    /* Hanging Wooden Board */
     .hanging-board-wrap {
       position: absolute;
       top: 10px;
@@ -427,14 +377,12 @@
       z-index: 6;
       pointer-events: none;
     }
-
     .hanging-chains {
       display: flex;
       justify-content: space-between;
       width: 150px;
       height: 16px;
     }
-
     .chain-line {
       width: 4px;
       height: 16px;
@@ -444,7 +392,6 @@
         #0b0d12 3px, #0b0d12 5px
       );
     }
-
     .hanging-board {
       background: #3a2012;
       border: 3px solid var(--amber-lo);
@@ -459,7 +406,6 @@
         4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
       );
     }
-
     .hanging-board .board-word {
       color: #ffe3a3;
       font-size: 1.55rem;
@@ -468,7 +414,6 @@
       margin: 0;
     }
 
-    /* 10 Pixel Locks Row (Top-Left of Stage) */
     .stage-locks-row {
       position: absolute;
       top: 12px;
@@ -477,37 +422,31 @@
       gap: 4px;
       z-index: 6;
     }
-
     .stage-lock {
       width: 11px;
       height: 15px;
       color: var(--amber);
-      transition: none;
     }
-
     @keyframes lockShatter {
       0% { transform: scale(1) rotate(0deg); opacity: 1; }
       50% { transform: scale(1.4) rotate(-15deg); opacity: 0.5; }
       100% { transform: scale(0.9) rotate(0deg); opacity: 0.25; }
     }
-
     .stage-lock.broken {
       color: var(--steel) !important;
       opacity: 0.3;
       animation: lockShatter 0.4s steps(3);
     }
 
-    /* Pixel-Art Knight */
     .knight-actor {
       position: absolute;
       bottom: 24px;
       right: 24px;
       z-index: 5;
-      transform: scaleX(-1); /* Face left towards gate */
+      transform: scaleX(-1);
       transition: right 0.3s steps(6);
     }
 
-    /* Screen Shake Animation */
     @keyframes screenShake {
       0% { transform: translate(0, 0); }
       20% { transform: translate(-6px, 3px); }
@@ -516,18 +455,13 @@
       80% { transform: translate(3px, 2px); }
       100% { transform: translate(0, 0); }
     }
-
     .shake-active {
       animation: screenShake 0.35s steps(4);
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .shake-active {
-        animation: none;
-      }
-      .candle-flame, .castle-flag, .pixel-star {
-        animation: none;
-      }
+      .shake-active { animation: none; }
+      .candle-flame, .castle-flag, .pixel-star { animation: none; }
     }
 
     /* RPG DIALOG WINDOW */
@@ -543,7 +477,6 @@
       box-shadow: 0 6px 0 #07090f;
       margin-bottom: 14px;
     }
-
     .rpg-dialog-inner {
       background: var(--panel);
       padding: 16px;
@@ -554,7 +487,6 @@
         4px 100%, 4px calc(100% - 2px), 2px calc(100% - 2px), 2px calc(100% - 4px), 0 calc(100% - 4px)
       );
     }
-
     .rpg-header {
       display: flex;
       justify-content: space-between;
@@ -563,7 +495,6 @@
       border-bottom: 2px solid #1c2638;
       padding-bottom: 8px;
     }
-
     .speaker-tag {
       background: var(--amber);
       color: #0b0d12;
@@ -577,13 +508,11 @@
         3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px)
       );
     }
-
     .rpg-stats {
       display: flex;
       align-items: center;
       gap: 10px;
     }
-
     .combo-badge {
       background: var(--red);
       color: #fff;
@@ -593,14 +522,12 @@
       box-shadow: 2px 2px 0 #0b0d12;
       border: 1px solid #ff7b92;
     }
-
     .xp-readout {
       color: var(--xp);
       font-family: 'Press Start 2P', monospace;
       font-size: 0.82rem;
       text-shadow: 2px 2px 0 #0b0d12;
     }
-
     .rpg-question {
       font-size: 0.95rem;
       font-weight: 800;
@@ -609,12 +536,10 @@
       margin-bottom: 14px;
       text-shadow: 1px 1px 0 #0b0d12;
     }
-
     @keyframes blinkCursor {
       0%, 100% { opacity: 1; }
       50% { opacity: 0; }
     }
-
     .pixel-cursor {
       color: var(--amber);
       font-family: monospace;
@@ -629,7 +554,6 @@
       gap: 8px;
       margin-bottom: 14px;
     }
-
     .rpg-option-btn {
       min-height: 44px;
       background: #0d121c;
@@ -650,9 +574,7 @@
         4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
       );
       box-shadow: 0 3px 0 #07090f;
-      transition: none;
     }
-
     .rpg-option-btn .opt-box {
       width: 28px;
       height: 28px;
@@ -665,37 +587,29 @@
       font-size: 0.82rem;
       flex-shrink: 0;
     }
-
     .rpg-option-btn .opt-arrow {
       display: none;
       color: #0b0d12;
       font-size: 0.85rem;
       margin-left: 2px;
     }
-
     .rpg-option-btn.selected {
       background: var(--amber);
       color: #0b0d12;
       border-color: var(--amber-hi);
       text-shadow: none;
     }
-
     .rpg-option-btn.selected .opt-box {
       background: #0b0d12;
       color: var(--amber);
     }
-
-    .rpg-option-btn.selected .opt-arrow {
-      display: inline-block;
-    }
-
+    .rpg-option-btn.selected .opt-arrow { display: inline-block; }
     .rpg-option-btn.correct {
       background: var(--ok) !important;
       color: #fff !important;
       border-color: #7ee09b !important;
       text-shadow: 1px 1px 0 #0b0d12;
     }
-
     .rpg-option-btn.wrong {
       background: var(--bad) !important;
       color: #fff !important;
@@ -703,29 +617,17 @@
       text-shadow: 1px 1px 0 #0b0d12;
     }
 
-    /* Flashcard Meaning Boxes */
-    .fc-meaning-card {
-      background: #0b0e14;
-      border: 2px solid var(--line);
-      padding: 10px 12px;
-      margin-bottom: 8px;
-      clip-path: polygon(
-        0 3px, 3px 3px, 3px 0,
-        calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
-        100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
-        3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px)
-      );
-    }
-
     /* Tower Map Cards */
     .tower-card {
       background: #111724;
       border: 3px solid var(--line);
-      padding: 12px 14px;
-      margin-bottom: 10px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
       clip-path: polygon(
         0 4px, 4px 4px, 4px 0,
         calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
@@ -734,19 +636,51 @@
       );
       box-shadow: 0 4px 0 #07090f;
     }
+    .tower-card.unlocked { border-color: var(--amber); }
+    .tower-card.completed { border-color: var(--ok); }
+    .tower-card.locked { opacity: 0.55; }
 
-    .tower-card.unlocked {
-      border-color: var(--amber);
+    /* Dedicated Study Card */
+    .study-card-box {
+      background: #0d121c;
+      border: 3px solid var(--amber-lo);
+      box-shadow: 0 6px 0 #07090f;
+      min-height: 220px;
+      padding: 22px 18px;
+      margin-bottom: 16px;
       cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      clip-path: polygon(
+        0 4px, 4px 4px, 4px 0,
+        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
+      );
     }
-
-    .tower-card.completed {
-      border-color: var(--ok);
+    .study-tag {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: var(--wine);
+      color: var(--ink);
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border: 1px solid #9c3f44;
     }
-
-    .tower-card.locked {
-      opacity: 0.55;
-      cursor: not-allowed;
+    .study-meaning-item {
+      background: #141a26;
+      border: 1px solid var(--line);
+      padding: 9px 12px;
+      margin-bottom: 6px;
+      width: 100%;
+      text-align: right;
+      font-size: 0.88rem;
     }
 
     /* Pixel Tables */
@@ -756,14 +690,12 @@
       border: 2px solid var(--line);
       background: #0b0e14;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.8rem;
       text-align: right;
     }
-
     th {
       background: #172033;
       color: var(--amber);
@@ -771,14 +703,12 @@
       font-weight: 800;
       border-bottom: 2px solid var(--line);
     }
-
     td {
       padding: 8px;
       border-bottom: 1px solid #1a2438;
       color: var(--ink);
     }
 
-    /* Rank Badges */
     .rank-badge {
       display: inline-flex;
       align-items: center;
@@ -790,12 +720,10 @@
       font-weight: 900;
       box-shadow: 2px 2px 0 #0b0d12;
     }
-
     .rank-1 { background: var(--amber); color: #0b0d12; }
     .rank-2 { background: var(--moon); color: #0b0d12; }
     .rank-3 { background: var(--amber-lo); color: #fff; }
 
-    /* Footer */
     .footer-ver {
       font-family: 'Press Start 2P', monospace;
       font-size: 0.68rem;
@@ -807,14 +735,9 @@
       user-select: none;
       letter-spacing: 0.5px;
     }
+    .footer-ver:hover { color: var(--amber); }
 
-    .footer-ver:hover {
-      color: var(--amber);
-    }
-
-    .hidden {
-      display: none !important;
-    }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
@@ -843,7 +766,6 @@
   <div id="viewAuth" class="pixel-window border-amber">
     <div class="pixel-window-inner">
       <div style="text-align:center; margin-bottom:16px;">
-        <!-- Pixel Castle SVG Icon -->
         <svg viewBox="0 0 32 32" width="44" height="44" style="margin-bottom:4px;" shape-rendering="crispEdges">
           <rect x="2" y="10" width="6" height="18" fill="#566c86" />
           <rect x="2" y="6" width="2" height="4" fill="#566c86" />
@@ -927,13 +849,60 @@
     <div id="towersList"></div>
   </div>
 
-  <!-- VIEW 3: MAIN ARENA SCREEN ( معمای دروازه ) -->
+  <!-- VIEW 3: DEDICATED FLASHCARD STUDY MODE (یادگیری) -->
+  <div id="viewStudy" class="hidden">
+    <div class="pixel-window border-line">
+      <div class="pixel-window-inner">
+        <!-- Study Top Bar -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:2px solid var(--line); padding-bottom:8px;">
+          <button id="btnStudyBack" class="pixel-btn btn-slate" style="padding:5px 12px; font-size:0.8rem;">بازگشت</button>
+          <div style="text-align:center;">
+            <div id="studyStageTitle" style="font-weight:900; color:var(--amber); font-size:0.88rem;"></div>
+            <div style="font-size:0.7rem; color:var(--steel);">بخش یادگیری آرام و مرور واژگان</div>
+          </div>
+          <span class="pixel-num" id="studyCounter" style="color:var(--moon);">1/10</span>
+        </div>
+
+        <!-- Interactive Study Pixel Card (Flip on Tap) -->
+        <div class="study-card-box" id="studyCard">
+          <span class="study-tag" id="studyCardTag">واژه ایهام‌دار</span>
+
+          <!-- Front Face -->
+          <div id="studyCardFront">
+            <div style="font-size:2.3rem; font-weight:900; color:#ffe3a3; margin-bottom:6px;" id="studyCardWord">آهو</div>
+            <div style="font-size:0.75rem; color:var(--steel);" id="studyTapHint">[برای مشاهده معانی لمس کنید]</div>
+          </div>
+
+          <!-- Back Face (Revealed on Tap) -->
+          <div id="studyCardBack" class="hidden" style="width:100%;">
+            <div id="studyMeanings"></div>
+            <div id="studyHint" style="font-size:0.8rem; color:var(--steel); margin-top:10px; line-height:1.5;"></div>
+            <div style="font-size:0.7rem; color:var(--amber); margin-top:8px;">[برای پنهان‌سازی مجدد لمس کنید]</div>
+          </div>
+        </div>
+
+        <!-- Study Navigation Controls -->
+        <div style="display:flex; gap:8px; margin-bottom:12px;">
+          <button id="btnStudyPrev" class="pixel-btn btn-slate" style="flex:1; min-height:44px;">قبلی</button>
+          <button id="btnStudyReview" class="pixel-btn btn-wine" style="flex:1.2; min-height:44px;" title="فرستادن به انتهای دسته برای مرور بیشتر">نیاز به مرور</button>
+          <button id="btnStudyNext" class="pixel-btn btn-emerald" style="flex:1; min-height:44px;">بعدی</button>
+        </div>
+
+        <!-- Direct CTA to Battle Mode -->
+        <button id="btnStudyEnterBattle" class="pixel-btn btn-amber" style="width:100%; min-height:46px; font-size:0.95rem;">
+          آماده‌ام • ورود به نبرد دروازه
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW 4: MAIN BATTLE ARENA (نبرد دروازه) -->
   <div id="viewArena" class="hidden">
     <!-- Arena HUD -->
     <div class="top-hud">
       <button id="btnBackToMap" class="pixel-btn btn-slate" style="padding:5px 9px; font-size:0.75rem;">← نقشه</button>
 
-      <!-- 3 Pixel-Art SVG Candles -->
+      <!-- 3 Pixel-Art SVG Candles (Lives) -->
       <div class="hud-candles" id="candlesHud">
         <svg id="candle1" class="hud-candle" viewBox="0 0 16 32" shape-rendering="crispEdges">
           <rect class="candle-flame" x="6" y="2" width="4" height="6" fill="#ffd48a" />
@@ -961,7 +930,7 @@
         </svg>
       </div>
 
-      <div style="font-weight:900; font-size:0.85rem; color:var(--amber);" id="arenaStageTitle">برج اول</div>
+      <div style="font-weight:900; font-size:0.85rem; color:var(--amber);" id="arenaStageTitle">نبرد دروازه</div>
       <div class="pixel-num" id="arenaCounter" style="color:var(--moon);">0/10</div>
     </div>
 
@@ -988,15 +957,12 @@
 
       <!-- Castle Silhouette & Glowing Gate -->
       <svg class="castle-silhouette" viewBox="0 0 170 120" shape-rendering="crispEdges">
-        <!-- Main Keep Body -->
         <rect x="35" y="30" width="100" height="90" fill="#07090e" />
-        <!-- Battlements -->
         <rect x="35" y="20" width="16" height="10" fill="#07090e" />
         <rect x="59" y="20" width="16" height="10" fill="#07090e" />
         <rect x="83" y="20" width="16" height="10" fill="#07090e" />
         <rect x="107" y="20" width="16" height="10" fill="#07090e" />
         <rect x="119" y="20" width="16" height="10" fill="#07090e" />
-        <!-- Towers Left & Right -->
         <rect x="15" y="10" width="24" height="110" fill="#07090e" />
         <rect x="15" y="2" width="6" height="8" fill="#07090e" />
         <rect x="25" y="2" width="6" height="8" fill="#07090e" />
@@ -1005,16 +971,13 @@
         <rect x="131" y="2" width="6" height="8" fill="#07090e" />
         <rect x="139" y="2" width="6" height="8" fill="#07090e" />
         <rect x="149" y="2" width="6" height="8" fill="#07090e" />
-        <!-- Flag pole & waving wine flag -->
         <rect x="26" y="-12" width="2" height="14" fill="#566c86" />
         <polygon class="castle-flag" points="28,-12 46,-7 28,-2" fill="#7a2b2e" />
-        <!-- Windows with amber glow -->
         <rect x="48" y="45" width="8" height="12" fill="#f0b560" />
         <rect x="114" y="45" width="8" height="12" fill="#f0b560" />
         <rect x="81" y="38" width="8" height="12" fill="#f0b560" />
         <rect x="23" y="30" width="6" height="10" fill="#f0b560" />
         <rect x="140" y="30" width="6" height="10" fill="#f0b560" />
-        <!-- Gate Arch Frame -->
         <rect x="71" y="80" width="28" height="40" fill="#141a26" />
       </svg>
 
@@ -1038,7 +1001,7 @@
       <!-- Stone Road -->
       <div class="stone-road"></div>
 
-      <!-- Pixel Knight Actor (Cloak + Sword) -->
+      <!-- Pixel Knight Actor -->
       <div id="knightActor" class="knight-actor">
         <svg viewBox="0 0 24 32" width="28" height="36" shape-rendering="crispEdges">
           <rect x="9" y="2" width="6" height="3" fill="#b13e53" />
@@ -1058,7 +1021,7 @@
       </div>
     </div>
 
-    <!-- RPG DIALOG WINDOW -->
+    <!-- RPG DIALOG WINDOW (Battle Quiz Direct) -->
     <div class="rpg-dialog" id="rpgDialog">
       <div class="rpg-dialog-inner">
         <div class="rpg-header">
@@ -1069,21 +1032,8 @@
           </div>
         </div>
 
-        <!-- PHASE 1: FLASHCARD STUDY MODE -->
-        <div id="phaseFlashcard">
-          <div style="font-size:0.8rem; color:var(--amber); font-weight:800; margin-bottom:10px;">
-            معانی ایهام‌دار و راز واژه در ادبیات فارسی دهم:
-          </div>
-          <div id="fcMeanings"></div>
-          <div id="fcHint" style="font-size:0.8rem; color:var(--steel); margin:10px 0 14px; line-height:1.5;"></div>
-          <div style="display:flex; gap:8px;">
-            <button id="btnFcRepeat" class="pixel-btn btn-wine" style="flex:1;">نیاز به تکرار دارم</button>
-            <button id="btnFcKnown" class="pixel-btn btn-emerald" style="flex:1;">یاد گرفتم (ادامه)</button>
-          </div>
-        </div>
-
-        <!-- PHASE 2: QUIZ & GATE RIDDLE -->
-        <div id="phaseQuiz" class="hidden">
+        <!-- BATTLE QUIZ -->
+        <div id="phaseQuiz">
           <div id="qzRetryTag" class="hidden" style="color:var(--red); font-size:0.75rem; font-weight:900; margin-bottom:4px;">
             [تکرار هوشمند • واژه دارای چالش]
           </div>
@@ -1095,19 +1045,19 @@
           <!-- 4 RPG Options (الف، ب، ج، د) -->
           <div class="rpg-options-list" id="qzOptions"></div>
 
-          <!-- Stepped Confirm Answer Button -->
-          <button id="btnConfirmAnswer" class="pixel-btn btn-amber" style="width:100%; font-size:0.95rem;" disabled>
+          <!-- Stepped Confirm Button -->
+          <button id="btnConfirmAnswer" class="pixel-btn btn-amber" style="width:100%; min-height:44px; font-size:0.95rem;" disabled>
             تأیید پاسخ
           </button>
         </div>
 
-        <!-- PHASE 3: VICTORY SCREEN -->
+        <!-- VICTORY SCREEN -->
         <div id="phaseVictory" class="hidden" style="text-align:center; padding:10px 0;">
           <h2 style="margin:0 0 8px; color:var(--ok); font-weight:900; font-size:1.4rem;" class="hard-shadow">
             دروازه فتح شد!
           </h2>
           <p id="victoryStats" style="color:var(--ink); font-size:0.85rem; line-height:1.6; margin-bottom:16px;"></p>
-          <button id="btnVictoryContinue" class="pixel-btn btn-amber" style="width:100%; font-size:0.95rem;">
+          <button id="btnVictoryContinue" class="pixel-btn btn-amber" style="width:100%; min-height:46px; font-size:0.95rem;">
             ادامه و بازگشت به نقشه
           </button>
         </div>
@@ -1115,7 +1065,7 @@
     </div>
   </div>
 
-  <!-- VIEW 4: STUDENT LEADERBOARD -->
+  <!-- VIEW 5: STUDENT LEADERBOARD -->
   <div id="viewLeaderboard" class="pixel-window border-amber hidden">
     <div class="pixel-window-inner">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -1141,7 +1091,7 @@
     </div>
   </div>
 
-  <!-- VIEW 5: HIDDEN TEACHER ADMIN PANEL -->
+  <!-- VIEW 6: HIDDEN TEACHER ADMIN PANEL -->
   <div id="viewTeacher" class="pixel-window border-wine hidden">
     <div class="pixel-window-inner">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:2px solid var(--line); padding-bottom:8px;">
@@ -1213,13 +1163,13 @@
   </div>
 
   <!-- Hidden Teacher Access Trigger (3 rapid clicks on version number) -->
-  <div class="footer-ver" id="versionTrigger">v3.0-pixel</div>
+  <div class="footer-ver" id="versionTrigger">v3.1-pixel</div>
 
 </div>
 
 <script>
 // ==========================================
-// 1. DEFAULT CURRICULUM DATA
+// 1. CURRICULUM DATA WITH HIGH-QUALITY DISTRACTORS
 // ==========================================
 const DEFAULT_STAGES = [
   {
@@ -1227,16 +1177,136 @@ const DEFAULT_STAGES = [
     title: "برج اول: درس‌های ۱ تا ۳ (ایهام‌های پایه)",
     unlocked: true,
     words: [
-      { word: "آهو", meanings: ["غزال و حیوان زیبا", "عیب، نقص و گناه"], hint: "در بیت حافظ: گر آن شکرلب بازآید ز آهوی او چه باک؟" },
-      { word: "شیرین", meanings: ["محبوب و معشوقه خسرو", "شهد و طعم گوارا"], hint: "شیرین‌دهنان و معشوقه باستانی" },
-      { word: "مهر", meanings: ["عشق، محبت و دوستی", "خورشید تابان"], hint: "پرتو مهر و مهر مادری" },
-      { word: "دام", meanings: ["تله صیاد", "حیوان و چهارپا"], hint: "دام و دد در بیابان" },
-      { word: "مدام", meanings: ["همیشگی و پیوسته", "می و شراب دیرینه"], hint: "در باده‌نوشی و ذکر مدام" },
-      { word: "دوش", meanings: ["شانه و کتف", "دیشب و شامگاه گذشته"], hint: "دوش بر دوش و دوش وقت سحر" },
-      { word: "بو", meanings: ["رایحه و عطر", "امید، آرزو و توقع"], hint: "بوی وصال و رایحه گل" },
-      { word: "راست", meanings: ["درست و صادق", "سمت راست (جهت)"], hint: "راست‌گویی و دست راست" },
-      { word: "روان", meanings: ["جاری و رونده", "جان، روح و نفس"], hint: "آب روان و روان پاک" },
-      { word: "پرده", meanings: ["حجاب و پوشش", "نغمه و مقام موسیقی"], hint: "پرده‌نشین و پرده عشاق" }
+      {
+        word: "آهو",
+        tag: "ایهام پایه",
+        meanings: ["غزال و حیوان زیبا", "عیب، نقص و گناه"],
+        hint: "در شعر کهن: گر آن شکرلب بازآید، ز آهوی او چه باک؟",
+        prompt: "دو معنای دقیق و ایهام‌دار واژه «آهو» در ادبیات دهم کدامند؟",
+        correct: "غزال و حیوان زیبا / عیب و نقص",
+        distractors: [
+          "حیوان وحشی / ترس و وحشت شکارچی",
+          "معشوق چابک / ناله و فغان سحرگاهی",
+          "شکار بیابان / گریز و شتابزدگی"
+        ]
+      },
+      {
+        word: "شیرین",
+        tag: "ایهام تناسب",
+        meanings: ["محبوب و معشوقه خسرو", "شهد و طعم گوارا"],
+        hint: "شیرین‌دهنان و معشوقه خسرو پرویز",
+        prompt: "دو معنای ایهام‌دار واژه «شیرین» در شعر کهن فارسی چیست؟",
+        correct: "معشوقه خسرو / شهد و طعم گوارا",
+        distractors: [
+          "بانوی ارمنی / لبخند دلنشین معشوق",
+          "کلام فصیح و گیرا / شربت شکرین",
+          "همسر فرهاد / طراوت و شادابی چهره"
+        ]
+      },
+      {
+        word: "مهر",
+        tag: "ایهام واژگانی",
+        meanings: ["عشق، محبت و دوستی", "خورشید تابان آسمان"],
+        hint: "پرتو مهر خورشید و مهر مادری",
+        prompt: "معانی دوگانه و ایهام‌دار واژه «مهر» در ابیات ادبیات دهم کدام است؟",
+        correct: "عشق و محبت / خورشید تابان",
+        distractors: [
+          "ماه هفتم سال / پیمان و سوگند وفاداری",
+          "نگین انگشتری / لطف و کرم پادشاه",
+          "روشنایی روز / مهربانی و بخشش"
+        ]
+      },
+      {
+        word: "دام",
+        tag: "ایهام مشترک لفظی",
+        meanings: ["تله صیاد", "حیوان و چهارپا"],
+        hint: "دام و دد در بیابان",
+        prompt: "کدام گزینه معانی صحیح و ایهام‌دار واژه «دام» را بیان می‌کند؟",
+        correct: "تله صیاد / حیوان و چهارپا",
+        distractors: [
+          "فریب و نیرنگ / طناب محکم شکارچی",
+          "حیوان اهلی / بند و زنجیر اسارت",
+          "قفس پرنده / دانه و طعمه صید"
+        ]
+      },
+      {
+        word: "مدام",
+        tag: "ایهام شعری",
+        meanings: ["همیشگی و پیوسته", "شراب و باده دیرینه"],
+        hint: "ذکر مدام و جام باده",
+        prompt: "دو معنای ایهام‌دار واژه «مدام» در غزلیات فارسی چیست؟",
+        correct: "همیشگی و پیوسته / شراب و باده",
+        distractors: [
+          "جام باده / ورد و ذکر شبانه عارفان",
+          "دوام و استمرار / مستی سحرگاهی",
+          "همدم وفادار / جاودان و پایدار"
+        ]
+      },
+      {
+        word: "دوش",
+        tag: "ایهام زمان و اندام",
+        meanings: ["شانه و کتف انسان", "دیشب و شامگاه گذشته"],
+        hint: "دوش بر دوش یاران و دوش وقت سحر",
+        prompt: "معانی ایهام‌دار واژه «دوش» در ابیات حافظ کدام است؟",
+        correct: "شانه و کتف / دیشب و شامگاه گذشته",
+        distractors: [
+          "بار سنگین / دیروز و روزگار گذشته",
+          "شانه و بازو / تاریکی و سیاهی شب",
+          "آغوش محبت / گذشته‌های دور"
+        ]
+      },
+      {
+        word: "بو",
+        tag: "ایهام معنایی",
+        meanings: ["رایحه، شمیم و عطر", "امید، آرزو و توقع وصال"],
+        hint: "بوی گل و بوی وصال یار",
+        prompt: "دو معنای ایهام‌دار واژه «بو» در ادبیات کدامند؟",
+        correct: "رایحه و عطر / امید و آرزو",
+        distractors: [
+          "شمیم گلزار / جست‌وجو و اشتیاق دل",
+          "امید وصال / نسیم خنک بهاری",
+          "اشتیاق دیدار / بوییدن گل سرخ"
+        ]
+      },
+      {
+        word: "راست",
+        tag: "ایهام جهت و راستی",
+        meanings: ["درست، صادق و به‌حق", "سمت راست (جهت جغرافیایی)"],
+        hint: "راست‌گویی و دست راست",
+        prompt: "معانی دوگانه واژه «راست» در ادبیات دهم کدام است؟",
+        correct: "درست و صادق / سمت راست (جهت)",
+        distractors: [
+          "مستقیم و هموار / عدل و دادگری",
+          "سخن حق / قامت کشیده و بلند",
+          "صداقت باطنی / مسیر مستقیم"
+        ]
+      },
+      {
+        word: "روان",
+        tag: "ایهام حرکت و جان",
+        meanings: ["جاری و رونده", "جان، روح و نفس انسان"],
+        hint: "آب روان و روان پاک",
+        prompt: "معانی ایهام‌دار واژه «روان» در شعر فارسی کدام است؟",
+        correct: "جاری و رونده / جان، روح و نفس",
+        distractors: [
+          "ساده و بی‌تکلف / جویبار زلال چمن",
+          "اندیشه تابناک / شتاب در رفتن",
+          "سیال و بی‌قرار / تن و کالبد خاکی"
+        ]
+      },
+      {
+        word: "پرده",
+        tag: "ایهام حجاب و موسیقی",
+        meanings: ["حجاب و پوشش نهان", "نغمه، آهنگ و مقام موسیقی"],
+        hint: "پرده‌نشین و پرده عشاق",
+        prompt: "دو معنای دقیق و ایهام‌دار واژه «پرده» کدام است؟",
+        correct: "حجاب و پوشش / مقام و نغمه موسیقی",
+        distractors: [
+          "راز نهفته / سیم و پرده‌های ساز چنگ",
+          "پوشش خانه / نوای خواننده بزم",
+          "حجاب شرم / پرده‌داری حرمسرا"
+        ]
+      }
     ]
   },
   {
@@ -1244,16 +1314,136 @@ const DEFAULT_STAGES = [
     title: "برج دوم: درس‌های ۴ تا ۷ (ایهام در شعر کهن)",
     unlocked: false,
     words: [
-      { word: "گور", meanings: ["قبر و آرامگاه", "گورخر وحشی"], hint: "بهرام که گور می‌گرفتی همه عمر..." },
-      { word: "چنگ", meanings: ["ساز موسیقی زهی", "پنجه دست و پنجه درنده"], hint: "دست در چنگ زدن" },
-      { word: "هوا", meanings: ["اتمسفر و باد", "میل، آرزو و هوس دل"], hint: "هوای بهاری و هوای کوی یار" },
-      { word: "گلاب", meanings: ["عصاره گل محمدی", "اشک چشم جاری"], hint: "گلاب ریختن بر رخسار" },
-      { word: "خط", meanings: ["نوشته و کتابت", "موی تازه دمیده چهره"], hint: "خط خوش و خط سبز رخ" },
-      { word: "قربان", meanings: ["فدا و ذبح شده", "تیردان کماندار"], hint: "قربانی کوی تو و تیر در قربان" },
-      { word: "شام", meanings: ["وعده غذای شب", "کشور و سرزمین سوریه"], hint: "شام غریبان و ملک شام" },
-      { word: "مردم", meanings: ["انسان‌ها و خلق", "مردمک چشم"], hint: "مردم دیده من غرق شد در خون" },
-      { word: "لبریز", meanings: ["پر و سرشار", "جویبار پرآب"], hint: "کاسه لبریز" },
-      { word: "چشمه", meanings: ["محل جوشش آب", "چشم بیننده"], hint: "چشمه خورشید و چشمه آب حیات" }
+      {
+        word: "گور",
+        tag: "ایهام تاریخی",
+        meanings: ["قبر و آرامگاه ابدی", "گورخر وحشی دشت"],
+        hint: "بهرام که گور می‌گرفتی همه عمر...",
+        prompt: "دو معنای معروف ایهام‌دار «گور» در رباعی خیام کدامند؟",
+        correct: "قبر و آرامگاه / گورخر وحشی",
+        distractors: [
+          "خاک تاریک / شکار تیزپا و چابک",
+          "گودال شکار / خاکسپاری شاهان",
+          "مغاک بیابان / حیوان رمیده دشت"
+        ]
+      },
+      {
+        word: "چنگ",
+        tag: "ایهام ساز و دست",
+        meanings: ["ساز موسیقی زهی کهن", "پنجه دست و پنجه صیاد"],
+        hint: "دست در چنگ زدن و نوای چنگ",
+        prompt: "معانی ایهام‌دار واژه «چنگ» کدام است؟",
+        correct: "ساز موسیقی زهی / پنجه دست و پنجه",
+        distractors: [
+          "ساز نیلوفری / انگشتان نوازنده",
+          "تار و پود بزم / تسلط و پنجه قدرت",
+          "آوای موسیقی / مشت گره‌کرده جنگجو"
+        ]
+      },
+      {
+        word: "هوا",
+        tag: "ایهام جو و میل",
+        meanings: ["اتمسفر، باد و نسیم", "میل، آرزو، هوس و عشق"],
+        hint: "هوای بهار و هوای کوی دوست",
+        prompt: "دو معنای ایهام‌دار واژه «هوا» در شعر سعدی و حافظ چیست؟",
+        correct: "اتمسفر و باد / میل، آرزو و هوس",
+        distractors: [
+          "نسیم بهاری / تنفس در باغستان",
+          "عشق افلاطونی / آسمان آبی و پاک",
+          "فضای پرواز / تمایل به وصال"
+        ]
+      },
+      {
+        word: "گلاب",
+        tag: "ایهام عصاره و اشک",
+        meanings: ["عصاره معطر گل محمدی", "اشک چشم جاری از سوز دل"],
+        hint: "گلاب ریختن بر رخسار یار",
+        prompt: "معانی ایهام‌دار «گلاب» در متون ادبی دهم چیست؟",
+        correct: "عصاره معطر گل / اشک چشم جاری",
+        distractors: [
+          "آب گل‌آلود / بوی خوش بوستان",
+          "شبنم صبحگاهی / اشک سرخ عاشق",
+          "عطر بهشتی / آب حوض باغ"
+        ]
+      },
+      {
+        word: "خط",
+        tag: "ایهام چهره و نگارش",
+        meanings: ["نوشته، کتابت و نامه", "موی تازه دمیده گرد چهره یار"],
+        hint: "خط خوش و خط سبز رخسار معشوق",
+        prompt: "دو معنای ایهام‌دار واژه «خط» در ادبیات کدامند؟",
+        correct: "نوشته و نامه / موی تازه دمیده چهره",
+        distractors: [
+          "مسیر راه / نقش و نگار قلم",
+          "سرنوشت انسان / سبزه کنار جویبار",
+          "قلم‌زنی / خطوط چهره در پیری"
+        ]
+      },
+      {
+        word: "قربان",
+        tag: "ایهام ایثار و تیردان",
+        meanings: ["فدا، ذبح و نذر شده", "تیردان کماندار"],
+        hint: "قربان تو گشتن و تیر در قربان نهادن",
+        prompt: "معانی ایهام‌دار واژه «قربان» در ابیات حماسی و غنایی چیست؟",
+        correct: "فدا و نذر شده / تیردان کماندار",
+        distractors: [
+          "عید اسلامی / تیر و کمان جنگی",
+          "جان‌فشانی / سپر فولادین نبرد",
+          "ایثار مال / زره و جوشن پهلوان"
+        ]
+      },
+      {
+        word: "شام",
+        tag: "ایهام زمان و مکان",
+        meanings: ["وعده غذای شب و تاریکی شب", "سرزمین و کشور تاریخی سوریه"],
+        hint: "شام غریبان و ملک شام",
+        prompt: "دو معنای ایهام‌دار واژه «شام» در اشعار فارسی کدام است؟",
+        correct: "هنگام شب و طعام شب / سرزمین سوریه",
+        distractors: [
+          "غروب خورشید / شهر دمشق و بازار آن",
+          "تاریکی مطلق / دیار غربت و تنهایی",
+          "غذای شبانه / کاروان اهل بیت"
+        ]
+      },
+      {
+        word: "مردم",
+        tag: "ایهام انسان و چشم",
+        meanings: ["انسان‌ها، خلق و مردمان", "مردمک چشم بیننده"],
+        hint: "مردم دیده من غرق شد در خون که چرا...",
+        prompt: "معانی ایهام‌دار واژه «مردم» در بیت معروف حافظ چیست؟",
+        correct: "انسان‌ها و خلق / مردمک چشم",
+        distractors: [
+          "جماعت شهر / سیاهی چشم و نگاه",
+          "خویشاوندان / روشنایی دیده",
+          "عاشقان جهان / اشک ریزان از چشم"
+        ]
+      },
+      {
+        word: "لبریز",
+        tag: "ایهام پر و جویبار",
+        meanings: ["پر، سرشار و لبالب", "جویبار سرریز از آب"],
+        hint: "پیمانه لبریز و جویبار بهاری",
+        prompt: "دو معنای ایهام‌دار واژه «لبریز» کدامند؟",
+        correct: "پر و سرشار / جویبار لبریز آب",
+        distractors: [
+          "جام شراب / رودخانه طغیان‌کرده",
+          "لبالب از غم / ریزش اشک از مژه",
+          "کاسه لبالب / چشمه خروشان کوه"
+        ]
+      },
+      {
+        word: "چشمه",
+        tag: "ایهام جوشش و دیده",
+        meanings: ["محل جوشش آب زلال", "چشم بیننده و منفذ نور"],
+        hint: "چشمه خورشید و چشمه آب حیات",
+        prompt: "معانی ایهام‌دار واژه «چشمه» در کتب فارسی کدام است؟",
+        correct: "محل جوشش آب / چشم بیننده",
+        distractors: [
+          "سرچشمه رود / کاسه چشم و اشک",
+          "حوضچه باغ / نگاه مهرآمیز معشوق",
+          "چشمه آفتاب / چشمان غزال چمن"
+        ]
+      }
     ]
   },
   {
@@ -1261,16 +1451,136 @@ const DEFAULT_STAGES = [
     title: "برج سوم: درس‌های ۸ تا ۱۱ (آرایه‌های کنایی)",
     unlocked: false,
     words: [
-      { word: "باد", meanings: ["نسیم وزان", "غرور و تکبر"], hint: "باد در سر داشتن" },
-      { word: "لبخند", meanings: ["تبسم شیرین", "شکفتن غنچه گل"], hint: "خنده گل در چمن" },
-      { word: "پای", meanings: ["اندام حرکتی", "اساس و بنیاد پایدار"], hint: "پای‌برجا بودن" },
-      { word: "دست", meanings: ["اندام گیرنده", "قدرت، نفوذ و تسلط"], hint: "دست بالا دست بسیار است" },
-      { word: "سایه", meanings: ["تاریکی ناشی از جسم", "حمایت، پناه و لطف"], hint: "سایه‌ات کم مباد" },
-      { word: "سر", meanings: ["کله و عضو فوقانی", "راز نهان و اندیشه"], hint: "سر در گریبان و سر عشق" },
-      { word: "آتش", meanings: ["شعله سوزان", "خشم، عشق و سوز دل"], hint: "آتش درون سینه" },
-      { word: "خاک", meanings: ["زمین و تربت", "تواضع، افتادگی و ناچیزی"], hint: "خاک پای دوستان بودن" },
-      { word: "خون", meanings: ["مایع سرخ حیات", "کشتن، جان‌فشانی و رنج"], hint: "خون دل خوردن" },
-      { word: "پروانه", meanings: ["حشره عاشق شمع", "اجازه‌نامه و رخصت"], hint: "پروانه حضور داشتن" }
+      {
+        word: "باد",
+        tag: "کنایه و ایهام",
+        meanings: ["نسیم وزان و جریان هوا", "غرور، تکبر و کبر در سر"],
+        hint: "باد در سر داشتن",
+        prompt: "معانی کنایی و ایهام‌دار «باد» در زبان ادبی چیست؟",
+        correct: "نسیم وزان / غرور و تکبر",
+        distractors: [
+          "طوفان تندباد / بیهودگی و پوچی",
+          "هوای خنک / ادعای باطل",
+          "حرکت نسیم / خشم و غضب ناگهانی"
+        ]
+      },
+      {
+        word: "لبخند",
+        tag: "کنایه تصویری",
+        meanings: ["تبسم شیرین چهره", "شکفتن غنچه و گل سرخ"],
+        hint: "خنده گل در چمنزار",
+        prompt: "معانی کنایی و ایهام‌دار «خنده و لبخند گل» کدام است؟",
+        correct: "تبسم چهره / شکفتن غنچه گل",
+        distractors: [
+          "شادی معشوق / قطره شبنم روی گلبرگ",
+          "قهقهه مستانه / طراوت چمنزار بهاری",
+          "خوشرویی / پژمردگی و ریزش گلبرگ"
+        ]
+      },
+      {
+        word: "پای",
+        tag: "کنایه ادبی",
+        meanings: ["اندام حرکتی بدن", "اساس، بنیان، قدرت و پایداری"],
+        hint: "پای‌برجا بودن و از پای درآمدن",
+        prompt: "معانی کنایی واژه «پا و پای» در عبارت «پای‌برجا» کدام است؟",
+        correct: "اندام حرکتی / اساس و بنیاد پایدار",
+        distractors: [
+          "گام برداشتن / شتاب و سرعت در عمل",
+          "کفش و پای‌پوش / ایستادگی ظاهری",
+          "قدم سلوک / پافشاری بر ادعا"
+        ]
+      },
+      {
+        word: "دست",
+        tag: "کنایه اقتدار",
+        meanings: ["اندام گیرنده و دست", "قدرت، نفوذ، توانمندی و تسلط"],
+        hint: "دست بالا دست بسیار است",
+        prompt: "معنای کنایی واژه «دست» در متون کهن چیست؟",
+        correct: "اندام گیرنده / قدرت و نفوذ",
+        distractors: [
+          "پنجه سخاوت / یاری رساندن به دیگران",
+          "بخشندگی شاه / سلاح جنگی پهلوان",
+          "بازوی نبرد / اقتدار حاکم شهر"
+        ]
+      },
+      {
+        word: "سایه",
+        tag: "کنایه حمایت",
+        meanings: ["تاریکی ناشی از جسم در آفتاب", "حمایت، پناه، لطف و عنایت"],
+        hint: "سایه‌ات کم مباد",
+        prompt: "معنای کنایی واژه «سایه» در عبارت دعایی «سایه‌ات مستدام» چیست؟",
+        correct: "تاریکی مقابل آفتاب / حمایت و پناه",
+        distractors: [
+          "سایه درخت / حضور و همنشینی",
+          "تاریکی شب / لطف و کرم پنهانی",
+          "سردی و سکوت / طول عمر فراوان"
+        ]
+      },
+      {
+        word: "سر",
+        tag: "ایهام کله و راز",
+        meanings: ["عضو فوقانی بدن (کله)", "راز نهان، اندیشه و هوای باطن"],
+        hint: "سر در گریبان و سر عشق داشتن",
+        prompt: "معانی ایهام‌دار واژه «سر» در ادبیات کدام است؟",
+        correct: "کله و عضو فوقانی / راز نهان و اندیشه",
+        distractors: [
+          "تاج پادشاه / فکر و خیال پوچ",
+          "پیشوای قوم / راز فاش‌شده",
+          "آغاز داستان / تصمیم قاطع در کار"
+        ]
+      },
+      {
+        word: "آتش",
+        tag: "استعاره و ایهام",
+        meanings: ["شعله سوزان برافروخته", "خشم شدید، عشق پرشور و سوز دل"],
+        hint: "آتش درون سینه و سوز عشق",
+        prompt: "معانی ادبی و استعاری واژه «آتش» در شعر غنایی چیست؟",
+        correct: "شعله سوزان / خشم، عشق و سوز دل",
+        distractors: [
+          "حرارت هیزم / تب و بیماری سخت",
+          "سرخی لاله / عذاب دوزخ",
+          "اخگر تابان / هیجان زودگذر"
+        ]
+      },
+      {
+        word: "خاک",
+        tag: "کنایه تواضع",
+        meanings: ["تربت و زمین خاکی", "تواضع، افتادگی، ناچیزی و فنا"],
+        hint: "خاک پای دوستان بودن",
+        prompt: "معنای کنایی «خاک شدن» در برابر محبوب چیست؟",
+        correct: "زمین و تربت / تواضع و افتادگی کامل",
+        distractors: [
+          "گرد و غبار بیابان / مرگ و نیستی",
+          "دفن شدن / فقر و تنگدستی شدید",
+          "آلودگی گناه / خاموشی و سکوت"
+        ]
+      },
+      {
+        word: "خون",
+        tag: "کنایه مشقت",
+        meanings: ["مایع سرخ حیات بدن", "رنج، مشقت فراوان، کشتن و ایثار"],
+        hint: "خون دل خوردن در طلب یار",
+        prompt: "معنای کنایی عبارت «خون جگر خوردن» چیست؟",
+        correct: "مایع سرخ حیات / رنج و مشقت فراوان",
+        distractors: [
+          "خونریزی در نبرد / بیماری کشنده",
+          "فداکاری در راه حق / خشم و غضب مفرط",
+          "کشته شدن بی‌گناه / حسرت و اندوه زودگذر"
+        ]
+      },
+      {
+        word: "پروانه",
+        tag: "ایهام حشره و رخصت",
+        meanings: ["حشره عاشق شمع و نور", "اجازه‌نامه، حکم و رخصت رسمی"],
+        hint: "پروانه حضور داشتن در درگاه شاه",
+        prompt: "دو معنای ایهام‌دار واژه «پروانه» در متون دهم کدامند؟",
+        correct: "حشره عاشق شمع / اجازه‌نامه و رخصت",
+        distractors: [
+          "حشره بال‌دار / پر پرنده خوش‌آواز",
+          "شعله شمع / نامه محبت‌آمیز یار",
+          "طواف‌کننده حرم / پرچم کوچک لشکر"
+        ]
+      }
     ]
   },
   {
@@ -1278,16 +1588,136 @@ const DEFAULT_STAGES = [
     title: "برج چهارم: درس‌های ۱۲ تا ۱۴ (تناسب و ایهام تناسب)",
     unlocked: false,
     words: [
-      { word: "خسرو", meanings: ["پادشاه ساسانی", "شاه و فرمانروا"], hint: "خسرو و شیرین نظامی" },
-      { word: "عیسی", meanings: ["پیامبر اهل معجزه", "شفابخش و زنده‌کننده"], hint: "دم عیسوی داشتن" },
-      { word: "سلیمان", meanings: ["پیامبر حاکم بر باد و مور", "انسان صاحب شوکت"], hint: "ملک سلیمان و خاتم او" },
-      { word: "یوسف", meanings: ["پیامبر نماد زیبایی", "عزیز مصر و گمگشته"], hint: "یوسف گمگشته بازآید به کنعان" },
-      { word: "مجنون", meanings: ["عاشق شیدای لیلی", "دیوانه و بی‌قرار"], hint: "مجنون عامری" },
-      { word: "بلبل", meanings: ["پرنده خوش‌آواز چمن", "نغمه‌سرای عاشق گل"], hint: "ناله بلبل سحری" },
-      { word: "شمع", meanings: ["موم روشنایی‌بخش", "معشوق و مراد جمع"], hint: "شمع محفل‌افروز" },
-      { word: "پرویز", meanings: ["لقب خسرو دوم ساسانی", "پیروزمند و مظفر"], hint: "خسرو پرویز" },
-      { word: "نادر", meanings: ["کمیاب و بی‌نظیر", "پادشاه افشاری"], hint: "گوهر نادر" },
-      { word: "فرهاد", meanings: ["عاشق کوه‌کن شیرین", "مرد زحمتکش پرشور"], hint: "تیشه فرهاد بر بیستون" }
+      {
+        word: "خسرو",
+        tag: "ایهام تناسب",
+        meanings: ["خسرو پرویز پادشاه ساسانی", "شاه و فرمانروای مطلق"],
+        hint: "خسرو و شیرین نظامی",
+        prompt: "معانی واژه «خسرو» در شعر عاشقانه کهن چیست؟",
+        correct: "خسرو پرویز پادشاه / شاه و فرمانروا",
+        distractors: [
+          "عاشق کوه‌کن / تاجدار باانصاف",
+          "پادشاه کیانی / سردار جنگاور",
+          "خسرو انوشیروان / شاهزاده ساسانی"
+        ]
+      },
+      {
+        word: "عیسی",
+        tag: "تلمیح و تناسب",
+        meanings: ["پیامبر اهل معجزه الهی", "دم شفابخش و زنده‌کننده دل‌ها"],
+        hint: "دم عیسوی داشتن معشوق",
+        prompt: "معنای ایهامی و تلمیحی «دم عیسی» در شعر کهن چیست؟",
+        correct: "پیامبر اهل معجزه / دم شفابخش و حیات‌بخش",
+        distractors: [
+          "مسیح موعود / نفس پاک و پرهیزگار",
+          "پزشک دانا / دعای مستجاب سحر",
+          "پیامبر مهربان / سخن پندآموز"
+        ]
+      },
+      {
+        word: "سلیمان",
+        tag: "تلمیح حاکمیت",
+        meanings: ["پیامبر حاکم بر باد و دیو و مور", "انسان دارای شوکت و اقتدار عظیم"],
+        hint: "ملک سلیمان و خاتم انگشتری او",
+        prompt: "معانی تلمیحی و تناسبی «سلیمان» در ابیات ادبیات دهم کدام است؟",
+        correct: "پیامبر حاکم بر باد / صاحب شوکت و خاتم",
+        distractors: [
+          "پادشاه دادگر / هم‌سخن با پرندگان",
+          "صاحب گنجینه‌های طلا / حکیم بنی‌اسرائیل",
+          "پادشاه بلقیس / نگین اسرارآمیز"
+        ]
+      },
+      {
+        word: "یوسف",
+        tag: "تلمیح زیبایی",
+        meanings: ["پیامبر نماد زیبایی و گمگشتگی", "عزیز مصر و ماه کنعان"],
+        hint: "یوسف گمگشته بازآید به کنعان غم مخور",
+        prompt: "معنای نمادین و تلمیحی «یوسف» در غزل حافظ چیست؟",
+        correct: "پیامبر نماد زیبایی / گمگشته عزیز مصر",
+        distractors: [
+          "تعبیرکننده خواب / برادر وفادار بنیامین",
+          "پادشاه کنعان / مسافر راه دور",
+          "غلام وفادار / نماد پاکدامنی و صبر"
+        ]
+      },
+      {
+        word: "مجنون",
+        tag: "ایهام صفت و نام",
+        meanings: ["مجنون عامری (قیس) عاشق لیلی", "دیوانه، شوریده و بی‌قرار"],
+        hint: "قصه لیلی و مجنون نظامی",
+        prompt: "دو وجه معنایی واژه «مجنون» در ادبیات کدامند؟",
+        correct: "عاشق شیدای لیلی / دیوانه و بی‌قرار",
+        distractors: [
+          "شاعر قبیله بنی‌عامر / پریشان‌حال بیابان",
+          "سرگردان کوه نجد / واله و شیفته زیبایی",
+          "عاشق ناکام / شیدازده خلوت‌نشین"
+        ]
+      },
+      {
+        word: "بلبل",
+        tag: "تناسب عاشق گل",
+        meanings: ["پرنده خوش‌آواز چمن (عندلیب)", "نغمه‌سرای عاشق و شیدای گل"],
+        hint: "ناله بلبل سحری در فراق گل",
+        prompt: "معنای نمادین «بلبل» در شعر تمثیلی و عرفانی چیست؟",
+        correct: "پرنده خوش‌آواز / عاشق نغمه‌سرای گل",
+        distractors: [
+          "هزاردستان خوشخوان / پیام‌آور فصل بهار",
+          "پرنده چمنزار / مطرب مجلس انس",
+          "نغمه‌ساز سحرگاهی / بلبل قفسی"
+        ]
+      },
+      {
+        word: "شمع",
+        tag: "تناسب پروانه و شمع",
+        meanings: ["موم روشنایی‌بخش و سوزان", "معشوق زیبارو و مراد بزم محفل"],
+        hint: "شمع محفل‌افروز و پروانه گرد او",
+        prompt: "دو وجه تمثیلی و ایهامی «شمع» در شعر غنایی کدام است؟",
+        correct: "روشنایی‌بخش سوزان / معشوق و مراد محفل",
+        distractors: [
+          "چراغ خانه / چهره برافروخته از باده",
+          "موم گداخته / فناپذیری عمر آدمی",
+          "نور شبستان / راهنمای سالکان"
+        ]
+      },
+      {
+        word: "پرویز",
+        tag: "ایهام نام و پیروزی",
+        meanings: ["خسرو پرویز شاهنشاه ساسانی", "پیروزمند، مظفر و فاتح نبرد"],
+        hint: "شاه پرویز و شیرین",
+        prompt: "معانی ایهام‌دار واژه «پرویز» در اشعار تاریخی و غنایی چیست؟",
+        correct: "خسرو پرویز پادشاه / پیروزمند و مظفر",
+        distractors: [
+          "همسر شیرین / سردار نامدار ایران",
+          "تاجدار مداین / فاتح قلعه‌های روم",
+          "پادشاه صاحب شوکت / شوالیه پیروز"
+        ]
+      },
+      {
+        word: "نادر",
+        tag: "ایهام صفت و اسم",
+        meanings: ["کمیاب، شگفت و بی‌نظیر", "نادرشاه پادشاه افشاری"],
+        hint: "گوهر نادر و نادر دوران",
+        prompt: "معانی دوگانه و ایهام‌دار «نادر» در شعر و نثر چیست؟",
+        correct: "کمیاب و بی‌نظیر / نادرشاه افشار",
+        distractors: [
+          "گوهر گرانبها / سردار فاتح شرق",
+          "شگفت‌انگیز و تک / فاتح دهلی",
+          "پادشاه شجاع / درّ بی‌مانند"
+        ]
+      },
+      {
+        word: "فرهاد",
+        tag: "تلمیح عاشق کوه‌کن",
+        meanings: ["عاشق شیدا و سنگ‌تراش شیرین", "مرد زحمتکش، پرشور و جان‌فشان"],
+        hint: "تیشه فرهاد بر صخره‌های بیستون",
+        prompt: "معنای نمادین «فرهاد» در شعر کهن فارسی چیست؟",
+        correct: "عاشق کوه‌کن شیرین / مرد زحمتکش پرشور",
+        distractors: [
+          "سنگ‌تراش بیستون / رقیب سرسخت خسرو",
+          "پهلوان عاشق‌پیشه / معمار قصر شیرین",
+          "شهید راه عشق / تیشه‌دار ناکام"
+        ]
+      }
     ]
   },
   {
@@ -1295,16 +1725,136 @@ const DEFAULT_STAGES = [
     title: "برج پنجم: درس‌های ۱۵ تا ۱۸ (واژگان پیشرفته ترم دوم)",
     unlocked: false,
     words: [
-      { word: "سودا", meanings: ["عشق، شور و تفکر عمیق", "تجارت، داد و ستد"], hint: "سودای عشق در سر" },
-      { word: "نوا", meanings: ["آهنگ و نغمه موسیقی", "ساز، برگ و توشه زندگی"], hint: "بی‌برگ و بینوا" },
-      { word: "هزار", meanings: ["عدد ریاضی ۱۰۰۰", "پرنده بلبل (هزاردستان)"], hint: "هزاردستان در باغ" },
-      { word: "گوشه", meanings: ["کنج و خلوتگاه", "گوشه دستگاه موسیقی ایرانی"], hint: "گوشه‌نشین و گوشه نیوا" },
-      { word: "ساز", meanings: ["آلت موسیقی", "آمادگی، سازوبرگ"], hint: "ساز کردن آهنگ" },
-      { word: "باز", meanings: ["پرنده شکاری تیزبین", "گشوده و دوباره"], hint: "کبوتر با کبوتر، باز با باز" },
-      { word: "تیر", meanings: ["تیر کمان", "ماه چهارم و سیاره عطارد"], hint: "تیر پرتابی و تیر آسمان" },
-      { word: "زهره", meanings: ["سیاره ناهید و نوازنده فلک", "شجاعت و جرأت"], hint: "زهره چنگ‌نواز" },
-      { word: "بهار", meanings: ["فصل سرسبزی طبیعت", "بتخانه و جایگاه زیبا"], hint: "نوبهار و بهارستان" },
-      { word: "دیوان", meanings: ["دفتر اشعار منظوم", "دادگاه، اداره و جایگاه دیوها"], hint: "دیوان حافظ و دیوان محاسبات" }
+      {
+        word: "سودا",
+        tag: "ایهام عشق و تجارت",
+        meanings: ["عشق، شور جنون‌آمیز و تفکر عمیق", "تجارت، داد و ستد و معامله"],
+        hint: "سودای عشق در سر داشتن",
+        prompt: "معانی دوگانه و ایهام‌دار واژه «سودا» در ادبیات کدام است؟",
+        correct: "عشق و شور جنون‌آمیز / تجارت و دادوستد",
+        distractors: [
+          "سیاهی باطن / معامله سودآور بازار",
+          "خلق و خوی تند / خرید و فروش کالا",
+          "خیال باطل / تجارت پرسود کاروانیان"
+        ]
+      },
+      {
+        word: "نوا",
+        tag: "ایهام آهنگ و توشه",
+        meanings: ["آهنگ و نغمه موسیقی", "ساز، برگ و توشه زندگی"],
+        hint: "بی‌برگ و بینوا گشتن و نوای خوش ساز",
+        prompt: "معانی ایهام‌دار واژه «نوا» در شعر کهن چیست؟",
+        correct: "آهنگ و نغمه موسیقی / ساز و توشه زندگی",
+        distractors: [
+          "صدای دلنشین خواننده / رزق و روزی حلال",
+          "نغمه نی / مال و ثروت پادشاهی",
+          "دستگاه موسیقی سنتی / نان و آب مسافر"
+        ]
+      },
+      {
+        word: "هزار",
+        tag: "ایهام عدد و بلبل",
+        meanings: ["عدد ریاضی ۱۰۰۰", "پرنده بلبل (هزاردستان)"],
+        hint: "هزاردستان در بوستان و هزاران دستان",
+        prompt: "دو معنای ایهام‌دار واژه «هزار» در زبان شعر چیست؟",
+        correct: "عدد ریاضی ۱۰۰۰ / پرنده بلبل (هزاردستان)",
+        distractors: [
+          "شمارگان بی‌پایان / نغمه‌های بسیار",
+          "تعداد گام‌های سالک / پرنده بهاری چمن",
+          "عدد کثرت / نوای بلبلان در قفس"
+        ]
+      },
+      {
+        word: "گوشه",
+        tag: "ایهام کنج و مقام",
+        meanings: ["کنج، زاویه و خلوتگاه", "گوشه و نغمه دستگاه موسیقی سنتی"],
+        hint: "گوشه‌نشین خرابات و گوشه دستگاه نوا",
+        prompt: "معانی ایهام‌دار واژه «گوشه» در ابیات ادبیات چیست؟",
+        correct: "کنج و خلوتگاه / مقام و نغمه موسیقی",
+        distractors: [
+          "زاویه اتاق / بخش کوچک ترانه",
+          "پناهگاه درویشان / سیم‌های ساز زهی",
+          "خلوتگاه تنهایی / پرده موسیقی کهن"
+        ]
+      },
+      {
+        word: "ساز",
+        tag: "ایهام آلت موسیقی و سازوبرگ",
+        meanings: ["آلت و ادوات موسیقی", "آمادگی، اسباب و سازوبرگ سفر"],
+        hint: "ساز کردن آهنگ و سازوبرگ نبرد",
+        prompt: "دو معنای ایهام‌دار واژه «ساز» در زبان فارسی چیست؟",
+        correct: "آلت موسیقی / آمادگی و سازوبرگ",
+        distractors: [
+          "نوای چنگ و رباب / ابزار و آلات کار",
+          "آهنگ دلنشین / رخت و اسباب خانه",
+          "تار و تنبور / آذوقه کاروان سفر"
+        ]
+      },
+      {
+        word: "باز",
+        tag: "ایهام پرنده و دوباره",
+        meanings: ["پرنده شکاری تیزبین و شکاری", "گشوده، فراخ و دوباره"],
+        hint: "کبوتر با کبوتر، باز با باز",
+        prompt: "معانی دوگانه و ایهام‌دار واژه «باز» کدامند؟",
+        correct: "پرنده شکاری تیزبین / گشوده و دوباره",
+        distractors: [
+          "عقاب بلندپرواز / درب گشوده قصر",
+          "شکارچی پرندگان / برگشت به خانه",
+          "شهباز شکاری / آشکار و هویدا"
+        ]
+      },
+      {
+        word: "تیر",
+        tag: "ایهام کمان و سیاره",
+        meanings: ["تیر پرتابی کماندار", "ماه چهارم سال و سیاره عطارد"],
+        hint: "تیر پرتابی و تیر فلک (عطارد دانا)",
+        prompt: "معانی ایهام‌دار واژه «تیر» در منظومه‌ها کدام است؟",
+        correct: "تیر کماندار / ماه تیر و سیاره عطارد",
+        distractors: [
+          "پیکان تیز جنگی / فصل گرم تابستان",
+          "تیردان صیاد / ستاره بخت و اقبال",
+          "سلاح آرش کمانگیر / سیاره زهره"
+        ]
+      },
+      {
+        word: "زهره",
+        tag: "ایهام سیاره و شجاعت",
+        meanings: ["سیاره ناهید و نوازنده فلک", "جرأت، شجاعت و دلاوری"],
+        hint: "زهره چنگ‌نواز و زهره دریدن از ترس",
+        prompt: "دو معنای ایهام‌دار واژه «زهره» در ادب فارسی چیست؟",
+        correct: "سیاره ناهید (نوازنده فلک) / جرأت و شجاعت",
+        distractors: [
+          "ستاره صبحگاهی / کبد و صفرا در بدن",
+          "الهه موسیقی / شهامت و تهور جنگجو",
+          "ناهید درخشان / کیسه صفرای انسان"
+        ]
+      },
+      {
+        word: "بهار",
+        tag: "ایهام فصل و بتخانه",
+        meanings: ["فصل سرسبزی و شکوفایی طبیعت", "بتخانه، بتکده و جایگاه زیبا"],
+        hint: "نوبهار طبیعت و بهارستان بتخانه",
+        prompt: "معانی ایهام‌دار واژه «بهار» در شعر حافظ و نظامی کدام است؟",
+        correct: "فصل شکوفایی طبیعت / بتخانه و بتکده زیبا",
+        distractors: [
+          "آغاز سال نو / زیباروی خوش‌چهره",
+          "نسیم گلزار / نگارخانه چین و ماچین",
+          "جشن فروردین / بت‌های سیمین‌بر"
+        ]
+      },
+      {
+        word: "دیوان",
+        tag: "ایهام کتاب و دادگاه",
+        meanings: ["دفتر اشعار منظوم شاعر", "دادگاه، اداره محاسبات و کاخ دیوها"],
+        hint: "دیوان حافظ و دیوان محاسبات کشور",
+        prompt: "معانی دوگانه واژه «دیوان» در ادب فارسی کدام است؟",
+        correct: "دفتر اشعار منظوم / دادگاه، اداره و جایگاه دیوها",
+        distractors: [
+          "مجموعه غزلیات / مجلس حاکم و شاه",
+          "کتاب شعر کهن / مجمع بزرگان قوم",
+          "طومار نوشته‌ها / زندان تاریک پادشاه"
+        ]
+      }
     ]
   }
 ];
@@ -1329,7 +1879,6 @@ function saveLocal() {
   localStorage.setItem("gv_classLock", appState.classLock);
 }
 
-// Map Database row to Client Model
 function mapStudentRow(row) {
   if (!row) return null;
   return {
@@ -1343,7 +1892,7 @@ function mapStudentRow(row) {
   };
 }
 
-// 1. Global Teacher Config Sync (gv_state: id=global, stages + classLock only)
+// 1. Global Teacher Config Sync (gv_state: id=global)
 async function syncGlobalState(action = "push") {
   if (!appState.sbUrl || !appState.sbKey) return;
   const headers = {
@@ -1713,7 +2262,7 @@ document.getElementById("btnLogout").addEventListener("click", () => {
 // 5. VIEW NAVIGATION & DASHBOARD
 // ==========================================
 function showView(viewId) {
-  ["viewAuth", "viewMap", "viewArena", "viewLeaderboard", "viewTeacher"].forEach(id => {
+  ["viewAuth", "viewMap", "viewStudy", "viewArena", "viewLeaderboard", "viewTeacher"].forEach(id => {
     document.getElementById(id).classList.add("hidden");
   });
   document.getElementById(viewId).classList.remove("hidden");
@@ -1748,37 +2297,164 @@ function renderTowerMap() {
 
     const card = document.createElement("div");
     card.className = `tower-card ${isCompleted ? "completed" : (isUnlocked ? "unlocked" : "locked")}`;
-    card.innerHTML = `
-      <div>
-        <div style="font-weight:900; font-size:0.92rem; color:${isCompleted ? "var(--ok)" : (isUnlocked ? "var(--amber)" : "var(--steel)")};">
-          ${st.title}
-        </div>
-        <div style="font-size:0.75rem; color:var(--steel); margin-top:3px;">
-          تعداد واژگان: ${st.words.length} • وضعیت: ${isCompleted ? "فتح شده" : (isUnlocked ? "آماده ورود به دروازه" : "قفل برج قبلی")}
-        </div>
+
+    const infoDiv = document.createElement("div");
+    infoDiv.innerHTML = `
+      <div style="font-weight:900; font-size:0.95rem; color:${isCompleted ? "var(--ok)" : (isUnlocked ? "var(--amber)" : "var(--steel)")};">
+        ${st.title}
       </div>
-      <div style="display:flex; align-items:center; gap:8px;">
-        <span class="pixel-num" style="font-size:0.7rem; color:${isCompleted ? "var(--ok)" : (isUnlocked ? "var(--amber)" : "var(--steel)")};">
-          ${isCompleted ? "[فتح]" : (isUnlocked ? "[ورود]" : "[قفل]")}
-        </span>
+      <div style="font-size:0.75rem; color:var(--steel); margin-top:4px;">
+        تعداد واژگان: ${st.words.length} • وضعیت: ${isCompleted ? "فتح شده" : (isUnlocked ? "آماده ورود" : "قفل برج قبلی")}
       </div>
     `;
+    card.appendChild(infoDiv);
 
     if (isUnlocked) {
-      card.addEventListener("click", () => {
+      const actionsDiv = document.createElement("div");
+      actionsDiv.style.cssText = "display:flex; gap:8px; align-items:center; flex-wrap:wrap;";
+
+      // 1. Study Mode Button (یادگیری) - min-height 44px
+      const studyBtn = document.createElement("button");
+      studyBtn.className = "pixel-btn btn-slate";
+      studyBtn.style.cssText = "min-height:44px; padding:8px 14px; font-size:0.85rem;";
+      studyBtn.textContent = "یادگیری";
+      studyBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
         playSelectSound();
-        startStage(st);
+        openStudyMode(st);
       });
+
+      // 2. Battle Mode Button (نبرد دروازه) - min-height 44px
+      const battleBtn = document.createElement("button");
+      battleBtn.className = "pixel-btn btn-amber";
+      battleBtn.style.cssText = "min-height:44px; padding:8px 14px; font-size:0.85rem;";
+      battleBtn.textContent = "نبرد دروازه";
+      battleBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        playSelectSound();
+        startBattleMode(st);
+      });
+
+      actionsDiv.appendChild(studyBtn);
+      actionsDiv.appendChild(battleBtn);
+      card.appendChild(actionsDiv);
+    } else {
+      const lockedBadge = document.createElement("div");
+      lockedBadge.className = "pixel-num";
+      lockedBadge.style.cssText = "font-size:0.75rem; color:var(--steel);";
+      lockedBadge.textContent = "[قفل]";
+      card.appendChild(lockedBadge);
     }
+
     list.appendChild(card);
   });
 }
 
 // ==========================================
-// 6. MAIN ARENA ENGINE ("معمای دروازه")
+// 6. DEDICATED FLASHCARD STUDY MODE (یادگیری)
+// ==========================================
+let studyStage = null;
+let studyDeck = [];
+let studyIndex = 0;
+let isCardFlipped = false;
+
+function openStudyMode(stage) {
+  studyStage = stage;
+  studyDeck = [...stage.words];
+  studyIndex = 0;
+  isCardFlipped = false;
+
+  renderStudyCard();
+  showView("viewStudy");
+}
+
+function renderStudyCard() {
+  if (studyDeck.length === 0) {
+    studyDeck = [...studyStage.words];
+  }
+  if (studyIndex >= studyDeck.length) studyIndex = 0;
+  if (studyIndex < 0) studyIndex = studyDeck.length - 1;
+
+  const item = studyDeck[studyIndex];
+  document.getElementById("studyStageTitle").textContent = studyStage.title.split(":")[0];
+  document.getElementById("studyCounter").textContent = `${studyIndex + 1}/${studyDeck.length}`;
+  document.getElementById("studyCardTag").textContent = item.tag || "واژه ایهام‌دار";
+  document.getElementById("studyCardWord").textContent = item.word;
+
+  const mContainer = document.getElementById("studyMeanings");
+  mContainer.innerHTML = (item.meanings || []).map((m, idx) => `
+    <div class="study-meaning-item">
+      <strong style="color:var(--amber);">معنای ${idx + 1}:</strong> ${m}
+    </div>
+  `).join("");
+
+  document.getElementById("studyHint").textContent = item.hint ? `نکته ادبی: ${item.hint}` : "";
+
+  applyCardFlipState();
+}
+
+function applyCardFlipState() {
+  const front = document.getElementById("studyCardFront");
+  const back = document.getElementById("studyCardBack");
+  if (isCardFlipped) {
+    front.classList.add("hidden");
+    back.classList.remove("hidden");
+  } else {
+    front.classList.remove("hidden");
+    back.classList.add("hidden");
+  }
+}
+
+document.getElementById("studyCard").addEventListener("click", () => {
+  isCardFlipped = !isCardFlipped;
+  playSelectSound();
+  applyCardFlipState();
+});
+
+document.getElementById("btnStudyNext").addEventListener("click", () => {
+  if (studyIndex < studyDeck.length - 1) {
+    studyIndex++;
+  } else {
+    studyIndex = 0;
+  }
+  isCardFlipped = false;
+  playSelectSound();
+  renderStudyCard();
+});
+
+document.getElementById("btnStudyPrev").addEventListener("click", () => {
+  if (studyIndex > 0) {
+    studyIndex--;
+  } else {
+    studyIndex = studyDeck.length - 1;
+  }
+  isCardFlipped = false;
+  playSelectSound();
+  renderStudyCard();
+});
+
+document.getElementById("btnStudyReview").addEventListener("click", () => {
+  // Push current card to the end of study deck for spaced review
+  playSelectSound();
+  if (studyDeck.length > 1) {
+    const item = studyDeck.splice(studyIndex, 1)[0];
+    studyDeck.push(item);
+  }
+  isCardFlipped = false;
+  renderStudyCard();
+});
+
+document.getElementById("btnStudyEnterBattle").addEventListener("click", () => {
+  playSelectSound();
+  startBattleMode(studyStage);
+});
+
+document.getElementById("btnStudyBack").addEventListener("click", enterDashboard);
+
+// ==========================================
+// 7. BATTLE ARENA ENGINE (نبرد دروازه)
 // ==========================================
 let currentStage = null;
-let flashcardQueue = [];
 let quizQueue = [];
 let masteredCount = 0;
 let totalInitialWords = 0;
@@ -1814,7 +2490,6 @@ function updateCandlesHUD() {
 function updateKnightPosition(progressPct) {
   const actor = document.getElementById("knightActor");
   if (actor) {
-    // Knight walks from right:24px to right:calc(50% - 14px) towards gate
     const offset = 24 + (progressPct / 100) * 170;
     actor.style.right = `${offset}px`;
   }
@@ -1849,9 +2524,8 @@ function updateComboBadge() {
   }
 }
 
-function startStage(stage) {
+function startBattleMode(stage) {
   currentStage = stage;
-  flashcardQueue = [...stage.words];
   quizQueue = [...stage.words];
   masteredCount = 0;
   totalInitialWords = stage.words.length;
@@ -1872,60 +2546,45 @@ function startStage(stage) {
   updateLocksRow(0, totalInitialWords);
 
   showView("viewArena");
-  renderNextFlashcard();
+  renderNextQuizQuestion();
 }
 
-// Phase 1: Flashcards
-function renderNextFlashcard() {
-  document.getElementById("phaseFlashcard").classList.remove("hidden");
-  document.getElementById("phaseQuiz").classList.add("hidden");
-  document.getElementById("phaseVictory").classList.add("hidden");
-  document.getElementById("speakerTag").textContent = "حکیم قلعه";
+// Upgraded Quiz Distractor Engine
+function getQuizOptionsForCard(card, stage) {
+  const correctChoice = card.correct || (card.meanings ? card.meanings.join(" / ") : "");
 
-  if (flashcardQueue.length === 0) {
-    // All cards reviewed -> Enter Phase 2: Quiz
-    startQuizPhase();
-    return;
+  // Priority 1: Use explicit 3 high-quality distractors if present on card
+  if (Array.isArray(card.distractors) && card.distractors.length >= 3) {
+    const distractors = card.distractors.slice(0, 3);
+    return [correctChoice, ...distractors].sort(() => 0.5 - Math.random());
   }
 
-  const item = flashcardQueue[0];
-  document.getElementById("stageTargetWord").textContent = item.word;
+  // Priority 2: Pick 3 distractors strictly from the SAME stage/category first
+  let sameStageCards = (stage && stage.words) ? stage.words.filter(w => w.word !== card.word) : [];
+  let candidatePool = sameStageCards.map(w => w.correct || (w.meanings ? w.meanings.join(" / ") : "")).filter(Boolean);
 
-  const mBox = document.getElementById("fcMeanings");
-  mBox.innerHTML = item.meanings.map((m, idx) => `
-    <div class="fc-meaning-card">
-      <span style="color:var(--amber); font-weight:900;">معنای ${idx + 1}:</span> ${m}
-    </div>
-  `).join("");
+  // Fallback: If stage has fewer than 4 cards, pool from other stages
+  if (candidatePool.length < 3) {
+    appState.stages.forEach(st => {
+      st.words.forEach(w => {
+        if (w.word !== card.word) {
+          const c = w.correct || (w.meanings ? w.meanings.join(" / ") : "");
+          if (c && !candidatePool.includes(c)) candidatePool.push(c);
+        }
+      });
+    });
+  }
 
-  document.getElementById("fcHint").textContent = item.hint || "";
-  document.getElementById("arenaCounter").textContent = `کارت ${totalInitialWords - flashcardQueue.length + 1}/${totalInitialWords}`;
+  const shuffledPool = [...candidatePool].sort(() => 0.5 - Math.random());
+  const selectedDistractors = shuffledPool.slice(0, 3);
+  return [correctChoice, ...selectedDistractors].sort(() => 0.5 - Math.random());
 }
 
-document.getElementById("btnFcKnown").addEventListener("click", () => {
-  playCorrectSound();
-  flashcardQueue.shift();
-  renderNextFlashcard();
-});
-
-document.getElementById("btnFcRepeat").addEventListener("click", () => {
-  playSelectSound();
-  const f = flashcardQueue.shift();
-  flashcardQueue.push(f);
-  renderNextFlashcard();
-});
-
-// Phase 2: Spaced Repetition Quiz
-function startQuizPhase() {
-  document.getElementById("phaseFlashcard").classList.add("hidden");
+function renderNextQuizQuestion() {
   document.getElementById("phaseQuiz").classList.remove("hidden");
   document.getElementById("phaseVictory").classList.add("hidden");
   document.getElementById("speakerTag").textContent = "نگهبان دروازه";
 
-  renderNextQuizQuestion();
-}
-
-function renderNextQuizQuestion() {
   if (quizQueue.length === 0) {
     completeStageVictory();
     return;
@@ -1935,6 +2594,11 @@ function renderNextQuizQuestion() {
   document.getElementById("stageTargetWord").textContent = currentQuizItem.word;
   selectedOptionIdx = -1;
 
+  // Prompt Text
+  const promptText = currentQuizItem.prompt || "کدام گزینه معانی صحیح و ایهام‌دار این واژه است؟";
+  document.getElementById("qzPrompt").textContent = promptText;
+
+  // Smart Repetition Badge
   const retryTag = document.getElementById("qzRetryTag");
   if (currentQuizItem.isRetry) {
     retryTag.classList.remove("hidden");
@@ -1942,13 +2606,8 @@ function renderNextQuizQuestion() {
     retryTag.classList.add("hidden");
   }
 
-  // Generate 4 options (1 correct + 3 distractors)
-  const allOtherWords = currentStage.words.filter(w => w.word !== currentQuizItem.word);
-  const shuffledOthers = [...allOtherWords].sort(() => 0.5 - Math.random());
-  const distractors = shuffledOthers.slice(0, 3).map(w => w.meanings.join(" / "));
-  const correctChoice = currentQuizItem.meanings.join(" / ");
-  const allChoices = [correctChoice, ...distractors].sort(() => 0.5 - Math.random());
-
+  // Build 4 RPG Options
+  const allChoices = getQuizOptionsForCard(currentQuizItem, currentStage);
   const optContainer = document.getElementById("qzOptions");
   optContainer.innerHTML = "";
   const letters = ["الف", "ب", "ج", "د"];
@@ -1988,7 +2647,7 @@ document.getElementById("btnConfirmAnswer").addEventListener("click", () => {
   if (!selectedBtn) return;
 
   const selectedText = selectedBtn.querySelector("span:nth-child(2)").textContent.trim();
-  const correctText = currentQuizItem.meanings.join(" / ");
+  const correctText = (currentQuizItem.correct || (currentQuizItem.meanings ? currentQuizItem.meanings.join(" / ") : "")).trim();
   const isCorrect = selectedText === correctText;
 
   handleQuizAnswer(selectedBtn, isCorrect, currentQuizItem, optBtns);
@@ -2034,16 +2693,16 @@ function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
     triggerScreenShake();
     playWrongSound();
 
-    // Record mistake for student & teacher analytics
     user.mistakes[item.word] = (user.mistakes[item.word] || 0) + 1;
 
     // Highlight correct answer
-    const correctText = item.meanings.join(" / ");
+    const correctText = (item.correct || (item.meanings ? item.meanings.join(" / ") : "")).trim();
     allBtns.forEach(b => {
-      if (b.textContent.includes(correctText)) b.classList.add("correct");
+      const txt = b.querySelector("span:nth-child(2)").textContent.trim();
+      if (txt === correctText) b.classList.add("correct");
     });
 
-    // Spaced repetition
+    // Spaced repetition: push failed item to end of queue
     const failed = quizQueue.shift();
     failed.isRetry = true;
     quizQueue.push(failed);
@@ -2083,7 +2742,7 @@ document.getElementById("btnBackToMap").addEventListener("click", enterDashboard
 document.getElementById("btnVictoryContinue").addEventListener("click", enterDashboard);
 
 // ==========================================
-// 7. LEADERBOARD VIEW
+// 8. LEADERBOARD VIEW
 // ==========================================
 document.getElementById("btnOpenLeaderboard").addEventListener("click", async () => {
   await fetchAllStudentsFromCloud();
@@ -2110,7 +2769,7 @@ document.getElementById("btnOpenLeaderboard").addEventListener("click", async ()
 document.getElementById("btnCloseLeaderboard").addEventListener("click", enterDashboard);
 
 // ==========================================
-// 8. HIDDEN TEACHER ADMIN PANEL (3 CLICKS + 431380)
+// 9. HIDDEN TEACHER ADMIN PANEL (3 CLICKS + 431380)
 // ==========================================
 let verClickCount = 0;
 let verClickTimer = null;
@@ -2251,7 +2910,7 @@ document.getElementById("btnAddCustomWord").addEventListener("click", async () =
 
   const stage = appState.stages.find(s => s.id === stageId);
   if (stage) {
-    stage.words.push({ word, meanings: [m1, m2], hint: "افزوده‌شده توسط دبیر" });
+    stage.words.push({ word, meanings: [m1, m2], hint: "افزوده‌شده توسط دبیر", tag: "واژه دبیر" });
     saveLocal();
     await syncGlobalState("push");
     document.getElementById("newWordText").value = "";
@@ -2298,7 +2957,7 @@ document.getElementById("btnExitTeacher").addEventListener("click", () => {
 });
 
 // ==========================================
-// 9. PWA SERVICE WORKER
+// 10. PWA SERVICE WORKER
 // ==========================================
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
