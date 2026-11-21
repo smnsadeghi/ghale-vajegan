@@ -1,9 +1,24 @@
-const CACHE_NAME = 'ghale-vajegan-v4.2';
+const CACHE_NAME = 'ghale-vajegan-v4.2.1';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './icon.svg',
+  './assets/world1_bg.webp',
+  './assets/world2_bg.webp',
+  './assets/world3_bg.webp',
+  './assets/world4_bg.webp',
+  './assets/knight_idle.webp',
+  './assets/knight_run.webp',
+  './assets/knight_attack.webp',
+  './assets/obstacle_bear.webp',
+  './assets/obstacle_bandit.webp',
+  './assets/obstacle_shadow.webp',
+  './assets/obstacle_dragon.webp',
+  './assets/hud_candle_lit.webp',
+  './assets/hud_candle_unlit.webp',
+  './assets/map_lock_unlocked.webp',
+  './assets/map_lock_locked.webp',
   './assets/bg/bg_w1_battle_ruins.webp',
   './assets/bg/bg_w1_citadel_bridge.webp',
   './assets/sprites/spr_knight_idle.png',
@@ -57,7 +72,13 @@ self.addEventListener('fetch', (event) => {
         const clone = response.clone();
         caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
         return response;
-      }).catch(() => caches.match('./index.html'));
+      }).catch(() => {
+        // Fallback for image requests when offline
+        if (event.request.destination === 'image' || event.request.url.match(/\.(png|webp|jpg|jpeg|svg)$/i)) {
+          return caches.match('./assets/bg/bg_w1_battle_ruins.webp') || caches.match('./icon.svg');
+        }
+        return caches.match('./index.html');
+      });
     })
   );
 });

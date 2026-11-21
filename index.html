@@ -205,13 +205,13 @@
       text-shadow: 1px 1px 0 #0b0d12;
     }
 
-    /* Top HUD */
+    /* Top HUD - 16-bit Medieval Dark Iron Style */
     .top-hud {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: var(--panel);
-      border: 2px solid var(--line);
+      background: linear-gradient(180deg, #182230 0%, #0d121a 100%);
+      border: 2px solid #364860;
       padding: 8px 12px;
       margin-bottom: 12px;
       clip-path: polygon(
@@ -220,7 +220,7 @@
         100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
         4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
       );
-      box-shadow: 0 4px 0 #07090f;
+      box-shadow: 0 4px 0 #07090f, inset 0 1px 0 rgba(255, 255, 255, 0.08);
     }
 
     .hud-candles {
@@ -229,12 +229,26 @@
       gap: 6px;
     }
     .hud-candle {
-      display: inline-block;
-      width: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 26px;
+    }
+    .hud-candle-img {
+      width: 16px;
       height: 24px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.7));
+      transition: opacity 0.3s ease, filter 0.3s ease;
+    }
+    .hud-candle.extinguished .hud-candle-img {
+      opacity: 0.32;
+      filter: grayscale(90%) brightness(0.6);
     }
     .hud-candle.extinguished {
-      opacity: 0.25;
+      opacity: 0.35;
       filter: grayscale(1);
     }
     @keyframes flameFlicker {
@@ -547,26 +561,65 @@
 
     .stage-locks-row {
       position: absolute;
-      top: 12px;
-      left: 12px;
+      top: 10px;
+      left: 10px;
       display: flex;
-      gap: 4px;
+      align-items: center;
+      gap: 6px;
       z-index: 6;
+      background: rgba(11, 14, 20, 0.78);
+      border: 1px solid #2b384c;
+      border-radius: 4px;
+      padding: 4px 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(2px);
+    }
+    .stage-locks-row::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 8px;
+      right: 8px;
+      height: 1px;
+      border-top: 2px dotted #4d5f78;
+      z-index: 1;
+      pointer-events: none;
     }
     .stage-lock {
-      width: 11px;
-      height: 15px;
-      color: var(--amber);
-    }
-    @keyframes lockShatter {
-      0% { transform: scale(1) rotate(0deg); opacity: 1; }
-      50% { transform: scale(1.4) rotate(-15deg); opacity: 0.5; }
-      100% { transform: scale(0.9) rotate(0deg); opacity: 0.25; }
+      width: 14px;
+      height: 16px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      z-index: 2;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.25s ease;
     }
     .stage-lock.broken {
-      color: var(--steel) !important;
-      opacity: 0.3;
-      animation: lockShatter 0.4s steps(3);
+      transform: scale(1.12) rotate(-8deg);
+      filter: drop-shadow(0 0 6px rgba(240, 181, 96, 0.75));
+    }
+    .knight-idle-breathe {
+      animation: knightIdleBreathe 1.8s ease-in-out infinite;
+    }
+    @keyframes knightIdleBreathe {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+    .knight-attack-lunge {
+      animation: knightLunge 0.35s ease-out;
+    }
+    @keyframes knightLunge {
+      0% { transform: translateX(0); }
+      40% { transform: translateX(14px) scale(1.08); filter: drop-shadow(0 0 8px rgba(240, 181, 96, 0.9)); }
+      100% { transform: translateX(0); }
+    }
+    .obstacle-hit-recoil {
+      animation: obsRecoil 0.35s ease-out;
+    }
+    @keyframes obsRecoil {
+      0% { transform: scale(1); filter: brightness(1); }
+      25% { transform: translateX(-8px) scale(1.08) rotate(5deg); filter: brightness(2) drop-shadow(0 0 8px #ff4444); }
+      60% { transform: translateX(4px) scale(0.95); filter: brightness(1.2); }
+      100% { transform: translateX(0) scale(1); filter: brightness(1); }
     }
 
     .knight-actor {
@@ -696,8 +749,8 @@
     }
     .rpg-option-btn {
       min-height: 44px;
-      background: #0d121c;
-      border: 2px solid var(--line);
+      background: linear-gradient(180deg, #182230 0%, #0d121c 100%);
+      border: 2px solid #364860;
       color: var(--ink);
       display: flex;
       align-items: center;
@@ -713,7 +766,15 @@
         100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
         4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
       );
-      box-shadow: 0 3px 0 #07090f;
+      box-shadow: 0 3px 0 #07090f, inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: transform 0.12s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .rpg-option-btn:hover {
+      border-color: var(--amber);
+      box-shadow: 0 3px 0 #07090f, 0 0 10px rgba(240, 181, 96, 0.25);
+    }
+    .rpg-option-btn:active {
+      transform: translateY(1px);
     }
     .rpg-option-btn .opt-box {
       width: 28px;
@@ -1650,30 +1711,9 @@
 
       <!-- 3 Pixel-Art SVG Candles (Lives) -->
       <div class="hud-candles" id="candlesHud">
-        <svg id="candle1" class="hud-candle" viewBox="0 0 16 32" shape-rendering="crispEdges">
-          <rect class="candle-flame" x="6" y="2" width="4" height="6" fill="#ffd48a" />
-          <rect class="candle-core" x="7" y="4" width="2" height="4" fill="#f0b560" />
-          <rect x="7" y="8" width="2" height="3" fill="#0b0d12" />
-          <rect x="4" y="11" width="8" height="17" fill="#e8dcc0" />
-          <rect x="4" y="15" width="2" height="4" fill="#d8e2ee" />
-          <rect x="2" y="28" width="12" height="4" fill="#566c86" />
-        </svg>
-        <svg id="candle2" class="hud-candle" viewBox="0 0 16 32" shape-rendering="crispEdges">
-          <rect class="candle-flame" x="6" y="2" width="4" height="6" fill="#ffd48a" />
-          <rect class="candle-core" x="7" y="4" width="2" height="4" fill="#f0b560" />
-          <rect x="7" y="8" width="2" height="3" fill="#0b0d12" />
-          <rect x="4" y="11" width="8" height="17" fill="#e8dcc0" />
-          <rect x="4" y="15" width="2" height="4" fill="#d8e2ee" />
-          <rect x="2" y="28" width="12" height="4" fill="#566c86" />
-        </svg>
-        <svg id="candle3" class="hud-candle" viewBox="0 0 16 32" shape-rendering="crispEdges">
-          <rect class="candle-flame" x="6" y="2" width="4" height="6" fill="#ffd48a" />
-          <rect class="candle-core" x="7" y="4" width="2" height="4" fill="#f0b560" />
-          <rect x="7" y="8" width="2" height="3" fill="#0b0d12" />
-          <rect x="4" y="11" width="8" height="17" fill="#e8dcc0" />
-          <rect x="4" y="15" width="2" height="4" fill="#d8e2ee" />
-          <rect x="2" y="28" width="12" height="4" fill="#566c86" />
-        </svg>
+        <div id="candle1" class="hud-candle"><img id="candleImg1" class="hud-candle-img" src="assets/hud_candle_lit.webp" alt="Candle 1" onerror="this.src='assets/sprites/obs_spike_trap.png'"></div>
+        <div id="candle2" class="hud-candle"><img id="candleImg2" class="hud-candle-img" src="assets/hud_candle_lit.webp" alt="Candle 2" onerror="this.src='assets/sprites/obs_spike_trap.png'"></div>
+        <div id="candle3" class="hud-candle"><img id="candleImg3" class="hud-candle-img" src="assets/hud_candle_lit.webp" alt="Candle 3" onerror="this.src='assets/sprites/obs_spike_trap.png'"></div>
       </div>
 
       <!-- Live Battle Timer & Mode Badge -->
@@ -2276,7 +2316,7 @@
   </div>
 
   <!-- Hidden Teacher Access Trigger -->
-  <div class="footer-ver" id="versionTrigger">v4.2</div>
+  <div class="footer-ver" id="versionTrigger">v4.2.1-pixel</div>
 
 </div>
 
@@ -6051,12 +6091,17 @@ function triggerScreenShake() {
 function updateCandlesHUD() {
   for (let i = 1; i <= 3; i++) {
     const el = document.getElementById("candle" + i);
+    const imgEl = document.getElementById("candleImg" + i);
+    const isLit = i <= 3 - mistakesThisStage;
     if (el) {
-      if (i <= 3 - mistakesThisStage) {
+      if (isLit) {
         el.classList.remove("extinguished");
       } else {
         el.classList.add("extinguished");
       }
+    }
+    if (imgEl) {
+      imgEl.src = isLit ? "assets/hud_candle_lit.webp" : "assets/hud_candle_unlit.webp";
     }
   }
 }
@@ -6075,16 +6120,14 @@ function updateLocksRow(mastered, total) {
   row.innerHTML = "";
   for (let i = 0; i < total; i++) {
     const isBroken = i < mastered;
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("class", `stage-lock ${isBroken ? "broken" : ""}`);
-    svg.setAttribute("viewBox", "0 0 12 16");
-    svg.setAttribute("shape-rendering", "crispEdges");
-    svg.innerHTML = `
-      <rect x="3" y="1" width="6" height="6" fill="none" stroke="currentColor" stroke-width="2" />
-      <rect x="1" y="7" width="10" height="8" fill="currentColor" />
-      <rect x="5" y="10" width="2" height="3" fill="#0b0d12" />
-    `;
-    row.appendChild(svg);
+    const lockImg = document.createElement("img");
+    lockImg.className = `stage-lock ${isBroken ? "broken" : ""}`;
+    lockImg.src = isBroken ? "assets/map_lock_unlocked.webp" : "assets/map_lock_locked.webp";
+    lockImg.alt = isBroken ? "Unlocked Checkpoint" : "Locked Checkpoint";
+    lockImg.onerror = function() {
+      this.src = isBroken ? "assets/sprites/obs_spike_trap.png" : "assets/sprites/obs_spike_trap.png";
+    };
+    row.appendChild(lockImg);
   }
 }
 
@@ -6141,11 +6184,16 @@ function setKnightState(state) {
   const kActor = document.getElementById("knightActor");
   if (!kImg || !kActor) return;
   kActor.classList.remove("knight-walk-bob", "knight-damage-fx");
-  if (state === "walk") {
-    kImg.src = "assets/sprites/spr_knight_walk.png";
+  kImg.classList.remove("knight-idle-breathe", "knight-attack-lunge");
+
+  if (state === "walk" || state === "run") {
+    kImg.src = "assets/knight_run.webp";
+    kImg.onerror = function() { this.src = "assets/sprites/spr_knight_walk.png"; };
     kActor.classList.add("knight-walk-bob");
   } else if (state === "attack") {
-    kImg.src = "assets/sprites/spr_knight_attack.png";
+    kImg.src = "assets/knight_attack.webp";
+    kImg.onerror = function() { this.src = "assets/sprites/spr_knight_attack.png"; };
+    kImg.classList.add("knight-attack-lunge");
     triggerCombatFx();
   } else if (state === "damage") {
     kImg.src = "assets/sprites/spr_knight_damage.png";
@@ -6153,11 +6201,13 @@ function setKnightState(state) {
   } else if (state === "kneel") {
     kImg.src = "assets/sprites/spr_knight_kneel.png";
   } else {
-    kImg.src = "assets/sprites/spr_knight_idle.png";
+    kImg.src = "assets/knight_idle.webp";
+    kImg.onerror = function() { this.src = "assets/sprites/spr_knight_idle.png"; };
+    kImg.classList.add("knight-idle-breathe");
   }
 }
 
-function setRoadObstacle(type) {
+function setRoadObstacle(type, worldIndex) {
   const rObs = document.getElementById("roadObstacle");
   const oImg = document.getElementById("obstacleSpriteImg");
   if (!rObs || !oImg) return;
@@ -6168,13 +6218,20 @@ function setRoadObstacle(type) {
     return;
   }
   currentObstacle = type;
-  const obsMap = {
-    trap: { src: "assets/sprites/obs_spike_trap.png", height: "28px" },
-    bear: { src: "assets/sprites/obs_shadow_bear.png", height: "34px" },
-    dragon: { src: "assets/sprites/obs_shadow_dragon.png", height: "52px" }
+
+  const world = worldIndex || (currentStage ? (currentStage.world || 1) : 1);
+  const worldEnemyMap = {
+    1: { src: "assets/obstacle_bear.webp", fallback: "assets/sprites/obs_shadow_bear.png", height: "42px" },
+    2: { src: "assets/obstacle_bandit.webp", fallback: "assets/sprites/spr_knight_side.png", height: "54px" },
+    3: { src: "assets/obstacle_shadow.webp", fallback: "assets/fx/fx_portal_aura.png", height: "54px" },
+    4: { src: "assets/obstacle_dragon.webp", fallback: "assets/sprites/obs_shadow_dragon.png", height: "64px" }
   };
-  const data = obsMap[type] || obsMap.bear;
+
+  const data = worldEnemyMap[world] || worldEnemyMap[1];
   oImg.src = data.src;
+  oImg.onerror = function() {
+    this.src = data.fallback;
+  };
   oImg.style.height = data.height;
   rObs.style.display = "flex";
   rObs.classList.remove("hidden");
@@ -6456,7 +6513,7 @@ function startBattleMode(stage, isRanked = false) {
     }
   }
 
-  // Visual Theme Application (World 1: amber, World 2: cyan, World 3: ok, World 4: hell)
+  // Visual Theme & 4 World Atmospheric Backgrounds
   const stageScene = document.getElementById("stageScene");
   stageScene.className = "stage-wrapper";
   if (stage.theme === "cyan") {
@@ -6467,6 +6524,22 @@ function startBattleMode(stage, isRanked = false) {
     stageScene.classList.add("theme-hell");
   } else {
     stageScene.classList.add("theme-amber");
+  }
+
+  // Active World Background (9:16 Aspect pixel-art webp)
+  const bgImg = document.getElementById("stageBgLayer");
+  if (bgImg && stage) {
+    const w = stage.world || 1;
+    const worldBgMap = {
+      1: "assets/world1_bg.webp",
+      2: "assets/world2_bg.webp",
+      3: "assets/world3_bg.webp",
+      4: "assets/world4_bg.webp"
+    };
+    bgImg.src = worldBgMap[w] || "assets/world1_bg.webp";
+    bgImg.onerror = function() {
+      this.src = "assets/bg/bg_w1_battle_ruins.webp";
+    };
   }
 
   // Hell 2x Badge
@@ -6658,10 +6731,13 @@ function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
 
     if (currentObstacle) {
       const rObs = document.getElementById("roadObstacle");
-      if (rObs) rObs.classList.add("obstacle-hit");
-      setTimeout(() => {
-        setRoadObstacle("none");
-      }, 400);
+      if (rObs) {
+        rObs.classList.add("obstacle-hit-recoil");
+        setTimeout(() => {
+          setRoadObstacle("none");
+          if (rObs) rObs.classList.remove("obstacle-hit-recoil");
+        }, 400);
+      }
     }
 
     quizQueue.shift();

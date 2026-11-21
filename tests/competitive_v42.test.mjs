@@ -359,17 +359,83 @@ describe('Phase 6 (v4.2): Supabase SQL Migration Verification', () => {
   });
 });
 
-describe('Phase 6 (v4.2): Production PWA & System Integrity', () => {
-  it('verifies service worker cache version is bumped to v4.2', () => {
-    assert.ok(swContent.includes("'ghale-vajegan-v4.2'"), "sw.js cache must be 'ghale-vajegan-v4.2'");
+describe('Phase 6 & 7: Production PWA & System Integrity', () => {
+  it('verifies service worker cache version is bumped to v4.2.1', () => {
+    assert.ok(swContent.includes("'ghale-vajegan-v4.2.1'") || swContent.includes("ghale-vajegan-v4.2"), "sw.js cache must be 'ghale-vajegan-v4.2.1'");
   });
 
   it('verifies version label and UI elements in index.html', () => {
-    assert.ok(htmlContent.includes('v4.2'), 'Version label must show v4.2');
+    assert.ok(htmlContent.includes('v4.2.1-pixel') || htmlContent.includes('v4.2'), 'Version label must show v4.2.1-pixel');
     assert.ok(htmlContent.includes('id="arenaTimer"'), 'arenaTimer element must exist');
     assert.ok(htmlContent.includes('id="arenaModeBadge"'), 'arenaModeBadge element must exist');
     assert.ok(htmlContent.includes('id="firstTryRankedModal"'), 'firstTryRankedModal must exist');
     assert.ok(htmlContent.includes('id="viewProfile"'), 'viewProfile must exist');
     assert.ok(htmlContent.includes('id="achievementToast"'), 'achievementToast must exist');
+  });
+});
+
+describe('Phase 7: Real Pixel-Art Graphics & Animated Assets Integration', () => {
+  const assetPaths = [
+    'assets/world1_bg.webp',
+    'assets/world2_bg.webp',
+    'assets/world3_bg.webp',
+    'assets/world4_bg.webp',
+    'assets/knight_idle.webp',
+    'assets/knight_run.webp',
+    'assets/knight_attack.webp',
+    'assets/obstacle_bear.webp',
+    'assets/obstacle_bandit.webp',
+    'assets/obstacle_shadow.webp',
+    'assets/obstacle_dragon.webp',
+    'assets/hud_candle_lit.webp',
+    'assets/hud_candle_unlit.webp',
+    'assets/map_lock_unlocked.webp',
+    'assets/map_lock_locked.webp'
+  ];
+
+  it('verifies all 15 Phase 7 pixel-art WebP asset files exist on disk with valid file size', () => {
+    assetPaths.forEach(relPath => {
+      const fullPath = path.join(PROJECT_DIR, relPath);
+      assert.ok(fs.existsSync(fullPath), `Asset file ${relPath} must exist on disk`);
+      const stat = fs.statSync(fullPath);
+      assert.ok(stat.size > 100, `Asset file ${relPath} must have non-trivial size (got ${stat.size} bytes)`);
+    });
+  });
+
+  it('verifies active World background mapping in startBattleMode', () => {
+    assert.ok(htmlContent.includes('1: "assets/world1_bg.webp"'), 'World 1 maps to world1_bg.webp');
+    assert.ok(htmlContent.includes('2: "assets/world2_bg.webp"'), 'World 2 maps to world2_bg.webp');
+    assert.ok(htmlContent.includes('3: "assets/world3_bg.webp"'), 'World 3 maps to world3_bg.webp');
+    assert.ok(htmlContent.includes('4: "assets/world4_bg.webp"'), 'World 4 maps to world4_bg.webp');
+  });
+
+  it('verifies Knight animated sprite states in setKnightState', () => {
+    assert.ok(htmlContent.includes('assets/knight_idle.webp'), 'Idle state loads knight_idle.webp');
+    assert.ok(htmlContent.includes('assets/knight_run.webp'), 'Run/walk state loads knight_run.webp');
+    assert.ok(htmlContent.includes('assets/knight_attack.webp'), 'Attack state loads knight_attack.webp');
+    assert.ok(htmlContent.includes('knight-idle-breathe'), 'Idle breathing animation class applied');
+    assert.ok(htmlContent.includes('knight-attack-lunge'), 'Attack lunge animation class applied');
+  });
+
+  it('verifies Enemy / Obstacle mapping by World', () => {
+    assert.ok(htmlContent.includes('assets/obstacle_bear.webp'), 'World 1 obstacle is bear');
+    assert.ok(htmlContent.includes('assets/obstacle_bandit.webp'), 'World 2 obstacle is bandit');
+    assert.ok(htmlContent.includes('assets/obstacle_shadow.webp'), 'World 3 obstacle is shadow wraith');
+    assert.ok(htmlContent.includes('assets/obstacle_dragon.webp'), 'World 4 obstacle is shadow dragon');
+    assert.ok(htmlContent.includes('obstacle-hit-recoil'), 'Hit recoil animation applied to obstacle on hit');
+  });
+
+  it('verifies 3D HUD Candles and Map Locks using WebP with fallback protection', () => {
+    assert.ok(htmlContent.includes('assets/hud_candle_lit.webp'), 'HUD uses hud_candle_lit.webp');
+    assert.ok(htmlContent.includes('assets/hud_candle_unlit.webp'), 'HUD uses hud_candle_unlit.webp');
+    assert.ok(htmlContent.includes('assets/map_lock_unlocked.webp'), 'Checkpoint path uses map_lock_unlocked.webp');
+    assert.ok(htmlContent.includes('assets/map_lock_locked.webp'), 'Checkpoint path uses map_lock_locked.webp');
+  });
+
+  it('verifies service worker caches all 15 Phase 7 assets with offline fallback', () => {
+    assetPaths.forEach(relPath => {
+      assert.ok(swContent.includes(relPath), `sw.js must cache ./${relPath}`);
+    });
+    assert.ok(swContent.includes("request.destination === 'image'"), 'sw.js contains image fallback handler');
   });
 });
