@@ -16,20 +16,25 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Vazirmatn:wght@500;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0b0d12;
-      --panel: #141a26;
-      --line: #566c86;
-      --ink: #e8dcc0;
+      --bg: #07080d;
+      --panel: #10141f;
+      --panel-dark: #090c14;
+      --line: #2e3a4e;
+      --line-hi: #455773;
+      --ink: #dcd0b8;
+      --ink-dim: #98a3b3;
+      --shadow-deep: #15182b;
+      --shadow-violet: #1d1a2f;
       --amber: #f0b560;
-      --amber-hi: #ffd48a;
-      --amber-lo: #a8642a;
-      --wine: #7a2b2e;
-      --red: #b13e53;
-      --steel: #8a97a3;
-      --moon: #d8e2ee;
-      --xp: #73eff7;
-      --ok: #4ea66a;
-      --bad: #b13e53;
+      --amber-hi: #ffcf86;
+      --amber-lo: #7a461e;
+      --wine: #5e1f2b;
+      --red: #a83246;
+      --steel: #7d8b99;
+      --moon: #d0dbe6;
+      --xp: #5de2eb;
+      --ok: #3ea066;
+      --bad: #a83246;
     }
 
     * {
@@ -859,6 +864,89 @@
       color: var(--red);
     }
 
+    
+    /* Arena Fog & Atmospheric Elements */
+    .road-fog-band {
+      position: absolute;
+      top: -6px;
+      left: 0;
+      right: 0;
+      height: 12px;
+      background: linear-gradient(90deg, rgba(30, 39, 56, 0.45) 0%, rgba(20, 26, 38, 0.7) 50%, rgba(30, 39, 56, 0.45) 100%);
+      pointer-events: none;
+      animation: fogDrift 8s infinite alternate steps(10);
+    }
+    @keyframes fogDrift {
+      0% { transform: translateX(-15px); opacity: 0.5; }
+      100% { transform: translateX(15px); opacity: 0.85; }
+    }
+
+    /* Road Obstacles (Trap, Bear, Dragon) */
+    .road-obstacle {
+      position: absolute;
+      bottom: 22px;
+      z-index: 4;
+      pointer-events: none;
+      transition: opacity 0.3s steps(3);
+    }
+    .obstacle-hit {
+      animation: obstacleShatter 0.4s steps(4) forwards;
+    }
+    @keyframes obstacleShatter {
+      0% { transform: scale(1) translateY(0); opacity: 1; }
+      50% { transform: scale(1.25) translateY(-8px) rotate(15deg); opacity: 0.6; filter: brightness(2); }
+      100% { transform: scale(0.3) translateY(12px) rotate(30deg); opacity: 0; }
+    }
+    .obstacle-attack {
+      animation: obstacleLunge 0.35s steps(4);
+    }
+    @keyframes obstacleLunge {
+      0% { transform: translateX(0); }
+      40% { transform: translateX(20px) scale(1.15); filter: drop-shadow(0 0 6px var(--red)); }
+      100% { transform: translateX(0); }
+    }
+
+    /* Knight Strike & Recoil */
+    .knight-strike {
+      animation: knightDashStrike 0.35s steps(4);
+    }
+    @keyframes knightDashStrike {
+      0% { transform: scaleX(-1) translateX(0); }
+      40% { transform: scaleX(-1) translateX(18px); filter: brightness(1.6); }
+      100% { transform: scaleX(-1) translateX(0); }
+    }
+    .knight-recoil {
+      animation: knightRecoilBack 0.35s steps(4);
+    }
+    @keyframes knightRecoilBack {
+      0% { transform: scaleX(-1) translateX(0); }
+      30% { transform: scaleX(-1) translateX(-12px); filter: drop-shadow(0 0 8px var(--red)); }
+      100% { transform: scaleX(-1) translateX(0); }
+    }
+
+    /* Stepped Portal Transition */
+    .portal-mist-active {
+      animation: portalMistTransition 0.22s steps(4);
+    }
+    @keyframes portalMistTransition {
+      0% { opacity: 1; filter: brightness(1) contrast(1); }
+      40% { opacity: 0.12; filter: brightness(0.25) contrast(1.5); transform: scale(0.98); }
+      100% { opacity: 1; filter: brightness(1) contrast(1); transform: scale(1); }
+    }
+
+    /* Gesture Hint for Flashcard Study */
+    .study-gesture-hint {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--amber);
+      background: rgba(16, 20, 31, 0.95);
+      border: 1px dashed var(--amber);
+      padding: 7px 12px;
+      margin-bottom: 12px;
+      clip-path: polygon(0 3px, 3px 3px, 3px 0, calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px));
+      transition: opacity 0.3s steps(3);
+    }
+
     /* Tower Map Cards */
     .tower-card {
       background: #111724;
@@ -993,7 +1081,7 @@
   <div id="topBar" class="top-hud hidden">
     <div style="display:flex; align-items:center; gap:8px;">
       <span id="userGreeting" style="font-weight:800; font-size:0.85rem; color:var(--ink);"></span>
-      <span style="font-size:0.7rem; color:var(--ok); font-weight:800;">[ابری فعال]</span>
+      
     </div>
     <div style="display:flex; align-items:center; gap:8px;">
       <span class="xp-readout"><span id="userXP">0</span> XP</span>
@@ -1164,43 +1252,41 @@
   <div id="viewStudy" class="hidden">
     <div class="pixel-window border-line" id="studyWindow">
       <div class="pixel-window-inner">
-        <!-- Study Top Bar -->
+        <!-- Minimal Top Bar: Back, Title, Stage Counter -->
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:2px solid var(--line); padding-bottom:8px;">
           <button id="btnStudyBack" class="pixel-btn btn-slate" style="padding:5px 12px; font-size:0.8rem;">بازگشت</button>
           <div style="text-align:center;">
-            <div id="studyStageTitle" style="font-weight:900; color:var(--amber); font-size:0.88rem;"></div>
+            <div id="studyStageTitle" style="font-weight:900; color:var(--amber); font-size:0.9rem;"></div>
             <div style="font-size:0.7rem; color:var(--steel);">بخش یادگیری آرام و مرور واژگان</div>
           </div>
           <span class="pixel-num" id="studyCounter" style="color:var(--moon);">1/10</span>
         </div>
 
-        <!-- Interactive Study Pixel Card (Flip on Tap) -->
-        <div class="study-card-box" id="studyCard">
+        <!-- One-Time Gesture Hint (Appears only on first session) -->
+        <div id="studyGestureHint" class="study-gesture-hint hidden">
+          لمس: نمایش معنا | کشیدن به چپ/راست: کارت بعدی و قبلی
+        </div>
+
+        <!-- Interactive Study Pixel Card (Pure Gestures: Tap to Flip, Swipe to Advance) -->
+        <div class="study-card-box" id="studyCard" style="cursor:pointer; touch-action:pan-y;">
           <span class="study-tag" id="studyCardTag">واژه</span>
 
           <!-- Front Face -->
           <div id="studyCardFront">
-            <div style="font-size:2.2rem; font-weight:900; color:#ffe3a3; margin-bottom:6px;" id="studyCardWord">واژه</div>
+            <div style="font-size:2.2rem; font-weight:900; color:#ffe3a3; margin-bottom:8px;" id="studyCardWord">واژه</div>
             <div style="font-size:0.75rem; color:var(--steel);" id="studyTapHint">[برای مشاهده معانی لمس کنید]</div>
           </div>
 
           <!-- Back Face (Revealed on Tap) -->
           <div id="studyCardBack" class="hidden" style="width:100%;">
             <div id="studyMeanings"></div>
-            <div id="studyHint" style="font-size:0.8rem; color:var(--steel); margin-top:10px; line-height:1.5;"></div>
+            <div id="studyHint" style="font-size:0.82rem; color:var(--steel); margin-top:10px; line-height:1.5;"></div>
             <div style="font-size:0.7rem; color:var(--amber); margin-top:8px;">[برای پنهان‌سازی مجدد لمس کنید]</div>
           </div>
         </div>
 
-        <!-- Study Navigation Controls -->
-        <div style="display:flex; gap:8px; margin-bottom:12px;">
-          <button id="btnStudyPrev" class="pixel-btn btn-slate" style="flex:1; min-height:44px;">قبلی</button>
-          <button id="btnStudyReview" class="pixel-btn btn-wine" style="flex:1.2; min-height:44px;" title="فرستادن به انتهای دسته برای مرور بیشتر">نیاز به مرور</button>
-          <button id="btnStudyNext" class="pixel-btn btn-emerald" style="flex:1; min-height:44px;">بعدی</button>
-        </div>
-
         <!-- Direct CTA to Battle Mode -->
-        <button id="btnStudyEnterBattle" class="pixel-btn btn-amber" style="width:100%; min-height:46px; font-size:0.95rem;">
+        <button id="btnStudyEnterBattle" class="pixel-btn btn-amber" style="width:100%; min-height:46px; font-size:0.95rem; margin-top:14px;">
           آماده‌ام • ورود به نبرد دروازه
         </button>
       </div>
@@ -1250,50 +1336,105 @@
       <div class="crt-overlay"></div>
       <div class="stage-sky"></div>
 
-      <!-- Stars -->
-      <div class="pixel-star" style="top:25px; left:40px;"></div>
-      <div class="pixel-star" style="top:55px; left:120px; animation-delay:0.5s;"></div>
-      <div class="pixel-star" style="top:35px; left:210px; animation-delay:1s;"></div>
-      <div class="pixel-star" style="top:70px; left:310px; animation-delay:0.3s;"></div>
-      <div class="pixel-star" style="top:20px; right:80px; animation-delay:0.8s;"></div>
+      <!-- Subtle Twinkling Stars -->
+      <div class="pixel-star" style="top:18px; left:35px;"></div>
+      <div class="pixel-star" style="top:48px; left:110px; animation-delay:0.5s;"></div>
+      <div class="pixel-star" style="top:28px; left:190px; animation-delay:1.2s;"></div>
+      <div class="pixel-star" style="top:62px; left:290px; animation-delay:0.3s;"></div>
+      <div class="pixel-star" style="top:16px; right:75px; animation-delay:0.8s;"></div>
 
-      <!-- Moon -->
+      <!-- Pale Crescent Moon with Violet Haze -->
       <div class="pixel-moon"></div>
 
-      <!-- Distant Stepped Mountains -->
-      <svg class="mountains-layer" viewBox="0 0 400 90" preserveAspectRatio="none" shape-rendering="crispEdges">
-        <polygon points="0,90 0,40 40,40 40,24 80,24 80,48 140,48 140,16 190,16 190,56 260,56 260,32 320,32 320,60 400,60 400,90" fill="#141a26" />
-        <polygon points="20,90 20,60 60,60 60,45 110,45 110,65 170,65 170,38 230,38 230,70 300,70 300,48 370,48 370,90" fill="#0e131d" />
+      <!-- Distant Stepped Mountains with Ruined Tower (Atmospheric Perspective) -->
+      <svg class="mountains-layer" viewBox="0 0 400 95" preserveAspectRatio="none" shape-rendering="crispEdges">
+        <!-- Far Hazy Ridge (deep violet/indigo) -->
+        <polygon points="0,95 0,38 35,38 35,22 75,22 75,44 130,44 130,14 180,14 180,52 250,52 250,28 310,28 310,56 400,56 400,95" fill="#131627" />
+        <!-- Ruined Tower on mountain ridge -->
+        <rect x="175" y="6" width="12" height="18" fill="#131627" />
+        <rect x="173" y="4" width="4" height="4" fill="#131627" />
+        <rect x="183" y="4" width="4" height="4" fill="#131627" />
+        <!-- Near Mountain Ridge (darker slate) -->
+        <polygon points="15,95 15,55 55,55 55,40 105,40 105,60 165,60 165,34 225,34 225,66 295,66 295,44 365,44 365,95" fill="#0d111b" />
       </svg>
 
-      <!-- Castle Silhouette & Glowing Gate -->
+      <!-- Castle Silhouette, Weathered Walls, Lanterns, Balcony & Dignified Princess -->
       <svg class="castle-silhouette" viewBox="0 0 170 120" shape-rendering="crispEdges">
+        <!-- Main Keep & Weathered Stone -->
         <rect x="35" y="30" width="100" height="90" fill="#07090e" />
+        <!-- Dark Moss patches on stone -->
+        <rect x="38" y="70" width="8" height="6" fill="#19281c" />
+        <rect x="42" y="74" width="6" height="4" fill="#233827" />
+        <rect x="120" y="65" width="10" height="8" fill="#19281c" />
+        <!-- Wooden Beams & Chains -->
+        <rect x="35" y="48" width="100" height="3" fill="#241711" />
+        <rect x="18" y="38" width="2" height="18" fill="#4d5c70" />
+        <rect x="142" y="38" width="2" height="18" fill="#4d5c70" />
+        <!-- Crenellations Keep -->
         <rect x="35" y="20" width="16" height="10" fill="#07090e" />
         <rect x="59" y="20" width="16" height="10" fill="#07090e" />
         <rect x="83" y="20" width="16" height="10" fill="#07090e" />
         <rect x="107" y="20" width="16" height="10" fill="#07090e" />
         <rect x="119" y="20" width="16" height="10" fill="#07090e" />
+        <!-- Left Flank Tower -->
         <rect x="15" y="10" width="24" height="110" fill="#07090e" />
         <rect x="15" y="2" width="6" height="8" fill="#07090e" />
         <rect x="25" y="2" width="6" height="8" fill="#07090e" />
         <rect x="33" y="2" width="6" height="8" fill="#07090e" />
+        <!-- Right Flank Tower -->
         <rect x="131" y="10" width="24" height="110" fill="#07090e" />
         <rect x="131" y="2" width="6" height="8" fill="#07090e" />
         <rect x="139" y="2" width="6" height="8" fill="#07090e" />
         <rect x="149" y="2" width="6" height="8" fill="#07090e" />
-        <rect x="26" y="-12" width="2" height="14" fill="#566c86" />
-        <polygon class="castle-flag" points="28,-12 46,-7 28,-2" fill="#7a2b2e" />
-        <!-- Windows with Theme Glow -->
-        <rect class="win-glow" x="48" y="45" width="8" height="12" fill="#f0b560" />
-        <rect class="win-glow" x="114" y="45" width="8" height="12" fill="#f0b560" />
-        <rect class="win-glow" x="81" y="38" width="8" height="12" fill="#f0b560" />
-        <rect class="win-glow" x="23" y="30" width="6" height="10" fill="#f0b560" />
-        <rect class="win-glow" x="140" y="30" width="6" height="10" fill="#f0b560" />
-        <rect x="71" y="80" width="28" height="40" fill="#141a26" />
+        <!-- Weathered Flag on left tower -->
+        <rect x="26" y="-12" width="2" height="14" fill="#3a4759" />
+        <polygon class="castle-flag" points="28,-12 45,-7 28,-2" fill="#5e1f2b" />
+
+        <!-- Wall Lanterns with Stepped Bloom -->
+        <!-- Left Lantern -->
+        <rect x="20" y="48" width="4" height="6" fill="#f0b560" />
+        <rect x="18" y="46" width="8" height="10" fill="none" stroke="#7a461e" stroke-width="1" />
+        <!-- Right Lantern -->
+        <rect x="138" y="48" width="4" height="6" fill="#f0b560" />
+        <rect x="136" y="46" width="8" height="10" fill="none" stroke="#7a461e" stroke-width="1" />
+
+        <!-- UPPER CASTLE BALCONY -->
+        <rect x="62" y="24" width="46" height="14" fill="#0c1018" />
+        <rect x="60" y="24" width="50" height="2" fill="#2d3749" />
+        <!-- Balustrade Crenellations -->
+        <rect x="62" y="22" width="4" height="4" fill="#182130" />
+        <rect x="70" y="22" width="4" height="4" fill="#182130" />
+        <rect x="78" y="22" width="4" height="4" fill="#182130" />
+        <rect x="86" y="22" width="4" height="4" fill="#182130" />
+        <rect x="94" y="22" width="4" height="4" fill="#182130" />
+        <rect x="102" y="22" width="4" height="4" fill="#182130" />
+
+        <!-- DIGNIFIED PIXEL PRINCESS ON BALCONY -->
+        <g id="balconyPrincess" class="balcony-princess">
+          <!-- Royal Violet Dress -->
+          <polygon points="82,12 80,18 78,28 92,28 90,18 88,12" fill="#281a38" />
+          <!-- Gold Embroidery / Sash -->
+          <rect x="81" y="20" width="8" height="1" fill="#f0b560" />
+          <rect x="84" y="16" width="2" height="12" fill="#ffcf86" />
+          <!-- Princess Head & Hair with subtle warm rim-lighting -->
+          <rect x="83" y="8" width="4" height="4" fill="#dcd0b8" />
+          <polygon points="81,6 89,6 90,15 88,15 87,10 85,10 84,15 82,15" fill="#171221" />
+          <rect x="87" y="7" width="1" height="5" fill="#f0b560" /> <!-- Warm rim light from lanterns -->
+          <!-- Golden Tiara -->
+          <polygon points="83,5 85,7 87,5" fill="#ffcf86" />
+        </g>
+
+        <!-- Lower Windows with Warm Theme Glow -->
+        <rect class="win-glow" x="48" y="52" width="8" height="12" fill="#f0b560" />
+        <rect class="win-glow" x="114" y="52" width="8" height="12" fill="#f0b560" />
+        <rect class="win-glow" x="23" y="32" width="6" height="10" fill="#f0b560" />
+        <rect class="win-glow" x="140" y="32" width="6" height="10" fill="#f0b560" />
+
+        <!-- Arched Castle Gate Portal (Warm Light Spills onto road) -->
+        <rect x="71" y="80" width="28" height="40" fill="#10141f" />
       </svg>
 
-      <!-- Warm Gate Glow -->
+      <!-- Volumetric Gate Glow & Light Rays -->
       <div id="gateGlow" class="gate-glow"></div>
 
       <!-- Hanging Wooden Board with 2 chains -->
@@ -1310,25 +1451,42 @@
       <!-- 10 Pixel Locks Row -->
       <div class="stage-locks-row" id="locksRow"></div>
 
-      <!-- Stone Road -->
-      <div class="stone-road"></div>
+      <!-- Weathered Stone Road with Cracks & Low-Lying Fog -->
+      <div class="stone-road">
+        <div class="road-fog-band"></div>
+      </div>
 
-      <!-- Pixel Knight Actor -->
+      <!-- RANDOM ROAD ENCOUNTER CONTAINER -->
+      <div id="roadObstacle" class="road-obstacle hidden"></div>
+
+      <!-- SEMI-REALISTIC PIXEL KNIGHT ACTOR (Small, realistic proportions, wine cloak, grounded shadow) -->
       <div id="knightActor" class="knight-actor">
-        <svg viewBox="0 0 24 32" width="28" height="36" shape-rendering="crispEdges">
-          <rect x="9" y="2" width="6" height="3" fill="#b13e53" />
-          <rect x="8" y="5" width="8" height="7" fill="#8a97a3" />
-          <rect x="10" y="8" width="6" height="2" fill="#0b0d12" />
-          <rect x="6" y="12" width="12" height="10" fill="#7a2b2e" />
-          <rect x="9" y="12" width="6" height="8" fill="#d8e2ee" />
-          <rect x="8" y="20" width="8" height="2" fill="#f0b560" />
-          <rect x="8" y="22" width="3" height="7" fill="#566c86" />
-          <rect x="13" y="22" width="3" height="7" fill="#566c86" />
-          <rect x="7" y="29" width="4" height="3" fill="#0b0d12" />
-          <rect x="13" y="29" width="4" height="3" fill="#0b0d12" />
-          <rect x="19" y="9" width="2" height="15" fill="#73eff7" />
-          <rect x="17" y="15" width="6" height="2" fill="#f0b560" />
-          <rect x="19" y="17" width="2" height="4" fill="#a8642a" />
+        <svg viewBox="0 0 26 34" width="28" height="36" shape-rendering="crispEdges">
+          <!-- Grounded Shadow (Deep Violet) -->
+          <ellipse cx="13" cy="32" rx="10" ry="2" fill="#15182b" />
+          <!-- Tattered Wine Cloak Behind -->
+          <polygon points="5,12 2,29 6,28 10,30 9,14" fill="#4d1722" />
+          <!-- Steel Legs & Boots -->
+          <rect x="8" y="24" width="3" height="7" fill="#3a4759" />
+          <rect x="13" y="24" width="3" height="7" fill="#485970" />
+          <rect x="7" y="30" width="4" height="2" fill="#202936" />
+          <rect x="13" y="30" width="4" height="2" fill="#202936" />
+          <!-- Torso & Cuirass -->
+          <rect x="7" y="12" width="10" height="12" fill="#303b4d" />
+          <rect x="7" y="12" width="1" height="11" fill="#f0b560" /> <!-- Warm rim facing gate -->
+          <!-- Belt & Buckle -->
+          <rect x="7" y="22" width="10" height="2" fill="#1d2430" />
+          <rect x="11" y="22" width="2" height="2" fill="#f0b560" />
+          <!-- Helmet & Visor -->
+          <rect x="8" y="4" width="8" height="8" fill="#485970" />
+          <rect x="8" y="4" width="1" height="8" fill="#f0b560" /> <!-- Amber rim light -->
+          <rect x="9" y="8" width="6" height="2" fill="#15182b" /> <!-- Visor slit -->
+          <polygon points="9,2 15,2 14,4 10,4" fill="#5e1f2b" /> <!-- Plume -->
+          <!-- Sword & Guard -->
+          <rect x="18" y="8" width="2" height="16" fill="#8a97a3" />
+          <rect x="18" y="8" width="1" height="16" fill="#dcd0b8" />
+          <rect x="16" y="14" width="6" height="2" fill="#f0b560" />
+          <rect x="18" y="16" width="2" height="4" fill="#7a461e" />
         </svg>
       </div>
     </div>
@@ -1385,19 +1543,43 @@
     <div class="pixel-window-inner">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
         <h3 style="margin:0; color:var(--amber); font-weight:900; font-size:1.05rem;" class="hard-shadow">
-          رتبه‌بندی شوالیه‌های کلاس
+          جدول رده‌بندی بازیکنان
         </h3>
         <button id="btnCloseLeaderboard" class="pixel-btn btn-slate" style="padding:5px 10px; font-size:0.78rem;">بستن</button>
       </div>
 
+      <!-- MY RANK SUMMARY CARD (Dual Ranking) -->
+      <div class="pixel-window border-line" style="margin-bottom:12px; background:#0e1320;">
+        <div class="pixel-window-inner" style="padding:10px 14px;">
+          <div style="font-size:0.75rem; color:var(--steel); margin-bottom:6px;">کارنامه و رتبه فردی شما:</div>
+          <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+            <div>
+              <span style="font-size:0.8rem; color:var(--ink);">رتبه در رشته:</span>
+              <strong id="myMajorRank" style="color:var(--xp); font-size:0.92rem; margin-right:4px;">-</strong>
+            </div>
+            <div>
+              <span style="font-size:0.8rem; color:var(--ink);">رتبه در کل:</span>
+              <strong id="myGlobalRank" style="color:var(--amber); font-size:0.92rem; margin-right:4px;">-</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOGGLE: هم‌رشته‌ای‌ها vs کل بازیکنان -->
+      <div style="display:flex; gap:8px; margin-bottom:12px;">
+        <button id="btnTabMajorLeaderboard" class="pixel-btn btn-cyan active" style="flex:1; padding:7px; font-size:0.82rem;">هم‌رشته‌ای‌ها</button>
+        <button id="btnTabGlobalLeaderboard" class="pixel-btn btn-slate" style="flex:1; padding:7px; font-size:0.82rem;">کل بازیکنان</button>
+      </div>
+
+      <!-- LEADERBOARD TABLE (Strictly: Rank, Name, Major, XP - ZERO Phone Numbers) -->
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>رتبه</th>
-              <th>نام (شماره تلفن)</th>
+              <th style="width:48px;">رتبه</th>
+              <th>نام بازیکن</th>
               <th>رشته</th>
-              <th>امتیاز</th>
+              <th style="width:75px;">امتیاز</th>
             </tr>
           </thead>
           <tbody id="studentLeaderboardBody"></tbody>
@@ -1478,7 +1660,7 @@
   </div>
 
   <!-- Hidden Teacher Access Trigger (3 rapid clicks on version number) -->
-  <div class="footer-ver" id="versionTrigger">v3.4-pixel</div>
+  <div class="footer-ver" id="versionTrigger">v3.5-pixel</div>
 
 </div>
 
@@ -3751,6 +3933,86 @@ const DEFAULT_STAGES = [
 
 const TEACHER_PASS = "431380";
 
+const KNIGHT_STANDING_SVG = `<svg viewBox="0 0 26 34" width="28" height="36" shape-rendering="crispEdges">
+  <ellipse cx="13" cy="32" rx="10" ry="2" fill="#15182b" />
+  <polygon points="5,12 2,29 6,28 10,30 9,14" fill="#4d1722" />
+  <rect x="8" y="24" width="3" height="7" fill="#3a4759" />
+  <rect x="13" y="24" width="3" height="7" fill="#485970" />
+  <rect x="7" y="30" width="4" height="2" fill="#202936" />
+  <rect x="13" y="30" width="4" height="2" fill="#202936" />
+  <rect x="7" y="12" width="10" height="12" fill="#303b4d" />
+  <rect x="7" y="12" width="1" height="11" fill="#f0b560" />
+  <rect x="7" y="22" width="10" height="2" fill="#1d2430" />
+  <rect x="11" y="22" width="2" height="2" fill="#f0b560" />
+  <rect x="8" y="4" width="8" height="8" fill="#485970" />
+  <rect x="8" y="4" width="1" height="8" fill="#f0b560" />
+  <rect x="9" y="8" width="6" height="2" fill="#15182b" />
+  <polygon points="9,2 15,2 14,4 10,4" fill="#5e1f2b" />
+  <rect x="18" y="8" width="2" height="16" fill="#8a97a3" />
+  <rect x="18" y="8" width="1" height="16" fill="#dcd0b8" />
+  <rect x="16" y="14" width="6" height="2" fill="#f0b560" />
+  <rect x="18" y="16" width="2" height="4" fill="#7a461e" />
+</svg>`;
+
+const KNIGHT_KNEEL_SVG = `<svg viewBox="0 0 28 30" width="30" height="32" shape-rendering="crispEdges">
+  <ellipse cx="14" cy="28" rx="12" ry="2" fill="#15182b" />
+  <polygon points="4,14 1,27 12,28 10,16" fill="#4d1722" />
+  <polygon points="8,22 14,22 15,28 6,28" fill="#303b4d" />
+  <rect x="14" y="24" width="6" height="4" fill="#202936" />
+  <rect x="7" y="13" width="9" height="10" fill="#3a4759" />
+  <rect x="7" y="13" width="1" height="9" fill="#f0b560" />
+  <rect x="6" y="6" width="8" height="8" fill="#485970" />
+  <rect x="6" y="6" width="1" height="7" fill="#f0b560" />
+  <rect x="7" y="10" width="6" height="2" fill="#15182b" />
+  <polygon points="7,4 13,4 12,6 8,6" fill="#5e1f2b" />
+  <rect x="18" y="12" width="2" height="16" fill="#8a97a3" />
+  <rect x="18" y="12" width="1" height="16" fill="#f0b560" />
+  <rect x="15" y="12" width="8" height="2" fill="#f0b560" />
+  <rect x="18" y="10" width="2" height="2" fill="#7a461e" />
+</svg>`;
+
+const OBSTACLE_SVGS = {
+  trap: `<svg viewBox="0 0 28 20" width="32" height="24" shape-rendering="crispEdges">
+    <rect x="2" y="14" width="24" height="4" fill="#1b2332" />
+    <rect x="4" y="16" width="20" height="2" fill="#2d3b57" />
+    <polygon points="5,14 7,4 9,14" fill="#8a97a3" />
+    <polygon points="11,14 13,2 15,14" fill="#d8e2ee" />
+    <polygon points="17,14 19,4 21,14" fill="#8a97a3" />
+    <rect x="6" y="11" width="16" height="2" fill="#566c86" />
+    <rect x="12" y="5" width="2" height="4" fill="#7a2b2e" />
+  </svg>`,
+  bear: `<svg viewBox="0 0 32 28" width="36" height="32" shape-rendering="crispEdges">
+    <rect x="8" y="12" width="18" height="12" fill="#15182b" />
+    <rect x="6" y="8" width="10" height="8" fill="#1d1a2f" />
+    <rect x="6" y="6" width="3" height="3" fill="#15182b" />
+    <rect x="13" y="6" width="3" height="3" fill="#15182b" />
+    <rect x="8" y="10" width="2" height="2" fill="#b13e53" />
+    <rect x="12" y="10" width="2" height="2" fill="#f0b560" />
+    <rect x="5" y="13" width="4" height="3" fill="#2d2447" />
+    <rect x="6" y="14" width="2" height="2" fill="#dcd0b8" />
+    <rect x="6" y="24" width="6" height="4" fill="#15182b" />
+    <rect x="18" y="24" width="6" height="4" fill="#15182b" />
+    <rect x="4" y="26" width="2" height="2" fill="#dcd0b8" />
+    <rect x="16" y="26" width="2" height="2" fill="#dcd0b8" />
+  </svg>`,
+  dragon: `<svg viewBox="0 0 36 32" width="40" height="36" shape-rendering="crispEdges">
+    <polygon points="18,4 28,0 34,10 26,16 18,12" fill="#24142e" />
+    <polygon points="20,6 26,2 30,10 24,14" fill="#3d1d4d" />
+    <rect x="8" y="14" width="16" height="12" fill="#191224" />
+    <polygon points="2,12 8,6 14,8 10,16 4,16" fill="#2b1436" />
+    <polygon points="12,4 14,0 16,6" fill="#4d1b54" />
+    <rect x="6" y="10" width="2" height="2" fill="#f0b560" />
+    <rect x="0" y="14" width="3" height="2" fill="#b13e53" />
+    <rect x="10" y="26" width="4" height="4" fill="#191224" />
+    <rect x="18" y="26" width="4" height="4" fill="#191224" />
+    <polygon points="24,18 32,22 36,20 30,24" fill="#191224" />
+  </svg>`
+};
+
+let currentObstacle = null;
+let currentLeaderboardTab = "major"; // "major" or "global"
+
+
 // ==========================================
 // 2. STATE & STORAGE ENGINE (gv_stages_v32)
 // ==========================================
@@ -3997,6 +4259,28 @@ function playTone(freq, dur = 0.1, type = "square") {
   } catch (e) {}
 }
 
+
+function playPortalChime() {
+  if (isAudioMuted) return;
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    const notes = [220, 277.18, 329.63, 440];
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(freq, now + idx * 0.05);
+      gain.gain.setValueAtTime(0.12, now + idx * 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.05 + 0.18);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + idx * 0.05);
+      osc.stop(now + idx * 0.05 + 0.2);
+    });
+  } catch (e) {}
+}
+
 function playSelectSound() {
   playTone(587.33, 0.05, "square");
 }
@@ -4222,7 +4506,7 @@ function enterDashboard() {
   }
 
   document.getElementById("topBar").classList.remove("hidden");
-  document.getElementById("userGreeting").textContent = `شوالیه ${user.name}`;
+  document.getElementById("userGreeting").textContent = user.name;
   document.getElementById("userXP").textContent = user.xp;
   document.getElementById("mapMajor").textContent = user.major;
 
@@ -4231,8 +4515,14 @@ function enterDashboard() {
 }
 
 function switchWorld(wId) {
-  playSelectSound();
+  playPortalChime();
   appState.selectedWorld = wId;
+  const list = document.getElementById("towersList");
+  if (list) {
+    list.classList.remove("portal-mist-active");
+    void list.offsetWidth; // force reflow
+    list.classList.add("portal-mist-active");
+  }
   renderTowerMap();
 }
 window.switchWorld = switchWorld;
@@ -4417,9 +4707,17 @@ function openStudyMode(stage) {
   studyIndex = 0;
   isCardFlipped = false;
 
-  // Window styling reflection
   const win = document.getElementById("studyWindow");
   win.className = `pixel-window border-${stage.theme || "line"}`;
+
+  const hintEl = document.getElementById("studyGestureHint");
+  if (hintEl) {
+    if (!localStorage.getItem("gv_study_hint_seen")) {
+      hintEl.classList.remove("hidden");
+    } else {
+      hintEl.classList.add("hidden");
+    }
+  }
 
   renderStudyCard();
   showView("viewStudy");
@@ -4462,13 +4760,23 @@ function applyCardFlipState() {
   }
 }
 
-document.getElementById("studyCard").addEventListener("click", () => {
-  isCardFlipped = !isCardFlipped;
-  playSelectSound();
-  applyCardFlipState();
-});
+let touchStartX = 0;
+let touchStartY = 0;
+let isDraggingMouse = false;
+let mouseStartX = 0;
+let mouseStartY = 0;
 
-document.getElementById("btnStudyNext").addEventListener("click", () => {
+const studyCardEl = document.getElementById("studyCard");
+
+function dismissStudyHint() {
+  const hintEl = document.getElementById("studyGestureHint");
+  if (hintEl && !hintEl.classList.contains("hidden")) {
+    hintEl.classList.add("hidden");
+    localStorage.setItem("gv_study_hint_seen", "true");
+  }
+}
+
+function studyNextCard() {
   if (studyIndex < studyDeck.length - 1) {
     studyIndex++;
   } else {
@@ -4477,9 +4785,9 @@ document.getElementById("btnStudyNext").addEventListener("click", () => {
   isCardFlipped = false;
   playSelectSound();
   renderStudyCard();
-});
+}
 
-document.getElementById("btnStudyPrev").addEventListener("click", () => {
+function studyPrevCard() {
   if (studyIndex > 0) {
     studyIndex--;
   } else {
@@ -4488,16 +4796,53 @@ document.getElementById("btnStudyPrev").addEventListener("click", () => {
   isCardFlipped = false;
   playSelectSound();
   renderStudyCard();
+}
+
+function handleStudyGesture(deltaX, deltaY) {
+  dismissStudyHint();
+  if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4) {
+    if (deltaX < 0) {
+      studyNextCard();
+    } else {
+      studyPrevCard();
+    }
+  } else if (Math.abs(deltaX) < 14 && Math.abs(deltaY) < 14) {
+    isCardFlipped = !isCardFlipped;
+    playSelectSound();
+    applyCardFlipState();
+  }
+}
+
+// Touch Gestures
+studyCardEl.addEventListener("touchstart", (e) => {
+  if (e.touches.length === 1) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }
+}, { passive: true });
+
+studyCardEl.addEventListener("touchend", (e) => {
+  if (e.changedTouches.length === 1) {
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    const deltaY = e.changedTouches[0].clientY - touchStartY;
+    handleStudyGesture(deltaX, deltaY);
+  }
+}, { passive: true });
+
+// Mouse Gestures (Desktop Drag & Click)
+studyCardEl.addEventListener("mousedown", (e) => {
+  isDraggingMouse = true;
+  mouseStartX = e.clientX;
+  mouseStartY = e.clientY;
 });
 
-document.getElementById("btnStudyReview").addEventListener("click", () => {
-  playSelectSound();
-  if (studyDeck.length > 1) {
-    const item = studyDeck.splice(studyIndex, 1)[0];
-    studyDeck.push(item);
+window.addEventListener("mouseup", (e) => {
+  if (isDraggingMouse) {
+    isDraggingMouse = false;
+    const deltaX = e.clientX - mouseStartX;
+    const deltaY = e.clientY - mouseStartY;
+    handleStudyGesture(deltaX, deltaY);
   }
-  isCardFlipped = false;
-  renderStudyCard();
 });
 
 document.getElementById("btnStudyEnterBattle").addEventListener("click", () => {
@@ -4666,6 +5011,8 @@ function startBattleMode(stage) {
   document.getElementById("arenaStageTitle").textContent = stage.title.split(":")[0];
   document.getElementById("arenaCounter").textContent = `0/${totalInitialWords}`;
   document.getElementById("gateGlow").classList.remove("gate-open");
+  const kActorReset = document.getElementById("knightActor");
+  if (kActorReset) kActorReset.innerHTML = KNIGHT_STANDING_SVG;
 
   document.getElementById("dialogXP").textContent = `${user.xp || 0} XP`;
 
@@ -4829,6 +5176,16 @@ function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
     document.getElementById("dialogXP").textContent = `${user.xp} XP`;
 
     playCorrectSound();
+    if (currentObstacle) {
+      const kEl = document.getElementById("knightActor");
+      const rObs = document.getElementById("roadObstacle");
+      if (kEl) kEl.classList.add("knight-strike");
+      if (rObs) rObs.classList.add("obstacle-hit");
+      setTimeout(() => {
+        if (kEl) kEl.classList.remove("knight-strike");
+        if (rObs) { rObs.classList.add("hidden"); rObs.classList.remove("obstacle-hit"); }
+      }, 400);
+    }
     quizQueue.shift();
     masteredCount++;
 
@@ -4881,6 +5238,8 @@ function completeStageVictory() {
 
   playVictorySound();
   document.getElementById("gateGlow").classList.add("gate-open");
+      const kActor = document.getElementById("knightActor");
+      if (kActor) kActor.innerHTML = KNIGHT_KNEEL_SVG;
   updateKnightPosition(100);
   updateLocksRow(totalInitialWords, totalInitialWords);
 
@@ -4901,26 +5260,67 @@ document.getElementById("btnVictoryContinue").addEventListener("click", enterDas
 // ==========================================
 // 8. LEADERBOARD VIEW
 // ==========================================
-document.getElementById("btnOpenLeaderboard").addEventListener("click", async () => {
-  await fetchAllStudentsFromCloud();
-  const sorted = Object.values(appState.students).sort((a, b) => b.xp - a.xp);
+function renderLeaderboardTable() {
+  const allStudents = Object.values(appState.students).sort((a, b) => (b.xp || 0) - (a.xp || 0));
+  const currentUser = appState.students[appState.currentUserCode] || {};
+  const currentMajor = currentUser.major || "";
+
+  // 1. Calculate Dual Ranks
+  const globalRankIdx = allStudents.findIndex(s => s.code === appState.currentUserCode);
+  const globalRankStr = globalRankIdx >= 0 ? `رتبه ${globalRankIdx + 1} از ${allStudents.length} کل` : "-";
+
+  const majorStudents = allStudents.filter(s => s.major === currentMajor);
+  const majorRankIdx = majorStudents.findIndex(s => s.code === appState.currentUserCode);
+  const majorRankStr = majorRankIdx >= 0 ? `رتبه ${majorRankIdx + 1} از ${majorStudents.length} در ${currentMajor}` : "-";
+
+  const mRankEl = document.getElementById("myMajorRank");
+  const gRankEl = document.getElementById("myGlobalRank");
+  if (mRankEl) mRankEl.textContent = majorRankStr;
+  if (gRankEl) gRankEl.textContent = globalRankStr;
+
+  // 2. Filter Table based on active tab
+  const displayList = currentLeaderboardTab === "major" ? majorStudents : allStudents;
+
   const tbody = document.getElementById("studentLeaderboardBody");
-  tbody.innerHTML = sorted.map((s, idx) => {
+  tbody.innerHTML = displayList.map((s, idx) => {
     let rankHtml = `${idx + 1}`;
     if (idx === 0) rankHtml = '<span class="rank-badge rank-1">1</span>';
     else if (idx === 1) rankHtml = '<span class="rank-badge rank-2">2</span>';
     else if (idx === 2) rankHtml = '<span class="rank-badge rank-3">3</span>';
 
+    const isMe = s.code === appState.currentUserCode;
     return `
-      <tr style="${s.code === appState.currentUserCode ? "background:rgba(240,181,96,0.14);" : ""}">
+      <tr style="${isMe ? "background:rgba(240,181,96,0.16); border-right:3px solid var(--amber);" : ""}">
         <td>${rankHtml}</td>
-        <td><strong>${s.name}</strong><br><span style="color:var(--steel); font-size:0.7rem;">${s.code}</span></td>
-        <td style="color:var(--xp);">${s.major}</td>
-        <td class="pixel-num" style="color:var(--amber); font-weight:900;">${s.xp}</td>
+        <td><strong>${s.name}</strong></td>
+        <td style="color:var(--xp); font-size:0.8rem;">${s.major || "-"}</td>
+        <td class="pixel-num" style="color:var(--amber); font-weight:900;">${s.xp || 0} XP</td>
       </tr>
     `;
-  }).join("") || `<tr><td colspan="4" style="text-align:center;">هنوز شوالیه‌ای ثبت نشده است.</td></tr>`;
+  }).join("") || '<tr><td colspan="4" style="text-align:center; padding:16px;">هنوز بازیکنی ثبت نشده است.</td></tr>';
+}
+
+document.getElementById("btnOpenLeaderboard").addEventListener("click", async () => {
+  await fetchAllStudentsFromCloud();
+  currentLeaderboardTab = "major";
+  document.getElementById("btnTabMajorLeaderboard").className = "pixel-btn btn-cyan active";
+  document.getElementById("btnTabGlobalLeaderboard").className = "pixel-btn btn-slate";
+  renderLeaderboardTable();
   showView("viewLeaderboard");
+});
+
+document.getElementById("btnTabMajorLeaderboard").addEventListener("click", () => {
+  currentLeaderboardTab = "major";
+  document.getElementById("btnTabMajorLeaderboard").className = "pixel-btn btn-cyan active";
+  document.getElementById("btnTabGlobalLeaderboard").className = "pixel-btn btn-slate";
+  renderLeaderboardTable();
+});
+
+document.getElementById("btnTabGlobalLeaderboard").addEventListener("click", () => {
+  currentLeaderboardTab = "global";
+  document.getElementById("btnTabMajorLeaderboard").className = "pixel-btn btn-slate";
+  document.getElementById("btnTabGlobalLeaderboard").className = "pixel-btn btn-amber active";
+  renderLeaderboardTable();
 });
 
 document.getElementById("btnCloseLeaderboard").addEventListener("click", enterDashboard);
