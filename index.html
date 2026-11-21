@@ -2110,8 +2110,8 @@
     </div>
   </div>
 
-  <!-- Hidden Teacher Access Trigger (3 rapid clicks on version number) --> (3 rapid clicks on version number) -->
-  <div class="footer-ver" id="versionTrigger">v4.1</div>
+  <!-- Hidden Teacher Access Trigger -->
+  <div class="footer-ver" id="versionTrigger">v4.1.1</div>
 
 </div>
 
@@ -4766,7 +4766,7 @@ async function checkStudentNotifications(studentPhone) {
 }
 
 async function fetchStudentRecord(code) {
-  if (!appState.sbUrl || !appState.sbKey || !code) return null;
+  if (!appState.sbUrl || !appState.sbKey || !code) return appState.students[code] || null;
   try {
     const res = await fetch(`${appState.sbUrl}/rest/v1/gv_students?code=eq.${encodeURIComponent(code)}&select=*`, {
       headers: {
@@ -4781,6 +4781,17 @@ async function fetchStudentRecord(code) {
         appState.students[s.code] = s;
         saveLocal();
         return s;
+      } else if (Array.isArray(data) && data.length === 0) {
+        // Cloud verified: student does not exist in database (e.g. deleted by teacher)
+        if (appState.students[code]) {
+          delete appState.students[code];
+          saveLocal();
+        }
+        if (appState.currentUserCode === code) {
+          appState.currentUserCode = null;
+          localStorage.removeItem("gv_session_code");
+        }
+        return null;
       }
     }
   } catch (e) {
@@ -4828,10 +4839,12 @@ async function fetchAllStudentsFromCloud() {
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data)) {
+        const cloudStudents = {};
         data.forEach(row => {
           const s = mapStudentRow(row);
-          if (s) appState.students[s.code] = s;
+          if (s) cloudStudents[s.code] = s;
         });
+        appState.students = cloudStudents;
         saveLocal();
       }
     }
@@ -6529,24 +6542,45 @@ window.resetStudentPin = async function(code) {
 };
 
 window.deleteStudent = async function(code) {
-  if (confirm("آیا از حذف این حساب کاربری مطمئن هستید؟")) {
-    delete appState.students[code];
-    saveLocal();
-    if (appState.sbUrl && appState.sbKey) {
-      try {
-        await fetch(`${appState.sbUrl}/rest/v1/gv_students?code=eq.${encodeURIComponent(code)}`, {
-          method: "DELETE",
-          headers: {
-            "apikey": appState.sbKey,
-            "Authorization": `Bearer ${appState.sbKey}`
-          }
-        });
-      } catch (e) {
-        console.warn("deleteStudent cloud error:", e);
-      }
-    }
-    openTeacherPanel();
+  if (!confirm(`آیا از حذف کامل حساب کاربری دانش‌آموز (${code}) اطمینان دارید؟ تمامی سوابق وی پاک خواهد شد.`)) {
+    return;
   }
+
+  // 1. Call secure teacher_delete_student RPC first
+  if (appState.sbUrl && appState.sbKey) {
+    try {
+      await callSupabaseRPC("teacher_delete_student", {
+        p_admin_pass: TEACHER_PASS,
+        p_student_phone: code
+      });
+    } catch (e) {
+      console.warn("teacher_delete_student RPC error:", e);
+      alert("خطا در حذف دانش‌آموز از سرور ابری: " + (e.message || e));
+      return; // Do not delete locally if cloud RPC fails
+    }
+  }
+
+  // 2. Remove from local state & cache
+  delete appState.students[code];
+  saveLocal();
+
+  // If this phone is currently active in session, clear it
+  if (appState.currentUserCode === code) {
+    appState.currentUserCode = null;
+    localStorage.removeItem("gv_session_code");
+  }
+
+  // Clear local notifications related to this student
+  const localNotifs = getLocalNotifications().filter(n => n.student_phone !== code);
+  saveLocalNotifications(localNotifs);
+
+  playCorrectSound();
+  alert(`حساب کاربری ${code} با موفقیت حذف شد. این شماره اکنون می‌تواند مجدداً ثبت‌نام کند.`);
+
+  // Refresh teacher views
+  renderTeacherStudents();
+  renderTeacherApprovals();
+  loadTeacherNotifications();
 };
 
 document.getElementById("btnAddCustomWord").addEventListener("click", async () => {

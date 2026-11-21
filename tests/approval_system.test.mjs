@@ -1,6 +1,6 @@
 // ====================================================================
-// GHALE VAJEGAN - STUDENT REGISTRATION APPROVAL SYSTEM TESTS
-// Specification: v4.1 (Node.js Built-in Test Runner)
+// GHALE VAJEGAN - STUDENT REGISTRATION APPROVAL & DELETION SYSTEM TESTS
+// Specification: v4.1.1 (Node.js Built-in Test Runner)
 // ====================================================================
 
 import { describe, it, beforeEach } from 'node:test';
@@ -12,7 +12,8 @@ import crypto from 'node:crypto';
 const PROJECT_DIR = 'C:/Users/acer/.gemini/antigravity/scratch/ghale-vajegan';
 const htmlContent = fs.readFileSync(path.join(PROJECT_DIR, 'index.html'), 'utf8');
 const swContent = fs.readFileSync(path.join(PROJECT_DIR, 'sw.js'), 'utf8');
-const sqlContent = fs.readFileSync(path.join(PROJECT_DIR, 'supabase/migrations/001_student_approval_system.sql'), 'utf8');
+const sqlMigration1 = fs.readFileSync(path.join(PROJECT_DIR, 'supabase/migrations/001_student_approval_system.sql'), 'utf8');
+const sqlMigration2 = fs.readFileSync(path.join(PROJECT_DIR, 'supabase/migrations/002_teacher_delete_student.sql'), 'utf8');
 
 // Simulation of the Approval System logic (mirroring RPC & client models)
 class ApprovalSystemSimulator {
@@ -199,13 +200,38 @@ class ApprovalSystemSimulator {
     };
   }
 
+  // RPC 4: teacher_delete_student
+  teacherDeleteStudent(adminPass, studentPhone) {
+    if (adminPass !== this.TEACHER_PASS) {
+      throw new Error('دسترسی غیرمجاز: رمز عبور دبیر اشتباه است.');
+    }
+
+    if (!studentPhone || !studentPhone.trim()) {
+      throw new Error('شماره تلفن دانش‌آموز الزامی است.');
+    }
+
+    const phone = studentPhone.trim();
+
+    // 1. Delete notifications
+    this.notifications = this.notifications.filter(n => n.student_phone !== phone);
+
+    // 2. Delete student record
+    const existed = this.students.has(phone);
+    this.students.delete(phone);
+
+    return {
+      success: true,
+      deleted_phone: phone,
+      rows_deleted: existed ? 1 : 0
+    };
+  }
+
   // Simulated direct REST client tampering attempt
   directClientUpdate(phone, payload) {
     const student = this.students.get(phone);
     if (!student) throw new Error('Student not found');
     const oldCopy = { ...student };
     const newCopy = { ...student, ...payload };
-    // This will trigger the anti-tampering check without authorizedRpc
     this.beforeUpdateStudent(oldCopy, newCopy);
     Object.assign(student, payload);
     return student;
@@ -380,13 +406,11 @@ describe('Student Registration Approval System - Security & Anti-Tampering', () 
   });
 
   it('2. Anti-tampering trigger blocks direct REST update of account_status', () => {
-    // Malicious student tries to bypass teacher and set status to 'approved' via REST PATCH
     assert.throws(
       () => sim.directClientUpdate(testPhone, { account_status: 'approved' }),
       /دسترسی غیرمجاز: تغییر مستقیم وضعیت حساب کاربری تنها از طریق توابع رسمی دبیر مجاز است/
     );
 
-    // Verify status remains pending
     const student = sim.students.get(testPhone);
     assert.equal(student.account_status, 'pending');
   });
@@ -401,6 +425,57 @@ describe('Student Registration Approval System - Security & Anti-Tampering', () 
   });
 });
 
+describe('Student Deletion & Ghost Account Desync Prevention', () => {
+  let sim;
+  const testPhone = '09128887766';
+  const testPin = '3344';
+
+  beforeEach(() => {
+    sim = new ApprovalSystemSimulator();
+    sim.registerStudent(testPhone, sim.hashPin(testPin), 'دانش‌آموز تستی', 'شبکه و نرم‌افزار');
+  });
+
+  it('1. teacher_delete_student rejects wrong admin password', () => {
+    assert.throws(
+      () => sim.teacherDeleteStudent('wrong_pass', testPhone),
+      /دسترسی غیرمجاز: رمز عبور دبیر اشتباه است/
+    );
+    assert.ok(sim.students.has(testPhone), 'Student must not be deleted on wrong password');
+  });
+
+  it('2. teacher_delete_student cleanly deletes student and associated notifications', () => {
+    assert.ok(sim.students.has(testPhone));
+    assert.ok(sim.notifications.some(n => n.student_phone === testPhone));
+
+    const result = sim.teacherDeleteStudent('431380', testPhone);
+    assert.equal(result.success, true);
+    assert.equal(result.deleted_phone, testPhone);
+    assert.equal(result.rows_deleted, 1);
+
+    // Verify completely gone
+    assert.equal(sim.students.has(testPhone), false);
+    assert.equal(sim.notifications.some(n => n.student_phone === testPhone), false);
+  });
+
+  it('3. Deleted phone number can immediately re-register fresh without conflict', () => {
+    // Delete student
+    sim.teacherDeleteStudent('431380', testPhone);
+
+    // Re-register with the same phone
+    const newPinHash = sim.hashPin('9988');
+    const newReg = sim.registerStudent(testPhone, newPinHash, 'نام جدید', 'الکتروتکنیک');
+
+    assert.equal(newReg.success, true);
+    assert.equal(newReg.account_status, 'pending');
+
+    const freshStudent = sim.students.get(testPhone);
+    assert.ok(freshStudent);
+    assert.equal(freshStudent.name, 'نام جدید');
+    assert.equal(freshStudent.major, 'الکتروتکنیک');
+    assert.equal(freshStudent.resubmission_count, 0);
+  });
+});
+
 describe('Student Registration Approval System - Leaderboard & Privacy', () => {
   let sim;
 
@@ -409,16 +484,13 @@ describe('Student Registration Approval System - Leaderboard & Privacy', () => {
   });
 
   it('1. Public leaderboard strictly excludes pending and rejected students', () => {
-    // 1 approved student
     sim.registerStudent('09121111111', 'h1', 'دانش‌آموز فعال', 'رشته ۱');
     sim.teacherReview('431380', '09121111111', 'approved');
     sim.students.get('09121111111').xp = 1200;
 
-    // 1 pending student
     sim.registerStudent('09122222222', 'h2', 'دانش‌آموز منتظر', 'رشته ۱');
-    sim.students.get('09122222222').xp = 5000; // Even with high XP, must not appear
+    sim.students.get('09122222222').xp = 5000;
 
-    // 1 rejected student
     sim.registerStudent('09123333333', 'h3', 'دانش‌آموز ردشده', 'رشته ۱');
     sim.teacherReview('431380', '09123333333', 'rejected', 'دلیل رد');
     sim.students.get('09123333333').xp = 9999;
@@ -454,29 +526,42 @@ describe('Student Registration Approval System - In-App Notifications', () => {
   });
 });
 
-describe('Integration Verification with Production Code (HTML, SW, SQL)', () => {
-  it('1. SQL Migration file contains all required schema changes, RLS, and RPCs', () => {
-    assert.ok(sqlContent.includes('ALTER TABLE gv_students'), 'SQL alters gv_students');
-    assert.ok(sqlContent.includes('account_status'), 'SQL has account_status');
-    assert.ok(sqlContent.includes('rejection_reason'), 'SQL has rejection_reason');
-    assert.ok(sqlContent.includes('resubmission_count'), 'SQL has resubmission_count');
-    assert.ok(sqlContent.includes('gv_notifications'), 'SQL creates gv_notifications');
-    assert.ok(sqlContent.includes('trg_gv_protect_student_status'), 'SQL has anti-tamper trigger');
-    assert.ok(sqlContent.includes('CREATE OR REPLACE FUNCTION register_student'), 'SQL defines register_student');
-    assert.ok(sqlContent.includes('CREATE OR REPLACE FUNCTION resubmit_student_registration'), 'SQL defines resubmit_student_registration');
-    assert.ok(sqlContent.includes('CREATE OR REPLACE FUNCTION teacher_review_student'), 'SQL defines teacher_review_student');
-    assert.ok(sqlContent.includes('SECURITY DEFINER'), 'RPCs are SECURITY DEFINER');
+describe('Integration Verification with Production Code (HTML, SW, SQL v4.1.1)', () => {
+  it('1. SQL Migration files contain all required schema changes, RLS, and RPCs', () => {
+    assert.ok(sqlMigration1.includes('ALTER TABLE gv_students'), 'SQL alters gv_students');
+    assert.ok(sqlMigration1.includes('account_status'), 'SQL has account_status');
+    assert.ok(sqlMigration1.includes('rejection_reason'), 'SQL has rejection_reason');
+    assert.ok(sqlMigration1.includes('resubmission_count'), 'SQL has resubmission_count');
+    assert.ok(sqlMigration1.includes('gv_notifications'), 'SQL creates gv_notifications');
+    assert.ok(sqlMigration1.includes('trg_gv_protect_student_status'), 'SQL has anti-tamper trigger');
+    assert.ok(sqlMigration1.includes('CREATE OR REPLACE FUNCTION register_student'), 'SQL defines register_student');
+    assert.ok(sqlMigration1.includes('CREATE OR REPLACE FUNCTION resubmit_student_registration'), 'SQL defines resubmit_student_registration');
+    assert.ok(sqlMigration1.includes('CREATE OR REPLACE FUNCTION teacher_review_student'), 'SQL defines teacher_review_student');
+    assert.ok(sqlMigration1.includes('SECURITY DEFINER'), 'RPCs are SECURITY DEFINER');
+
+    // Migration 002
+    assert.ok(sqlMigration2.includes('CREATE OR REPLACE FUNCTION teacher_delete_student'), 'SQL 002 defines teacher_delete_student');
+    assert.ok(sqlMigration2.includes('SECURITY DEFINER'), 'teacher_delete_student is SECURITY DEFINER');
+    assert.ok(sqlMigration2.includes('DELETE FROM gv_notifications'), 'teacher_delete_student deletes notifications');
+    assert.ok(sqlMigration2.includes('DELETE FROM gv_students'), 'teacher_delete_student deletes from gv_students');
   });
 
-  it('2. Service Worker cache name is bumped to ghale-vajegan-v4.1', () => {
-    assert.ok(swContent.includes("const CACHE_NAME = 'ghale-vajegan-v4.1';"), 'sw.js has v4.1 cache name');
+  it('2. Service Worker cache name is bumped to ghale-vajegan-v4.1.1', () => {
+    assert.ok(swContent.includes("const CACHE_NAME = 'ghale-vajegan-v4.1.1';"), 'sw.js has v4.1.1 cache name');
   });
 
-  it('3. Index.html has versionTrigger updated to v4.1', () => {
-    assert.ok(htmlContent.includes('<div class="footer-ver" id="versionTrigger">v4.1</div>'), 'versionTrigger is v4.1');
+  it('3. Index.html has versionTrigger displaying ONLY v4.1.1 without hints', () => {
+    assert.ok(htmlContent.includes('<div class="footer-ver" id="versionTrigger">v4.1.1</div>'), 'versionTrigger is v4.1.1');
+    const hasHint = /3\s*بار|سه\s*بار|۳\s*بار/i.test(htmlContent);
+    assert.equal(hasHint, false, 'No visible or secret 3-tap hint text exists in index.html');
   });
 
-  it('4. Index.html contains all views and approval UI components', () => {
+  it('4. Index.html calls teacher_delete_student RPC and synchronizes cleanly', () => {
+    assert.ok(htmlContent.includes('callSupabaseRPC("teacher_delete_student"'), 'deleteStudent calls teacher_delete_student RPC');
+    assert.ok(htmlContent.includes('data.length === 0'), 'fetchStudentRecord handles deleted student by cleaning up local cache');
+  });
+
+  it('5. Index.html contains all views and approval UI components', () => {
     assert.ok(htmlContent.includes('id="viewPending"'), 'viewPending exists');
     assert.ok(htmlContent.includes('id="viewRejected"'), 'viewRejected exists');
     assert.ok(htmlContent.includes('id="studentNotifBanner"'), 'studentNotifBanner exists');
@@ -487,7 +572,7 @@ describe('Integration Verification with Production Code (HTML, SW, SQL)', () => 
     assert.ok(htmlContent.includes('id="rejectReasonModal"'), 'rejectReasonModal exists');
   });
 
-  it('5. Leaderboard in index.html filters non-approved students', () => {
+  it('6. Leaderboard in index.html filters non-approved students', () => {
     assert.ok(
       htmlContent.includes('accountStatus === "approved"') || htmlContent.includes("accountStatus === 'approved'"),
       'renderLeaderboardTable filters by approved accountStatus'
