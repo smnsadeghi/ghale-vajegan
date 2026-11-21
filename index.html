@@ -16,28 +16,28 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Vazirmatn:wght@500;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #06070a;
-      --panel: #10131c;
-      --panel-alt: #161b26;
-      --panel-dark: #0a0d14;
-      --line: #273042;
-      --line-hi: #3b4760;
-      --ink: #d6cfc2;
-      --ink-dim: #8a94a6;
-      --shadow-deep: #050608;
-      --shadow-violet: #14111f;
-      --amber: #c78d3e;
-      --gold: #d4a44c;
-      --amber-hi: #e2af5c;
-      --amber-lo: #664119;
-      --wine: #4a1620;
-      --red: #9e2f3b;
-      --steel: #7d889b;
-      --moon: #b8c4d1;
-      --xp: #46b8c4;
-      --cyan: #46b8c4;
-      --ok: #2e8a55;
-      --bad: #9e2f3b;
+      --bg: #040508;
+      --panel: #0b0d14;
+      --panel-alt: #121622;
+      --panel-dark: #07080d;
+      --line: #1e2536;
+      --line-hi: #2e394f;
+      --ink: #d4cdc0;
+      --ink-dim: #7f8a9e;
+      --shadow-deep: #020305;
+      --shadow-violet: #0d0a14;
+      --amber: #b88339;
+      --gold: #cfa04c;
+      --amber-hi: #dbab58;
+      --amber-lo: #4d3314;
+      --wine: #3d141b;
+      --red: #8b2635;
+      --steel: #707d90;
+      --moon: #9fb0c4;
+      --xp: #2b7588;
+      --cyan: #3ca2b8;
+      --ok: #2e7d4d;
+      --bad: #8b2635;
     }
 
     * {
@@ -72,7 +72,7 @@
     }
 
     .hard-shadow {
-      text-shadow: 2px 2px 0 #0b0d12;
+      text-shadow: 1px 1px 0 #020305;
     }
 
     input, select, textarea {
@@ -893,21 +893,16 @@
     .world-portal-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin: 14px 0 10px 0;
-    }
-    @media (max-width: 520px) {
-      .world-portal-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 6px;
-      }
+      gap: 5px;
+      margin: 6px 0;
+      flex-shrink: 0;
     }
     .portal-tab {
-      min-height: 52px;
+      min-height: 40px;
       background: var(--panel);
       border: 2px solid var(--line);
       color: var(--ink);
-      padding: 8px 10px;
+      padding: 4px 6px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
@@ -916,14 +911,14 @@
       position: relative;
       transition: all 0.15s steps(2);
       clip-path: polygon(
-        0 4px, 4px 4px, 4px 0,
-        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
-        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
-        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
+        0 3px, 3px 3px, 3px 0,
+        calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
+        100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
+        3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px)
       );
     }
     .portal-tab:hover {
-      background: #1a2233;
+      background: #141926;
       border-color: var(--ink);
     }
     .portal-tab-top {
@@ -932,13 +927,20 @@
       align-items: center;
       width: 100%;
     }
+    .portal-tab-top svg {
+      width: 15px;
+      height: 15px;
+    }
     .portal-name {
       font-weight: 800;
-      font-size: 0.85rem;
-      margin-top: 4px;
+      font-size: 0.72rem;
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .portal-counter {
-      font-size: 0.65rem;
+      font-size: 0.60rem;
       color: var(--steel);
     }
     .portal-tab[data-world="1"].active {
@@ -1044,60 +1046,96 @@
       100% { opacity: 1; filter: brightness(1) contrast(1); transform: scale(1); }
     }
 
-    /* Gesture Hint for Flashcard Study */
-    .study-gesture-hint {
-      text-align: center;
-      font-size: 0.78rem;
-      color: var(--amber);
-      background: rgba(16, 20, 31, 0.95);
-      border: 1px dashed var(--amber);
-      padding: 7px 12px;
-      margin-bottom: 12px;
-      clip-path: polygon(0 3px, 3px 3px, 3px 0, calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px));
-      transition: opacity 0.3s steps(3);
-    }
-
-    /* Tower Map Cards */
+    /* Tower Map Cards (Zero-Clip Compact) */
     .tower-card {
-      background: #111724;
-      border: 3px solid var(--line);
-      padding: 12px 14px;
-      margin-bottom: 10px;
+      background: var(--panel);
+      border: 2px solid var(--line);
+      padding: 6px 8px;
+      margin-bottom: 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 4px;
       clip-path: polygon(
-        0 4px, 4px 4px, 4px 0,
-        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
-        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
-        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
+        0 3px, 3px 3px, 3px 0,
+        calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
+        100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
+        3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px)
       );
-      box-shadow: 0 4px 0 #07090f;
+      box-shadow: 0 2px 0 #020305;
     }
     .tower-card.unlocked { border-color: var(--amber); }
     .tower-card.world-2.unlocked { border-color: var(--xp); }
     .tower-card.world-3.unlocked { border-color: var(--ok); }
-    .tower-card.world-4.unlocked { border-color: var(--red); background: #1a080d; }
+    .tower-card.world-4.unlocked { border-color: var(--red); background: #14080a; }
     .tower-card.completed { border-color: var(--ok); }
-    .tower-card.locked { opacity: 0.55; }
+    .tower-card.locked { opacity: 0.5; }
 
-    /* Dedicated Study Card */
-    .study-card-box {
-      background: #0d121c;
-      border: 3px solid var(--amber-lo);
-      box-shadow: 0 6px 0 #07090f;
-      min-height: 220px;
-      padding: 22px 18px;
-      margin-bottom: 16px;
-      cursor: pointer;
+    /* Study View 3D Flip & Minimal Scene */
+    .study-window {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0 !important;
+    }
+    .study-window .pixel-window-inner {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 10px 12px;
+      box-sizing: border-box;
+      justify-content: space-between;
+    }
+    .study-top-bar {
+      flex-shrink: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 6px;
+      margin-bottom: 6px;
+    }
+    .study-center-area {
+      flex: 1;
+      min-height: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      text-align: center;
+      width: 100%;
       position: relative;
+    }
+    .study-card-scene {
+      perspective: 1000px;
+      -webkit-perspective: 1000px;
+      width: 100%;
+      max-width: 360px;
+      height: 250px;
+      max-height: 42vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      touch-action: none;
+    }
+    .study-card-box {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      touch-action: none;
+      cursor: grab;
+      user-select: none;
+      will-change: transform, opacity;
+      background: var(--panel);
+      border: 2px solid var(--line);
+      box-shadow: 0 4px 0 #040508;
       clip-path: polygon(
         0 4px, 4px 4px, 4px 0,
         calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
@@ -1105,25 +1143,112 @@
         4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
       );
     }
-    .study-tag {
+    .study-card-box.is-flipped {
+      transform: rotateY(180deg);
+    }
+    .study-card-face {
       position: absolute;
-      top: 10px;
-      right: 12px;
-      background: var(--wine);
-      color: var(--ink);
-      font-size: 0.72rem;
-      font-weight: 800;
-      padding: 3px 8px;
-      border: 1px solid #9c3f44;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 14px;
+      box-sizing: border-box;
+      text-align: center;
+      background: var(--panel);
+    }
+    .study-card-front {
+      z-index: 2;
+      transform: rotateY(0deg);
+    }
+    .study-card-back {
+      transform: rotateY(180deg);
+      overflow-y: auto;
+    }
+    .study-card-word {
+      font-size: 2.1rem;
+      font-weight: 900;
+      color: #ffe3a3;
+      text-shadow: 2px 2px 0 #000;
+      margin: 0;
+      word-break: break-word;
+    }
+    .study-meanings-list {
+      width: 100%;
+      max-height: 155px;
+      overflow-y: auto;
     }
     .study-meaning-item {
-      background: #141a26;
+      background: #121622;
       border: 1px solid var(--line);
-      padding: 9px 12px;
-      margin-bottom: 6px;
+      padding: 7px 10px;
+      margin-bottom: 5px;
       width: 100%;
       text-align: right;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+    .study-hint-text {
+      font-size: 0.76rem;
+      color: var(--steel);
+      margin-top: 6px;
+      line-height: 1.4;
+      text-align: right;
+      width: 100%;
+    }
+    .study-tag {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: var(--wine);
+      color: var(--ink);
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border: 1px solid #732a35;
+    }
+    /* Subtle 1-second First-Entry Swipe Nudge Animation */
+    @keyframes cardFirstNudge {
+      0% { transform: translateX(0) rotate(0deg); }
+      20% { transform: translateX(-18px) rotate(-3deg); }
+      45% { transform: translateX(15px) rotate(2.5deg); }
+      70% { transform: translateX(-7px) rotate(-1deg); }
+      85% { transform: translateX(3px) rotate(0.5deg); }
+      100% { transform: translateX(0) rotate(0deg); }
+    }
+    .study-card-nudge {
+      animation: cardFirstNudge 0.95s cubic-bezier(0.25, 1, 0.5, 1) 0.35s 1 normal forwards;
+    }
+    /* Study Progress Dots */
+    .study-progress-dots {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .study-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--line);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.2s ease;
+    }
+    .study-dot.seen {
+      background: var(--amber);
+      border-color: var(--amber);
+      box-shadow: 0 0 3px rgba(184, 131, 57, 0.4);
+    }
+    .study-dot.current {
+      border-color: #ffe3a3;
+      transform: scale(1.35);
+      background: var(--gold);
     }
 
     /* Pixel Tables */
@@ -1181,9 +1306,12 @@
       letter-spacing: 0.5px;
     }
     .footer-ver:hover { color: var(--amber); opacity: 1; }
-    body.in-battle .footer-ver { display: none !important; }
+    body.in-battle .footer-ver,
+    body.in-study .footer-ver { display: none !important; }
     body.in-battle #topBar,
+    body.in-study #topBar,
     body.in-battle .top-hud:not(.hud-arena),
+    body.in-study .top-hud:not(.hud-arena),
     body.in-battle .app-header,
     body.in-battle header {
       display: none !important;
@@ -1665,7 +1793,7 @@
 
         <button type="submit" id="authSubmitBtn" class="pixel-btn btn-amber" style="width:100%; font-size:0.95rem;">ورود به قلعه</button>
       </form>
-      <div class="footer-ver" id="versionTrigger">v4.3.1</div>
+      <div class="footer-ver" id="versionTrigger">v4.4.0</div>
     </div>
   </div>
   </div>
@@ -1755,47 +1883,44 @@
 
   <!-- VIEW 3: DEDICATED FLASHCARD STUDY MODE (یادگیری) -->
   <div id="viewStudy" class="hidden">
-    <div class="pixel-window border-line" id="studyWindow">
+    <div class="pixel-window border-line study-window" id="studyWindow">
       <div class="pixel-window-inner">
         <!-- Minimal Top Bar: Back, Title, Stage Counter -->
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:2px solid var(--line); padding-bottom:8px;">
-          <button id="btnStudyBack" class="pixel-btn btn-slate" style="padding:5px 12px; font-size:0.8rem;">بازگشت</button>
-          <div style="text-align:center;">
-            <div id="studyStageTitle" style="font-weight:900; color:var(--amber); font-size:0.9rem;"></div>
-            <div style="font-size:0.7rem; color:var(--steel);">بخش یادگیری آرام و مرور واژگان</div>
-          </div>
-          <span class="pixel-num" id="studyCounter" style="color:var(--moon);">1/10</span>
+        <div class="study-top-bar">
+          <button id="btnStudyBack" class="pixel-btn btn-slate" style="padding:4px 10px; font-size:0.76rem;">بازگشت</button>
+          <div id="studyStageTitle" style="font-weight:900; color:var(--amber); font-size:0.88rem; text-align:center;"></div>
+          <span class="pixel-num" id="studyCounter" style="color:var(--moon); font-size:0.78rem;">1/10</span>
         </div>
 
-        <!-- One-Time Gesture Hint (Appears only on first session) -->
-        <div id="studyGestureHint" class="study-gesture-hint hidden">
-          لمس: نمایش معنا | کشیدن به چپ/راست: کارت بعدی و قبلی
-        </div>
+        <!-- Center: Interactive 3D Study Flashcard + Progress Dots -->
+        <div class="study-center-area">
+          <div class="study-card-scene" id="studyCardScene">
+            <div class="study-card-box" id="studyCard">
+              <!-- Front Face -->
+              <div id="studyCardFront" class="study-card-face study-card-front">
+                <span class="study-tag" id="studyCardTag">واژه</span>
+                <div class="study-card-word" id="studyCardWord">واژه</div>
+              </div>
 
-        <!-- Interactive Study Pixel Card (Tactile Physics: Pointer Events Swipe & Clean Flip) -->
-        <div style="overflow:hidden; padding:10px 0; min-height:260px; display:flex; justify-content:center;">
-          <div class="study-card-box" id="studyCard" style="width:100%; cursor:grab; touch-action:pan-y; user-select:none; will-change:transform,opacity;">
-            <span class="study-tag" id="studyCardTag">واژه</span>
-
-            <!-- Front Face -->
-            <div id="studyCardFront" style="width:100%; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-              <div style="font-size:2.3rem; font-weight:900; color:#ffe3a3; margin-bottom:12px; text-shadow:2px 2px 0 #000;" id="studyCardWord">واژه</div>
-              <div style="font-size:0.75rem; color:var(--steel); border:1px dashed var(--line); padding:4px 10px; background:#0b0d12;" id="studyTapHint">[برای مشاهده معنا لمس کنید]</div>
-            </div>
-
-            <!-- Back Face (Revealed on Tap) -->
-            <div id="studyCardBack" class="hidden" style="width:100%; display:none; flex-direction:column; align-items:center; justify-content:center;">
-              <div id="studyMeanings" style="width:100%;"></div>
-              <div id="studyHint" style="font-size:0.82rem; color:var(--steel); margin-top:10px; line-height:1.5;"></div>
-              <div style="font-size:0.72rem; color:var(--amber); margin-top:12px;">[برای بازگشت به واژه لمس کنید]</div>
+              <!-- Back Face (Revealed on 3D Flip) -->
+              <div id="studyCardBack" class="study-card-face study-card-back">
+                <span class="study-tag" id="studyCardTagBack">معنا</span>
+                <div id="studyMeanings" class="study-meanings-list"></div>
+                <div id="studyHint" class="study-hint-text"></div>
+              </div>
             </div>
           </div>
+
+          <!-- Minimal Horizontal Progress Dot Bar -->
+          <div id="studyProgressDots" class="study-progress-dots"></div>
         </div>
 
-        <!-- Direct CTA to Battle Mode -->
-        <button id="btnStudyEnterBattle" class="pixel-btn btn-amber" style="width:100%; min-height:46px; font-size:0.95rem; margin-top:14px;">
-          آماده‌ام • ورود به نبرد دروازه
-        </button>
+        <!-- Direct CTA to Battle Mode (Strictly Gated Inside 100dvh) -->
+        <div style="flex-shrink:0; padding-top:8px; width:100%;">
+          <button id="btnStudyEnterBattle" class="pixel-btn btn-slate" disabled style="width:100%; min-height:42px; font-size:0.9rem; font-weight:900;">
+            مرور باقیمانده
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -5476,6 +5601,7 @@ document.getElementById("btnLogout").addEventListener("click", () => {
 // ==========================================
 function showView(viewId) {
   document.body.classList.toggle("in-battle", viewId === "viewArena");
+  document.body.classList.toggle("in-study", viewId === "viewStudy");
   const allViews = [
     "viewAuth", "viewMap", "viewStudy", "viewArena",
     "viewLeaderboard", "viewTeacher", "viewPending", "viewRejected", "viewProfile"
@@ -5704,8 +5830,8 @@ function renderTowerMap() {
     return;
   }
 
-  // Worlds 1, 2, 3: render compact 2-column stage cards
-  list.style.cssText = "display:grid; grid-template-columns:1fr 1fr; gap:6px; overflow:hidden;";
+  // Worlds 1, 2, 3: render compact 2-column stage cards (Zero-Clip 100dvh)
+  list.style.cssText = "display:grid; grid-template-columns:1fr 1fr; gap:5px; flex:1; min-height:0; overflow-y:auto; padding-bottom:4px;";
   activeStages.forEach((st, idxInWorld) => {
     const isCompleted = completed.includes(st.id);
     const prevInWorldCompleted = (idxInWorld === 0) || completed.includes(activeStages[idxInWorld - 1].id);
@@ -5713,7 +5839,7 @@ function renderTowerMap() {
 
     const card = document.createElement("div");
     card.className = `tower-card world-${st.world} ${isCompleted ? "completed" : (isUnlocked ? "unlocked" : "locked")}`;
-    card.style.cssText = "padding:8px 10px; margin-bottom:0; display:flex; flex-direction:column; justify-content:space-between; min-height:68px; gap:4px;";
+    card.style.cssText = "padding:6px 8px; margin-bottom:0; display:flex; flex-direction:column; justify-content:space-between; min-height:58px; gap:3px;";
 
     const infoDiv = document.createElement("div");
     let countLabel = `${st.words.length} واژه`;
@@ -5724,10 +5850,10 @@ function renderTowerMap() {
     let titleColor = isCompleted ? "var(--ok)" : (isUnlocked ? (st.world === 2 ? "var(--xp)" : (st.world === 3 ? "var(--ok)" : "var(--amber)")) : "var(--steel)");
 
     infoDiv.innerHTML = `
-      <div style="font-weight:900; font-size:0.82rem; color:${titleColor}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+      <div style="font-weight:800; font-size:0.76rem; color:${titleColor}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
         ${st.title}
       </div>
-      <div style="font-size:0.68rem; color:var(--steel); margin:1px 0 4px 0;">
+      <div style="font-size:0.65rem; color:var(--steel); margin:0 0 2px 0;">
         ${countLabel} • ${statusLabel}
       </div>
     `;
@@ -5737,10 +5863,12 @@ function renderTowerMap() {
       const actionsDiv = document.createElement("div");
       actionsDiv.style.cssText = "display:flex; gap:4px; align-items:center;";
 
+      const isStudied = user?.stats?.studiedStageIds?.includes(st.id);
+
       const studyBtn = document.createElement("button");
       studyBtn.className = "pixel-btn btn-slate";
-      studyBtn.style.cssText = "flex:1; padding:4px 2px; font-size:0.72rem; min-height:28px;";
-      studyBtn.textContent = "یادگیری";
+      studyBtn.style.cssText = "flex:1; padding:2px 4px; font-size:0.70rem; min-height:26px;";
+      studyBtn.textContent = isStudied ? "مرور" : "یادگیری";
       studyBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         playSelectSound();
@@ -5749,20 +5877,35 @@ function renderTowerMap() {
       actionsDiv.appendChild(studyBtn);
 
       const battleBtn = document.createElement("button");
-      battleBtn.className = st.world === 2 ? "pixel-btn btn-cyan" : (st.world === 3 ? "pixel-btn btn-emerald" : "pixel-btn btn-amber");
-      battleBtn.style.cssText = "flex:1; padding:4px 2px; font-size:0.72rem; min-height:28px;";
-      battleBtn.textContent = "نبرد";
-      battleBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        playSelectSound();
-        promptStartBattle(st);
-      });
+      battleBtn.style.cssText = "flex:1; padding:2px 4px; font-size:0.70rem; min-height:26px;";
+      if (isStudied) {
+        battleBtn.className = st.world === 2 ? "pixel-btn btn-cyan" : (st.world === 3 ? "pixel-btn btn-emerald" : "pixel-btn btn-amber");
+        battleBtn.textContent = "نبرد";
+        battleBtn.disabled = false;
+        battleBtn.style.opacity = "1";
+        battleBtn.style.cursor = "pointer";
+        battleBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          playSelectSound();
+          promptStartBattle(st);
+        });
+      } else {
+        battleBtn.className = "pixel-btn btn-slate";
+        battleBtn.textContent = "🔒 نبرد";
+        battleBtn.disabled = true;
+        battleBtn.style.opacity = "0.4";
+        battleBtn.style.cursor = "not-allowed";
+        battleBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          playTone(140, 'square', 0.1);
+        });
+      }
       actionsDiv.appendChild(battleBtn);
 
       card.appendChild(actionsDiv);
     } else {
       const lockTag = document.createElement("div");
-      lockTag.style.cssText = "font-size:0.68rem; color:var(--steel); border:1px solid var(--line); padding:3px 4px; text-align:center; background:#0b0d12;";
+      lockTag.style.cssText = "font-size:0.66rem; color:var(--steel); border:1px solid var(--line); padding:2px 4px; text-align:center; background:#0b0d12;";
       lockTag.textContent = !st.unlocked ? "قفل استاد" : "قفل برج قبل";
       card.appendChild(lockTag);
     }
@@ -5775,23 +5918,77 @@ function openStudyMode(stage) {
   studyStage = stage;
   studyDeck = [...stage.words];
   studyIndex = 0;
-  currentStudyCardsViewed = new Set();
   isCardFlipped = false;
 
-  const win = document.getElementById("studyWindow");
-  win.className = `pixel-window border-${stage.theme || "line"}`;
+  const user = appState.currentUserCode ? appState.students[appState.currentUserCode] : null;
+  if (!window.sessionStudyViewed) window.sessionStudyViewed = {};
+  if (!window.sessionStudyViewed[stage.id]) {
+    window.sessionStudyViewed[stage.id] = new Set();
+  }
+  currentStudyCardsViewed = window.sessionStudyViewed[stage.id];
 
-  const hintEl = document.getElementById("studyGestureHint");
-  if (hintEl) {
-    if (!localStorage.getItem("gv_study_hint_seen")) {
-      hintEl.classList.remove("hidden");
-    } else {
-      hintEl.classList.add("hidden");
+  const win = document.getElementById("studyWindow");
+  if (win) win.className = `pixel-window border-${stage.theme || "line"} study-window`;
+
+  const studyCard = document.getElementById("studyCard");
+  if (studyCard) {
+    studyCard.classList.remove("is-flipped");
+    studyCard.style.transform = "none";
+    // Show-Don't-Tell visual nudge on first entry
+    if (!sessionStorage.getItem("gv_study_nudge_seen")) {
+      studyCard.classList.add("study-card-nudge");
+      setTimeout(() => {
+        studyCard.classList.remove("study-card-nudge");
+        sessionStorage.setItem("gv_study_nudge_seen", "true");
+      }, 1400);
     }
   }
 
   renderStudyCard();
   showView("viewStudy");
+}
+
+function renderStudyProgressDots() {
+  const container = document.getElementById("studyProgressDots");
+  if (!container || !studyDeck) return;
+  const user = appState.students[appState.currentUserCode];
+  const isAlreadyStudied = user?.stats?.studiedStageIds?.includes(studyStage?.id);
+
+  container.innerHTML = studyDeck.map((_, idx) => {
+    const isSeen = isAlreadyStudied || currentStudyCardsViewed.has(idx);
+    const isCurrent = idx === studyIndex;
+    const classes = ["study-dot"];
+    if (isSeen) classes.push("seen");
+    if (isCurrent) classes.push("current");
+    return `<div class="${classes.join(" ")}" title="${idx + 1}"></div>`;
+  }).join("");
+}
+
+function updateStudyBattleButton() {
+  const btn = document.getElementById("btnStudyEnterBattle");
+  if (!btn || !studyStage) return;
+  const user = appState.students[appState.currentUserCode];
+  const isAlreadyStudied = user?.stats?.studiedStageIds?.includes(studyStage.id);
+  const total = studyDeck.length;
+  const viewed = currentStudyCardsViewed.size;
+  const isComplete = isAlreadyStudied || viewed >= total;
+
+  if (isComplete) {
+    btn.disabled = false;
+    btn.className = "pixel-btn btn-amber";
+    btn.textContent = "ورود به نبرد";
+    btn.style.opacity = "1";
+    btn.style.cursor = "pointer";
+    btn.style.pointerEvents = "auto";
+  } else {
+    const remaining = total - viewed;
+    btn.disabled = true;
+    btn.className = "pixel-btn btn-slate";
+    btn.textContent = `مرور باقیمانده: ${remaining} واژه`;
+    btn.style.opacity = "0.5";
+    btn.style.cursor = "not-allowed";
+    btn.style.pointerEvents = "none";
+  }
 }
 
 function renderStudyCard() {
@@ -5801,7 +5998,7 @@ function renderStudyCard() {
   if (studyIndex >= studyDeck.length) studyIndex = 0;
   if (studyIndex < 0) studyIndex = studyDeck.length - 1;
 
-  // Track 100% viewed cards for Knowledge Seeker achievement
+  // Track 100% viewed cards for gating & achievement
   currentStudyCardsViewed.add(studyIndex);
   if (currentStudyCardsViewed.size >= studyDeck.length) {
     const user = appState.students[appState.currentUserCode];
@@ -5821,40 +6018,40 @@ function renderStudyCard() {
   const item = studyDeck[studyIndex];
   document.getElementById("studyStageTitle").textContent = studyStage.title.split(":")[0];
   document.getElementById("studyCounter").textContent = `${studyIndex + 1}/${studyDeck.length}`;
-  document.getElementById("studyCardTag").textContent = item.tag || (studyStage.world === 2 ? "کنایه" : (studyStage.world === 3 ? "ایهام" : "واژه"));
+
+  const tagText = item.tag || (studyStage.world === 2 ? "کنایه" : (studyStage.world === 3 ? "ایهام" : "واژه"));
+  const tagFront = document.getElementById("studyCardTag");
+  if (tagFront) tagFront.textContent = tagText;
+  const tagBack = document.getElementById("studyCardTagBack");
+  if (tagBack) tagBack.textContent = tagText;
+
   document.getElementById("studyCardWord").textContent = item.word;
 
   const mContainer = document.getElementById("studyMeanings");
   const meaningsList = (item.meanings && item.meanings.length > 0) ? item.meanings : [item.correct || ""];
-  mContainer.innerHTML = meaningsList.map((m, idx) => `
-    <div class="study-meaning-item" style="background:#131826; border:1px solid var(--line); padding:10px 14px; margin-bottom:6px; color:var(--ink); font-size:0.92rem; line-height:1.6; text-align:right;">
+  mContainer.innerHTML = meaningsList.map(m => `
+    <div class="study-meaning-item">
       <strong style="color:var(--amber); margin-left:6px;">معنا:</strong> ${m}
     </div>
   `).join("");
 
-  document.getElementById("studyHint").textContent = item.hint ? `نکته ادبی: ${item.hint}` : "";
+  const hintEl = document.getElementById("studyHint");
+  if (hintEl) {
+    hintEl.textContent = item.hint ? `نکته ادبی: ${item.hint}` : "";
+  }
 
-  applyCardFlipState();
+  renderStudyProgressDots();
+  updateStudyBattleButton();
 }
 
 function applyCardFlipState() {
-  const front = document.getElementById("studyCardFront");
-  const back = document.getElementById("studyCardBack");
-  if (!front || !back) return;
-  if (isCardFlipped) {
-    front.classList.add("hidden");
-    front.style.display = "none";
-    back.classList.remove("hidden");
-    back.style.display = "flex";
-  } else {
-    front.classList.remove("hidden");
-    front.style.display = "flex";
-    back.classList.add("hidden");
-    back.style.display = "none";
-  }
+  const card = document.getElementById("studyCard");
+  if (!card) return;
+  card.classList.toggle("is-flipped", isCardFlipped);
+  card.style.transform = isCardFlipped ? "rotateY(180deg)" : "rotateY(0deg)";
 }
 
-// Tactile Real Physical Swiping (Pointer Events)
+// Tactile Real Physical Swiping & 3D Flip (Pointer Events)
 let isPointerDown = false;
 let pointerStartX = 0;
 let pointerStartY = 0;
@@ -5862,14 +6059,6 @@ let currentDx = 0;
 let isAnimatingSwipe = false;
 
 const studyCardEl = document.getElementById("studyCard");
-
-function dismissStudyHint() {
-  const hintEl = document.getElementById("studyGestureHint");
-  if (hintEl && !hintEl.classList.contains("hidden")) {
-    hintEl.classList.add("hidden");
-    localStorage.setItem("gv_study_hint_seen", "true");
-  }
-}
 
 studyCardEl.addEventListener("pointerdown", (e) => {
   if (isAnimatingSwipe) return;
@@ -5890,7 +6079,8 @@ studyCardEl.addEventListener("pointermove", (e) => {
   if (Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(dy)) {
     currentDx = dx;
     const rotate = dx * 0.04;
-    studyCardEl.style.transform = `translateX(${dx}px) rotate(${rotate}deg)`;
+    const flipRot = isCardFlipped ? 180 : 0;
+    studyCardEl.style.transform = `translateX(${dx}px) rotate(${rotate}deg) rotateY(${flipRot}deg)`;
     studyCardEl.style.opacity = `${Math.max(0.45, 1 - Math.abs(dx) / 320)}`;
   }
 });
@@ -5901,36 +6091,32 @@ const finishPointer = (e) => {
   studyCardEl.style.cursor = "grab";
   try { studyCardEl.releasePointerCapture(e.pointerId); } catch (_) {}
 
-  dismissStudyHint();
-
   const totalDx = Math.abs(e.clientX - pointerStartX);
   const totalDy = Math.abs(e.clientY - pointerStartY);
 
-  // Pure Tap / Click (<10px displacement) -> Clean Flip
-  if (totalDx < 10 && totalDy < 10) {
-    studyCardEl.style.transition = "transform 0.12s steps(2)";
-    studyCardEl.style.transform = "scale(0.97)";
-    setTimeout(() => {
-      isCardFlipped = !isCardFlipped;
-      playSelectSound();
-      applyCardFlipState();
-      studyCardEl.style.transform = "none";
-    }, 70);
+  // Tap / Click (<18px displacement) -> True 3D Flip
+  if (totalDx < 18 && totalDy < 18) {
+    isCardFlipped = !isCardFlipped;
+    playSelectSound();
+    studyCardEl.style.transition = "transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)";
+    studyCardEl.style.opacity = "1";
+    studyCardEl.style.transform = isCardFlipped ? "rotateY(180deg)" : "rotateY(0deg)";
+    studyCardEl.classList.toggle("is-flipped", isCardFlipped);
     return;
   }
 
-  // Swipe Check (Threshold 65px)
-  if (currentDx < -65) {
+  // Swipe Check (Threshold 55px)
+  if (currentDx < -55) {
     // Dragged Left -> Next Card
     flyCardAndAdvance(1);
-  } else if (currentDx > 65) {
+  } else if (currentDx > 55) {
     // Dragged Right -> Prev Card
     flyCardAndAdvance(-1);
   } else {
     // Snap back to center
     studyCardEl.style.transition = "transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.2s ease";
-    studyCardEl.style.transform = "translateX(0px) rotate(0deg)";
     studyCardEl.style.opacity = "1";
+    studyCardEl.style.transform = isCardFlipped ? "rotateY(180deg)" : "rotateY(0deg)";
   }
 };
 
@@ -5940,8 +6126,9 @@ studyCardEl.addEventListener("pointercancel", finishPointer);
 function flyCardAndAdvance(dir) {
   isAnimatingSwipe = true;
   const flyOutX = dir === 1 ? -window.innerWidth - 80 : window.innerWidth + 80;
+  const flipRot = isCardFlipped ? 180 : 0;
   studyCardEl.style.transition = "transform 0.22s ease-in, opacity 0.2s ease-in";
-  studyCardEl.style.transform = `translateX(${flyOutX}px) rotate(${dir === 1 ? -14 : 14}deg)`;
+  studyCardEl.style.transform = `translateX(${flyOutX}px) rotate(${dir === 1 ? -14 : 14}deg) rotateY(${flipRot}deg)`;
   studyCardEl.style.opacity = "0";
 
   setTimeout(() => {
@@ -5953,23 +6140,24 @@ function flyCardAndAdvance(dir) {
       else studyIndex = studyDeck.length - 1;
     }
     isCardFlipped = false;
+    studyCardEl.classList.remove("is-flipped");
     playSelectSound();
     renderStudyCard();
 
     // Slide in from opposite side
-    const slideInX = dir === 1 ? 140 : -140;
+    const slideInX = dir === 1 ? 130 : -130;
     studyCardEl.style.transition = "none";
-    studyCardEl.style.transform = `translateX(${slideInX}px) rotate(${dir === 1 ? 6 : -6}deg)`;
+    studyCardEl.style.transform = `translateX(${slideInX}px) rotate(${dir === 1 ? 5 : -5}deg) rotateY(0deg)`;
     studyCardEl.style.opacity = "0.15";
 
     void studyCardEl.offsetWidth; // Reflow
 
     studyCardEl.style.transition = "transform 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.15), opacity 0.22s ease-out";
-    studyCardEl.style.transform = "translateX(0px) rotate(0deg)";
+    studyCardEl.style.transform = "translateX(0px) rotate(0deg) rotateY(0deg)";
     studyCardEl.style.opacity = "1";
 
     setTimeout(() => {
-      studyCardEl.style.transition = "none";
+      studyCardEl.style.transition = "transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)";
       isAnimatingSwipe = false;
     }, 250);
   }, 220);
@@ -6141,7 +6329,12 @@ function openPublicProfile(code) {
 }
 window.openPublicProfile = openPublicProfile;
 
-document.getElementById("btnStudyEnterBattle").addEventListener("click", () => {
+document.getElementById("btnStudyEnterBattle")?.addEventListener("click", () => {
+  const btn = document.getElementById("btnStudyEnterBattle");
+  if (btn && btn.disabled) {
+    playTone(140, 'square', 0.1);
+    return;
+  }
   playSelectSound();
   promptStartBattle(studyStage);
 });
