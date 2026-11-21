@@ -1,9 +1,11 @@
-const CACHE_NAME = 'ghale-vajegan-v4.4.0';
+const CACHE_NAME = 'shovalie-vajeha-v5.0.0';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './icon.svg',
+  './icon-192.png',
+  './icon-512.png',
   './assets/world1_bg.webp',
   './assets/world2_bg.webp',
   './assets/world3_bg.webp',

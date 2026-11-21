@@ -3,41 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#0b0d12" />
+  <meta name="theme-color" content="#0e0c0b" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="قلعه واژگان" />
+  <meta name="apple-mobile-web-app-title" content="شوالیه واژه‌ها" />
   <link rel="manifest" href="./manifest.json" />
   <link rel="icon" type="image/svg+xml" href="./icon.svg" />
   <link rel="apple-touch-icon" href="./icon.svg" />
-  <title>قلعه واژگان</title>
+  <title>شوالیه واژه‌ها</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Vazirmatn:wght@500;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #040508;
-      --panel: #0b0d14;
-      --panel-alt: #121622;
-      --panel-dark: #07080d;
-      --line: #1e2536;
-      --line-hi: #2e394f;
-      --ink: #d4cdc0;
-      --ink-dim: #7f8a9e;
-      --shadow-deep: #020305;
-      --shadow-violet: #0d0a14;
-      --amber: #b88339;
-      --gold: #cfa04c;
-      --amber-hi: #dbab58;
-      --amber-lo: #4d3314;
-      --wine: #3d141b;
-      --red: #8b2635;
-      --steel: #707d90;
-      --moon: #9fb0c4;
-      --xp: #2b7588;
-      --cyan: #3ca2b8;
-      --ok: #2e7d4d;
-      --bad: #8b2635;
+      /* Base & Surfaces */
+      --bg: #0e0c0b;
+      --surface: #161311;
+      --surface-elevated: #1e1a17;
+      --border-subtle: #332a23;
+      --border-accent: #7a6348;
+
+      /* Dignified Muted Accents */
+      --ink: #e8dcc8;
+      --ink-muted: #9e8f7b;
+      --accent-gold: #c9a25e;
+      --accent-terracotta: #a85646;
+      --accent-sage: #55756a;
+      --accent-ochre: #b06c3b;
+
+      /* Semantic & Legacy Aliases */
+      --panel: var(--surface);
+      --panel-alt: var(--surface-elevated);
+      --panel-dark: #0a0908;
+      --line: var(--border-subtle);
+      --line-hi: var(--border-accent);
+      --ink-dim: var(--ink-muted);
+      --shadow-deep: #060505;
+      --shadow-violet: #120e0c;
+      --amber: var(--accent-gold);
+      --gold: var(--accent-gold);
+      --amber-hi: #dbb574;
+      --amber-lo: #574326;
+      --wine: #381a1d;
+      --red: var(--accent-terracotta);
+      --steel: var(--ink-muted);
+      --moon: var(--ink-muted);
+      --xp: var(--accent-ochre);
+      --cyan: #468c87;
+      --ok: var(--accent-sage);
+      --bad: var(--accent-terracotta);
     }
 
     * {
@@ -132,36 +146,29 @@
       transition: background-color 5000s ease-in-out 0s;
     }
 
-    /* Double-Layered Stepped Pixel Windows */
+    /* Minimalist Dark-Fantasy Window Container */
     .pixel-window {
-      background: var(--ink);
-      padding: 4px;
-      margin-bottom: 14px;
-      clip-path: polygon(
-        0 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0,
-        calc(100% - 6px) 0, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px,
-        100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%,
-        6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0 calc(100% - 6px)
-      );
-      box-shadow: 0 6px 0 #07090f;
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 3px;
+      margin-bottom: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+      position: relative;
     }
 
-    .pixel-window.border-amber { background: var(--amber); }
-    .pixel-window.border-cyan { background: var(--xp); }
-    .pixel-window.border-ok { background: var(--ok); }
-    .pixel-window.border-line { background: var(--line); }
-    .pixel-window.border-wine { background: var(--wine); }
-    .pixel-window.border-hell { background: var(--red); }
+    .pixel-window.border-amber { border-color: var(--accent-gold); }
+    .pixel-window.border-cyan { border-color: var(--cyan); }
+    .pixel-window.border-ok { border-color: var(--accent-sage); }
+    .pixel-window.border-line { border-color: var(--border-subtle); }
+    .pixel-window.border-wine { border-color: var(--wine); }
+    .pixel-window.border-hell { border-color: var(--accent-terracotta); }
 
     .pixel-window-inner {
-      background: var(--panel);
-      padding: 16px;
-      clip-path: polygon(
-        0 4px, 2px 4px, 2px 2px, 4px 2px, 4px 0,
-        calc(100% - 4px) 0, calc(100% - 4px) 2px, calc(100% - 2px) 2px, calc(100% - 2px) 4px, 100% 4px,
-        100% calc(100% - 4px), calc(100% - 2px) calc(100% - 4px), calc(100% - 2px) calc(100% - 2px), calc(100% - 4px) calc(100% - 2px), calc(100% - 4px) 100%,
-        4px 100%, 4px calc(100% - 2px), 2px calc(100% - 2px), 2px calc(100% - 4px), 0 calc(100% - 4px)
-      );
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 12px 14px;
+      box-sizing: border-box;
     }
 
     /* Stepped Pixel Buttons */
@@ -225,23 +232,19 @@
     /* Stepped Pixel Inputs */
     .pixel-input {
       font-family: 'Vazirmatn', sans-serif;
-      background: #0b0e14;
-      border: 2px solid var(--line);
+      background: var(--surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
       color: var(--ink);
-      padding: 10px 14px;
+      padding: 9px 12px;
       font-size: 0.9rem;
       width: 100%;
       outline: none;
-      clip-path: polygon(
-        0 3px, 3px 3px, 3px 0,
-        calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
-        100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
-        3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px)
-      );
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
     .pixel-input:focus {
-      border-color: var(--amber);
-      box-shadow: inset 0 0 0 1px var(--amber);
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 8px rgba(201, 162, 94, 0.2);
     }
 
     .form-group {
@@ -669,6 +672,115 @@
       25% { transform: translateX(-8px) scale(1.08) rotate(5deg); filter: brightness(2) drop-shadow(0 0 8px #ff4444); }
       60% { transform: translateX(4px) scale(0.95); filter: brightness(1.2); }
       100% { transform: translateX(0) scale(1); filter: brightness(1); }
+    }
+
+        /* 1v1 Arena Duel Stage & Choreography */
+    .enemy-hp-wrap {
+      position: absolute;
+      top: 8px;
+      left: 12px;
+      right: 12px;
+      z-index: 30;
+      background: rgba(14, 12, 11, 0.88);
+      border: 1px solid var(--border-accent);
+      border-radius: 8px;
+      padding: 4px 10px;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    }
+    .enemy-hp-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+    }
+    .enemy-name-label {
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: var(--accent-gold);
+    }
+    .enemy-hp-num {
+      font-size: 0.65rem;
+      color: var(--ink-muted);
+    }
+    .enemy-hp-track {
+      height: 6px;
+      background: #080706;
+      border-radius: 3px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .enemy-hp-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-terracotta), var(--accent-gold));
+      transition: width 0.4s cubic-bezier(0.2, 0.8, 0.3, 1);
+      border-radius: 2px;
+    }
+
+    /* Fighter Positioning in 1v1 Duel */
+    .knight-actor {
+      position: absolute;
+      right: 28px;
+      bottom: 26px;
+      width: 72px;
+      height: 72px;
+      z-index: 15;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      transition: transform 0.25s ease;
+    }
+    .knight-actor .knight-sprite-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.6));
+    }
+
+    .arena-enemy {
+      position: absolute;
+      left: 28px;
+      bottom: 26px;
+      width: 76px;
+      height: 76px;
+      z-index: 15;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      transition: transform 0.25s ease, opacity 0.5s ease;
+      transform: scaleX(-1);
+    }
+    .arena-enemy .obstacle-sprite-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.6));
+    }
+
+    /* Combat Animations */
+    .knight-duel-attack {
+      transform: translateX(-48px) scale(1.08) !important;
+      transition: transform 0.16s ease-out !important;
+    }
+    .enemy-recoil-hit {
+      transform: scaleX(-1) translateX(-28px) !important;
+      filter: brightness(2) contrast(1.5) drop-shadow(0 0 10px rgba(201, 162, 94, 0.9)) !important;
+      transition: transform 0.15s ease-out, filter 0.15s ease-out !important;
+    }
+    .enemy-duel-strike {
+      transform: scaleX(-1) translateX(-48px) scale(1.08) !important;
+      transition: transform 0.16s ease-out !important;
+    }
+    .knight-recoil-hit {
+      transform: translateX(28px) !important;
+      filter: brightness(1.9) drop-shadow(0 0 10px rgba(168, 86, 70, 0.9)) !important;
+      transition: transform 0.15s ease-out, filter 0.15s ease-out !important;
+    }
+    .enemy-defeat-collapse {
+      opacity: 0 !important;
+      transform: scaleX(-1) translateY(24px) scale(0.6) !important;
+      filter: grayscale(1) blur(3px) !important;
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
 
     .knight-actor {
@@ -1128,20 +1240,15 @@
       height: 100%;
       transform-style: preserve-3d;
       -webkit-transform-style: preserve-3d;
-      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
       touch-action: none;
       cursor: grab;
       user-select: none;
       will-change: transform, opacity;
-      background: var(--panel);
-      border: 2px solid var(--line);
-      box-shadow: 0 4px 0 #040508;
-      clip-path: polygon(
-        0 4px, 4px 4px, 4px 0,
-        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
-        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
-        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
-      );
+      background: var(--surface);
+      border: 1px solid var(--border-accent);
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
     }
     .study-card-box.is-flipped {
       transform: rotateY(180deg);
@@ -1153,14 +1260,16 @@
       height: 100%;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
-      display: flex;
+      display: flex !important;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 16px 14px;
+      padding: 18px 16px;
       box-sizing: border-box;
       text-align: center;
-      background: var(--panel);
+      background: var(--surface);
+      border-radius: 14px;
+      border: 1px solid var(--border-subtle);
     }
     .study-card-front {
       z-index: 2;
@@ -1733,24 +1842,23 @@
     <div class="pixel-window border-amber" style="height:auto; flex:0 0 auto; margin-bottom:0;">
       <div class="pixel-window-inner">
       <div style="text-align:center; margin-bottom:16px;">
-        <svg viewBox="0 0 32 32" width="44" height="44" style="margin-bottom:4px;" shape-rendering="crispEdges">
-          <rect x="2" y="10" width="6" height="18" fill="#566c86" />
-          <rect x="2" y="6" width="2" height="4" fill="#566c86" />
-          <rect x="6" y="6" width="2" height="4" fill="#566c86" />
-          <rect x="24" y="10" width="6" height="18" fill="#566c86" />
-          <rect x="24" y="6" width="2" height="4" fill="#566c86" />
-          <rect x="28" y="6" width="2" height="4" fill="#566c86" />
-          <rect x="8" y="14" width="16" height="14" fill="#3a4759" />
-          <rect x="10" y="8" width="12" height="6" fill="#566c86" />
-          <rect x="10" y="4" width="2" height="4" fill="#566c86" />
-          <rect x="15" y="4" width="2" height="4" fill="#566c86" />
-          <rect x="20" y="4" width="2" height="4" fill="#566c86" />
-          <rect x="13" y="18" width="6" height="10" fill="#f0b560" />
-          <rect x="4" y="14" width="2" height="3" fill="#ffd48a" />
-          <rect x="26" y="14" width="2" height="3" fill="#ffd48a" />
+        <svg viewBox="0 0 100 100" width="52" height="52" style="margin-bottom:6px;">
+          <!-- Shield Crest -->
+          <path d="M 50 10 C 68 10 84 16 84 26 C 84 62 68 84 50 94 C 32 84 16 62 16 26 C 16 16 32 10 50 10 Z" fill="#161311" stroke="#c9a25e" stroke-width="2.5" />
+          <path d="M 50 15 C 64 15 78 20 78 28 C 78 58 64 78 50 86 C 36 78 22 58 22 28 C 22 20 36 15 50 15 Z" fill="#0e0c0b" stroke="#332a23" stroke-width="1.5" />
+          <!-- Sword -->
+          <line x1="50" y1="20" x2="50" y2="62" stroke="#e8dcc8" stroke-width="2" />
+          <rect x="42" y="62" width="16" height="3" rx="1" fill="#c9a25e" />
+          <line x1="50" y1="65" x2="50" y2="72" stroke="#7a6348" stroke-width="2" />
+          <circle cx="50" cy="74" r="2" fill="#c9a25e" />
+          <!-- Knight Visor -->
+          <path d="M 40 34 C 40 26 60 26 60 34 L 62 44 L 38 44 Z" fill="#1e1a17" stroke="#c9a25e" stroke-width="1.5" />
+          <path d="M 38 44 L 50 52 L 62 44 L 60 56 L 50 60 L 40 56 Z" fill="#161311" stroke="#c9a25e" stroke-width="1.5" />
+          <line x1="43" y1="47" x2="48" y2="50" stroke="#e8cf9b" stroke-width="1.5" stroke-linecap="round" />
+          <line x1="57" y1="47" x2="52" y2="50" stroke="#e8cf9b" stroke-width="1.5" stroke-linecap="round" />
         </svg>
-        <h1 style="margin:0; font-size:1.45rem; font-weight:900; color:var(--amber);" class="hard-shadow">قلعه واژگان</h1>
-        <p style="margin:4px 0 0; font-size:0.8rem; color:var(--steel);">معمای دروازه • یادگیری واژه‌های ادبیات فارسی دهم</p>
+        <h1 style="margin:0; font-size:1.45rem; font-weight:900; color:var(--accent-gold);" class="hard-shadow">شوالیه واژه‌ها</h1>
+        <p style="margin:4px 0 0; font-size:0.8rem; color:var(--ink-muted);">دوئل شوالیه‌ها • مسابقه ادبی دهم</p>
       </div>
 
       <div style="display:flex; gap:6px; margin-bottom:14px;">
@@ -1791,9 +1899,9 @@
 
         <div id="authError" style="background:var(--wine); color:#fff; padding:8px 10px; margin-bottom:12px; font-size:0.8rem; font-weight:800; border:1px solid #ff7b92;" class="hidden"></div>
 
-        <button type="submit" id="authSubmitBtn" class="pixel-btn btn-amber" style="width:100%; font-size:0.95rem;">ورود به قلعه</button>
+        <button type="submit" id="authSubmitBtn" class="pixel-btn btn-amber" style="width:100%; font-size:0.95rem;">ورود به بازی</button>
       </form>
-      <div class="footer-ver" id="versionTrigger">v4.4.0</div>
+      <div class="footer-ver font-pixel" id="versionTrigger">v5.0.0</div>
     </div>
   </div>
   </div>
@@ -1805,7 +1913,7 @@
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div>
             <div style="font-size:0.75rem; color:var(--steel);">رشته: <strong id="mapMajor" style="color:var(--xp);"></strong></div>
-            <div style="font-size:1.05rem; font-weight:900; color:var(--ink); margin-top:2px;" class="hard-shadow">نقشه فتح ۴ جهان قلعه واژگان</div>
+            <div style="font-size:1.05rem; font-weight:900; color:var(--ink); margin-top:2px;" class="hard-shadow">نقشه فتوحات شوالیه واژه‌ها</div>
           </div>
           <button id="btnOpenLeaderboard" class="pixel-btn btn-amber" style="padding:7px 12px; font-size:0.78rem;">جدول رتبه‌ها</button>
         </div>
@@ -1925,13 +2033,13 @@
     </div>
   </div>
 
-  <!-- VIEW 4: MAIN BATTLE ARENA (نبرد دروازه) -->
+  <!-- VIEW 4: 1v1 ARENA DUEL (دوئل واژگان) -->
   <div id="viewArena" class="hidden">
     <!-- Arena HUD -->
     <div class="top-hud hud-arena" style="flex-direction:column; gap:6px; padding:6px 10px;">
       <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
         <button id="btnBackToMap" class="pixel-btn btn-slate" style="padding:4px 8px; font-size:0.75rem;">← نقشه</button>
-        <div style="font-weight:900; font-size:0.82rem; color:var(--amber); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center; flex:1; margin:0 8px;" id="arenaStageTitle">نبرد دروازه</div>
+        <div style="font-weight:900; font-size:0.82rem; color:var(--accent-gold); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center; flex:1; margin:0 8px;" id="arenaStageTitle">دوئل واژگان</div>
         <div class="pixel-num" id="arenaCounter" style="color:var(--moon); font-size:0.82rem;">0/10</div>
       </div>
       <div style="display:flex; align-items:center; justify-content:space-between; width:100%; border-top:1px solid rgba(255,255,255,0.08); padding-top:4px;">
@@ -1974,30 +2082,27 @@
 
 
 
-      <!-- Layer 4: Captive Princess & Rescued Portal (Revealed on Stage Victory) -->
-      <div id="gatePrincess" class="gate-princess hidden">
-        <div class="princess-portal-aura"></div>
-        <img src="assets/sprites/spr_princess_standing.png" class="princess-sprite-img" alt="Princess">
+      <!-- 1v1 Enemy HP Bar -->
+      <div class="enemy-hp-wrap" id="enemyHpWrap">
+        <div class="enemy-hp-meta">
+          <span id="enemyNameLabel" class="enemy-name-label">خرس سایه‌ها</span>
+          <span id="enemyHpNum" class="enemy-hp-num font-pixel">10 / 10</span>
+        </div>
+        <div class="enemy-hp-track">
+          <div class="enemy-hp-fill" id="enemyHpFill" style="width: 100%;"></div>
+        </div>
       </div>
 
-
-      <!-- Hanging Wooden Board with 2 chains for Target Word -->
+      <!-- Target Word Badge -->
       <div class="hanging-board-wrap">
-        <div class="hanging-chains">
-          <div class="chain-line"></div>
-          <div class="chain-line"></div>
-        </div>
         <div class="hanging-board">
-          <div class="board-word" id="stageTargetWord">آهو</div>
+          <div class="board-word" id="stageTargetWord">واژه</div>
         </div>
       </div>
 
-      <!-- 10 Pixel Locks Row -->
-      <div class="stage-locks-row" id="locksRow"></div>
-
-      <!-- Layer 5: Obstacle / Road Monster -->
-      <div id="roadObstacle" class="road-obstacle hidden">
-        <img id="obstacleSpriteImg" class="obstacle-sprite-img" src="assets/sprites/obs_shadow_bear.png" alt="Obstacle">
+      <!-- 1v1 Duel Enemy Actor (Left Side, Facing Knight) -->
+      <div id="roadObstacle" class="road-obstacle arena-enemy">
+        <img id="obstacleSpriteImg" class="obstacle-sprite-img" src="assets/sprites/obs_shadow_bear.png" alt="Enemy">
       </div>
 
       <!-- Layer 6: Knight Hero Actor (Bottom-Center Ground Anchored) -->
@@ -2024,7 +2129,7 @@
       <div class="rpg-dialog-inner">
         <div class="rpg-header">
           <div style="display:flex; align-items:center; gap:8px;">
-            <span class="speaker-tag" id="speakerTag">نگهبان دروازه</span>
+            <span class="speaker-tag" id="speakerTag">هماورد</span>
             <span id="hellBonusBadge" class="hell-badge hidden">2x XP</span>
           </div>
           <div class="rpg-stats">
@@ -2066,7 +2171,7 @@
 
         <div id="phaseVictory" class="hidden" style="text-align:center; padding:8px 0;">
           <h2 style="margin:0 0 6px; color:var(--ok); font-weight:900; font-size:1.3rem;" class="hard-shadow">
-            دروازه فتح شد!
+            پیروزی در مبارزه!
           </h2>
           <div id="victoryModeBadge" style="margin-bottom:8px;"></div>
           <div style="background:#0b0e14; border:1px solid var(--line); border-radius:4px; padding:8px 12px; margin-bottom:10px; text-align:right;">
@@ -2075,7 +2180,7 @@
               <strong id="victoryAccuracy" style="color:var(--gold);">-</strong>
             </div>
             <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:5px;">
-              <span style="color:var(--steel);">زمان فتح دروازه:</span>
+              <span style="color:var(--ink-muted);">زمان مبارزه:</span>
               <strong id="victoryTime" class="pixel-num" style="color:var(--cyan);">-</strong>
             </div>
             <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:5px;">
@@ -2299,7 +2404,7 @@
       <h2 style="color:var(--amber); margin-bottom:8px; font-weight:900;">در انتظار تأیید دبیر</h2>
       <p style="color:var(--steel); font-size:0.85rem; line-height:1.6; margin-bottom:16px;">
         درخواست ثبت‌نام شما در سامانه ثبت شد.<br>
-        به منظور ارزیابی آموزشی، ورود به قلعه واژگان پس از تأیید دبیر ادبیات امکان‌پذیر خواهد بود.
+        به منظور ارزیابی آموزشی، ورود به شوالیه واژه‌ها پس از تأیید دبیر ادبیات امکان‌پذیر خواهد بود.
       </p>
 
       <div style="background:#0b0e14; border:1px solid var(--line); border-radius:4px; padding:14px; margin-bottom:18px; text-align:right;">
@@ -2406,7 +2511,7 @@
           </svg>
         </div>
         <h3 style="color:var(--amber); margin:0 0 10px 0; font-weight:900; font-size:1.1rem;" class="hard-shadow">
-          نبرد رسمی دروازه
+          دوئل رسمی واژگان
         </h3>
         <p style="color:var(--steel); font-size:0.84rem; line-height:1.7; margin:0 0 16px 0; text-align:right; background:#0b0e14; padding:12px; border:1px solid var(--line); border-radius:3px;">
           توجه: فقط امتیاز اولین تلاش شما در این مرحله در جدول رده‌بندی ثبت می‌شود. تلاش‌های بعدی صرفاً تمرینی خواهند بود.
@@ -2449,7 +2554,7 @@
             <strong id="pubProfileConquered" class="pixel-num" style="color:var(--cyan);">-</strong>
           </div>
           <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
-            <span style="color:var(--steel);">بهترین زمان دروازه:</span>
+            <span style="color:var(--ink-muted);">بهترین زمان مبارزه:</span>
             <strong id="pubProfileBestTime" class="pixel-num" style="color:var(--gold);">-</strong>
           </div>
         </div>
@@ -5452,7 +5557,7 @@ tabLogin.addEventListener("click", () => {
   tabLogin.className = "pixel-btn btn-amber";
   tabRegister.className = "pixel-btn btn-slate";
   registerFields.classList.add("hidden");
-  authSubmitBtn.textContent = "ورود به قلعه";
+  authSubmitBtn.textContent = "ورود به بازی";
   authError.classList.add("hidden");
   playSelectSound();
 });
@@ -6410,6 +6515,7 @@ function updateCandlesHUD() {
 let currentKnightRightPct = 8;
 
 function updateKnightPosition(progressPct) {
+  return; // Knight remains in duel anchor in v5.0.0
   const actor = document.getElementById("knightActor");
   currentKnightRightPct = 8 + (Math.max(0, Math.min(100, progressPct)) / 100) * 68;
   if (actor) {
@@ -6567,7 +6673,7 @@ const ACHIEVEMENTS_DEF = [
   {
     id: "unscathed",
     title: "بی‌گزند",
-    desc: "فتح هر دروازه‌ای بدون خاموش شدن حتی یک شمع (۱۰ از ۱۰)",
+    desc: "پیروزی در مبارزه بدون خاموش شدن حتی یک شمع (۱۰ از ۱۰)",
     icon: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" shape-rendering="crispEdges"><path d="M12 2L4 5V11C4 16.5 7.5 21 12 22C16.5 21 20 16.5 20 11V5L12 2Z"/></svg>'
   },
   {
@@ -6579,7 +6685,7 @@ const ACHIEVEMENTS_DEF = [
   {
     id: "lightning",
     title: "برق‌آسا",
-    desc: "فتح دروازه در کمتر از ۴۵ ثانیه با حداقل ۸ پاسخ درست",
+    desc: "پیروزی در دوئل در کمتر از ۴۵ ثانیه با حداقل ۸ پاسخ درست",
     icon: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" shape-rendering="crispEdges"><polygon points="13 2 4 14 11 14 9 22 20 10 13 10 13 2"/></svg>'
   },
   {
@@ -6861,8 +6967,9 @@ function startBattleMode(stage, isRanked = false) {
   // Reset Actors & Princess
   const princessEl = document.getElementById("gatePrincess");
   if (princessEl) princessEl.classList.add("hidden");
-  setRoadObstacle("none");
+  setupArenaEnemy(stage);
   setKnightState("idle");
+  updateEnemyHP();
 
   const dXp1 = document.getElementById("dialogXP"); if (dXp1) dXp1.textContent = `${user.xp || 0} XP`;
 
@@ -7032,31 +7139,22 @@ function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
     const dXp = document.getElementById("dialogXP"); if (dXp) dXp.textContent = `${user.xp} XP`;
 
     playCorrectSound();
+    const knightEl = document.getElementById("knightActor");
+    const enemyEl = document.getElementById("roadObstacle");
+    if (knightEl) knightEl.classList.add("knight-duel-attack");
     setKnightState("attack");
-
-    if (currentObstacle) {
-      const rObs = document.getElementById("roadObstacle");
-      if (rObs) {
-        rObs.classList.add("obstacle-hit-recoil");
-        setTimeout(() => {
-          setRoadObstacle("none");
-          if (rObs) rObs.classList.remove("obstacle-hit-recoil");
-        }, 400);
-      }
-    }
+    triggerCombatFx();
+    if (enemyEl) enemyEl.classList.add("enemy-recoil-hit");
 
     quizQueue.shift();
     masteredCount++;
-
-    const progressPct = (masteredCount / totalInitialWords) * 100;
-    setTimeout(() => {
-      setKnightState("walk");
-      updateKnightPosition(progressPct);
-    }, 200);
+    updateEnemyHP();
 
     setTimeout(() => {
+      if (knightEl) knightEl.classList.remove("knight-duel-attack");
+      if (enemyEl) enemyEl.classList.remove("enemy-recoil-hit");
       setKnightState("idle");
-    }, 550);
+    }, 450);
 
     updateLocksRow(masteredCount, totalInitialWords);
     document.getElementById("arenaCounter").textContent = `${masteredCount}/${totalInitialWords}`;
@@ -7074,7 +7172,18 @@ function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
     updateCandlesHUD();
     triggerScreenShake();
     playWrongSound();
+
+    const knightEl = document.getElementById("knightActor");
+    const enemyEl = document.getElementById("roadObstacle");
+    if (enemyEl) enemyEl.classList.add("enemy-duel-strike");
+    if (knightEl) knightEl.classList.add("knight-recoil-hit");
     setKnightState("damage");
+
+    setTimeout(() => {
+      if (enemyEl) enemyEl.classList.remove("enemy-duel-strike");
+      if (knightEl) knightEl.classList.remove("knight-recoil-hit");
+      setKnightState("idle");
+    }, 450);
 
     user.mistakes[item.word] = (user.mistakes[item.word] || 0) + 1;
 
@@ -7540,7 +7649,7 @@ async function teacherReviewStudentAction(studentPhone, action, reason = null) {
       student_phone: studentPhone,
       title: action === "approved" ? "تأیید حساب کاربری" : "رد درخواست ثبت‌نام",
       message: action === "approved"
-        ? "حساب کاربری شما توسط دبیر با موفقیت تأیید شد. اکنون می‌توانید وارد قلعه واژگان شوید."
+        ? "حساب کاربری شما توسط دبیر با موفقیت تأیید شد. اکنون می‌توانید وارد شوالیه واژه‌ها شوید."
         : `درخواست ثبت‌نام شما مورد تأیید قرار نگرفت. دلیل دبیر: ${reason || "نامشخص"}`
     });
 

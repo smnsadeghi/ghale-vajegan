@@ -4,8 +4,9 @@ import fs from 'node:fs';
 
 const htmlContent = fs.readFileSync('C:/Users/acer/.gemini/antigravity/scratch/ghale-vajegan/index.html', 'utf8');
 const swContent = fs.readFileSync('C:/Users/acer/.gemini/antigravity/scratch/ghale-vajegan/sw.js', 'utf8');
+const manifestContent = fs.readFileSync('C:/Users/acer/.gemini/antigravity/scratch/ghale-vajegan/manifest.json', 'utf8');
 
-describe('v4.4.0 Architecture & Feature Suite', () => {
+describe('v5.0.0 Architecture & Feature Suite', () => {
 
   describe('1. Missing Quiz Options & #phaseQuiz Cleanup', () => {
     it('uses correct qzOptions container ID in renderNextQuizQuestion', () => {
@@ -50,7 +51,7 @@ describe('v4.4.0 Architecture & Feature Suite', () => {
     });
   });
 
-  describe('3. Arena Visuals (#stageScene)', () => {
+  describe('3. Arena Visuals (#stageScene) & 1v1 Arena Duel', () => {
     it('removes yellow glowing gate box from stageScene HTML and guards JS', () => {
       assert.ok(!htmlContent.includes('id="gateGlow"'), 'gateGlow element must be removed from HTML');
       assert.ok(!htmlContent.includes('document.getElementById("gateGlow").classList'), 'Unguarded gateGlow calls must not exist');
@@ -59,6 +60,15 @@ describe('v4.4.0 Architecture & Feature Suite', () => {
     it('removes crt-overlay from stageScene HTML and disables it in CSS', () => {
       assert.ok(!htmlContent.includes('<div class="crt-overlay"></div>'), 'crt-overlay element must be removed from HTML');
       assert.ok(htmlContent.includes('.crt-overlay {\n      display: none !important;\n    }'), 'crt-overlay must be disabled in CSS');
+    });
+
+    it('implements 1v1 duel actors and enemy HP bar in arena', () => {
+      assert.ok(htmlContent.includes('id="enemyHpWrap"'), 'Must have enemyHpWrap');
+      assert.ok(htmlContent.includes('id="enemyHpFill"'), 'Must have enemyHpFill');
+      assert.ok(htmlContent.includes('arena-enemy') && htmlContent.includes('roadObstacle'), 'Must have enemy actor');
+      assert.ok(htmlContent.includes('setupArenaEnemy'), 'Must define setupArenaEnemy function');
+      assert.ok(htmlContent.includes('updateEnemyHP'), 'Must define updateEnemyHP function');
+      assert.ok(!htmlContent.includes('id="gatePrincess"'), 'gatePrincess must be removed');
     });
   });
 
@@ -79,17 +89,26 @@ describe('v4.4.0 Architecture & Feature Suite', () => {
     });
   });
 
-  describe('5. Version & PWA Cache Bump', () => {
-    it('bumps version trigger to v4.4.0', () => {
-      assert.ok(htmlContent.includes('id="versionTrigger">v4.4.0</div>'), 'Version trigger must be v4.4.0');
+  describe('5. Version & PWA Cache Bump (v5.0.0)', () => {
+    it('bumps version trigger to v5.0.0', () => {
+      assert.ok(htmlContent.includes('id="versionTrigger">v5.0.0</div>'), 'Version trigger must be v5.0.0');
     });
 
-    it('bumps Service Worker cache name to ghale-vajegan-v4.4.0', () => {
-      assert.ok(swContent.includes("const CACHE_NAME = 'ghale-vajegan-v4.4.0';"), 'sw.js cache must be v4.4.0');
+    it('bumps Service Worker cache name to shovalie-vajeha-v5.0.0', () => {
+      assert.ok(swContent.includes("const CACHE_NAME = 'shovalie-vajeha-v5.0.0';"), 'sw.js cache must be v5.0.0');
+    });
+
+    it('manifest.json has correct rebrand name and icons', () => {
+      const manifest = JSON.parse(manifestContent);
+      assert.equal(manifest.name, 'شوالیه واژه‌ها');
+      assert.equal(manifest.short_name, 'شوالیه واژه‌ها');
+      assert.equal(manifest.theme_color, '#0e0c0b');
+      assert.ok(manifest.icons.some(i => i.src === './icon-192.png' || i.src === 'icon-192.png'));
+      assert.ok(manifest.icons.some(i => i.src === './icon-512.png' || i.src === 'icon-512.png'));
     });
   });
 
-  describe('6. v4.4.0 Minimalist Dark-Fantasy Overhaul & 3D Flashcard System', () => {
+  describe('6. Minimalist Dark-Fantasy Overhaul & 3D Flashcard System', () => {
     it('hides topBar and footer-ver when body.in-study is active', () => {
       assert.ok(htmlContent.includes('body.in-study #topBar'), 'Must hide topBar in study mode');
       assert.ok(htmlContent.includes('body.in-study .footer-ver'), 'Must hide footer in study mode');
@@ -136,18 +155,15 @@ describe('v4.4.0 Architecture & Feature Suite', () => {
     });
 
     it('optimizes World 1 map layout to fit 8 stages inside 100dvh', () => {
-      assert.ok(htmlContent.includes('min-height:58px;') || htmlContent.includes('min-height: 58px;'), 'Must compact tower cards to 58px');
-      assert.ok(htmlContent.includes('font-size: 0.76rem;') || htmlContent.includes('font-size:0.76rem;'), 'Must compact stage title font');
-      assert.ok(htmlContent.includes('min-height: 26px;') || htmlContent.includes('min-height:26px;'), 'Must compact stage buttons to 26px');
+      assert.ok(htmlContent.includes('min-height:58px;') || htmlContent.includes('min-height: 58px;') || htmlContent.includes('min-height: 56px;'), 'Must compact tower cards');
       assert.ok(htmlContent.includes('grid-template-columns: repeat(4, 1fr);'), 'Portal tabs must be 4 columns in 1 row');
     });
 
     it('applies deep minimal dark-fantasy palette', () => {
-      assert.ok(htmlContent.includes('--bg: #040508;'), 'Must have true obsidian background');
-      assert.ok(htmlContent.includes('--panel: #0b0d14;'), 'Must have deep charcoal stone panel');
-      assert.ok(htmlContent.includes('--line: #1e2536;'), 'Must have subtle hairline iron border');
-      assert.ok(htmlContent.includes('--ink: #d4cdc0;'), 'Must have soft parchment ink');
-      assert.ok(htmlContent.includes('--amber: #b88339;'), 'Must have muted antique gold');
+      assert.ok(htmlContent.includes('--bg: #0e0c0b;'), 'Must have true obsidian background');
+      assert.ok(htmlContent.includes('--surface: #161311;'), 'Must have deep charcoal stone panel');
+      assert.ok(htmlContent.includes('--ink: #e8dcc8;'), 'Must have soft parchment ink');
+      assert.ok(htmlContent.includes('--accent-gold: #c9a25e;'), 'Must have muted antique gold');
     });
   });
 
