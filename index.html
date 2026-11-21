@@ -49,7 +49,7 @@
       font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
       background-color: var(--bg);
       color: var(--ink);
-      min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -273,12 +273,7 @@
     }
 
     .crt-overlay {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.38) 50%);
-      background-size: 100% 4px;
-      z-index: 15;
+      display: none !important;
     }
 
     /* Sky & Theme Variations */
@@ -742,10 +737,10 @@
 
     /* 4 RPG Menu Options */
     .rpg-options-list {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 8px;
-      margin-bottom: 14px;
+      margin-bottom: 0;
     }
     .rpg-option-btn {
       min-height: 44px;
@@ -1123,11 +1118,28 @@
       font-size: 0.68rem;
       color: var(--steel);
       text-align: center;
-      margin-top: 16px;
+      margin-top: auto;
       padding: 10px;
       cursor: pointer;
       user-select: none;
       letter-spacing: 0.5px;
+    }
+
+    #viewArena:not(.hidden) {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    #viewArena .rpg-dialog {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0;
+    }
+    #viewArena .rpg-dialog-inner {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
     .footer-ver:hover { color: var(--amber); }
 
@@ -1706,30 +1718,31 @@
   <!-- VIEW 4: MAIN BATTLE ARENA (نبرد دروازه) -->
   <div id="viewArena" class="hidden">
     <!-- Arena HUD -->
-    <div class="top-hud">
-      <button id="btnBackToMap" class="pixel-btn btn-slate" style="padding:5px 9px; font-size:0.75rem;">← نقشه</button>
-
-      <!-- 3 Pixel-Art SVG Candles (Lives) -->
-      <div class="hud-candles" id="candlesHud">
-        <div id="candle1" class="hud-candle"><img id="candleImg1" class="hud-candle-img" src="assets/hud_candle_lit.webp" alt="Candle 1" onerror="this.src='assets/sprites/obs_spike_trap.png'"></div>
-        <div id="candle2" class="hud-candle"><img id="candleImg2" class="hud-candle-img" src="assets/hud_candle_lit.webp" alt="Candle 2" onerror="this.src='assets/sprites/obs_spike_trap.png'"></div>
-        <div id="candle3" class="hud-candle"><img id="candleImg3" class="hud-candle-img" src="assets/hud_candle_lit.webp" alt="Candle 3" onerror="this.src='assets/sprites/obs_spike_trap.png'"></div>
+    <div class="top-hud hud-arena" style="flex-direction:column; gap:6px; padding:6px 10px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+        <button id="btnBackToMap" class="pixel-btn btn-slate" style="padding:4px 8px; font-size:0.75rem;">← نقشه</button>
+        <div style="font-weight:900; font-size:0.82rem; color:var(--amber); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center; flex:1; margin:0 8px;" id="arenaStageTitle">نبرد دروازه</div>
+        <div class="pixel-num" id="arenaCounter" style="color:var(--moon); font-size:0.82rem;">0/10</div>
       </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; width:100%; border-top:1px solid rgba(255,255,255,0.08); padding-top:4px;">
+        <!-- 3 Pixel-Art SVG Candles (Lives) -->
+        <div class="hud-candles" id="candlesHud">
+          <div id="candle1" class="hud-candle"><img id="candleImg1" class="hud-candle-img" src="assets/hud_candle_lit.webp" alt="Candle 1" onerror="this.src='assets/sprites/obs_spike_trap.png'"></div>
+          <div id="candle2" class="hud-candle"><img id="candleImg2" class="hud-candle-img" src="assets/hud_candle_lit.webp" alt="Candle 2" onerror="this.src='assets/sprites/obs_spike_trap.png'"></div>
+          <div id="candle3" class="hud-candle"><img id="candleImg3" class="hud-candle-img" src="assets/hud_candle_lit.webp" alt="Candle 3" onerror="this.src='assets/sprites/obs_spike_trap.png'"></div>
+        </div>
 
-      <!-- Live Battle Timer & Mode Badge -->
-      <div style="display:flex; align-items:center; gap:5px;">
-        <span id="arenaTimer" class="pixel-num" style="color:var(--gold); font-size:0.75rem; font-weight:900;">00:00</span>
-        <span id="arenaModeBadge" class="badge-status status-pending" style="font-size:0.65rem; padding:1px 5px;">رسمی</span>
+        <!-- Live Battle Timer & Mode Badge -->
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span id="arenaTimer" class="pixel-num" style="color:var(--gold); font-size:0.75rem; font-weight:900;">00:00</span>
+          <span id="arenaModeBadge" class="badge-status status-pending" style="font-size:0.65rem; padding:1px 5px;">رسمی</span>
+        </div>
       </div>
-
-      <div style="font-weight:900; font-size:0.82rem; color:var(--amber);" id="arenaStageTitle">نبرد دروازه</div>
-      <div class="pixel-num" id="arenaCounter" style="color:var(--moon); font-size:0.82rem;">0/10</div>
     </div>
 
     <!-- 312px STAGE SCENE (Dynamic Theme Frame) -->
     <!-- 270px HYBRID PIXEL ART BATTLE SCENE -->
     <div class="stage-wrapper theme-amber" id="stageScene">
-      <div class="crt-overlay"></div>
       
       <!-- Layer 0: Deep Background Environment -->
       <img src="assets/bg/bg_w1_battle_ruins.webp" class="stage-bg-layer" id="stageBgLayer" alt="Castle Ruins Battleground">
@@ -1759,8 +1772,6 @@
         <img src="assets/sprites/spr_princess_standing.png" class="princess-sprite-img" alt="Princess">
       </div>
 
-      <!-- Volumetric Gate Glow & Light Rays -->
-      <div id="gateGlow" class="gate-glow"></div>
 
       <!-- Hanging Wooden Board with 2 chains for Target Word -->
       <div class="hanging-board-wrap">
@@ -1810,7 +1821,7 @@
           </div>
           <div class="rpg-stats">
             <span id="comboBadge" class="combo-badge hidden">x3 COMBO</span>
-            <span class="xp-readout" id="dialogXP">0 XP</span>
+            
           </div>
         </div>
 
@@ -1827,10 +1838,7 @@
           <!-- 4 RPG Options (الف، ب، ج، د) -->
           <div class="rpg-options-list" id="qzOptions"></div>
 
-          <!-- Stepped Confirm Button -->
-          <button id="btnConfirmAnswer" class="pixel-btn btn-amber" style="width:100%; min-height:44px; font-size:0.95rem;" disabled>
-            تأیید پاسخ
-          </button>
+
         </div>
 
         <!-- VICTORY SCREEN -->
@@ -2316,7 +2324,7 @@
   </div>
 
   <!-- Hidden Teacher Access Trigger -->
-  <div class="footer-ver" id="versionTrigger">v4.2.1-pixel</div>
+  <div class="footer-ver" id="versionTrigger">v4.2.2</div>
 
 </div>
 
@@ -6552,7 +6560,7 @@ function startBattleMode(stage, isRanked = false) {
 
   document.getElementById("arenaStageTitle").textContent = stage.title.split(":")[0];
   document.getElementById("arenaCounter").textContent = `0/${totalInitialWords}`;
-  document.getElementById("gateGlow").classList.remove("gate-open");
+  document.getElementById("gateGlow")?.classList.remove("gate-open");
 
   // Reset Actors & Princess
   const princessEl = document.getElementById("gatePrincess");
@@ -6560,7 +6568,7 @@ function startBattleMode(stage, isRanked = false) {
   setRoadObstacle("none");
   setKnightState("idle");
 
-  document.getElementById("dialogXP").textContent = `${user.xp || 0} XP`;
+  const dXp1 = document.getElementById("dialogXP"); if (dXp1) dXp1.textContent = `${user.xp || 0} XP`;
 
   updateCandlesHUD();
   updateComboBadge();
@@ -6677,16 +6685,17 @@ function renderNextQuizQuestion() {
   }
 
   // Render 4 Options
-  const grid = document.getElementById("qzOptionsGrid");
+  const grid = document.getElementById("qzOptions");
+  if (!grid) return;
   grid.innerHTML = "";
   const options = getQuizOptionsForCard(currentQuizItem, currentStage);
 
   options.forEach((optText, idx) => {
     const btn = document.createElement("button");
-    btn.className = "quiz-choice-btn";
-    btn.innerHTML = `<span class="choice-num">${idx + 1}</span> <span>${optText}</span>`;
+    btn.className = "rpg-option-btn";
+    btn.innerHTML = `<span class="opt-box">${idx + 1}</span> <span>${optText}</span>`;
     btn.addEventListener("click", () => {
-      const allBtns = grid.querySelectorAll(".quiz-choice-btn");
+      const allBtns = grid.querySelectorAll(".rpg-option-btn");
       handleQuizAnswer(btn, optText === currentQuizItem.correct, currentQuizItem, allBtns);
     });
     grid.appendChild(btn);
@@ -6724,7 +6733,7 @@ function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
     stageBaseEarnedXP += baseXP;
     user.xp += baseXP;
     document.getElementById("userXP").textContent = user.xp;
-    document.getElementById("dialogXP").textContent = `${user.xp} XP`;
+    const dXp = document.getElementById("dialogXP"); if (dXp) dXp.textContent = `${user.xp} XP`;
 
     playCorrectSound();
     setKnightState("attack");
@@ -6877,7 +6886,7 @@ function completeStageVictory() {
   });
 
   playVictorySound();
-  document.getElementById("gateGlow").classList.add("gate-open");
+  document.getElementById("gateGlow")?.classList.add("gate-open");
 
   const princessEl = document.getElementById("gatePrincess");
   if (princessEl) princessEl.classList.remove("hidden");
@@ -6892,7 +6901,7 @@ function completeStageVictory() {
   document.getElementById("phaseVictory").classList.remove("hidden");
   document.getElementById("speakerTag").textContent = "فتح دروازه";
   document.getElementById("userXP").textContent = user.xp;
-  document.getElementById("dialogXP").textContent = `${user.xp} XP`;
+  const dXp = document.getElementById("dialogXP"); if (dXp) dXp.textContent = `${user.xp} XP`;
 
   // Render Victory UI breakdown
   const m = String(Math.floor(durationSec / 60)).padStart(2, "0");
