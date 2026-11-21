@@ -91,8 +91,11 @@
     }
 
     .pixel-window.border-amber { background: var(--amber); }
+    .pixel-window.border-cyan { background: var(--xp); }
+    .pixel-window.border-ok { background: var(--ok); }
     .pixel-window.border-line { background: var(--line); }
     .pixel-window.border-wine { background: var(--wine); }
+    .pixel-window.border-hell { background: var(--red); }
 
     .pixel-window-inner {
       background: var(--panel);
@@ -148,6 +151,12 @@
       font-weight: 900;
     }
     .btn-amber:hover { background: var(--amber-hi); }
+    .btn-cyan {
+      background: var(--xp);
+      color: #0b0d12;
+      text-shadow: none;
+      font-weight: 900;
+    }
     .btn-wine { background: var(--wine); color: var(--ink); }
     .btn-emerald { background: var(--ok); color: #fff; }
     .btn-crimson { background: var(--red); color: #fff; }
@@ -232,7 +241,7 @@
       transform-origin: center bottom;
     }
 
-    /* 312px STAGE SCENE (معمای دروازه) */
+    /* 312px STAGE SCENE */
     .stage-wrapper {
       position: relative;
       width: 100%;
@@ -244,9 +253,26 @@
       background: #0b0e14;
     }
 
+    .crt-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.38) 50%);
+      background-size: 100% 4px;
+      z-index: 15;
+    }
+
+    /* Sky & Theme Variations */
     .stage-sky {
       position: absolute;
       inset: 0;
+    }
+
+    /* THEME 1: Amber / Midnight (جهان واژگان) */
+    .stage-wrapper.theme-amber {
+      border-color: var(--ink);
+    }
+    .stage-wrapper.theme-amber .stage-sky {
       background: 
         repeating-conic-gradient(#111826 0% 25%, #0b0e14 0% 50%) 0 48px / 4px 4px no-repeat,
         repeating-conic-gradient(#18223a 0% 25%, #111826 0% 50%) 0 100px / 4px 4px no-repeat,
@@ -262,14 +288,122 @@
           #1e2535 260px, #1e2535 312px
         );
     }
+    .stage-wrapper.theme-amber .win-glow { fill: var(--amber); }
+    .stage-wrapper.theme-amber .gate-glow {
+      background: var(--amber);
+      box-shadow: 0 0 16px 6px var(--amber);
+    }
+    .stage-wrapper.theme-amber .gate-glow.gate-open {
+      background: var(--amber-hi);
+      box-shadow: 0 0 36px 16px var(--amber-hi);
+    }
 
-    .crt-overlay {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.38) 50%);
-      background-size: 100% 4px;
-      z-index: 15;
+    /* THEME 2: Cyan / Nocturnal Teal (جهان کنایه) */
+    .stage-wrapper.theme-cyan {
+      border-color: var(--xp);
+    }
+    .stage-wrapper.theme-cyan .stage-sky {
+      background: 
+        repeating-conic-gradient(#0c1d2a 0% 25%, #060f16 0% 50%) 0 48px / 4px 4px no-repeat,
+        repeating-conic-gradient(#122c3f 0% 25%, #0c1d2a 0% 50%) 0 100px / 4px 4px no-repeat,
+        repeating-conic-gradient(#193c54 0% 25%, #122c3f 0% 50%) 0 152px / 4px 4px no-repeat,
+        repeating-conic-gradient(#224e6b 0% 25%, #193c54 0% 50%) 0 204px / 4px 4px no-repeat,
+        linear-gradient(
+          to bottom,
+          #060f16 0px, #060f16 48px,
+          #0c1d2a 48px, #0c1d2a 100px,
+          #122c3f 100px, #122c3f 152px,
+          #193c54 152px, #193c54 204px,
+          #224e6b 204px, #224e6b 260px,
+          #17364b 260px, #17364b 312px
+        );
+    }
+    .stage-wrapper.theme-cyan .win-glow { fill: var(--xp); }
+    .stage-wrapper.theme-cyan .gate-glow {
+      background: var(--xp);
+      box-shadow: 0 0 18px 8px var(--xp);
+    }
+    .stage-wrapper.theme-cyan .gate-glow.gate-open {
+      background: #b8f6fb;
+      box-shadow: 0 0 36px 16px var(--xp);
+    }
+    .stage-wrapper.theme-cyan .hanging-board {
+      border-color: #224e6b;
+    }
+    .stage-wrapper.theme-cyan .board-word {
+      color: #d4f9fc;
+    }
+
+    /* THEME 3: Emerald / Moonlit Forest (جهان ایهام) */
+    .stage-wrapper.theme-ok {
+      border-color: var(--ok);
+    }
+    .stage-wrapper.theme-ok .stage-sky {
+      background: 
+        repeating-conic-gradient(#0b2017 0% 25%, #06110c 0% 50%) 0 48px / 4px 4px no-repeat,
+        repeating-conic-gradient(#113023 0% 25%, #0b2017 0% 50%) 0 100px / 4px 4px no-repeat,
+        repeating-conic-gradient(#184230 0% 25%, #113023 0% 50%) 0 152px / 4px 4px no-repeat,
+        repeating-conic-gradient(#21563f 0% 25%, #184230 0% 50%) 0 204px / 4px 4px no-repeat,
+        linear-gradient(
+          to bottom,
+          #06110c 0px, #06110c 48px,
+          #0b2017 48px, #0b2017 100px,
+          #113023 100px, #113023 152px,
+          #184230 152px, #184230 204px,
+          #21563f 204px, #21563f 260px,
+          #163c2c 260px, #163c2c 312px
+        );
+    }
+    .stage-wrapper.theme-ok .win-glow { fill: var(--ok); }
+    .stage-wrapper.theme-ok .gate-glow {
+      background: var(--ok);
+      box-shadow: 0 0 18px 8px var(--ok);
+    }
+    .stage-wrapper.theme-ok .gate-glow.gate-open {
+      background: #7ee09b;
+      box-shadow: 0 0 36px 16px var(--ok);
+    }
+    .stage-wrapper.theme-ok .hanging-board {
+      border-color: #184230;
+    }
+    .stage-wrapper.theme-ok .board-word {
+      color: #d2f9df;
+    }
+
+    /* THEME 4: Hell / Volcanic Crimson (دژ جهنمی) */
+    .stage-wrapper.hell-mode {
+      border-color: var(--red);
+    }
+    .stage-wrapper.hell-mode .stage-sky {
+      background: 
+        repeating-conic-gradient(#240c12 0% 25%, #14070a 0% 50%) 0 48px / 4px 4px no-repeat,
+        repeating-conic-gradient(#38121b 0% 25%, #240c12 0% 50%) 0 100px / 4px 4px no-repeat,
+        repeating-conic-gradient(#4d1822 0% 25%, #38121b 0% 50%) 0 152px / 4px 4px no-repeat,
+        repeating-conic-gradient(#661f29 0% 25%, #4d1822 0% 50%) 0 204px / 4px 4px no-repeat,
+        linear-gradient(
+          to bottom,
+          #14070a 0px, #14070a 48px,
+          #240c12 48px, #240c12 100px,
+          #38121b 100px, #38121b 152px,
+          #4d1822 152px, #4d1822 204px,
+          #661f29 204px, #661f29 260px,
+          #44141c 260px, #44141c 312px
+        );
+    }
+    .stage-wrapper.hell-mode .win-glow { fill: #ff5a5f; }
+    .stage-wrapper.hell-mode .gate-glow {
+      background: #ff5a5f;
+      box-shadow: 0 0 20px 8px #ff5a5f;
+    }
+    .stage-wrapper.hell-mode .gate-glow.gate-open {
+      background: #ff859b;
+      box-shadow: 0 0 40px 18px #ff5a5f;
+    }
+    .stage-wrapper.hell-mode .hanging-board {
+      border-color: #661f29;
+    }
+    .stage-wrapper.hell-mode .board-word {
+      color: #ffd2d6;
     }
 
     .pixel-moon {
@@ -337,17 +471,9 @@
       transform: translateX(-50%);
       width: 28px;
       height: 38px;
-      background: var(--amber);
-      box-shadow: 0 0 16px 6px var(--amber);
-      opacity: 0.8;
+      opacity: 0.85;
       z-index: 3;
       transition: width 0.4s steps(4), height 0.4s steps(4), box-shadow 0.4s steps(4);
-    }
-    .gate-glow.gate-open {
-      width: 80px;
-      height: 54px;
-      background: var(--amber-hi);
-      box-shadow: 0 0 36px 16px var(--amber-hi);
     }
 
     .stone-road {
@@ -522,6 +648,15 @@
       box-shadow: 2px 2px 0 #0b0d12;
       border: 1px solid #ff7b92;
     }
+    .hell-badge {
+      background: var(--red);
+      color: #fff;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.68rem;
+      padding: 4px 8px;
+      box-shadow: 2px 2px 0 #0b0d12;
+      border: 1px solid #ffd2d6;
+    }
     .xp-readout {
       color: var(--xp);
       font-family: 'Press Start 2P', monospace;
@@ -617,17 +752,38 @@
       text-shadow: 1px 1px 0 #0b0d12;
     }
 
+    /* World Section Headers on Tower Map */
+    .world-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      margin: 18px 0 10px;
+      background: #0d121c;
+      border-right: 4px solid var(--amber);
+      clip-path: polygon(
+        0 3px, 3px 3px, 3px 0,
+        calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
+        100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
+        3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px)
+      );
+    }
+    .world-header.world-1 { border-color: var(--amber); }
+    .world-header.world-2 { border-color: var(--xp); }
+    .world-header.world-3 { border-color: var(--ok); }
+    .world-header.world-4 { border-color: var(--red); background: #16070a; }
+
     /* Tower Map Cards */
     .tower-card {
       background: #111724;
       border: 3px solid var(--line);
-      padding: 14px 16px;
-      margin-bottom: 12px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
       clip-path: polygon(
         0 4px, 4px 4px, 4px 0,
         calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
@@ -637,6 +793,9 @@
       box-shadow: 0 4px 0 #07090f;
     }
     .tower-card.unlocked { border-color: var(--amber); }
+    .tower-card.world-2.unlocked { border-color: var(--xp); }
+    .tower-card.world-3.unlocked { border-color: var(--ok); }
+    .tower-card.world-4.unlocked { border-color: var(--red); background: #1a080d; }
     .tower-card.completed { border-color: var(--ok); }
     .tower-card.locked { opacity: 0.55; }
 
@@ -839,7 +998,7 @@
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div>
             <div style="font-size:0.75rem; color:var(--steel);">رشته: <strong id="mapMajor" style="color:var(--xp);"></strong></div>
-            <div style="font-size:1.05rem; font-weight:900; color:var(--ink); margin-top:2px;" class="hard-shadow">نقشه فتح برج‌های دروازه</div>
+            <div style="font-size:1.05rem; font-weight:900; color:var(--ink); margin-top:2px;" class="hard-shadow">نقشه فتح ۴ جهان قلعه واژگان</div>
           </div>
           <button id="btnOpenLeaderboard" class="pixel-btn btn-amber" style="padding:7px 12px; font-size:0.78rem;">جدول رتبه‌ها</button>
         </div>
@@ -851,7 +1010,7 @@
 
   <!-- VIEW 3: DEDICATED FLASHCARD STUDY MODE (یادگیری) -->
   <div id="viewStudy" class="hidden">
-    <div class="pixel-window border-line">
+    <div class="pixel-window border-line" id="studyWindow">
       <div class="pixel-window-inner">
         <!-- Study Top Bar -->
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:2px solid var(--line); padding-bottom:8px;">
@@ -865,11 +1024,11 @@
 
         <!-- Interactive Study Pixel Card (Flip on Tap) -->
         <div class="study-card-box" id="studyCard">
-          <span class="study-tag" id="studyCardTag">واژه ایهام‌دار</span>
+          <span class="study-tag" id="studyCardTag">واژه</span>
 
           <!-- Front Face -->
           <div id="studyCardFront">
-            <div style="font-size:2.3rem; font-weight:900; color:#ffe3a3; margin-bottom:6px;" id="studyCardWord">آهو</div>
+            <div style="font-size:2.2rem; font-weight:900; color:#ffe3a3; margin-bottom:6px;" id="studyCardWord">واژه</div>
             <div style="font-size:0.75rem; color:var(--steel);" id="studyTapHint">[برای مشاهده معانی لمس کنید]</div>
           </div>
 
@@ -934,8 +1093,8 @@
       <div class="pixel-num" id="arenaCounter" style="color:var(--moon);">0/10</div>
     </div>
 
-    <!-- 312px STAGE SCENE -->
-    <div class="stage-wrapper" id="stageScene">
+    <!-- 312px STAGE SCENE (Dynamic Theme Frame) -->
+    <div class="stage-wrapper theme-amber" id="stageScene">
       <div class="crt-overlay"></div>
       <div class="stage-sky"></div>
 
@@ -973,15 +1132,16 @@
         <rect x="149" y="2" width="6" height="8" fill="#07090e" />
         <rect x="26" y="-12" width="2" height="14" fill="#566c86" />
         <polygon class="castle-flag" points="28,-12 46,-7 28,-2" fill="#7a2b2e" />
-        <rect x="48" y="45" width="8" height="12" fill="#f0b560" />
-        <rect x="114" y="45" width="8" height="12" fill="#f0b560" />
-        <rect x="81" y="38" width="8" height="12" fill="#f0b560" />
-        <rect x="23" y="30" width="6" height="10" fill="#f0b560" />
-        <rect x="140" y="30" width="6" height="10" fill="#f0b560" />
+        <!-- Windows with Theme Glow -->
+        <rect class="win-glow" x="48" y="45" width="8" height="12" fill="#f0b560" />
+        <rect class="win-glow" x="114" y="45" width="8" height="12" fill="#f0b560" />
+        <rect class="win-glow" x="81" y="38" width="8" height="12" fill="#f0b560" />
+        <rect class="win-glow" x="23" y="30" width="6" height="10" fill="#f0b560" />
+        <rect class="win-glow" x="140" y="30" width="6" height="10" fill="#f0b560" />
         <rect x="71" y="80" width="28" height="40" fill="#141a26" />
       </svg>
 
-      <!-- Warm Amber Gate Glow -->
+      <!-- Warm Gate Glow -->
       <div id="gateGlow" class="gate-glow"></div>
 
       <!-- Hanging Wooden Board with 2 chains -->
@@ -1021,11 +1181,14 @@
       </div>
     </div>
 
-    <!-- RPG DIALOG WINDOW (Battle Quiz Direct) -->
+    <!-- RPG DIALOG WINDOW (Battle Direct) -->
     <div class="rpg-dialog" id="rpgDialog">
       <div class="rpg-dialog-inner">
         <div class="rpg-header">
-          <span class="speaker-tag" id="speakerTag">نگهبان دروازه</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="speaker-tag" id="speakerTag">نگهبان دروازه</span>
+            <span id="hellBonusBadge" class="hell-badge hidden">2x XP</span>
+          </div>
           <div class="rpg-stats">
             <span id="comboBadge" class="combo-badge hidden">x3 COMBO</span>
             <span class="xp-readout" id="dialogXP">0 XP</span>
@@ -1038,7 +1201,7 @@
             [تکرار هوشمند • واژه دارای چالش]
           </div>
           <div class="rpg-question">
-            <span id="qzPrompt">کدام گزینه معانی صحیح این واژه است؟</span>
+            <span id="qzPrompt">کدام گزینه معنای صحیح این مورد است؟</span>
             <span class="pixel-cursor">█</span>
           </div>
 
@@ -1163,709 +1326,1934 @@
   </div>
 
   <!-- Hidden Teacher Access Trigger (3 rapid clicks on version number) -->
-  <div class="footer-ver" id="versionTrigger">v3.1-pixel</div>
+  <div class="footer-ver" id="versionTrigger">v3.2-pixel</div>
 
 </div>
 
 <script>
 // ==========================================
-// 1. CURRICULUM DATA WITH HIGH-QUALITY DISTRACTORS
+// 1. COMPLETE 10TH GRADE CURRICULUM DATA
 // ==========================================
 const DEFAULT_STAGES = [
   {
-    id: 1,
-    title: "برج اول: درس‌های ۱ تا ۳ (ایهام‌های پایه)",
-    unlocked: true,
-    words: [
+    "id": 1,
+    "world": 1,
+    "worldTitle": "جهان واژگان",
+    "title": "واژگان · ستایش و درس ۱",
+    "theme": "amber",
+    "unlocked": true,
+    "words": [
       {
-        word: "آهو",
-        tag: "ایهام پایه",
-        meanings: ["غزال و حیوان زیبا", "عیب، نقص و گناه"],
-        hint: "در شعر کهن: گر آن شکرلب بازآید، ز آهوی او چه باک؟",
-        prompt: "دو معنای دقیق و ایهام‌دار واژه «آهو» در ادبیات دهم کدامند؟",
-        correct: "غزال و حیوان زیبا / عیب و نقص",
-        distractors: [
-          "حیوان وحشی / ترس و وحشت شکارچی",
-          "معشوق چابک / ناله و فغان سحرگاهی",
-          "شکار بیابان / گریز و شتابزدگی"
+        "word": "سفینه",
+        "meanings": [
+          "کشتی",
+          "دفترچه اشعار"
+        ],
+        "correct": "کشتی",
+        "tag": "واژگان درس ۱",
+        "hint": "کشتی و قایق در دریا"
+      },
+      {
+        "word": "کفایت",
+        "meanings": [
+          "بسندگی و شایستگی"
+        ],
+        "correct": "بسندگی و شایستگی",
+        "tag": "واژگان درس ۱",
+        "hint": "کفایت کردن و لیاقت"
+      },
+      {
+        "word": "مونس",
+        "meanings": [
+          "همدم و انس‌گرفته"
+        ],
+        "correct": "همدم و انس‌گرفته",
+        "tag": "واژگان درس ۱",
+        "hint": "انیس و مونس شبانه"
+      },
+      {
+        "word": "التفات",
+        "meanings": [
+          "توجه و مهربانی"
+        ],
+        "correct": "توجه و مهربانی",
+        "tag": "واژگان درس ۱",
+        "hint": "التفات کردن به سخن"
+      },
+      {
+        "word": "تیمار",
+        "meanings": [
+          "حمایت، پرستاری و نگاهداشت"
+        ],
+        "correct": "حمایت، پرستاری و نگاهداشت",
+        "tag": "واژگان درس ۱",
+        "hint": "تیمار داشتن بیمار"
+      },
+      {
+        "word": "حاذق",
+        "meanings": [
+          "چربه‌دست و ماهر"
+        ],
+        "correct": "چربه‌دست و ماهر",
+        "tag": "واژگان درس ۱",
+        "hint": "طبیب حاذق"
+      },
+      {
+        "word": "ضایع",
+        "meanings": [
+          "تباه و تلف"
+        ],
+        "correct": "تباه و تلف",
+        "tag": "واژگان درس ۱",
+        "hint": "ضایع گشتن حق"
+      },
+      {
+        "word": "عجم",
+        "meanings": [
+          "پارسیان، غیرعرب"
+        ],
+        "correct": "پارسیان، غیرعرب",
+        "tag": "واژگان درس ۱",
+        "hint": "ملوک عجم"
+      },
+      {
+        "word": "قرابت",
+        "meanings": [
+          "خویشاوندی و نزدیکی"
+        ],
+        "correct": "خویشاوندی و نزدیکی",
+        "tag": "واژگان درس ۱",
+        "hint": "قرابت فامیلی و پیوند"
+      },
+      {
+        "word": "محال",
+        "meanings": [
+          "بی‌اصل و ناممکن"
+        ],
+        "correct": "بی‌اصل و ناممکن",
+        "tag": "واژگان درس ۱",
+        "hint": "امر ناممکن و نشدنی"
+      },
+      {
+        "word": "مستغنی",
+        "meanings": [
+          "بی‌نیاز"
+        ],
+        "correct": "بی‌نیاز",
+        "tag": "واژگان درس ۱",
+        "hint": "غنی و بی‌نیاز از خلق"
+      },
+      {
+        "word": "معالجت",
+        "meanings": [
+          "درمان و مداوا"
+        ],
+        "correct": "درمان و مداوا",
+        "tag": "واژگان درس ۱",
+        "hint": "معالجه و درمان بیماری"
+      },
+      {
+        "word": "ملوک",
+        "meanings": [
+          "پادشاهان"
+        ],
+        "correct": "پادشاهان",
+        "tag": "واژگان درس ۱",
+        "hint": "جمع ملک به معنی شاهان"
+      },
+      {
+        "word": "مولع",
+        "meanings": [
+          "حریص و آزمند"
+        ],
+        "correct": "حریص و آزمند",
+        "tag": "واژگان درس ۱",
+        "hint": "ولع داشتن و بسیار مشتاق"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "world": 1,
+    "worldTitle": "جهان واژگان",
+    "title": "واژگان · درس ۳: کلاس نقاشی",
+    "theme": "amber",
+    "unlocked": false,
+    "words": [
+      {
+        "word": "اسلیمی",
+        "meanings": [
+          "طرح‌های پیچ‌درپیچ شبیه طبیعت"
+        ],
+        "correct": "طرح‌های پیچ‌درپیچ شبیه طبیعت",
+        "tag": "واژگان درس ۳",
+        "hint": "نقوش اسلیمی در نگارگری"
+      },
+      {
+        "word": "آخره",
+        "meanings": [
+          "چنبره و قوس زیر گردن"
+        ],
+        "correct": "چنبره و قوس زیر گردن",
+        "tag": "واژگان درس ۳",
+        "hint": "قوس زیر گردن اسب"
+      },
+      {
+        "word": "بی‌رنگ",
+        "meanings": [
+          "طرح اولیه کم‌رنگ نقاش"
+        ],
+        "correct": "طرح اولیه کم‌رنگ نقاش",
+        "tag": "واژگان درس ۳",
+        "hint": "اتود و طرح ابتدایی"
+      },
+      {
+        "word": "تعلق",
+        "meanings": [
+          "دلبستگی و وابستگی"
+        ],
+        "correct": "دلبستگی و وابستگی",
+        "tag": "واژگان درس ۳",
+        "hint": "تعلق خاطر داشتن"
+      },
+      {
+        "word": "خلف صدق",
+        "meanings": [
+          "جانشین راستین"
+        ],
+        "correct": "جانشین راستین",
+        "tag": "واژگان درس ۳",
+        "hint": "فرزند صالح و جانشین شایسته"
+      },
+      {
+        "word": "رعنا",
+        "meanings": [
+          "خوش قد و قامت، زیبا"
+        ],
+        "correct": "خوش قد و قامت، زیبا",
+        "tag": "واژگان درس ۳",
+        "hint": "قامت رعنا و موزون"
+      },
+      {
+        "word": "رندانه",
+        "meanings": [
+          "زیرکانه و هوشمندانه"
+        ],
+        "correct": "زیرکانه و هوشمندانه",
+        "tag": "واژگان درس ۳",
+        "hint": "نگاه و لبخند رندانه"
+      },
+      {
+        "word": "غارب",
+        "meanings": [
+          "میان دو کتف"
+        ],
+        "correct": "میان دو کتف",
+        "tag": "واژگان درس ۳",
+        "hint": "ناحیه بالای شانه و پشت"
+      },
+      {
+        "word": "کُله",
+        "meanings": [
+          "برآمدگی پشت پای اسب"
+        ],
+        "correct": "برآمدگی پشت پای اسب",
+        "tag": "واژگان درس ۳",
+        "hint": "برآمدگی مفصل پای ستور"
+      },
+      {
+        "word": "گرته‌برداری",
+        "meanings": [
+          "نسخه‌برداری با گرده زغال"
+        ],
+        "correct": "نسخه‌برداری با گرده زغال",
+        "tag": "واژگان درس ۳",
+        "hint": "کپی‌برداری طرح با گرده"
+      },
+      {
+        "word": "گرده",
+        "meanings": [
+          "پشت و بالای کمر"
+        ],
+        "correct": "پشت و بالای کمر",
+        "tag": "واژگان درس ۳",
+        "hint": "گرده انسان و ستور"
+      },
+      {
+        "word": "مخمصه",
+        "meanings": [
+          "تنگنا و گرفتاری سخت"
+        ],
+        "correct": "تنگنا و گرفتاری سخت",
+        "tag": "واژگان درس ۳",
+        "hint": "افتادن در مخمصه و دردسر"
+      },
+      {
+        "word": "مربی",
+        "meanings": [
+          "پرورش‌دهنده و آموزگار"
+        ],
+        "correct": "پرورش‌دهنده و آموزگار",
+        "tag": "واژگان درس ۳",
+        "hint": "تربیت‌کننده اندیشه و اخلاق"
+      },
+      {
+        "word": "مشوش",
+        "meanings": [
+          "آشفته و پریشان"
+        ],
+        "correct": "آشفته و پریشان",
+        "tag": "واژگان درس ۳",
+        "hint": "خاطر مشوش و پریشان‌احوال"
+      },
+      {
+        "word": "وقب",
+        "meanings": [
+          "فرورفتگی اندام چون گودی چشم"
+        ],
+        "correct": "فرورفتگی اندام چون گودی چشم",
+        "tag": "واژگان درس ۳",
+        "hint": "گودی کاسه چشم"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "world": 1,
+    "worldTitle": "جهان واژگان",
+    "title": "واژگان · درس ۵: مهر و وفا",
+    "theme": "amber",
+    "unlocked": false,
+    "words": [
+      {
+        "word": "حدیث",
+        "meanings": [
+          "ماجرا، روایت و سخن"
+        ],
+        "correct": "ماجرا، روایت و سخن",
+        "tag": "واژگان درس ۵",
+        "hint": "حدیث عشق و روایت یاران"
+      },
+      {
+        "word": "حقه",
+        "meanings": [
+          "جعبه و محفظه کوچک"
+        ],
+        "correct": "جعبه و محفظه کوچک",
+        "tag": "واژگان درس ۵",
+        "hint": "حقه‌دان جواهر و راز"
+      },
+      {
+        "word": "ریحان",
+        "meanings": [
+          "گیاه سبز و خوشبو"
+        ],
+        "correct": "گیاه سبز و خوشبو",
+        "tag": "واژگان درس ۵",
+        "hint": "گیاه معطر بستان"
+      },
+      {
+        "word": "سودا",
+        "meanings": [
+          "اندیشه، هوس و خیال"
+        ],
+        "correct": "اندیشه، هوس و خیال",
+        "tag": "واژگان درس ۵",
+        "hint": "سودای وصال در سر داشتن"
+      },
+      {
+        "word": "سودایی",
+        "meanings": [
+          "عاشق، شیفته و شیدا"
+        ],
+        "correct": "عاشق، شیفته و شیدا",
+        "tag": "واژگان درس ۵",
+        "hint": "دل سودایی و عاشق‌پیشه"
+      },
+      {
+        "word": "صبا",
+        "meanings": [
+          "باد لطیف بهار"
+        ],
+        "correct": "باد لطیف بهار",
+        "tag": "واژگان درس ۵",
+        "hint": "نسیم باد صبا از کوی یار"
+      },
+      {
+        "word": "معاش",
+        "meanings": [
+          "زندگی و زیست"
+        ],
+        "correct": "زندگی و زیست",
+        "tag": "واژگان درس ۵",
+        "hint": "معیشت، گذران عمر و زندگی"
+      },
+      {
+        "word": "نقض",
+        "meanings": [
+          "شکستن عهد و پیمان"
+        ],
+        "correct": "شکستن عهد و پیمان",
+        "tag": "واژگان درس ۵",
+        "hint": "نقض پیمان و بی‌وفایی"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "world": 1,
+    "worldTitle": "جهان واژگان",
+    "title": "واژگان · درس ۷: پاسداری از حقیقت",
+    "theme": "amber",
+    "unlocked": false,
+    "words": [
+      {
+        "word": "تالاب",
+        "meanings": [
+          "آبگیر و برکه"
+        ],
+        "correct": "آبگیر و برکه",
+        "tag": "واژگان درس ۷",
+        "hint": "برکه آرام و مرداب‌مانند"
+      },
+      {
+        "word": "تناور",
+        "meanings": [
+          "تنومند و قوی‌جثه"
+        ],
+        "correct": "تنومند و قوی‌جثه",
+        "tag": "واژگان درس ۷",
+        "hint": "درخت تناور و کهنسال"
+      },
+      {
+        "word": "حضیض",
+        "meanings": [
+          "جای پست و فرود"
+        ],
+        "correct": "جای پست و فرود",
+        "tag": "واژگان درس ۷",
+        "hint": "نقطه حضیض در برابر اوج"
+      },
+      {
+        "word": "رغبت",
+        "meanings": [
+          "میل، علاقه و توجه"
+        ],
+        "correct": "میل، علاقه و توجه",
+        "tag": "واژگان درس ۷",
+        "hint": "رغبت نشان دادن به یادگیری"
+      },
+      {
+        "word": "رفیع",
+        "meanings": [
+          "بلند، مرتفع و ارزشمند"
+        ],
+        "correct": "بلند، مرتفع و ارزشمند",
+        "tag": "واژگان درس ۷",
+        "hint": "مقام رفیع و جایگاه بلند"
+      },
+      {
+        "word": "زلت",
+        "meanings": [
+          "لغزش و گناه"
+        ],
+        "correct": "لغزش و گناه",
+        "tag": "واژگان درس ۷",
+        "hint": "خطا، لغزش پا و گناه"
+      },
+      {
+        "word": "سخره",
+        "meanings": [
+          "مسخره کردن و ریشخند"
+        ],
+        "correct": "مسخره کردن و ریشخند",
+        "tag": "واژگان درس ۷",
+        "hint": "به سخره گرفتن دیگران"
+      },
+      {
+        "word": "شرف",
+        "meanings": [
+          "آبرو، عزت و بزرگواری"
+        ],
+        "correct": "آبرو، عزت و بزرگواری",
+        "tag": "واژگان درس ۷",
+        "hint": "شرافت و اصالت انسانی"
+      },
+      {
+        "word": "ضامن",
+        "meanings": [
+          "ضمانت‌کننده و کفیل"
+        ],
+        "correct": "ضمانت‌کننده و کفیل",
+        "tag": "واژگان درس ۷",
+        "hint": "کفیل و پذیرنده مسئولیت"
+      },
+      {
+        "word": "طهارت",
+        "meanings": [
+          "پاکی و نظافت معنوی"
+        ],
+        "correct": "پاکی و نظافت معنوی",
+        "tag": "واژگان درس ۷",
+        "hint": "پاکی روح و تن"
+      },
+      {
+        "word": "عزم",
+        "meanings": [
+          "قصد، همت و اراده استوار"
+        ],
+        "correct": "قصد، همت و اراده استوار",
+        "tag": "واژگان درس ۷",
+        "hint": "عزم جزم برای فتح قله"
+      },
+      {
+        "word": "غبطه",
+        "meanings": [
+          "رشک بردن بدون خواستن زوال نعمت"
+        ],
+        "correct": "رشک بردن بدون خواستن زوال نعمت",
+        "tag": "واژگان درس ۷",
+        "hint": "آرزوی داشتن کمال دیگران بدون حسد"
+      },
+      {
+        "word": "فلق",
+        "meanings": [
+          "سپیده صبح و فجر"
+        ],
+        "correct": "سپیده صبح و فجر",
+        "tag": "واژگان درس ۷",
+        "hint": "سپیده‌دم و شکافتن تاریکی"
+      },
+      {
+        "word": "معاملت",
+        "meanings": [
+          "داد و ستد و تعامل"
+        ],
+        "correct": "داد و ستد و تعامل",
+        "tag": "واژگان درس ۷",
+        "hint": "تجارت، دادوستد و رفتار متقابل"
+      },
+      {
+        "word": "نجابت",
+        "meanings": [
+          "اصالت و پاک‌منشی"
+        ],
+        "correct": "اصالت و پاک‌منشی",
+        "tag": "واژگان درس ۷",
+        "hint": "بزرگ‌منشی و ریشه پاک"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "world": 1,
+    "worldTitle": "جهان واژگان",
+    "title": "واژگان · درس ۹: دریادلان",
+    "theme": "amber",
+    "unlocked": false,
+    "words": [
+      {
+        "word": "اسوه",
+        "meanings": [
+          "پیشوا و سرمشق نیکو"
+        ],
+        "correct": "پیشوا و سرمشق نیکو",
+        "tag": "واژگان درس ۹",
+        "hint": "اسوه حسنه و الگوی رفتار"
+      },
+      {
+        "word": "پدرام",
+        "meanings": [
+          "آراسته، نیکو و شاد"
+        ],
+        "correct": "آراسته، نیکو و شاد",
+        "tag": "واژگان درس ۹",
+        "hint": "روزگار خرم و پدرام"
+      },
+      {
+        "word": "تجلی",
+        "meanings": [
+          "آشکار شدن و جلوه کردن"
+        ],
+        "correct": "آشکار شدن و جلوه کردن",
+        "tag": "واژگان درس ۹",
+        "hint": "تجلی انوار الهی در آینه دل"
+      },
+      {
+        "word": "تکلف",
+        "meanings": [
+          "خودنمایی، تعارف و تجمل"
+        ],
+        "correct": "خودنمایی، تعارف و تجمل",
+        "tag": "واژگان درس ۹",
+        "hint": "بی‌تکلف زیستن"
+      },
+      {
+        "word": "جنود",
+        "meanings": [
+          "سربازان و لشکریان"
+        ],
+        "correct": "سربازان و لشکریان",
+        "tag": "واژگان درس ۹",
+        "hint": "جنود آسمانی و لشکریان حق"
+      },
+      {
+        "word": "حنین",
+        "meanings": [
+          "نام نبردی تاریخی بین مکه و طائف"
+        ],
+        "correct": "نام نبردی تاریخی بین مکه و طائف",
+        "tag": "واژگان درس ۹",
+        "hint": "غزوه حنین در تاریخ اسلام"
+      },
+      {
+        "word": "خطه",
+        "meanings": [
+          "سرزمین، مرز و دیار"
+        ],
+        "correct": "سرزمین، مرز و دیار",
+        "tag": "واژگان درس ۹",
+        "hint": "خطه سرسبز شمال"
+      },
+      {
+        "word": "خور",
+        "meanings": [
+          "شاخه‌ای از دریا و زمین پست"
+        ],
+        "correct": "شاخه‌ای از دریا و زمین پست",
+        "tag": "واژگان درس ۹",
+        "hint": "خورآب‌های ساحلی خلیج فارس"
+      },
+      {
+        "word": "خیره",
+        "meanings": [
+          "متحیر، شگفت‌زده و سرگشته"
+        ],
+        "correct": "متحیر، شگفت‌زده و سرگشته",
+        "tag": "واژگان درس ۹",
+        "hint": "خیره ماندن در شگفتی آفرینش"
+      },
+      {
+        "word": "راست و ریس کردن",
+        "meanings": [
+          "آماده، مرتب و مهیا کردن"
+        ],
+        "correct": "آماده، مرتب و مهیا کردن",
+        "tag": "واژگان درس ۹",
+        "hint": "کارها را سروسامان دادن"
+      },
+      {
+        "word": "رعب",
+        "meanings": [
+          "ترس و دلهره شدید"
+        ],
+        "correct": "ترس و دلهره شدید",
+        "tag": "واژگان درس ۹",
+        "hint": "افکندن رعب در دل دشمن"
+      },
+      {
+        "word": "سردمدار",
+        "meanings": [
+          "سردسته و رئیس"
+        ],
+        "correct": "سردسته و رئیس",
+        "tag": "واژگان درس ۹",
+        "hint": "پیشرو و سردسته یک حرکت"
+      },
+      {
+        "word": "سکان",
+        "meanings": [
+          "ابزار هدایت کشتی"
+        ],
+        "correct": "ابزار هدایت کشتی",
+        "tag": "واژگان درس ۹",
+        "hint": "سکان‌دار سفینه در امواج"
+      },
+      {
+        "word": "سوله",
+        "meanings": [
+          "ساختمان فلزی با سقف شیب‌دار بلند"
+        ],
+        "correct": "ساختمان فلزی با سقف شیب‌دار بلند",
+        "tag": "واژگان درس ۹",
+        "hint": "سوله‌های نظامی و صنعتی"
+      },
+      {
+        "word": "غنا",
+        "meanings": [
+          "توانگری و بی‌نیازی"
+        ],
+        "correct": "توانگری و بی‌نیازی",
+        "tag": "واژگان درس ۹",
+        "hint": "استغنا و بی‌نیازی طبع"
+      },
+      {
+        "word": "فوج",
+        "meanings": [
+          "گروه، دسته و لشکر"
+        ],
+        "correct": "گروه، دسته و لشکر",
+        "tag": "واژگان درس ۹",
+        "hint": "فوج‌فوج کبوتران یا سربازان"
+      },
+      {
+        "word": "کنام",
+        "meanings": [
+          "آشیانه، کمین‌گاه و جایگاه درندگان"
+        ],
+        "correct": "آشیانه، کمین‌گاه و جایگاه درندگان",
+        "tag": "واژگان درس ۹",
+        "hint": "دریغ است ایران که ویران شود، کنام پلنگان و شیران شود"
+      },
+      {
+        "word": "مشیت",
+        "meanings": [
+          "اراده و خواست خدا"
+        ],
+        "correct": "اراده و خواست خدا",
+        "tag": "واژگان درس ۹",
+        "hint": "مشیت الهی در تقدیر کائنات"
+      },
+      {
+        "word": "معرکه",
+        "meanings": [
+          "میدان جنگ و هیاهو"
+        ],
+        "correct": "میدان جنگ و هیاهو",
+        "tag": "واژگان درس ۹",
+        "hint": "معرکه‌گیری و صحنه پیکار"
+      },
+      {
+        "word": "ملک",
+        "meanings": [
+          "فرشته آسمانی"
+        ],
+        "correct": "فرشته آسمانی",
+        "tag": "واژگان درس ۹",
+        "hint": "تسبیح ملک و فرشتگان"
+      },
+      {
+        "word": "نسیان",
+        "meanings": [
+          "فراموشی"
+        ],
+        "correct": "فراموشی",
+        "tag": "واژگان درس ۹",
+        "hint": "افتادن در ورطه نسیان و غفلت"
+      },
+      {
+        "word": "هژیر",
+        "meanings": [
+          "چابک، چالاک و خردمند"
+        ],
+        "correct": "چابک، چالاک و خردمند",
+        "tag": "واژگان درس ۹",
+        "hint": "پهلوان هژیر و چالاک شاهنامه"
+      },
+      {
+        "word": "هنگامه",
+        "meanings": [
+          "هنگام، زمان و غوغا"
+        ],
+        "correct": "هنگام، زمان و غوغا",
+        "tag": "واژگان درس ۹",
+        "hint": "هنگامه کارزار و نبرد"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "world": 1,
+    "worldTitle": "جهان واژگان",
+    "title": "واژگان · درس ۱۱: رستم و اشکبوس",
+    "theme": "amber",
+    "unlocked": false,
+    "words": [
+      {
+        "word": "آبنوس",
+        "meanings": [
+          "چوب سیاه و سخت (مجازاً سیاه)"
+        ],
+        "correct": "چوب سیاه و سخت (مجازاً سیاه)",
+        "tag": "واژگان درس ۱۱",
+        "hint": "رنگ سیاه آبنوسی"
+      },
+      {
+        "word": "بارگی",
+        "meanings": [
+          "اسب و مرکب سواری"
+        ],
+        "correct": "اسب و مرکب سواری",
+        "tag": "واژگان درس ۱۱",
+        "hint": "برنشستن بر بارگی تیزتک"
+      },
+      {
+        "word": "بهرام",
+        "meanings": [
+          "سیاره سرخ‌رنگ مریخ"
+        ],
+        "correct": "سیاره سرخ‌رنگ مریخ",
+        "tag": "واژگان درس ۱۱",
+        "hint": "سیاره جنگ و دلاوری در فلک"
+      },
+      {
+        "word": "پتک",
+        "meanings": [
+          "چکش بزرگ فولادین آهنگران"
+        ],
+        "correct": "چکش بزرگ فولادین آهنگران",
+        "tag": "واژگان درس ۱۱",
+        "hint": "کوبیدن پتک گران بر سندان"
+      },
+      {
+        "word": "ترگ",
+        "meanings": [
+          "کلاهخود فلزی جنگی"
+        ],
+        "correct": "کلاهخود فلزی جنگی",
+        "tag": "واژگان درس ۱۱",
+        "hint": "نهادن ترگ فولادین بر سر"
+      },
+      {
+        "word": "تیز",
+        "meanings": [
+          "تند، سریع و برنده"
+        ],
+        "correct": "تند، سریع و برنده",
+        "tag": "واژگان درس ۱۱",
+        "hint": "اسب تیزتک و نگاه تیزبین"
+      },
+      {
+        "word": "خدنگ",
+        "meanings": [
+          "درخت سخت برای ساخت تیر و نیزه"
+        ],
+        "correct": "درخت سخت برای ساخت تیر و نیزه",
+        "tag": "واژگان درس ۱۱",
+        "hint": "تیر خدنگ رستم دستان"
+      },
+      {
+        "word": "خود",
+        "meanings": [
+          "کلاه فلزی سربازان در پیکار"
+        ],
+        "correct": "کلاه فلزی سربازان در پیکار",
+        "tag": "واژگان درس ۱۱",
+        "hint": "کلاهخود محافظ سر جنگاور"
+      },
+      {
+        "word": "زجر",
+        "meanings": [
+          "آزار، شکنجه و رنجاندن"
+        ],
+        "correct": "آزار، شکنجه و رنجاندن",
+        "tag": "واژگان درس ۱۱",
+        "hint": "زجر کشیدن در راه هدف"
+      },
+      {
+        "word": "زه",
+        "meanings": [
+          "چله و کمان‌تار محکم"
+        ],
+        "correct": "چله و کمان‌تار محکم",
+        "tag": "واژگان درس ۱۱",
+        "hint": "کشیدن کمان تا گوش با زه"
+      },
+      {
+        "word": "سپردن",
+        "meanings": [
+          "طی کردن، درنوردیدن و پامال کردن"
+        ],
+        "correct": "طی کردن، درنوردیدن و پامال کردن",
+        "tag": "واژگان درس ۱۱",
+        "hint": "راه را با پای پیاده سپردن"
+      },
+      {
+        "word": "ستوه",
+        "meanings": [
+          "درمانده، خسته و عاجز"
+        ],
+        "correct": "درمانده، خسته و عاجز",
+        "tag": "واژگان درس ۱۱",
+        "hint": "به ستوه آمدن از خصم"
+      },
+      {
+        "word": "سلیح",
+        "meanings": [
+          "افزار جنگ و سلاح (ممال سلاح)"
+        ],
+        "correct": "افزار جنگ و سلاح (ممال سلاح)",
+        "tag": "واژگان درس ۱۱",
+        "hint": "ساز و سلیح نبرد"
+      },
+      {
+        "word": "سندروس",
+        "meanings": [
+          "صمغ زردرنگ سرو کوهی"
+        ],
+        "correct": "صمغ زردرنگ سرو کوهی",
+        "tag": "واژگان درس ۱۱",
+        "hint": "رخسار زرد چون سندروس"
+      },
+      {
+        "word": "عامل",
+        "meanings": [
+          "حاکم، فرماندار و کارگزار"
+        ],
+        "correct": "حاکم، فرماندار و کارگزار",
+        "tag": "واژگان درس ۱۱",
+        "hint": "عامل خراج و کارگزار شهر"
+      },
+      {
+        "word": "عنان",
+        "meanings": [
+          "افسار، دهنه و مهار اسب"
+        ],
+        "correct": "افسار، دهنه و مهار اسب",
+        "tag": "واژگان درس ۱۱",
+        "hint": "عنان کشیدن و مهار زدن"
+      },
+      {
+        "word": "کام",
+        "meanings": [
+          "مراد، آرزو و کام دل"
+        ],
+        "correct": "مراد، آرزو و کام دل",
+        "tag": "واژگان درس ۱۱",
+        "hint": "رسیدن به کام دل"
+      },
+      {
+        "word": "کاموس",
+        "meanings": [
+          "یکی از فرماندهان نامدار توران و افراسیاب"
+        ],
+        "correct": "یکی از فرماندهان نامدار توران و افراسیاب",
+        "tag": "واژگان درس ۱۱",
+        "hint": "کاموس کشانی در شاهنامه"
+      },
+      {
+        "word": "کوس",
+        "meanings": [
+          "طبل بزرگ جنگی"
+        ],
+        "correct": "طبل بزرگ جنگی",
+        "tag": "واژگان درس ۱۱",
+        "hint": "نواختن کوس رحیل و نبرد"
+      },
+      {
+        "word": "کیوان",
+        "meanings": [
+          "سیاره زحل در فلک هفتم"
+        ],
+        "correct": "سیاره زحل در فلک هفتم",
+        "tag": "واژگان درس ۱۱",
+        "hint": "بر اوج کیوان رسیدن کلاهخود"
+      },
+      {
+        "word": "گبر",
+        "meanings": [
+          "جامه جنگی محکم و خفتان"
+        ],
+        "correct": "جامه جنگی محکم و خفتان",
+        "tag": "واژگان درس ۱۱",
+        "hint": "پوشیدن ببر بیان و گبر نبرد"
+      },
+      {
+        "word": "گرد",
+        "meanings": [
+          "پهلوان، دلیر و شجاع"
+        ],
+        "correct": "پهلوان، دلیر و شجاع",
+        "tag": "واژگان درس ۱۱",
+        "hint": "گردان ایران‌زمین در رزم"
+      },
+      {
+        "word": "مصادره",
+        "meanings": [
+          "تاوان، جریمه گرفتن و ضبط مال"
+        ],
+        "correct": "تاوان، جریمه گرفتن و ضبط مال",
+        "tag": "واژگان درس ۱۱",
+        "hint": "مصادره اموال سرکشان"
+      },
+      {
+        "word": "مضرت",
+        "meanings": [
+          "زیان، گزند و آسیب"
+        ],
+        "correct": "زیان، گزند و آسیب",
+        "tag": "واژگان درس ۱۱",
+        "hint": "دفع مضرت و زیان"
+      },
+      {
+        "word": "هماورد",
+        "meanings": [
+          "حریف، رقیب و هم‌نبرد"
+        ],
+        "correct": "حریف، رقیب و هم‌نبرد",
+        "tag": "واژگان درس ۱۱",
+        "hint": "هماورد جستن در میدان رزم"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "world": 1,
+    "worldTitle": "جهان واژگان",
+    "title": "واژگان · درس ۱۳: خسرو",
+    "theme": "amber",
+    "unlocked": false,
+    "words": [
+      {
+        "word": "ارتجالاً",
+        "meanings": [
+          "بی‌درنگ و بدون اندیشه سخن گفتن"
+        ],
+        "correct": "بی‌درنگ و بدون اندیشه سخن گفتن",
+        "tag": "واژگان درس ۱۳",
+        "hint": "بداهه‌گویی شعر در محفل"
+      },
+      {
+        "word": "استرحام",
+        "meanings": [
+          "طلب رحم و بخشش کردن"
+        ],
+        "correct": "طلب رحم و بخشش کردن",
+        "tag": "واژگان درس ۱۳",
+        "hint": "استرحام از خطاهای گذشته"
+      },
+      {
+        "word": "استماع",
+        "meanings": [
+          "شنیدن و با دقت گوش دادن"
+        ],
+        "correct": "شنیدن و با دقت گوش دادن",
+        "tag": "واژگان درس ۱۳",
+        "hint": "استماع کلام استاد"
+      },
+      {
+        "word": "الزام",
+        "meanings": [
+          "ضرورت، بایستگی و واجب گردانیدن"
+        ],
+        "correct": "ضرورت، بایستگی و واجب گردانیدن",
+        "tag": "واژگان درس ۱۳",
+        "hint": "الزام قانونی به انجام تکلیف"
+      },
+      {
+        "word": "اوان",
+        "meanings": [
+          "وقت، هنگام و زمانه"
+        ],
+        "correct": "وقت، هنگام و زمانه",
+        "tag": "واژگان درس ۱۳",
+        "hint": "در اوان جوانی"
+      },
+      {
+        "word": "باری",
+        "meanings": [
+          "القصه، باری دیگر و خلاصه سخن"
+        ],
+        "correct": "القصه، باری دیگر و خلاصه سخن",
+        "tag": "واژگان درس ۱۳",
+        "hint": "باری، القصه ماجرا چنین شد"
+      },
+      {
+        "word": "بدسگال",
+        "meanings": [
+          "بداندیش، کینه‌توز و دشمن"
+        ],
+        "correct": "بداندیش، کینه‌توز و دشمن",
+        "tag": "واژگان درس ۱۳",
+        "hint": "سگالیدن به معنی اندیشیدن است"
+      },
+      {
+        "word": "بسمل کردن",
+        "meanings": [
+          "سر جانور را با نام خدا بریدن"
+        ],
+        "correct": "سر جانور را با نام خدا بریدن",
+        "tag": "واژگان درس ۱۳",
+        "hint": "ذبح شرعی جانور"
+      },
+      {
+        "word": "پلاس",
+        "meanings": [
+          "گلیم درشت و جامه کم‌ارزش خشن"
+        ],
+        "correct": "گلیم درشت و جامه کم‌ارزش خشن",
+        "tag": "واژگان درس ۱۳",
+        "hint": "پلاس‌پوش و درویش‌صفت"
+      },
+      {
+        "word": "تصدیق‌نامه",
+        "meanings": [
+          "گواهی‌نامه رسمی و سند قبولی"
+        ],
+        "correct": "گواهی‌نامه رسمی و سند قبولی",
+        "tag": "واژگان درس ۱۳",
+        "hint": "مدرک تحصیلی دوران قدیم"
+      },
+      {
+        "word": "تعلیقات",
+        "meanings": [
+          "پیوست‌ها و نشان‌های ارتشی و توضیحات"
+        ],
+        "correct": "پیوست‌ها و نشان‌های ارتشی و توضیحات",
+        "tag": "واژگان درس ۱۳",
+        "hint": "مدال‌ها و پیوست‌های لباس"
+      },
+      {
+        "word": "تقریر",
+        "meanings": [
+          "بیان کردن، تقریظ و نگارش سخن"
+        ],
+        "correct": "بیان کردن، تقریظ و نگارش سخن",
+        "tag": "واژگان درس ۱۳",
+        "hint": "تقریر درس در مکتب‌خانه"
+      },
+      {
+        "word": "تکریم",
+        "meanings": [
+          "گرامیداشت، احترام و بزرگداشت"
+        ],
+        "correct": "گرامیداشت، احترام و بزرگداشت",
+        "tag": "واژگان درس ۱۳",
+        "hint": "تکریم مقام دانشمندان"
+      },
+      {
+        "word": "تکیده",
+        "meanings": [
+          "لاغر، رنجور و باریک‌اندام"
+        ],
+        "correct": "لاغر، رنجور و باریک‌اندام",
+        "tag": "واژگان درس ۱۳",
+        "hint": "چهره تکیده از بیماری"
+      },
+      {
+        "word": "تلطف",
+        "meanings": [
+          "مهربانی کردن و نوازش"
+        ],
+        "correct": "مهربانی کردن و نوازش",
+        "tag": "واژگان درس ۱۳",
+        "hint": "از سر لطف و تلطف نگریستن"
+      },
+      {
+        "word": "حجب",
+        "meanings": [
+          "شرم، حیا و پاکدامنی"
+        ],
+        "correct": "شرم، حیا و پاکدامنی",
+        "tag": "واژگان درس ۱۳",
+        "hint": "حجب و حیای باطنی"
+      },
+      {
+        "word": "حلبی",
+        "meanings": [
+          "ورق آهن نازک قلع‌اندود"
+        ],
+        "correct": "ورق آهن نازک قلع‌اندود",
+        "tag": "واژگان درس ۱۳",
+        "hint": "قوطی و ظروف حلبی"
+      },
+      {
+        "word": "خسروانی خورش",
+        "meanings": [
+          "غذای لذیذ و اشرافی شاهانه"
+        ],
+        "correct": "غذای لذیذ و اشرافی شاهانه",
+        "tag": "واژگان درس ۱۳",
+        "hint": "سفره شاهان ساسانی"
+      },
+      {
+        "word": "خودرو",
+        "meanings": [
+          "خودسر، لجوج و خودروی چمن"
+        ],
+        "correct": "خودسر، لجوج و خودروی چمن",
+        "tag": "واژگان درس ۱۳",
+        "hint": "گیاه خودرو یا طبع خودسر"
+      },
+      {
+        "word": "دانگ",
+        "meanings": [
+          "یک‌ششم از هر ملک یا چیزی"
+        ],
+        "correct": "یک‌ششم از هر ملک یا چیزی",
+        "tag": "واژگان درس ۱۳",
+        "hint": "شش دانگ یک خانه"
+      },
+      {
+        "word": "دوات",
+        "meanings": [
+          "مرکب‌دان و جوهردان خوشنویسان"
+        ],
+        "correct": "مرکب‌دان و جوهردان خوشنویسان",
+        "tag": "واژگان درس ۱۳",
+        "hint": "دوات و قلم نی"
+      },
+      {
+        "word": "زبون",
+        "meanings": [
+          "خوار، ناتوان و درمانده"
+        ],
+        "correct": "خوار، ناتوان و درمانده",
+        "tag": "واژگان درس ۱۳",
+        "hint": "دشمن زبون و عاجز"
+      },
+      {
+        "word": "زنگاری",
+        "meanings": [
+          "سبزرنگ متمایل به زنگ مس"
+        ],
+        "correct": "سبزرنگ متمایل به زنگ مس",
+        "tag": "واژگان درس ۱۳",
+        "hint": "رنگ سبز تیره فلز زنگ‌زده"
+      },
+      {
+        "word": "سفاهت",
+        "meanings": [
+          "بی‌خردی، نادانی و کم‌عقلی"
+        ],
+        "correct": "بی‌خردی، نادانی و کم‌عقلی",
+        "tag": "واژگان درس ۱۳",
+        "hint": "سفیه بودن در تصمیمات"
+      },
+      {
+        "word": "شهناز",
+        "meanings": [
+          "گوشه‌ای نامدار در دستگاه شور"
+        ],
+        "correct": "گوشه‌ای نامدار در دستگاه شور",
+        "tag": "واژگان درس ۱۳",
+        "hint": "نغمه موسیقی ایرانی"
+      },
+      {
+        "word": "صاحبدل",
+        "meanings": [
+          "عارف، آگاه، روشن‌ضمیر و پاک‌طینت"
+        ],
+        "correct": "عارف، آگاه، روشن‌ضمیر و پاک‌طینت",
+        "tag": "واژگان درس ۱۳",
+        "hint": "همنشینی با پیران صاحبدل"
+      },
+      {
+        "word": "ضمایم",
+        "meanings": [
+          "پیوست‌ها و نشان‌های دولتی الصاقی"
+        ],
+        "correct": "پیوست‌ها و نشان‌های دولتی الصاقی",
+        "tag": "واژگان درس ۱۳",
+        "hint": "ضمیمه‌ها و مدال‌ها"
+      },
+      {
+        "word": "طبیعت",
+        "meanings": [
+          "طبع، سرشت و خوی باطنی انسان"
+        ],
+        "correct": "طبع، سرشت و خوی باطنی انسان",
+        "tag": "واژگان درس ۱۳",
+        "hint": "طبیعت و نهاد آدمی"
+      },
+      {
+        "word": "طمأنینه",
+        "meanings": [
+          "آرامش، وقار و سکون قلب"
+        ],
+        "correct": "آرامش، وقار و سکون قلب",
+        "tag": "واژگان درس ۱۳",
+        "hint": "با طمأنینه و آرامش گام برداشتن"
+      },
+      {
+        "word": "عتاب کردن",
+        "meanings": [
+          "خشم گرفتن و سرزنش شدید کردن"
+        ],
+        "correct": "خشم گرفتن و سرزنش شدید کردن",
+        "tag": "واژگان درس ۱۳",
+        "hint": "توبیخ و عتاب بزرگ‌ترها"
+      },
+      {
+        "word": "عنود",
+        "meanings": [
+          "ستیزه‌کار، لجوج و بدخواه کینه‌توز"
+        ],
+        "correct": "ستیزه‌کار، لجوج و بدخواه کینه‌توز",
+        "tag": "واژگان درس ۱۳",
+        "hint": "دشمن عنود و لجوج"
+      },
+      {
+        "word": "فیاض",
+        "meanings": [
+          "سرشار، فیض‌بخش و بسیار بخشنده"
+        ],
+        "correct": "سرشار، فیض‌بخش و بسیار بخشنده",
+        "tag": "واژگان درس ۱۳",
+        "hint": "چشمه فیاض حکمت"
+      },
+      {
+        "word": "کمیت",
+        "meanings": [
+          "اسب سرخ‌رنگ مایل به سیاه"
+        ],
+        "correct": "اسب سرخ‌رنگ مایل به سیاه",
+        "tag": "واژگان درس ۱۳",
+        "hint": "اسب نژاده کمیت"
+      },
+      {
+        "word": "لاجرم",
+        "meanings": [
+          "ناگزیر، بناچار و بی‌گمان"
+        ],
+        "correct": "ناگزیر، بناچار و بی‌گمان",
+        "tag": "واژگان درس ۱۳",
+        "hint": "حکمی که حتماً واقع می‌شود"
+      },
+      {
+        "word": "لمن تقول",
+        "meanings": [
+          "برای چه کسی می‌گویی (کنایه از بیهودگی گفتار)"
+        ],
+        "correct": "برای چه کسی می‌گویی (کنایه از بیهودگی گفتار)",
+        "tag": "واژگان درس ۱۳",
+        "hint": "سخنی که شنونده فهمیده ندارد"
+      },
+      {
+        "word": "لهو و لعب",
+        "meanings": [
+          "خوشگذرانی، بازی و کارهای بیهوده"
+        ],
+        "correct": "خوشگذرانی، بازی و کارهای بیهوده",
+        "tag": "واژگان درس ۱۳",
+        "hint": "سرگرمی‌های غافل‌کننده"
+      },
+      {
+        "word": "مألوف",
+        "meanings": [
+          "خوگرفته، آشنا و مأنوس"
+        ],
+        "correct": "خوگرفته، آشنا و مأنوس",
+        "tag": "واژگان درس ۱۳",
+        "hint": "یار مألوف و خانه آشنا"
+      },
+      {
+        "word": "متداول",
+        "meanings": [
+          "معمول، رایج و مرسوم بین مردم"
+        ],
+        "correct": "معمول، رایج و مرسوم بین مردم",
+        "tag": "واژگان درس ۱۳",
+        "hint": "رسم و شیوه متداول روزگار"
+      },
+      {
+        "word": "مخذول",
+        "meanings": [
+          "خوار، زبون و خوارشده از سوی حق"
+        ],
+        "correct": "خوار، زبون و خوارشده از سوی حق",
+        "tag": "واژگان درس ۱۳",
+        "hint": "رهاشده و بی‌یار و یاور"
+      },
+      {
+        "word": "مسخرگی",
+        "meanings": [
+          "لطیفه‌گویی، دلقکی و شوخ‌طبعی لودگی"
+        ],
+        "correct": "لطیفه‌گویی، دلقکی و شوخ‌طبعی لودگی",
+        "tag": "واژگان درس ۱۳",
+        "hint": "لودگی و ریشخند"
+      },
+      {
+        "word": "مسکر",
+        "meanings": [
+          "نوشیدنی مست‌کننده و زایل‌کننده عقل"
+        ],
+        "correct": "نوشیدنی مست‌کننده و زایل‌کننده عقل",
+        "tag": "واژگان درس ۱۳",
+        "hint": "مسکرات حرام"
+      },
+      {
+        "word": "مسلم داشتن",
+        "meanings": [
+          "پذیرفتن، قطعی دانستن و باور داشتن"
+        ],
+        "correct": "پذیرفتن، قطعی دانستن و باور داشتن",
+        "tag": "واژگان درس ۱۳",
+        "hint": "امری که همه بر آن اتفاق نظر دارند"
+      },
+      {
+        "word": "مطربی",
+        "meanings": [
+          "نوازندگی، رامشگری و آوازخوانی طرب‌انگیز"
+        ],
+        "correct": "نوازندگی، رامشگری و آوازخوانی طرب‌انگیز",
+        "tag": "واژگان درس ۱۳",
+        "hint": "پیشه رامشگران مجالس"
+      },
+      {
+        "word": "معاصی",
+        "meanings": [
+          "گناهان و نافرمانی‌ها"
+        ],
+        "correct": "گناهان و نافرمانی‌ها",
+        "tag": "واژگان درس ۱۳",
+        "hint": "جمع معصیت به معنی گناه"
+      },
+      {
+        "word": "مغلوب",
+        "meanings": [
+          "شکست‌خورده و زیردست‌شده"
+        ],
+        "correct": "شکست‌خورده و زیردست‌شده",
+        "tag": "واژگان درس ۱۳",
+        "hint": "سپاه مغلوب در نبرد"
+      },
+      {
+        "word": "مفتول",
+        "meanings": [
+          "سیم و رشته فلزی تابیده‌شده"
+        ],
+        "correct": "سیم و رشته فلزی تابیده‌شده",
+        "tag": "واژگان درس ۱۳",
+        "hint": "سیم آهنی تاب‌خورده"
+      },
+      {
+        "word": "ملتفت شدن",
+        "meanings": [
+          "آگاه، باخبر و متوجه شدن"
+        ],
+        "correct": "آگاه، باخبر و متوجه شدن",
+        "tag": "واژگان درس ۱۳",
+        "hint": "پی بردن به حقیقت نکته"
+      },
+      {
+        "word": "منجلاب",
+        "meanings": [
+          "محل جمع شدن آب‌های کثیف و بدبو"
+        ],
+        "correct": "محل جمع شدن آب‌های کثیف و بدبو",
+        "tag": "واژگان درس ۱۳",
+        "hint": "باتلاق گنداب فساد"
+      },
+      {
+        "word": "مندرس",
+        "meanings": [
+          "کهنه، فرسوده و پوسیده"
+        ],
+        "correct": "کهنه، فرسوده و پوسیده",
+        "tag": "واژگان درس ۱۳",
+        "hint": "جامه مندرس و کهنه"
+      },
+      {
+        "word": "منکر",
+        "meanings": [
+          "رفتار زشت، گناه و ناپسند دینی"
+        ],
+        "correct": "رفتار زشت، گناه و ناپسند دینی",
+        "tag": "واژگان درس ۱۳",
+        "hint": "نهی از منکر"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "world": 1,
+    "worldTitle": "جهان واژگان",
+    "title": "واژگان · درس ۱۵ و نیایش",
+    "theme": "amber",
+    "unlocked": false,
+    "words": [
+      {
+        "word": "پیرانه",
+        "meanings": [
+          "هنگام پیری و کهنسالی"
+        ],
+        "correct": "هنگام پیری و کهنسالی",
+        "tag": "واژگان درس ۱۵",
+        "hint": "پیرانه‌سر و ایام کهولت"
+      },
+      {
+        "word": "شبان",
+        "meanings": [
+          "چوپان و نگهبان گله"
+        ],
+        "correct": "چوپان و نگهبان گله",
+        "tag": "واژگان درس ۱۵",
+        "hint": "داستان موسی و شبان"
+      },
+      {
+        "word": "فاصد",
+        "meanings": [
+          "رگزن و حجامت‌کننده کهن"
+        ],
+        "correct": "رگزن و حجامت‌کننده کهن",
+        "tag": "واژگان درس ۱۵",
+        "hint": "طبیب فصدکننده رگ"
+      },
+      {
+        "word": "فروغ",
+        "meanings": [
+          "روشنی، تابش و پرتو نور"
+        ],
+        "correct": "روشنی، تابش و پرتو نور",
+        "tag": "واژگان درس ۱۵",
+        "hint": "فروغ جاویدان حقیقت"
+      },
+      {
+        "word": "فسفر",
+        "meanings": [
+          "عنصر شیمیایی مشتعل‌شونده در تاریکی"
+        ],
+        "correct": "عنصر شیمیایی مشتعل‌شونده در تاریکی",
+        "tag": "واژگان درس ۱۵",
+        "hint": "نور فسفری در تاریکی"
+      },
+      {
+        "word": "مائده",
+        "meanings": [
+          "سفره دارای طعام و خوراکی آسمانی"
+        ],
+        "correct": "سفره دارای طعام و خوراکی آسمانی",
+        "tag": "واژگان درس ۱۵",
+        "hint": "مائده آسمانی برای حواریون"
+      },
+      {
+        "word": "منحصر",
+        "meanings": [
+          "ویژه، یگانه و محدود به فرد"
+        ],
+        "correct": "ویژه، یگانه و محدود به فرد",
+        "tag": "واژگان درس ۱۵",
+        "hint": "منحصر‌به‌فرد بودن صفات حق"
+      },
+      {
+        "word": "هیبت",
+        "meanings": [
+          "جلال، شکوه و بیم توام با احترام"
+        ],
+        "correct": "جلال، شکوه و بیم توام با احترام",
+        "tag": "واژگان درس ۱۵",
+        "hint": "هیبت سردار در چشم دشمنان"
+      },
+      {
+        "word": "حرمت",
+        "meanings": [
+          "آبرو، احترام و پاسداشت ارزش"
+        ],
+        "correct": "آبرو، احترام و پاسداشت ارزش",
+        "tag": "واژگان نیایش",
+        "hint": "حفظ حرمت بزرگان دین"
+      },
+      {
+        "word": "عاجز",
+        "meanings": [
+          "ناتوان، درمانده و ضعیف"
+        ],
+        "correct": "ناتوان، درمانده و ضعیف",
+        "tag": "واژگان نیایش",
+        "hint": "عاجز بودن انسان در برابر تقدیر"
+      },
+      {
+        "word": "مرحمت",
+        "meanings": [
+          "احسان، مهربانی، لطف و بخشش"
+        ],
+        "correct": "احسان، مهربانی، لطف و بخشش",
+        "tag": "واژگان نیایش",
+        "hint": "به مرحمت و فضل الهی نگریستن"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "world": 2,
+    "worldTitle": "جهان کنایه",
+    "title": "کنایه ۱ · نیمسال اول",
+    "theme": "cyan",
+    "unlocked": false,
+    "words": [
+      {
+        "word": "دست از آستین برآوردن",
+        "meanings": [
+          "آماده کار و تلاش شدن"
+        ],
+        "correct": "آماده کار و تلاش شدن",
+        "tag": "کنایه نیمسال اول",
+        "hint": "کنایه از شروع جدی کار و کوشش"
+      },
+      {
+        "word": "گندم‌نمای جوفروش",
+        "meanings": [
+          "دورو و فریبکار بودن"
+        ],
+        "correct": "دورو و فریبکار بودن",
+        "tag": "کنایه نیمسال اول",
+        "hint": "کنایه از ظاهر صالح و باطن فریبکار داشتن"
+      },
+      {
+        "word": "داد از خویشتن دادن",
+        "meanings": [
+          "انصاف داشتن در حق خود و دیگران"
+        ],
+        "correct": "انصاف داشتن در حق خود و دیگران",
+        "tag": "کنایه نیمسال اول",
+        "hint": "کنایه از رعایت عدالت و دادگری"
+      },
+      {
+        "word": "از جای شدن",
+        "meanings": [
+          "خشمگین و بی‌قرار شدن"
+        ],
+        "correct": "خشمگین و بی‌قرار شدن",
+        "tag": "کنایه نیمسال اول",
+        "hint": "کنایه از کنترل از دست دادن از خشم"
+      },
+      {
+        "word": "صورتک به رو داشتن",
+        "meanings": [
+          "ریاکار بودن و ظاهرسازی کردن"
+        ],
+        "correct": "ریاکار بودن و ظاهرسازی کردن",
+        "tag": "کنایه نیمسال اول",
+        "hint": "کنایه از پوشاندن چهره و نیت واقعی"
+      },
+      {
+        "word": "در نماندن",
+        "meanings": [
+          "عاجز و درمانده نشدن"
+        ],
+        "correct": "عاجز و درمانده نشدن",
+        "tag": "کنایه نیمسال اول",
+        "hint": "کنایه از استقامت و تسلیم نشدن در برابر سختی"
+      },
+      {
+        "word": "گریز رندانه زدن",
+        "meanings": [
+          "با زیرکی از مخمصه رهایی یافتن"
+        ],
+        "correct": "با زیرکی از مخمصه رهایی یافتن",
+        "tag": "کنایه نیمسال اول",
+        "hint": "کنایه از نجات هوشمندانه از تنگنا"
+      },
+      {
+        "word": "سررشته نگاه داشتن",
+        "meanings": [
+          "حفظ ارتباط و پیوند و مراقبت کار"
+        ],
+        "correct": "حفظ ارتباط و پیوند",
+        "tag": "کنایه نیمسال اول",
+        "hint": "کنایه از گم نکردن مسیر و تداوم ارتباط"
+      },
+      {
+        "word": "پرده دریدن",
+        "meanings": [
+          "فاش کردن راز و رسوا کردن"
+        ],
+        "correct": "فاش کردن راز",
+        "tag": "کنایه نیمسال اول",
+        "hint": "کنایه از برملا ساختن سرّ نهان"
+      },
+      {
+        "word": "به سخره گرفتن",
+        "meanings": [
+          "بی‌ارزش و مسخره جلوه دادن"
+        ],
+        "correct": "بی‌ارزش و مسخره جلوه دادن",
+        "tag": "کنایه نیمسال اول",
+        "hint": "کنایه از استهزا و ناچیز شمردن چیزی"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "world": 2,
+    "worldTitle": "جهان کنایه",
+    "title": "کنایه ۲ · نیمسال دوم",
+    "theme": "cyan",
+    "unlocked": false,
+    "words": [
+      {
+        "word": "راست و ریس کردن",
+        "meanings": [
+          "آماده و مهیا کردن کارها"
+        ],
+        "correct": "آماده و مهیا کردن کارها",
+        "tag": "کنایه نیمسال دوم",
+        "hint": "کنایه از مرتب کردن اسباب کار"
+      },
+      {
+        "word": "به آب زدن",
+        "meanings": [
+          "با شجاعت وارد خطر شدن"
+        ],
+        "correct": "با شجاعت وارد خطر شدن",
+        "tag": "کنایه نیمسال دوم",
+        "hint": "کنایه از دل به دریا زدن و اقدام جسورانه"
+      },
+      {
+        "word": "با خاک انس گرفتن",
+        "meanings": [
+          "فروتنی و تواضع در برابر خدا"
+        ],
+        "correct": "فروتنی و تواضع در برابر خدا",
+        "tag": "کنایه نیمسال دوم",
+        "hint": "کنایه از نهایت افتادگی عارفانه"
+      },
+      {
+        "word": "عنان را گران کردن",
+        "meanings": [
+          "متوقف کردن اسب و بازایستادن"
+        ],
+        "correct": "متوقف کردن اسب و بازایستادن",
+        "tag": "کنایه نیمسال دوم",
+        "hint": "کنایه از ایستادن و کشیدن مهار"
+      },
+      {
+        "word": "سر به گرد آوردن",
+        "meanings": [
+          "شکست دادن و به خاک افکندن حریف"
+        ],
+        "correct": "شکست دادن و به خاک افکندن حریف",
+        "tag": "کنایه نیمسال دوم",
+        "hint": "کنایه از سرنگون ساختن پهلوان هماورد"
+      },
+      {
+        "word": "سپر انداختن",
+        "meanings": [
+          "تسلیم شدن و پذیرش شکست"
+        ],
+        "correct": "تسلیم شدن و پذیرش شکست",
+        "tag": "کنایه نیمسال دوم",
+        "hint": "کنایه از واگذار کردن میدان نبرد"
+      },
+      {
+        "word": "کمیت کسی لنگ بودن",
+        "meanings": [
+          "ناتوان بودن در انجام کاری"
+        ],
+        "correct": "ناتوان بودن در انجام کاری",
+        "tag": "کنایه نیمسال دوم",
+        "hint": "کنایه از نقص و کم‌آوردن در مهارت"
+      },
+      {
+        "word": "خشت زدن",
+        "meanings": [
+          "کار بیهوده کردن و شعر بی‌ارزش گفتن"
+        ],
+        "correct": "کار بیهوده کردن و شعر بی‌ارزش گفتن",
+        "tag": "کنایه نیمسال دوم",
+        "hint": "کنایه از طبع‌آزمایی پوچ و بی‌حاصل"
+      },
+      {
+        "word": "باب دندان بودن",
+        "meanings": [
+          "کاملاً مطابق میل و دلخواه بودن"
+        ],
+        "correct": "کاملاً مطابق میل و دلخواه بودن",
+        "tag": "کنایه نیمسال دوم",
+        "hint": "کنایه از سازگار بودن با سلیقه فرد"
+      },
+      {
+        "word": "دم برنیاوردن",
+        "meanings": [
+          "سکوت کردن و سخنی نگفتن"
+        ],
+        "correct": "سکوت کردن و سخنی نگفتن",
+        "tag": "کنایه نیمسال دوم",
+        "hint": "کنایه از خویشتن‌داری و لب فروبستن"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "world": 3,
+    "worldTitle": "جهان ایهام",
+    "title": "ایهام · معماهای دوگانه",
+    "theme": "ok",
+    "unlocked": false,
+    "words": [
+      {
+        "word": "مهر",
+        "tag": "ایهام دوگانه",
+        "meanings": [
+          "خورشید تابان",
+          "محبت و عشق"
+        ],
+        "hint": "پرتو مهر خورشید و مهر مادری",
+        "prompt": "دو معنای دقیق و ایهام‌دار واژه «مهر» در ادبیات دهم کدام است؟",
+        "correct": "خورشید / محبت",
+        "distractors": [
+          "خورشید / انگشتر پادشاه",
+          "محبت / ماه هفتم سال",
+          "عهد و پیمان / خورشید"
         ]
       },
       {
-        word: "شیرین",
-        tag: "ایهام تناسب",
-        meanings: ["محبوب و معشوقه خسرو", "شهد و طعم گوارا"],
-        hint: "شیرین‌دهنان و معشوقه خسرو پرویز",
-        prompt: "دو معنای ایهام‌دار واژه «شیرین» در شعر کهن فارسی چیست؟",
-        correct: "معشوقه خسرو / شهد و طعم گوارا",
-        distractors: [
-          "بانوی ارمنی / لبخند دلنشین معشوق",
-          "کلام فصیح و گیرا / شربت شکرین",
-          "همسر فرهاد / طراوت و شادابی چهره"
+        "word": "بو",
+        "tag": "ایهام دوگانه",
+        "meanings": [
+          "رایحه و عطر",
+          "آرزو و امید"
+        ],
+        "hint": "بوی گل سرخ و بوی وصال یار",
+        "prompt": "دو معنای ایهام‌دار واژه «بو» در غزلیات فارسی کدامند؟",
+        "correct": "رایحه و عطر / آرزو و امید",
+        "distractors": [
+          "رایحه و عطر / جست‌وجو در بیابان",
+          "آرزو و امید / نسیم خنک بهار",
+          "شمیم خوش / طعم میوه رسیده"
         ]
       },
       {
-        word: "مهر",
-        tag: "ایهام واژگانی",
-        meanings: ["عشق، محبت و دوستی", "خورشید تابان آسمان"],
-        hint: "پرتو مهر خورشید و مهر مادری",
-        prompt: "معانی دوگانه و ایهام‌دار واژه «مهر» در ابیات ادبیات دهم کدام است؟",
-        correct: "عشق و محبت / خورشید تابان",
-        distractors: [
-          "ماه هفتم سال / پیمان و سوگند وفاداری",
-          "نگین انگشتری / لطف و کرم پادشاه",
-          "روشنایی روز / مهربانی و بخشش"
+        "word": "پرده",
+        "tag": "ایهام دوگانه",
+        "meanings": [
+          "حجاب و پوشش",
+          "راز و دستگاه موسیقی"
+        ],
+        "hint": "پرده‌نشین راز و پرده عشاق",
+        "prompt": "معانی دوگانه و ایهام‌دار واژه «پرده» در شعر فارسی چیست؟",
+        "correct": "حجاب و پوشش / راز و دستگاه موسیقی",
+        "distractors": [
+          "حجاب و پوشش / تار و سیم‌های ساز",
+          "راز و دستگاه موسیقی / لباس ابریشمی",
+          "دیوار خانه / نغمه و آهنگ سنتی"
         ]
       },
       {
-        word: "دام",
-        tag: "ایهام مشترک لفظی",
-        meanings: ["تله صیاد", "حیوان و چهارپا"],
-        hint: "دام و دد در بیابان",
-        prompt: "کدام گزینه معانی صحیح و ایهام‌دار واژه «دام» را بیان می‌کند؟",
-        correct: "تله صیاد / حیوان و چهارپا",
-        distractors: [
-          "فریب و نیرنگ / طناب محکم شکارچی",
-          "حیوان اهلی / بند و زنجیر اسارت",
-          "قفس پرنده / دانه و طعمه صید"
+        "word": "قلب",
+        "tag": "ایهام دوگانه",
+        "meanings": [
+          "عضو صنوبری بدن",
+          "میانه لشکر در میدان جنگ"
+        ],
+        "hint": "تپش قلب و قلب سپاه",
+        "prompt": "دو معنای ایهام‌دار واژه «قلب» در کتب کهن کدام است؟",
+        "correct": "عضو بدن / میانه لشکر",
+        "distractors": [
+          "عضو بدن / سکه تقلبی بازار",
+          "میانه لشکر / خون تازه و پاک",
+          "دل و جان / نوک پیکان نبرد"
         ]
       },
       {
-        word: "مدام",
-        tag: "ایهام شعری",
-        meanings: ["همیشگی و پیوسته", "شراب و باده دیرینه"],
-        hint: "ذکر مدام و جام باده",
-        prompt: "دو معنای ایهام‌دار واژه «مدام» در غزلیات فارسی چیست؟",
-        correct: "همیشگی و پیوسته / شراب و باده",
-        distractors: [
-          "جام باده / ورد و ذکر شبانه عارفان",
-          "دوام و استمرار / مستی سحرگاهی",
-          "همدم وفادار / جاودان و پایدار"
+        "word": "روان",
+        "tag": "ایهام دوگانه",
+        "meanings": [
+          "جاری و رونده",
+          "روح و جان انسان"
+        ],
+        "hint": "آب روان و روان پاکیزه",
+        "prompt": "دو معنای ایهام‌دار واژه «روان» کدامند؟",
+        "correct": "جاری و رونده / روح و جان",
+        "distractors": [
+          "جاری و رونده / فکر و خیال پوچ",
+          "روح و جان / حرکت سریع باد",
+          "آسان و ساده / چشمه زلال کوه"
         ]
       },
       {
-        word: "دوش",
-        tag: "ایهام زمان و اندام",
-        meanings: ["شانه و کتف انسان", "دیشب و شامگاه گذشته"],
-        hint: "دوش بر دوش یاران و دوش وقت سحر",
-        prompt: "معانی ایهام‌دار واژه «دوش» در ابیات حافظ کدام است؟",
-        correct: "شانه و کتف / دیشب و شامگاه گذشته",
-        distractors: [
-          "بار سنگین / دیروز و روزگار گذشته",
-          "شانه و بازو / تاریکی و سیاهی شب",
+        "word": "رخ",
+        "tag": "ایهام دوگانه",
+        "meanings": [
+          "چهره و صورت زیبا",
+          "مهره قلعه در شطرنج"
+        ],
+        "hint": "رخ زیبای یار و رخ شطرنج‌بازان",
+        "prompt": "معانی دوگانه و ایهام‌دار واژه «رخ» در ادبیات کدامند؟",
+        "correct": "چهره و صورت / مهره قلعه در شطرنج",
+        "distractors": [
+          "چهره و صورت / خط و خال مژگان",
+          "مهره قلعه در شطرنج / زلف پریشان",
+          "پادشاه شطرنج / گونه سرخ معشوق"
+        ]
+      },
+      {
+        "word": "آهو",
+        "tag": "ایهام دوگانه",
+        "meanings": [
+          "غزال و حیوان دشت",
+          "عیب و نقص باطنی"
+        ],
+        "hint": "چشم آهو و چشم‌پوشی از آهوی یار",
+        "prompt": "دو معنای ایهام‌دار واژه «آهو» در شعر کهن فارسی چیست؟",
+        "correct": "غزال / عیب و نقص",
+        "distractors": [
+          "غزال / ترس و رمیدگی در دشت",
+          "عیب و نقص / حیوان وحشی کوه",
+          "شکار تیزپا / گناه و نافرمانی"
+        ]
+      },
+      {
+        "word": "دوش",
+        "tag": "ایهام دوگانه",
+        "meanings": [
+          "شانه و کتف انسان",
+          "دیشب و شامگاه گذشته"
+        ],
+        "hint": "دوش بر دوش و دوش وقت سحر",
+        "prompt": "معانی دوگانه و ایهام‌دار واژه «دوش» در ابیات ادبیات دهم چیست؟",
+        "correct": "شانه و کتف / دیشب",
+        "distractors": [
+          "شانه و کتف / دیروز در بازار",
+          "دیشب / تاریکی و سیاهی شب",
           "آغوش محبت / گذشته‌های دور"
         ]
       },
       {
-        word: "بو",
-        tag: "ایهام معنایی",
-        meanings: ["رایحه، شمیم و عطر", "امید، آرزو و توقع وصال"],
-        hint: "بوی گل و بوی وصال یار",
-        prompt: "دو معنای ایهام‌دار واژه «بو» در ادبیات کدامند؟",
-        correct: "رایحه و عطر / امید و آرزو",
-        distractors: [
-          "شمیم گلزار / جست‌وجو و اشتیاق دل",
-          "امید وصال / نسیم خنک بهاری",
-          "اشتیاق دیدار / بوییدن گل سرخ"
+        "word": "عهد",
+        "tag": "ایهام دوگانه",
+        "meanings": [
+          "روزگار، عصر و دوران",
+          "پیمان، سوگند و وفاداری"
+        ],
+        "hint": "در عهد شاه عباس و وفای به عهد",
+        "prompt": "معانی ایهام‌دار واژه «عهد» در زبان فارسی کدام است؟",
+        "correct": "روزگار و دوران / پیمان",
+        "distractors": [
+          "روزگار و دوران / وعده دروغین",
+          "پیمان / سالیان دراز پیری",
+          "عصر پادشاهی / سوگند وفاداری سرباز"
         ]
       },
       {
-        word: "راست",
-        tag: "ایهام جهت و راستی",
-        meanings: ["درست، صادق و به‌حق", "سمت راست (جهت جغرافیایی)"],
-        hint: "راست‌گویی و دست راست",
-        prompt: "معانی دوگانه واژه «راست» در ادبیات دهم کدام است؟",
-        correct: "درست و صادق / سمت راست (جهت)",
-        distractors: [
-          "مستقیم و هموار / عدل و دادگری",
-          "سخن حق / قامت کشیده و بلند",
-          "صداقت باطنی / مسیر مستقیم"
-        ]
-      },
-      {
-        word: "روان",
-        tag: "ایهام حرکت و جان",
-        meanings: ["جاری و رونده", "جان، روح و نفس انسان"],
-        hint: "آب روان و روان پاک",
-        prompt: "معانی ایهام‌دار واژه «روان» در شعر فارسی کدام است؟",
-        correct: "جاری و رونده / جان، روح و نفس",
-        distractors: [
-          "ساده و بی‌تکلف / جویبار زلال چمن",
-          "اندیشه تابناک / شتاب در رفتن",
-          "سیال و بی‌قرار / تن و کالبد خاکی"
-        ]
-      },
-      {
-        word: "پرده",
-        tag: "ایهام حجاب و موسیقی",
-        meanings: ["حجاب و پوشش نهان", "نغمه، آهنگ و مقام موسیقی"],
-        hint: "پرده‌نشین و پرده عشاق",
-        prompt: "دو معنای دقیق و ایهام‌دار واژه «پرده» کدام است؟",
-        correct: "حجاب و پوشش / مقام و نغمه موسیقی",
-        distractors: [
-          "راز نهفته / سیم و پرده‌های ساز چنگ",
-          "پوشش خانه / نوای خواننده بزم",
-          "حجاب شرم / پرده‌داری حرمسرا"
+        "word": "شیر",
+        "tag": "ایهام دوگانه",
+        "meanings": [
+          "حیوان درنده بیشه",
+          "مایع سفید خوردنی مغذی"
+        ],
+        "hint": "آن یکی شیر است اندر بادیه...",
+        "prompt": "دو معنای مشهور و ایهام‌دار واژه «شیر» در شعر مولوی کدامند؟",
+        "correct": "حیوان درنده / مایع سفید خوردنی",
+        "distractors": [
+          "حیوان درنده / ابزار آب در خانه",
+          "مایع سفید خوردنی / پهلوان دلیر",
+          "شیر بیشه / دلاور بی‌باک میدان"
         ]
       }
     ]
   },
   {
-    id: 2,
-    title: "برج دوم: درس‌های ۴ تا ۷ (ایهام در شعر کهن)",
-    unlocked: false,
-    words: [
-      {
-        word: "گور",
-        tag: "ایهام تاریخی",
-        meanings: ["قبر و آرامگاه ابدی", "گورخر وحشی دشت"],
-        hint: "بهرام که گور می‌گرفتی همه عمر...",
-        prompt: "دو معنای معروف ایهام‌دار «گور» در رباعی خیام کدامند؟",
-        correct: "قبر و آرامگاه / گورخر وحشی",
-        distractors: [
-          "خاک تاریک / شکار تیزپا و چابک",
-          "گودال شکار / خاکسپاری شاهان",
-          "مغاک بیابان / حیوان رمیده دشت"
-        ]
-      },
-      {
-        word: "چنگ",
-        tag: "ایهام ساز و دست",
-        meanings: ["ساز موسیقی زهی کهن", "پنجه دست و پنجه صیاد"],
-        hint: "دست در چنگ زدن و نوای چنگ",
-        prompt: "معانی ایهام‌دار واژه «چنگ» کدام است؟",
-        correct: "ساز موسیقی زهی / پنجه دست و پنجه",
-        distractors: [
-          "ساز نیلوفری / انگشتان نوازنده",
-          "تار و پود بزم / تسلط و پنجه قدرت",
-          "آوای موسیقی / مشت گره‌کرده جنگجو"
-        ]
-      },
-      {
-        word: "هوا",
-        tag: "ایهام جو و میل",
-        meanings: ["اتمسفر، باد و نسیم", "میل، آرزو، هوس و عشق"],
-        hint: "هوای بهار و هوای کوی دوست",
-        prompt: "دو معنای ایهام‌دار واژه «هوا» در شعر سعدی و حافظ چیست؟",
-        correct: "اتمسفر و باد / میل، آرزو و هوس",
-        distractors: [
-          "نسیم بهاری / تنفس در باغستان",
-          "عشق افلاطونی / آسمان آبی و پاک",
-          "فضای پرواز / تمایل به وصال"
-        ]
-      },
-      {
-        word: "گلاب",
-        tag: "ایهام عصاره و اشک",
-        meanings: ["عصاره معطر گل محمدی", "اشک چشم جاری از سوز دل"],
-        hint: "گلاب ریختن بر رخسار یار",
-        prompt: "معانی ایهام‌دار «گلاب» در متون ادبی دهم چیست؟",
-        correct: "عصاره معطر گل / اشک چشم جاری",
-        distractors: [
-          "آب گل‌آلود / بوی خوش بوستان",
-          "شبنم صبحگاهی / اشک سرخ عاشق",
-          "عطر بهشتی / آب حوض باغ"
-        ]
-      },
-      {
-        word: "خط",
-        tag: "ایهام چهره و نگارش",
-        meanings: ["نوشته، کتابت و نامه", "موی تازه دمیده گرد چهره یار"],
-        hint: "خط خوش و خط سبز رخسار معشوق",
-        prompt: "دو معنای ایهام‌دار واژه «خط» در ادبیات کدامند؟",
-        correct: "نوشته و نامه / موی تازه دمیده چهره",
-        distractors: [
-          "مسیر راه / نقش و نگار قلم",
-          "سرنوشت انسان / سبزه کنار جویبار",
-          "قلم‌زنی / خطوط چهره در پیری"
-        ]
-      },
-      {
-        word: "قربان",
-        tag: "ایهام ایثار و تیردان",
-        meanings: ["فدا، ذبح و نذر شده", "تیردان کماندار"],
-        hint: "قربان تو گشتن و تیر در قربان نهادن",
-        prompt: "معانی ایهام‌دار واژه «قربان» در ابیات حماسی و غنایی چیست؟",
-        correct: "فدا و نذر شده / تیردان کماندار",
-        distractors: [
-          "عید اسلامی / تیر و کمان جنگی",
-          "جان‌فشانی / سپر فولادین نبرد",
-          "ایثار مال / زره و جوشن پهلوان"
-        ]
-      },
-      {
-        word: "شام",
-        tag: "ایهام زمان و مکان",
-        meanings: ["وعده غذای شب و تاریکی شب", "سرزمین و کشور تاریخی سوریه"],
-        hint: "شام غریبان و ملک شام",
-        prompt: "دو معنای ایهام‌دار واژه «شام» در اشعار فارسی کدام است؟",
-        correct: "هنگام شب و طعام شب / سرزمین سوریه",
-        distractors: [
-          "غروب خورشید / شهر دمشق و بازار آن",
-          "تاریکی مطلق / دیار غربت و تنهایی",
-          "غذای شبانه / کاروان اهل بیت"
-        ]
-      },
-      {
-        word: "مردم",
-        tag: "ایهام انسان و چشم",
-        meanings: ["انسان‌ها، خلق و مردمان", "مردمک چشم بیننده"],
-        hint: "مردم دیده من غرق شد در خون که چرا...",
-        prompt: "معانی ایهام‌دار واژه «مردم» در بیت معروف حافظ چیست؟",
-        correct: "انسان‌ها و خلق / مردمک چشم",
-        distractors: [
-          "جماعت شهر / سیاهی چشم و نگاه",
-          "خویشاوندان / روشنایی دیده",
-          "عاشقان جهان / اشک ریزان از چشم"
-        ]
-      },
-      {
-        word: "لبریز",
-        tag: "ایهام پر و جویبار",
-        meanings: ["پر، سرشار و لبالب", "جویبار سرریز از آب"],
-        hint: "پیمانه لبریز و جویبار بهاری",
-        prompt: "دو معنای ایهام‌دار واژه «لبریز» کدامند؟",
-        correct: "پر و سرشار / جویبار لبریز آب",
-        distractors: [
-          "جام شراب / رودخانه طغیان‌کرده",
-          "لبالب از غم / ریزش اشک از مژه",
-          "کاسه لبالب / چشمه خروشان کوه"
-        ]
-      },
-      {
-        word: "چشمه",
-        tag: "ایهام جوشش و دیده",
-        meanings: ["محل جوشش آب زلال", "چشم بیننده و منفذ نور"],
-        hint: "چشمه خورشید و چشمه آب حیات",
-        prompt: "معانی ایهام‌دار واژه «چشمه» در کتب فارسی کدام است؟",
-        correct: "محل جوشش آب / چشم بیننده",
-        distractors: [
-          "سرچشمه رود / کاسه چشم و اشک",
-          "حوضچه باغ / نگاه مهرآمیز معشوق",
-          "چشمه آفتاب / چشمان غزال چمن"
-        ]
-      }
-    ]
-  },
-  {
-    id: 3,
-    title: "برج سوم: درس‌های ۸ تا ۱۱ (آرایه‌های کنایی)",
-    unlocked: false,
-    words: [
-      {
-        word: "باد",
-        tag: "کنایه و ایهام",
-        meanings: ["نسیم وزان و جریان هوا", "غرور، تکبر و کبر در سر"],
-        hint: "باد در سر داشتن",
-        prompt: "معانی کنایی و ایهام‌دار «باد» در زبان ادبی چیست؟",
-        correct: "نسیم وزان / غرور و تکبر",
-        distractors: [
-          "طوفان تندباد / بیهودگی و پوچی",
-          "هوای خنک / ادعای باطل",
-          "حرکت نسیم / خشم و غضب ناگهانی"
-        ]
-      },
-      {
-        word: "لبخند",
-        tag: "کنایه تصویری",
-        meanings: ["تبسم شیرین چهره", "شکفتن غنچه و گل سرخ"],
-        hint: "خنده گل در چمنزار",
-        prompt: "معانی کنایی و ایهام‌دار «خنده و لبخند گل» کدام است؟",
-        correct: "تبسم چهره / شکفتن غنچه گل",
-        distractors: [
-          "شادی معشوق / قطره شبنم روی گلبرگ",
-          "قهقهه مستانه / طراوت چمنزار بهاری",
-          "خوشرویی / پژمردگی و ریزش گلبرگ"
-        ]
-      },
-      {
-        word: "پای",
-        tag: "کنایه ادبی",
-        meanings: ["اندام حرکتی بدن", "اساس، بنیان، قدرت و پایداری"],
-        hint: "پای‌برجا بودن و از پای درآمدن",
-        prompt: "معانی کنایی واژه «پا و پای» در عبارت «پای‌برجا» کدام است؟",
-        correct: "اندام حرکتی / اساس و بنیاد پایدار",
-        distractors: [
-          "گام برداشتن / شتاب و سرعت در عمل",
-          "کفش و پای‌پوش / ایستادگی ظاهری",
-          "قدم سلوک / پافشاری بر ادعا"
-        ]
-      },
-      {
-        word: "دست",
-        tag: "کنایه اقتدار",
-        meanings: ["اندام گیرنده و دست", "قدرت، نفوذ، توانمندی و تسلط"],
-        hint: "دست بالا دست بسیار است",
-        prompt: "معنای کنایی واژه «دست» در متون کهن چیست؟",
-        correct: "اندام گیرنده / قدرت و نفوذ",
-        distractors: [
-          "پنجه سخاوت / یاری رساندن به دیگران",
-          "بخشندگی شاه / سلاح جنگی پهلوان",
-          "بازوی نبرد / اقتدار حاکم شهر"
-        ]
-      },
-      {
-        word: "سایه",
-        tag: "کنایه حمایت",
-        meanings: ["تاریکی ناشی از جسم در آفتاب", "حمایت، پناه، لطف و عنایت"],
-        hint: "سایه‌ات کم مباد",
-        prompt: "معنای کنایی واژه «سایه» در عبارت دعایی «سایه‌ات مستدام» چیست؟",
-        correct: "تاریکی مقابل آفتاب / حمایت و پناه",
-        distractors: [
-          "سایه درخت / حضور و همنشینی",
-          "تاریکی شب / لطف و کرم پنهانی",
-          "سردی و سکوت / طول عمر فراوان"
-        ]
-      },
-      {
-        word: "سر",
-        tag: "ایهام کله و راز",
-        meanings: ["عضو فوقانی بدن (کله)", "راز نهان، اندیشه و هوای باطن"],
-        hint: "سر در گریبان و سر عشق داشتن",
-        prompt: "معانی ایهام‌دار واژه «سر» در ادبیات کدام است؟",
-        correct: "کله و عضو فوقانی / راز نهان و اندیشه",
-        distractors: [
-          "تاج پادشاه / فکر و خیال پوچ",
-          "پیشوای قوم / راز فاش‌شده",
-          "آغاز داستان / تصمیم قاطع در کار"
-        ]
-      },
-      {
-        word: "آتش",
-        tag: "استعاره و ایهام",
-        meanings: ["شعله سوزان برافروخته", "خشم شدید، عشق پرشور و سوز دل"],
-        hint: "آتش درون سینه و سوز عشق",
-        prompt: "معانی ادبی و استعاری واژه «آتش» در شعر غنایی چیست؟",
-        correct: "شعله سوزان / خشم، عشق و سوز دل",
-        distractors: [
-          "حرارت هیزم / تب و بیماری سخت",
-          "سرخی لاله / عذاب دوزخ",
-          "اخگر تابان / هیجان زودگذر"
-        ]
-      },
-      {
-        word: "خاک",
-        tag: "کنایه تواضع",
-        meanings: ["تربت و زمین خاکی", "تواضع، افتادگی، ناچیزی و فنا"],
-        hint: "خاک پای دوستان بودن",
-        prompt: "معنای کنایی «خاک شدن» در برابر محبوب چیست؟",
-        correct: "زمین و تربت / تواضع و افتادگی کامل",
-        distractors: [
-          "گرد و غبار بیابان / مرگ و نیستی",
-          "دفن شدن / فقر و تنگدستی شدید",
-          "آلودگی گناه / خاموشی و سکوت"
-        ]
-      },
-      {
-        word: "خون",
-        tag: "کنایه مشقت",
-        meanings: ["مایع سرخ حیات بدن", "رنج، مشقت فراوان، کشتن و ایثار"],
-        hint: "خون دل خوردن در طلب یار",
-        prompt: "معنای کنایی عبارت «خون جگر خوردن» چیست؟",
-        correct: "مایع سرخ حیات / رنج و مشقت فراوان",
-        distractors: [
-          "خونریزی در نبرد / بیماری کشنده",
-          "فداکاری در راه حق / خشم و غضب مفرط",
-          "کشته شدن بی‌گناه / حسرت و اندوه زودگذر"
-        ]
-      },
-      {
-        word: "پروانه",
-        tag: "ایهام حشره و رخصت",
-        meanings: ["حشره عاشق شمع و نور", "اجازه‌نامه، حکم و رخصت رسمی"],
-        hint: "پروانه حضور داشتن در درگاه شاه",
-        prompt: "دو معنای ایهام‌دار واژه «پروانه» در متون دهم کدامند؟",
-        correct: "حشره عاشق شمع / اجازه‌نامه و رخصت",
-        distractors: [
-          "حشره بال‌دار / پر پرنده خوش‌آواز",
-          "شعله شمع / نامه محبت‌آمیز یار",
-          "طواف‌کننده حرم / پرچم کوچک لشکر"
-        ]
-      }
-    ]
-  },
-  {
-    id: 4,
-    title: "برج چهارم: درس‌های ۱۲ تا ۱۴ (تناسب و ایهام تناسب)",
-    unlocked: false,
-    words: [
-      {
-        word: "خسرو",
-        tag: "ایهام تناسب",
-        meanings: ["خسرو پرویز پادشاه ساسانی", "شاه و فرمانروای مطلق"],
-        hint: "خسرو و شیرین نظامی",
-        prompt: "معانی واژه «خسرو» در شعر عاشقانه کهن چیست؟",
-        correct: "خسرو پرویز پادشاه / شاه و فرمانروا",
-        distractors: [
-          "عاشق کوه‌کن / تاجدار باانصاف",
-          "پادشاه کیانی / سردار جنگاور",
-          "خسرو انوشیروان / شاهزاده ساسانی"
-        ]
-      },
-      {
-        word: "عیسی",
-        tag: "تلمیح و تناسب",
-        meanings: ["پیامبر اهل معجزه الهی", "دم شفابخش و زنده‌کننده دل‌ها"],
-        hint: "دم عیسوی داشتن معشوق",
-        prompt: "معنای ایهامی و تلمیحی «دم عیسی» در شعر کهن چیست؟",
-        correct: "پیامبر اهل معجزه / دم شفابخش و حیات‌بخش",
-        distractors: [
-          "مسیح موعود / نفس پاک و پرهیزگار",
-          "پزشک دانا / دعای مستجاب سحر",
-          "پیامبر مهربان / سخن پندآموز"
-        ]
-      },
-      {
-        word: "سلیمان",
-        tag: "تلمیح حاکمیت",
-        meanings: ["پیامبر حاکم بر باد و دیو و مور", "انسان دارای شوکت و اقتدار عظیم"],
-        hint: "ملک سلیمان و خاتم انگشتری او",
-        prompt: "معانی تلمیحی و تناسبی «سلیمان» در ابیات ادبیات دهم کدام است؟",
-        correct: "پیامبر حاکم بر باد / صاحب شوکت و خاتم",
-        distractors: [
-          "پادشاه دادگر / هم‌سخن با پرندگان",
-          "صاحب گنجینه‌های طلا / حکیم بنی‌اسرائیل",
-          "پادشاه بلقیس / نگین اسرارآمیز"
-        ]
-      },
-      {
-        word: "یوسف",
-        tag: "تلمیح زیبایی",
-        meanings: ["پیامبر نماد زیبایی و گمگشتگی", "عزیز مصر و ماه کنعان"],
-        hint: "یوسف گمگشته بازآید به کنعان غم مخور",
-        prompt: "معنای نمادین و تلمیحی «یوسف» در غزل حافظ چیست؟",
-        correct: "پیامبر نماد زیبایی / گمگشته عزیز مصر",
-        distractors: [
-          "تعبیرکننده خواب / برادر وفادار بنیامین",
-          "پادشاه کنعان / مسافر راه دور",
-          "غلام وفادار / نماد پاکدامنی و صبر"
-        ]
-      },
-      {
-        word: "مجنون",
-        tag: "ایهام صفت و نام",
-        meanings: ["مجنون عامری (قیس) عاشق لیلی", "دیوانه، شوریده و بی‌قرار"],
-        hint: "قصه لیلی و مجنون نظامی",
-        prompt: "دو وجه معنایی واژه «مجنون» در ادبیات کدامند؟",
-        correct: "عاشق شیدای لیلی / دیوانه و بی‌قرار",
-        distractors: [
-          "شاعر قبیله بنی‌عامر / پریشان‌حال بیابان",
-          "سرگردان کوه نجد / واله و شیفته زیبایی",
-          "عاشق ناکام / شیدازده خلوت‌نشین"
-        ]
-      },
-      {
-        word: "بلبل",
-        tag: "تناسب عاشق گل",
-        meanings: ["پرنده خوش‌آواز چمن (عندلیب)", "نغمه‌سرای عاشق و شیدای گل"],
-        hint: "ناله بلبل سحری در فراق گل",
-        prompt: "معنای نمادین «بلبل» در شعر تمثیلی و عرفانی چیست؟",
-        correct: "پرنده خوش‌آواز / عاشق نغمه‌سرای گل",
-        distractors: [
-          "هزاردستان خوشخوان / پیام‌آور فصل بهار",
-          "پرنده چمنزار / مطرب مجلس انس",
-          "نغمه‌ساز سحرگاهی / بلبل قفسی"
-        ]
-      },
-      {
-        word: "شمع",
-        tag: "تناسب پروانه و شمع",
-        meanings: ["موم روشنایی‌بخش و سوزان", "معشوق زیبارو و مراد بزم محفل"],
-        hint: "شمع محفل‌افروز و پروانه گرد او",
-        prompt: "دو وجه تمثیلی و ایهامی «شمع» در شعر غنایی کدام است؟",
-        correct: "روشنایی‌بخش سوزان / معشوق و مراد محفل",
-        distractors: [
-          "چراغ خانه / چهره برافروخته از باده",
-          "موم گداخته / فناپذیری عمر آدمی",
-          "نور شبستان / راهنمای سالکان"
-        ]
-      },
-      {
-        word: "پرویز",
-        tag: "ایهام نام و پیروزی",
-        meanings: ["خسرو پرویز شاهنشاه ساسانی", "پیروزمند، مظفر و فاتح نبرد"],
-        hint: "شاه پرویز و شیرین",
-        prompt: "معانی ایهام‌دار واژه «پرویز» در اشعار تاریخی و غنایی چیست؟",
-        correct: "خسرو پرویز پادشاه / پیروزمند و مظفر",
-        distractors: [
-          "همسر شیرین / سردار نامدار ایران",
-          "تاجدار مداین / فاتح قلعه‌های روم",
-          "پادشاه صاحب شوکت / شوالیه پیروز"
-        ]
-      },
-      {
-        word: "نادر",
-        tag: "ایهام صفت و اسم",
-        meanings: ["کمیاب، شگفت و بی‌نظیر", "نادرشاه پادشاه افشاری"],
-        hint: "گوهر نادر و نادر دوران",
-        prompt: "معانی دوگانه و ایهام‌دار «نادر» در شعر و نثر چیست؟",
-        correct: "کمیاب و بی‌نظیر / نادرشاه افشار",
-        distractors: [
-          "گوهر گرانبها / سردار فاتح شرق",
-          "شگفت‌انگیز و تک / فاتح دهلی",
-          "پادشاه شجاع / درّ بی‌مانند"
-        ]
-      },
-      {
-        word: "فرهاد",
-        tag: "تلمیح عاشق کوه‌کن",
-        meanings: ["عاشق شیدا و سنگ‌تراش شیرین", "مرد زحمتکش، پرشور و جان‌فشان"],
-        hint: "تیشه فرهاد بر صخره‌های بیستون",
-        prompt: "معنای نمادین «فرهاد» در شعر کهن فارسی چیست؟",
-        correct: "عاشق کوه‌کن شیرین / مرد زحمتکش پرشور",
-        distractors: [
-          "سنگ‌تراش بیستون / رقیب سرسخت خسرو",
-          "پهلوان عاشق‌پیشه / معمار قصر شیرین",
-          "شهید راه عشق / تیشه‌دار ناکام"
-        ]
-      }
-    ]
-  },
-  {
-    id: 5,
-    title: "برج پنجم: درس‌های ۱۵ تا ۱۸ (واژگان پیشرفته ترم دوم)",
-    unlocked: false,
-    words: [
-      {
-        word: "سودا",
-        tag: "ایهام عشق و تجارت",
-        meanings: ["عشق، شور جنون‌آمیز و تفکر عمیق", "تجارت، داد و ستد و معامله"],
-        hint: "سودای عشق در سر داشتن",
-        prompt: "معانی دوگانه و ایهام‌دار واژه «سودا» در ادبیات کدام است؟",
-        correct: "عشق و شور جنون‌آمیز / تجارت و دادوستد",
-        distractors: [
-          "سیاهی باطن / معامله سودآور بازار",
-          "خلق و خوی تند / خرید و فروش کالا",
-          "خیال باطل / تجارت پرسود کاروانیان"
-        ]
-      },
-      {
-        word: "نوا",
-        tag: "ایهام آهنگ و توشه",
-        meanings: ["آهنگ و نغمه موسیقی", "ساز، برگ و توشه زندگی"],
-        hint: "بی‌برگ و بینوا گشتن و نوای خوش ساز",
-        prompt: "معانی ایهام‌دار واژه «نوا» در شعر کهن چیست؟",
-        correct: "آهنگ و نغمه موسیقی / ساز و توشه زندگی",
-        distractors: [
-          "صدای دلنشین خواننده / رزق و روزی حلال",
-          "نغمه نی / مال و ثروت پادشاهی",
-          "دستگاه موسیقی سنتی / نان و آب مسافر"
-        ]
-      },
-      {
-        word: "هزار",
-        tag: "ایهام عدد و بلبل",
-        meanings: ["عدد ریاضی ۱۰۰۰", "پرنده بلبل (هزاردستان)"],
-        hint: "هزاردستان در بوستان و هزاران دستان",
-        prompt: "دو معنای ایهام‌دار واژه «هزار» در زبان شعر چیست؟",
-        correct: "عدد ریاضی ۱۰۰۰ / پرنده بلبل (هزاردستان)",
-        distractors: [
-          "شمارگان بی‌پایان / نغمه‌های بسیار",
-          "تعداد گام‌های سالک / پرنده بهاری چمن",
-          "عدد کثرت / نوای بلبلان در قفس"
-        ]
-      },
-      {
-        word: "گوشه",
-        tag: "ایهام کنج و مقام",
-        meanings: ["کنج، زاویه و خلوتگاه", "گوشه و نغمه دستگاه موسیقی سنتی"],
-        hint: "گوشه‌نشین خرابات و گوشه دستگاه نوا",
-        prompt: "معانی ایهام‌دار واژه «گوشه» در ابیات ادبیات چیست؟",
-        correct: "کنج و خلوتگاه / مقام و نغمه موسیقی",
-        distractors: [
-          "زاویه اتاق / بخش کوچک ترانه",
-          "پناهگاه درویشان / سیم‌های ساز زهی",
-          "خلوتگاه تنهایی / پرده موسیقی کهن"
-        ]
-      },
-      {
-        word: "ساز",
-        tag: "ایهام آلت موسیقی و سازوبرگ",
-        meanings: ["آلت و ادوات موسیقی", "آمادگی، اسباب و سازوبرگ سفر"],
-        hint: "ساز کردن آهنگ و سازوبرگ نبرد",
-        prompt: "دو معنای ایهام‌دار واژه «ساز» در زبان فارسی چیست؟",
-        correct: "آلت موسیقی / آمادگی و سازوبرگ",
-        distractors: [
-          "نوای چنگ و رباب / ابزار و آلات کار",
-          "آهنگ دلنشین / رخت و اسباب خانه",
-          "تار و تنبور / آذوقه کاروان سفر"
-        ]
-      },
-      {
-        word: "باز",
-        tag: "ایهام پرنده و دوباره",
-        meanings: ["پرنده شکاری تیزبین و شکاری", "گشوده، فراخ و دوباره"],
-        hint: "کبوتر با کبوتر، باز با باز",
-        prompt: "معانی دوگانه و ایهام‌دار واژه «باز» کدامند؟",
-        correct: "پرنده شکاری تیزبین / گشوده و دوباره",
-        distractors: [
-          "عقاب بلندپرواز / درب گشوده قصر",
-          "شکارچی پرندگان / برگشت به خانه",
-          "شهباز شکاری / آشکار و هویدا"
-        ]
-      },
-      {
-        word: "تیر",
-        tag: "ایهام کمان و سیاره",
-        meanings: ["تیر پرتابی کماندار", "ماه چهارم سال و سیاره عطارد"],
-        hint: "تیر پرتابی و تیر فلک (عطارد دانا)",
-        prompt: "معانی ایهام‌دار واژه «تیر» در منظومه‌ها کدام است؟",
-        correct: "تیر کماندار / ماه تیر و سیاره عطارد",
-        distractors: [
-          "پیکان تیز جنگی / فصل گرم تابستان",
-          "تیردان صیاد / ستاره بخت و اقبال",
-          "سلاح آرش کمانگیر / سیاره زهره"
-        ]
-      },
-      {
-        word: "زهره",
-        tag: "ایهام سیاره و شجاعت",
-        meanings: ["سیاره ناهید و نوازنده فلک", "جرأت، شجاعت و دلاوری"],
-        hint: "زهره چنگ‌نواز و زهره دریدن از ترس",
-        prompt: "دو معنای ایهام‌دار واژه «زهره» در ادب فارسی چیست؟",
-        correct: "سیاره ناهید (نوازنده فلک) / جرأت و شجاعت",
-        distractors: [
-          "ستاره صبحگاهی / کبد و صفرا در بدن",
-          "الهه موسیقی / شهامت و تهور جنگجو",
-          "ناهید درخشان / کیسه صفرای انسان"
-        ]
-      },
-      {
-        word: "بهار",
-        tag: "ایهام فصل و بتخانه",
-        meanings: ["فصل سرسبزی و شکوفایی طبیعت", "بتخانه، بتکده و جایگاه زیبا"],
-        hint: "نوبهار طبیعت و بهارستان بتخانه",
-        prompt: "معانی ایهام‌دار واژه «بهار» در شعر حافظ و نظامی کدام است؟",
-        correct: "فصل شکوفایی طبیعت / بتخانه و بتکده زیبا",
-        distractors: [
-          "آغاز سال نو / زیباروی خوش‌چهره",
-          "نسیم گلزار / نگارخانه چین و ماچین",
-          "جشن فروردین / بت‌های سیمین‌بر"
-        ]
-      },
-      {
-        word: "دیوان",
-        tag: "ایهام کتاب و دادگاه",
-        meanings: ["دفتر اشعار منظوم شاعر", "دادگاه، اداره محاسبات و کاخ دیوها"],
-        hint: "دیوان حافظ و دیوان محاسبات کشور",
-        prompt: "معانی دوگانه واژه «دیوان» در ادب فارسی کدام است؟",
-        correct: "دفتر اشعار منظوم / دادگاه، اداره و جایگاه دیوها",
-        distractors: [
-          "مجموعه غزلیات / مجلس حاکم و شاه",
-          "کتاب شعر کهن / مجمع بزرگان قوم",
-          "طومار نوشته‌ها / زندان تاریک پادشاه"
-        ]
-      }
-    ]
+    "id": 12,
+    "world": 4,
+    "worldTitle": "دژ جهنمی",
+    "title": "دژ جهنمی · نبرد نهایی واژه‌ها",
+    "theme": "hell",
+    "isHellMix": true,
+    "unlocked": false,
+    "words": []
   }
 ];
 
 const TEACHER_PASS = "431380";
 
 // ==========================================
-// 2. STATE & STORAGE ENGINE
+// 2. STATE & STORAGE ENGINE (gv_stages_v32)
 // ==========================================
 let appState = {
-  stages: JSON.parse(localStorage.getItem("gv_stages")) || DEFAULT_STAGES,
+  stages: JSON.parse(localStorage.getItem("gv_stages_v32")) || DEFAULT_STAGES,
   students: JSON.parse(localStorage.getItem("gv_students")) || {},
   classLock: localStorage.getItem("gv_classLock") || "",
   sbUrl: localStorage.getItem("gv_sbUrl") || "https://lqwnjcnpizkdtowoezxi.supabase.co",
@@ -1874,7 +3262,7 @@ let appState = {
 };
 
 function saveLocal() {
-  localStorage.setItem("gv_stages", JSON.stringify(appState.stages));
+  localStorage.setItem("gv_stages_v32", JSON.stringify(appState.stages));
   localStorage.setItem("gv_students", JSON.stringify(appState.students));
   localStorage.setItem("gv_classLock", appState.classLock);
 }
@@ -1892,7 +3280,7 @@ function mapStudentRow(row) {
   };
 }
 
-// 1. Global Teacher Config Sync (gv_state: id=global)
+// Global Teacher Config Sync (gv_state: id=global)
 async function syncGlobalState(action = "push") {
   if (!appState.sbUrl || !appState.sbKey) return;
   const headers = {
@@ -1935,7 +3323,7 @@ async function syncGlobalState(action = "push") {
   }
 }
 
-// 2. Per-Student Cloud Operations (gv_students table)
+// Per-Student Cloud Operations (gv_students table)
 async function fetchStudentRecord(code) {
   if (!appState.sbUrl || !appState.sbKey || !code) return null;
   try {
@@ -2290,21 +3678,57 @@ function renderTowerMap() {
   const user = appState.students[appState.currentUserCode] || {};
   const completed = user.completedStages || [];
 
+  let currentRenderedWorld = null;
+
   appState.stages.forEach((st, idx) => {
+    // World Section Headers
+    if (st.world !== currentRenderedWorld) {
+      currentRenderedWorld = st.world;
+      const wHeader = document.createElement("div");
+      wHeader.className = `world-header world-${st.world}`;
+      let worldDesc = "";
+      let themeColor = "var(--amber)";
+      if (st.world === 1) {
+        worldDesc = "۸ مرحله • ۱۶۱ واژه رسمی واژه‌نامه دهم";
+        themeColor = "var(--amber)";
+      } else if (st.world === 2) {
+        worldDesc = "۲ مرحله • ۲۰ کنایه مهم و امتحانی";
+        themeColor = "var(--xp)";
+      } else if (st.world === 3) {
+        worldDesc = "۱ مرحله • ۱۰ واژه ایهام‌دار چالشی";
+        themeColor = "var(--ok)";
+      } else if (st.world === 4) {
+        worldDesc = "نبرد ترکیبی چالش‌برانگیز • پاداش ۲ برابر XP";
+        themeColor = "var(--red)";
+      }
+
+      wHeader.innerHTML = `
+        <div>
+          <span style="font-weight:900; font-size:0.9rem; color:${themeColor};">${st.worldTitle}</span>
+          <span style="font-size:0.75rem; color:var(--steel); margin-right:8px;">(${worldDesc})</span>
+        </div>
+      `;
+      list.appendChild(wHeader);
+    }
+
     const isCompleted = completed.includes(st.id);
     const prevCompleted = idx === 0 || completed.includes(appState.stages[idx - 1].id);
     const isUnlocked = st.unlocked && (idx === 0 || prevCompleted);
 
     const card = document.createElement("div");
-    card.className = `tower-card ${isCompleted ? "completed" : (isUnlocked ? "unlocked" : "locked")}`;
+    card.className = `tower-card world-${st.world} ${isCompleted ? "completed" : (isUnlocked ? "unlocked" : "locked")}`;
 
     const infoDiv = document.createElement("div");
+    let countLabel = st.isHellMix ? "۱۰ چالش ترکیبی" : `${st.words.length} واژه/کنایه`;
+    let statusLabel = isCompleted ? "فتح شده" : (isUnlocked ? "آماده ورود" : "قفل برج قبلی");
+    let titleColor = isCompleted ? "var(--ok)" : (isUnlocked ? (st.world === 2 ? "var(--xp)" : (st.world === 3 ? "var(--ok)" : (st.world === 4 ? "var(--red)" : "var(--amber)"))) : "var(--steel)");
+
     infoDiv.innerHTML = `
-      <div style="font-weight:900; font-size:0.95rem; color:${isCompleted ? "var(--ok)" : (isUnlocked ? "var(--amber)" : "var(--steel)")};">
+      <div style="font-weight:900; font-size:0.95rem; color:${titleColor};">
         ${st.title}
       </div>
       <div style="font-size:0.75rem; color:var(--steel); margin-top:4px;">
-        تعداد واژگان: ${st.words.length} • وضعیت: ${isCompleted ? "فتح شده" : (isUnlocked ? "آماده ورود" : "قفل برج قبلی")}
+        ${countLabel} • وضعیت: ${statusLabel}
       </div>
     `;
     card.appendChild(infoDiv);
@@ -2313,30 +3737,32 @@ function renderTowerMap() {
       const actionsDiv = document.createElement("div");
       actionsDiv.style.cssText = "display:flex; gap:8px; align-items:center; flex-wrap:wrap;";
 
-      // 1. Study Mode Button (یادگیری) - min-height 44px
-      const studyBtn = document.createElement("button");
-      studyBtn.className = "pixel-btn btn-slate";
-      studyBtn.style.cssText = "min-height:44px; padding:8px 14px; font-size:0.85rem;";
-      studyBtn.textContent = "یادگیری";
-      studyBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        playSelectSound();
-        openStudyMode(st);
-      });
+      // Study Mode Button (Not for Hell mix)
+      if (!st.isHellMix) {
+        const studyBtn = document.createElement("button");
+        studyBtn.className = "pixel-btn btn-slate";
+        studyBtn.style.cssText = "min-height:44px; padding:8px 14px; font-size:0.85rem;";
+        studyBtn.textContent = "یادگیری";
+        studyBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          playSelectSound();
+          openStudyMode(st);
+        });
+        actionsDiv.appendChild(studyBtn);
+      }
 
-      // 2. Battle Mode Button (نبرد دروازه) - min-height 44px
+      // Battle Mode Button
       const battleBtn = document.createElement("button");
-      battleBtn.className = "pixel-btn btn-amber";
+      battleBtn.className = st.world === 4 ? "pixel-btn btn-crimson" : (st.world === 2 ? "pixel-btn btn-cyan" : (st.world === 3 ? "pixel-btn btn-emerald" : "pixel-btn btn-amber"));
       battleBtn.style.cssText = "min-height:44px; padding:8px 14px; font-size:0.85rem;";
-      battleBtn.textContent = "نبرد دروازه";
+      battleBtn.textContent = st.world === 4 ? "نبرد جهنمی" : "نبرد دروازه";
       battleBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         playSelectSound();
         startBattleMode(st);
       });
-
-      actionsDiv.appendChild(studyBtn);
       actionsDiv.appendChild(battleBtn);
+
       card.appendChild(actionsDiv);
     } else {
       const lockedBadge = document.createElement("div");
@@ -2364,6 +3790,10 @@ function openStudyMode(stage) {
   studyIndex = 0;
   isCardFlipped = false;
 
+  // Window styling reflection
+  const win = document.getElementById("studyWindow");
+  win.className = `pixel-window border-${stage.theme || "line"}`;
+
   renderStudyCard();
   showView("viewStudy");
 }
@@ -2378,7 +3808,7 @@ function renderStudyCard() {
   const item = studyDeck[studyIndex];
   document.getElementById("studyStageTitle").textContent = studyStage.title.split(":")[0];
   document.getElementById("studyCounter").textContent = `${studyIndex + 1}/${studyDeck.length}`;
-  document.getElementById("studyCardTag").textContent = item.tag || "واژه ایهام‌دار";
+  document.getElementById("studyCardTag").textContent = item.tag || (studyStage.world === 2 ? "کنایه" : (studyStage.world === 3 ? "ایهام" : "واژه"));
   document.getElementById("studyCardWord").textContent = item.word;
 
   const mContainer = document.getElementById("studyMeanings");
@@ -2434,7 +3864,6 @@ document.getElementById("btnStudyPrev").addEventListener("click", () => {
 });
 
 document.getElementById("btnStudyReview").addEventListener("click", () => {
-  // Push current card to the end of study deck for spaced review
   playSelectSound();
   if (studyDeck.length > 1) {
     const item = studyDeck.splice(studyIndex, 1)[0];
@@ -2462,6 +3891,7 @@ let mistakesThisStage = 0;
 let comboCount = 0;
 let selectedOptionIdx = -1;
 let currentQuizItem = null;
+let isHellRound = false;
 
 function triggerScreenShake() {
   const sc = document.getElementById("stageScene");
@@ -2524,21 +3954,85 @@ function updateComboBadge() {
   }
 }
 
+// Sample 10 items for Hell World (4 Vocab + 3 Idioms + 3 Ambiguity)
+function sampleHellDeck(userMistakes) {
+  const getTopMistakes = (arr, count) => {
+    return [...arr].sort((a, b) => {
+      const ma = userMistakes[a.word] || 0;
+      const mb = userMistakes[b.word] || 0;
+      if (mb !== ma) return mb - ma;
+      return 0.5 - Math.random();
+    }).slice(0, count);
+  };
+
+  // World 1 pool (Stages 1-8)
+  let w1Pool = [];
+  for (let i = 0; i < 8; i++) w1Pool.push(...appState.stages[i].words);
+  const w1Sample = getTopMistakes(w1Pool, 4);
+
+  // World 2 pool (Stages 9-10)
+  let w2Pool = [...appState.stages[8].words, ...appState.stages[9].words];
+  const w2Sample = getTopMistakes(w2Pool, 3);
+
+  // World 3 pool (Stage 11)
+  let w3Pool = [...appState.stages[10].words];
+  const w3Sample = getTopMistakes(w3Pool, 3);
+
+  return [...w1Sample, ...w2Sample, ...w3Sample].sort(() => 0.5 - Math.random());
+}
+
 function startBattleMode(stage) {
   currentStage = stage;
-  quizQueue = [...stage.words];
+  isHellRound = !!stage.isHellMix;
+
+  const user = appState.students[appState.currentUserCode] || {};
+  const userMistakes = user.mistakes || {};
+
+  // Cap Battle Round to 10 locks
+  if (stage.isHellMix) {
+    quizQueue = sampleHellDeck(userMistakes);
+  } else {
+    const sortedByMistakes = [...stage.words].sort((a, b) => {
+      const ma = userMistakes[a.word] || 0;
+      const mb = userMistakes[b.word] || 0;
+      if (mb !== ma) return mb - ma;
+      return 0.5 - Math.random();
+    });
+    quizQueue = sortedByMistakes.slice(0, 10);
+  }
+
   masteredCount = 0;
-  totalInitialWords = stage.words.length;
+  totalInitialWords = quizQueue.length;
   mistakesThisStage = 0;
   comboCount = 0;
   selectedOptionIdx = -1;
+
+  // Visual Theme Application
+  const stageScene = document.getElementById("stageScene");
+  stageScene.className = "stage-wrapper";
+  if (stage.theme === "cyan") {
+    stageScene.classList.add("theme-cyan");
+  } else if (stage.theme === "ok") {
+    stageScene.classList.add("theme-ok");
+  } else if (stage.theme === "hell") {
+    stageScene.classList.add("hell-mode");
+  } else {
+    stageScene.classList.add("theme-amber");
+  }
+
+  // Hell 2x Badge
+  const hellBadge = document.getElementById("hellBonusBadge");
+  if (isHellRound) {
+    hellBadge.classList.remove("hidden");
+  } else {
+    hellBadge.classList.add("hidden");
+  }
 
   document.getElementById("arenaStageTitle").textContent = stage.title.split(":")[0];
   document.getElementById("arenaCounter").textContent = `0/${totalInitialWords}`;
   document.getElementById("gateGlow").classList.remove("gate-open");
 
-  const user = appState.students[appState.currentUserCode];
-  document.getElementById("dialogXP").textContent = `${user ? user.xp : 0} XP`;
+  document.getElementById("dialogXP").textContent = `${user.xp || 0} XP`;
 
   updateCandlesHUD();
   updateComboBadge();
@@ -2549,21 +4043,36 @@ function startBattleMode(stage) {
   renderNextQuizQuestion();
 }
 
-// Upgraded Quiz Distractor Engine
+// Distractor Engine
 function getQuizOptionsForCard(card, stage) {
   const correctChoice = card.correct || (card.meanings ? card.meanings.join(" / ") : "");
 
-  // Priority 1: Use explicit 3 high-quality distractors if present on card
+  // Priority 1: Explicit challenging distractors
   if (Array.isArray(card.distractors) && card.distractors.length >= 3) {
     const distractors = card.distractors.slice(0, 3);
     return [correctChoice, ...distractors].sort(() => 0.5 - Math.random());
   }
 
-  // Priority 2: Pick 3 distractors strictly from the SAME stage/category first
-  let sameStageCards = (stage && stage.words) ? stage.words.filter(w => w.word !== card.word) : [];
+  // Priority 2: Pick 3 distractors from same category and stage first
+  let sameStageCards = (stage && stage.words && stage.words.length > 0) ? stage.words.filter(w => w.word !== card.word) : [];
   let candidatePool = sameStageCards.map(w => w.correct || (w.meanings ? w.meanings.join(" / ") : "")).filter(Boolean);
 
-  // Fallback: If stage has fewer than 4 cards, pool from other stages
+  // If stage has fewer than 3, pull from same world
+  if (candidatePool.length < 3) {
+    const targetWorld = stage ? stage.world : 1;
+    appState.stages.forEach(st => {
+      if (st.world === targetWorld) {
+        st.words.forEach(w => {
+          if (w.word !== card.word) {
+            const c = w.correct || (w.meanings ? w.meanings.join(" / ") : "");
+            if (c && !candidatePool.includes(c)) candidatePool.push(c);
+          }
+        });
+      }
+    });
+  }
+
+  // Fallback across all stages if still < 3
   if (candidatePool.length < 3) {
     appState.stages.forEach(st => {
       st.words.forEach(w => {
@@ -2583,7 +4092,7 @@ function getQuizOptionsForCard(card, stage) {
 function renderNextQuizQuestion() {
   document.getElementById("phaseQuiz").classList.remove("hidden");
   document.getElementById("phaseVictory").classList.add("hidden");
-  document.getElementById("speakerTag").textContent = "نگهبان دروازه";
+  document.getElementById("speakerTag").textContent = isHellRound ? "دیو جهنمی" : "نگهبان دروازه";
 
   if (quizQueue.length === 0) {
     completeStageVictory();
@@ -2595,7 +4104,15 @@ function renderNextQuizQuestion() {
   selectedOptionIdx = -1;
 
   // Prompt Text
-  const promptText = currentQuizItem.prompt || "کدام گزینه معانی صحیح و ایهام‌دار این واژه است؟";
+  let defaultPrompt = "کدام گزینه معنای صحیح این واژه است؟";
+  if (currentStage && currentStage.world === 2) {
+    defaultPrompt = "مفهوم کنایی این عبارت در کدام گزینه آمده است؟";
+  } else if (currentStage && currentStage.world === 3) {
+    defaultPrompt = "دو معنای دقیق و ایهام‌دار این واژه در کدام گزینه است؟";
+  } else if (isHellRound) {
+    defaultPrompt = "پاسخ صحیح این چالش جهنمی کدام است؟";
+  }
+  const promptText = currentQuizItem.prompt || defaultPrompt;
   document.getElementById("qzPrompt").textContent = promptText;
 
   // Smart Repetition Badge
@@ -2664,11 +4181,15 @@ function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
     comboCount++;
     updateComboBadge();
 
-    let earnedXP = item.isRetry ? 5 : 10;
-    if (comboCount >= 3) {
-      earnedXP *= 3; // x3 Combo multiplier
+    let baseXP = item.isRetry ? 5 : 10;
+    if (isHellRound) {
+      baseXP *= 2; // 2x XP in Hell Mode
     }
-    user.xp += earnedXP;
+    if (comboCount >= 3) {
+      baseXP *= 3; // x3 Combo multiplier
+    }
+
+    user.xp += baseXP;
     document.getElementById("userXP").textContent = user.xp;
     document.getElementById("dialogXP").textContent = `${user.xp} XP`;
 
@@ -2718,7 +4239,7 @@ function completeStageVictory() {
   const user = appState.students[appState.currentUserCode];
   if (!user.completedStages.includes(currentStage.id)) {
     user.completedStages.push(currentStage.id);
-    user.xp += 25; // Castle conquest bonus
+    user.xp += isHellRound ? 50 : 25; // Castle conquest bonus
   }
   saveLocal();
   syncStudentToCloud(user);
@@ -2734,8 +4255,9 @@ function completeStageVictory() {
   document.getElementById("userXP").textContent = user.xp;
   document.getElementById("dialogXP").textContent = `${user.xp} XP`;
 
+  const bonusXP = isHellRound ? 50 : 25;
   document.getElementById("victoryStats").textContent = 
-    `تمام ${totalInitialWords} واژه ایهام‌دار «${currentStage.title}» با موفقیت فتح شدند و ۲۵ امتیاز پاداش فتح قلعه دریافت کردید!`;
+    `تمام ${totalInitialWords} قفل نبرد با موفقیت گشوده شدند و ${bonusXP} امتیاز پاداش فتح قلعه دریافت کردید!`;
 }
 
 document.getElementById("btnBackToMap").addEventListener("click", enterDashboard);
@@ -2807,7 +4329,7 @@ async function openTeacherPanel() {
     const row = document.createElement("div");
     row.style.cssText = "display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #1a2438;";
     row.innerHTML = `
-      <span style="font-size:0.8rem; color:var(--ink);">${st.title} (${st.words.length} واژه)</span>
+      <span style="font-size:0.8rem; color:var(--ink);">${st.title} (${st.words ? st.words.length : 0} واژه)</span>
       <button class="pixel-btn ${st.unlocked ? "btn-emerald" : "btn-crimson"}" style="padding:4px 10px; font-size:0.75rem;">
         ${st.unlocked ? "باز است (قفل کن)" : "قفل است (باز کن)"}
       </button>
@@ -2820,10 +4342,12 @@ async function openTeacherPanel() {
     });
     stageBox.appendChild(row);
 
-    const opt = document.createElement("option");
-    opt.value = st.id;
-    opt.textContent = st.title;
-    stageSelect.appendChild(opt);
+    if (!st.isHellMix) {
+      const opt = document.createElement("option");
+      opt.value = st.id;
+      opt.textContent = st.title;
+      stageSelect.appendChild(opt);
+    }
   });
 
   // Students Performance Table
