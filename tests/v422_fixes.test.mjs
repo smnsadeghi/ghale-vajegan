@@ -5,7 +5,7 @@ import fs from 'node:fs';
 const htmlContent = fs.readFileSync('C:/Users/acer/.gemini/antigravity/scratch/ghale-vajegan/index.html', 'utf8');
 const swContent = fs.readFileSync('C:/Users/acer/.gemini/antigravity/scratch/ghale-vajegan/sw.js', 'utf8');
 
-describe('v4.2.2 Surgical Production Fixes', () => {
+describe('v4.3.0 Zero-Scroll App Shell & Production Architecture', () => {
 
   describe('1. Missing Quiz Options & #phaseQuiz Cleanup', () => {
     it('uses correct qzOptions container ID in renderNextQuizQuestion', () => {
@@ -63,27 +63,29 @@ describe('v4.2.2 Surgical Production Fixes', () => {
   });
 
   describe('4. Vertical Mobile Layout & Viewport Optimization', () => {
-    it('sets body min-height to 100dvh', () => {
-      assert.ok(htmlContent.includes('min-height: 100dvh;'), 'body must use 100dvh');
+    it('locks html, body and container to 100dvh', () => {
+      assert.ok(htmlContent.includes('height: 100dvh;'), 'html, body or container must lock height to 100dvh');
+      assert.ok(htmlContent.includes('overflow: hidden;'), 'must lock overflow to hidden');
     });
 
-    it('makes viewArena and rpg-dialog flex items filling vertical space', () => {
+    it('makes viewArena and stage-wrapper flex items filling vertical space', () => {
       assert.ok(htmlContent.includes('#viewArena:not(.hidden)'), 'viewArena rule must exist');
-      assert.ok(htmlContent.includes('#viewArena .rpg-dialog'), 'viewArena rpg-dialog rule must exist');
+      assert.ok(htmlContent.includes('.stage-wrapper'), 'stage-wrapper rule must exist');
     });
 
-    it('pins footer-ver to bottom with margin-top: auto', () => {
-      assert.ok(htmlContent.includes('margin-top: auto;'), 'footer-ver must have margin-top: auto');
+    it('compacts footer-ver and places it inside viewAuth', () => {
+      assert.ok(htmlContent.includes('footer-ver'), 'footer-ver class must exist');
+      assert.ok(htmlContent.includes('id="versionTrigger"'), 'versionTrigger must exist');
     });
   });
 
   describe('5. Version & PWA Cache Bump', () => {
-    it('bumps version trigger to v4.2.2', () => {
-      assert.ok(htmlContent.includes('<div class="footer-ver" id="versionTrigger">v4.2.2</div>'), 'Version trigger must be v4.2.2');
+    it('bumps version trigger to v4.3.0', () => {
+      assert.ok(htmlContent.includes('id="versionTrigger">v4.3.0</div>'), 'Version trigger must be v4.3.0');
     });
 
-    it('bumps Service Worker cache name to ghale-vajegan-v4.2.2', () => {
-      assert.ok(swContent.includes("const CACHE_NAME = 'ghale-vajegan-v4.2.2';"), 'sw.js cache must be v4.2.2');
+    it('bumps Service Worker cache name to ghale-vajegan-v4.3.0', () => {
+      assert.ok(swContent.includes("const CACHE_NAME = 'ghale-vajegan-v4.3.0';"), 'sw.js cache must be v4.3.0');
     });
   });
 

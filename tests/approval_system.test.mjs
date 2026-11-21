@@ -547,7 +547,7 @@ describe('Integration Verification with Production Code (HTML, SW, SQL v4.1.1)',
   });
 
   it('2. Service Worker cache name is bumped to ghale-vajegan-v4.2 (or v4.1.1+)', () => {
-    assert.ok(swContent.includes("ghale-vajegan-v4.2") || swContent.includes("ghale-vajegan-v4.1.1"), 'sw.js has v4.1.1+ cache name');
+    assert.ok(swContent.includes("ghale-vajegan-v4.3") || swContent.includes("ghale-vajegan-v4.2") || swContent.includes("ghale-vajegan-v4.1.1"), 'sw.js has v4.1.1+ cache name');
   });
 
   it('3. Index.html has versionTrigger displaying version without hints', () => {
