@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ghale-vajegan-v3.6-visual';
+const CACHE_NAME = 'ghale-vajegan-v4.1';
 const ASSETS = [
   './',
   './index.html',

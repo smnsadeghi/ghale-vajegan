@@ -1385,11 +1385,44 @@
       filter: drop-shadow(-4px 0 8px rgba(0, 0, 0, 0.85));
     }
 
+
+    /* Student Approval System Badges */
+    .badge-status {
+      display: inline-block;
+      padding: 2px 7px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      border-radius: 3px;
+      border: 1px solid currentColor;
+    }
+    .badge-status.status-pending {
+      color: var(--amber);
+      background: rgba(240, 181, 96, 0.12);
+      border-color: var(--amber);
+    }
+    .badge-status.status-approved {
+      color: var(--ok, #10b981);
+      background: rgba(16, 185, 129, 0.12);
+      border-color: var(--ok, #10b981);
+    }
+    .badge-status.status-rejected {
+      color: var(--red, #ef4444);
+      background: rgba(239, 68, 68, 0.12);
+      border-color: var(--red, #ef4444);
+    }
+
   </style>
 </head>
 <body>
 
 <div class="container" id="appRoot">
+
+  <!-- IN-APP NOTIFICATION BANNER (For Students & Alerts) -->
+  <div id="studentNotifBanner" class="hidden" style="margin-bottom:10px; padding:10px 14px; border-radius:4px; font-size:0.82rem; display:flex; justify-content:space-between; align-items:center; background:#141b24; border:1px solid var(--amber); color:var(--amber);">
+    <div id="studentNotifMsg"></div>
+    <button id="btnDismissStudentNotif" style="background:transparent; border:none; color:var(--steel); cursor:pointer; font-size:1rem; padding:0 4px;" title="بستن">✕</button>
+  </div>
+
 
   <!-- TOP HUD BAR (Active when logged in) -->
   <div id="topBar" class="top-hud hidden">
@@ -1838,73 +1871,247 @@
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:2px solid var(--line); padding-bottom:8px;">
         <div>
           <h3 style="margin:0; color:var(--red); font-weight:900; font-size:1.1rem;">پنل مدیریت دبیر</h3>
-          <span style="font-size:0.75rem; color:var(--steel);">کنترل مراحل، پیگیری دانش‌آموزان و تنظیمات ابری</span>
+          <span style="font-size:0.75rem; color:var(--steel);">کنترل مراحل، تأیید ثبت‌نام‌ها و همگام‌سازی ابری</span>
         </div>
         <button id="btnExitTeacher" class="pixel-btn btn-slate" style="padding:6px 12px; font-size:0.78rem;">خروج از پنل</button>
       </div>
 
-      <!-- 1. Stage Locks Control -->
-      <div style="background:#0b0e14; padding:12px; margin-bottom:12px; border:2px solid var(--line);">
-        <div style="font-weight:900; font-size:0.85rem; color:var(--amber); margin-bottom:8px;">۱. وضعیت قفل برج‌ها و فصول:</div>
-        <div id="teacherStagesControl"></div>
+      <!-- Teacher Navigation Tabs -->
+      <div style="display:flex; gap:8px; margin-bottom:14px; border-bottom:1px solid var(--line); padding-bottom:8px; align-items:center; flex-wrap:wrap;">
+        <button id="btnTeacherTabCurriculum" class="pixel-btn btn-amber active" style="padding:6px 14px; font-size:0.8rem;">تنظیمات مراحل و کلاس</button>
+        <button id="btnTeacherTabApprovals" class="pixel-btn btn-slate" style="padding:6px 14px; font-size:0.8rem; position:relative;">
+          تأیید ثبت‌نام‌ها
+          <span id="teacherPendingBadge" class="pixel-num" style="display:none; margin-right:6px; background:var(--red); color:#fff; border-radius:10px; padding:1px 6px; font-size:0.72rem; font-weight:900;">0</span>
+        </button>
+        <div id="teacherNotifBell" style="margin-right:auto; cursor:pointer; position:relative; display:flex; align-items:center; padding:0 8px; font-size:1.1rem;" title="پیام‌های سیستمی">
+          🔔
+          <span id="teacherNotifCount" style="display:none; position:absolute; top:-4px; left:-4px; background:var(--gold); color:#000; font-size:0.65rem; font-weight:900; border-radius:50%; width:16px; height:16px; text-align:center; line-height:16px;">0</span>
+        </div>
       </div>
 
-      <!-- 2. Students Analytics & CSV Export -->
-      <div style="background:#0b0e14; padding:12px; margin-bottom:12px; border:2px solid var(--line);">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <span style="font-weight:900; font-size:0.85rem; color:var(--xp);">۲. عملکرد دانش‌آموزان و واژه‌های چالشی:</span>
-          <button id="btnExportCSV" class="pixel-btn btn-emerald" style="padding:4px 9px; font-size:0.75rem;">خروجی فایل CSV</button>
+      <!-- TAB 1: CURRICULUM, LOCKS & ANALYTICS -->
+      <div id="teacherContentCurriculum">
+        <!-- 1. Stage Locks Control -->
+        <div style="background:#0b0e14; padding:12px; margin-bottom:12px; border:2px solid var(--line);">
+          <div style="font-weight:900; font-size:0.85rem; color:var(--amber); margin-bottom:8px;">۱. وضعیت قفل برج‌ها و فصول:</div>
+          <div id="teacherStagesControl"></div>
         </div>
-        <div class="table-wrap">
+
+        <!-- 2. Students Analytics & CSV Export -->
+        <div style="background:#0b0e14; padding:12px; margin-bottom:12px; border:2px solid var(--line);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-weight:900; font-size:0.85rem; color:var(--xp);">۲. عملکرد دانش‌آموزان و واژه‌های چالشی:</span>
+            <button id="btnExportCSV" class="pixel-btn btn-emerald" style="padding:4px 9px; font-size:0.75rem;">خروجی فایل CSV</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>نام (شماره تلفن)</th>
+                  <th>رشته</th>
+                  <th>امتیاز</th>
+                  <th>کلمات اشتباه</th>
+                  <th>عملیات</th>
+                </tr>
+              </thead>
+              <tbody id="teacherStudentsBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 3. Add Custom Word -->
+        <div style="background:#0b0e14; padding:12px; margin-bottom:12px; border:2px solid var(--line);">
+          <div style="font-weight:900; font-size:0.85rem; color:var(--ok); margin-bottom:8px;">۳. افزودن واژه جدید به برج:</div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+            <select id="newWordStage" class="pixel-input" style="padding:7px; font-size:0.8rem;"></select>
+            <input type="text" id="newWordText" class="pixel-input" placeholder="واژه (مثلاً: چنگ)" style="padding:7px; font-size:0.8rem;" />
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+            <input type="text" id="newWordM1" class="pixel-input" placeholder="معنای اول" style="padding:7px; font-size:0.8rem;" />
+            <input type="text" id="newWordM2" class="pixel-input" placeholder="معنای دوم" style="padding:7px; font-size:0.8rem;" />
+          </div>
+          <button id="btnAddCustomWord" class="pixel-btn btn-amber" style="width:100%; padding:8px; font-size:0.82rem;">+ ثبت واژه در بازی</button>
+        </div>
+
+        <!-- 4. Class Code & Supabase Settings -->
+        <div style="background:#0b0e14; padding:12px; border:2px solid var(--line);">
+          <div style="font-weight:900; font-size:0.85rem; color:var(--steel); margin-bottom:8px;">۴. قفل کلاس و اتصال دیتابیس Supabase:</div>
+          <div style="display:flex; gap:8px; margin-bottom:8px;">
+            <input type="text" id="teacherClassLock" class="pixel-input" placeholder="کد کلاس الزامی (خالی = آزاد)" style="padding:7px; font-size:0.8rem;" />
+            <button id="btnSaveClassLock" class="pixel-btn btn-amber" style="padding:7px 12px; font-size:0.8rem;">ذخیره کد کلاس</button>
+          </div>
+          <details style="font-size:0.75rem; color:var(--steel); margin-top:6px;">
+            <summary style="cursor:pointer; color:var(--xp); font-weight:800;">تنظیمات دیتابیس Supabase</summary>
+            <p style="margin:6px 0; line-height:1.5;">آدرس URL و کلید Anon پروژه Supabase جهت همگام‌سازی ابری:</p>
+            <input type="text" id="sbUrl" class="pixel-input" style="padding:6px; font-size:0.75rem; margin-bottom:6px;" />
+            <input type="text" id="sbKey" class="pixel-input" style="padding:6px; font-size:0.75rem; margin-bottom:6px;" />
+            <button id="btnSaveSupabase" class="pixel-btn btn-emerald" style="width:100%; padding:6px; font-size:0.75rem;">ذخیره تنظیمات دیتابیس</button>
+          </details>
+        </div>
+      </div>
+
+      <!-- TAB 2: REGISTRATION APPROVAL QUEUE -->
+      <div id="teacherContentApprovals" class="hidden">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button id="filterApprPending" class="pixel-btn btn-amber" style="padding:5px 10px; font-size:0.75rem;">در انتظار تأیید (<span id="countFilterPending">0</span>)</button>
+            <button id="filterApprAll" class="pixel-btn btn-slate" style="padding:5px 10px; font-size:0.75rem;">همه (<span id="countFilterAll">0</span>)</button>
+            <button id="filterApprApproved" class="pixel-btn btn-slate" style="padding:5px 10px; font-size:0.75rem;">تأییدشده (<span id="countFilterApproved">0</span>)</button>
+            <button id="filterApprRejected" class="pixel-btn btn-slate" style="padding:5px 10px; font-size:0.75rem;">ردشده (<span id="countFilterRejected">0</span>)</button>
+          </div>
+          <button id="btnRefreshApprovals" class="pixel-btn btn-cyan" style="padding:5px 10px; font-size:0.75rem;">🔄 به‌روزرسانی لیست</button>
+        </div>
+
+        <!-- Notification banner container in teacher approvals -->
+        <div id="teacherNotifList" class="hidden" style="margin-bottom:12px; background:#0b0e14; border:1px solid var(--gold); padding:8px; border-radius:4px; font-size:0.75rem; max-height:120px; overflow-y:auto;"></div>
+
+        <!-- Approvals List Table -->
+        <div class="table-wrap" style="max-height:420px; overflow-y:auto;">
           <table>
             <thead>
               <tr>
-                <th>نام (شماره تلفن)</th>
+                <th>نام دانش‌آموز</th>
+                <th>شماره تلفن</th>
                 <th>رشته</th>
-                <th>امتیاز</th>
-                <th>کلمات اشتباه</th>
+                <th>زمان ثبت</th>
+                <th>وضعیت</th>
                 <th>عملیات</th>
               </tr>
             </thead>
-            <tbody id="teacherStudentsBody"></tbody>
+            <tbody id="teacherApprovalsBody"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- 3. Add Custom Word -->
-      <div style="background:#0b0e14; padding:12px; margin-bottom:12px; border:2px solid var(--line);">
-        <div style="font-weight:900; font-size:0.85rem; color:var(--ok); margin-bottom:8px;">۳. افزودن واژه جدید به برج:</div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
-          <select id="newWordStage" class="pixel-input" style="padding:7px; font-size:0.8rem;"></select>
-          <input type="text" id="newWordText" class="pixel-input" placeholder="واژه (مثلاً: چنگ)" style="padding:7px; font-size:0.8rem;" />
-        </div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
-          <input type="text" id="newWordM1" class="pixel-input" placeholder="معنای اول" style="padding:7px; font-size:0.8rem;" />
-          <input type="text" id="newWordM2" class="pixel-input" placeholder="معنای دوم" style="padding:7px; font-size:0.8rem;" />
-        </div>
-        <button id="btnAddCustomWord" class="pixel-btn btn-amber" style="width:100%; padding:8px; font-size:0.82rem;">+ ثبت واژه در بازی</button>
-      </div>
+    </div>
+  </div>
 
-      <!-- 4. Class Code & Supabase Settings -->
-      <div style="background:#0b0e14; padding:12px; border:2px solid var(--line);">
-        <div style="font-weight:900; font-size:0.85rem; color:var(--steel); margin-bottom:8px;">۴. قفل کلاس و اتصال دیتابیس Supabase:</div>
-        <div style="display:flex; gap:8px; margin-bottom:8px;">
-          <input type="text" id="teacherClassLock" class="pixel-input" placeholder="کد کلاس الزامی (خالی = آزاد)" style="padding:7px; font-size:0.8rem;" />
-          <button id="btnSaveClassLock" class="pixel-btn btn-amber" style="padding:7px 12px; font-size:0.8rem;">ذخیره کد کلاس</button>
+  <!-- REJECTION REASON MODAL -->
+  <div id="rejectReasonModal" class="hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); display:flex; align-items:center; justify-content:center; z-index:10000; padding:16px;">
+    <div class="pixel-window border-wine" style="max-width:420px; width:100%;">
+      <div class="pixel-window-inner">
+        <h4 style="color:var(--red); margin:0 0 8px 0; font-weight:900; font-size:0.95rem;">رد درخواست ثبت‌نام</h4>
+        <p style="font-size:0.78rem; color:var(--steel); margin-bottom:10px;">
+          لطفاً دلیل رد درخواست را برای دانش‌آموز (<span id="modalRejectStudentName" style="color:#fff;"></span>) ذکر کنید:
+        </p>
+        <textarea id="modalRejectReason" class="pixel-input" rows="3" placeholder="مثال: نام و نام خانوادگی ناقص است یا رشته اشتباه انتخاب شده است." style="width:100%; padding:8px; font-size:0.8rem; margin-bottom:8px;"></textarea>
+        <div id="modalRejectError" class="hidden" style="color:var(--red); font-size:0.75rem; margin-bottom:8px;"></div>
+        <div style="display:flex; justify-content:flex-end; gap:8px;">
+          <button id="btnCancelRejectModal" class="pixel-btn btn-slate" style="padding:6px 12px; font-size:0.78rem;">انصراف</button>
+          <button id="btnConfirmRejectModal" class="pixel-btn btn-wine" style="padding:6px 14px; font-size:0.78rem; background:var(--red); color:#fff;">ثبت رد با دلیل</button>
         </div>
-        <details style="font-size:0.75rem; color:var(--steel); margin-top:6px;">
-          <summary style="cursor:pointer; color:var(--xp); font-weight:800;">تنظیمات دیتابیس Supabase</summary>
-          <p style="margin:6px 0; line-height:1.5;">آدرس URL و کلید Anon پروژه Supabase جهت همگام‌سازی ابری:</p>
-          <input type="text" id="sbUrl" class="pixel-input" style="padding:6px; font-size:0.75rem; margin-bottom:6px;" />
-          <input type="text" id="sbKey" class="pixel-input" style="padding:6px; font-size:0.75rem; margin-bottom:6px;" />
-          <button id="btnSaveSupabase" class="pixel-btn btn-emerald" style="width:100%; padding:6px; font-size:0.75rem;">ذخیره تنظیمات دیتابیس</button>
-        </details>
       </div>
     </div>
   </div>
 
-  <!-- Hidden Teacher Access Trigger (3 rapid clicks on version number) -->
-  <div class="footer-ver" id="versionTrigger">v3.5.1-pixel</div>
+  <!-- VIEW 7: STUDENT PENDING APPROVAL -->
+  <div id="viewPending" class="pixel-window border-amber hidden">
+    <div class="pixel-window-inner text-center">
+      <div style="font-size:2.2rem; margin-bottom:10px;">⏳</div>
+      <h2 style="color:var(--amber); margin-bottom:8px; font-weight:900;">در انتظار تأیید دبیر</h2>
+      <p style="color:var(--steel); font-size:0.85rem; line-height:1.6; margin-bottom:16px;">
+        درخواست ثبت‌نام شما در سامانه ثبت شد.<br>
+        به منظور ارزیابی آموزشی، ورود به قلعه واژگان پس از تأیید دبیر ادبیات امکان‌پذیر خواهد بود.
+      </p>
+
+      <div style="background:#0b0e14; border:1px solid var(--line); border-radius:4px; padding:14px; margin-bottom:18px; text-align:right;">
+        <div style="font-size:0.75rem; color:var(--steel); margin-bottom:8px; font-weight:800;">مشخصات ثبت‌شده:</div>
+        <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:6px;">
+          <span style="color:var(--steel);">نام و نام خانوادگی:</span>
+          <strong id="pendingStudentName" style="color:var(--gold);">-</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:6px;">
+          <span style="color:var(--steel);">شماره همراه:</span>
+          <strong id="pendingStudentPhone" class="pixel-num" style="color:var(--gold);">-</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:6px;">
+          <span style="color:var(--steel);">رشته تحصیلی:</span>
+          <strong id="pendingStudentMajor" style="color:var(--cyan);">-</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:6px;">
+          <span style="color:var(--steel);">زمان ارسال:</span>
+          <span id="pendingStudentTime" style="color:var(--steel); font-size:0.75rem;">-</span>
+        </div>
+        <div id="pendingResubCountRow" style="display:none; justify-content:space-between; font-size:0.82rem;">
+          <span style="color:var(--steel);">دفعات ارسال مجدد:</span>
+          <span id="pendingResubCount" class="pixel-num" style="color:var(--amber);">-</span>
+        </div>
+      </div>
+
+      <div id="pendingStatusMsg" class="hidden" style="font-size:0.8rem; padding:8px; margin-bottom:14px; background:rgba(240,181,96,0.12); border:1px solid var(--amber); color:var(--amber);"></div>
+
+      <div style="display:flex; gap:10px; justify-content:center;">
+        <button id="btnRefreshPending" class="pixel-btn btn-amber" style="padding:8px 16px;">
+          🔄 بررسی مجدد وضعیت
+        </button>
+        <button id="btnPendingLogout" class="pixel-btn btn-slate" style="padding:8px 16px;">
+          خروج از حساب
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW 8: STUDENT REJECTED -->
+  <div id="viewRejected" class="pixel-window border-wine hidden">
+    <div class="pixel-window-inner">
+      <div style="text-align:center; margin-bottom:14px;">
+        <div style="font-size:2.2rem; margin-bottom:6px;">⚠️</div>
+        <h2 style="color:var(--red); margin:0 0 6px 0; font-weight:900;">درخواست ثبت‌نام تأیید نشد</h2>
+        <p style="color:var(--steel); font-size:0.82rem; margin:0;">
+          دبیر ادبیات پس از بررسی، درخواست عضویت شما را با ذکر دلیل زیر رد کرده است.
+        </p>
+      </div>
+
+      <!-- Rejection Reason Card -->
+      <div style="background:rgba(239,68,68,0.08); border:2px solid var(--red); padding:12px; border-radius:4px; margin-bottom:16px;">
+        <div style="font-weight:900; font-size:0.82rem; color:var(--red); margin-bottom:6px;">دلیل رد دبیر:</div>
+        <div id="rejectedReasonText" style="color:#fff; font-size:0.86rem; line-height:1.6; background:#0b0e14; padding:8px 10px; border:1px solid var(--line); border-radius:3px;">
+          -
+        </div>
+      </div>
+
+      <!-- Inline Resubmission Form -->
+      <div style="background:#0b0e14; border:1px solid var(--line); padding:14px; border-radius:4px; margin-bottom:14px;">
+        <div style="font-weight:900; font-size:0.85rem; color:var(--amber); margin-bottom:10px;">
+          اصلاح مشخصات و ارسال مجدد برای بررسی:
+        </div>
+
+        <form id="resubmitForm" style="display:flex; flex-direction:column; gap:10px;">
+          <div>
+            <label style="display:block; font-size:0.75rem; color:var(--steel); margin-bottom:4px;">نام و نام خانوادگی کامل و واقعی:</label>
+            <input type="text" id="resubmitName" class="pixel-input" placeholder="مثال: علی رضایی" required style="width:100%; padding:8px;" />
+          </div>
+
+          <div>
+            <label style="display:block; font-size:0.75rem; color:var(--steel); margin-bottom:4px;">رشته تحصیلی:</label>
+            <select id="resubmitMajor" class="pixel-input" style="width:100%; padding:8px;">
+              <option value="شبکه و نرم‌افزار">شبکه و نرم‌افزار</option>
+              <option value="الکتروتکنیک">الکتروتکنیک</option>
+              <option value="مکانیک خودرو">مکانیک خودرو</option>
+              <option value="صنایع چوب">صنایع چوب</option>
+              <option value="متالورژی">متالورژی</option>
+              <option value="ساخت و تولید">ساخت و تولید</option>
+              <option value="عمومی">سایر / عمومی</option>
+            </select>
+          </div>
+
+          <div id="resubmitError" class="hidden" style="color:var(--red); font-size:0.78rem; padding:6px; background:rgba(239,68,68,0.1); border:1px solid var(--red);"></div>
+
+          <div style="display:flex; gap:10px; margin-top:4px;">
+            <button type="submit" id="btnResubmitSubmit" class="pixel-btn btn-amber" style="flex:1; padding:9px;">
+              ارسال مجدد برای بررسی
+            </button>
+            <button type="button" id="btnRejectedLogout" class="pixel-btn btn-slate" style="padding:9px 16px;">
+              خروج
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden Teacher Access Trigger (3 rapid clicks on version number) --> (3 rapid clicks on version number) -->
+  <div class="footer-ver" id="versionTrigger">v4.1</div>
 
 </div>
 
@@ -4319,7 +4526,12 @@ function mapStudentRow(row) {
     pinHash: row.pin_hash || null,
     xp: Number(row.xp) || 0,
     completedStages: Array.isArray(row.completed_stages) ? row.completed_stages : [],
-    mistakes: (row.mistakes && typeof row.mistakes === "object") ? row.mistakes : {}
+    mistakes: (row.mistakes && typeof row.mistakes === "object") ? row.mistakes : {},
+    accountStatus: row.account_status || "approved",
+    rejectionReason: row.rejection_reason || null,
+    submittedAt: row.submitted_at || null,
+    reviewedAt: row.reviewed_at || null,
+    resubmissionCount: Number(row.resubmission_count) || 0
   };
 }
 
@@ -4394,6 +4606,162 @@ async function syncGlobalState(action = "push") {
     }
   } catch (e) {
     console.warn("syncGlobalState offline:", e);
+  }
+}
+
+
+// ==========================================
+// SUPABASE RPC & NOTIFICATION HELPERS
+// ==========================================
+async function callSupabaseRPC(fnName, params = {}) {
+  if (!appState.sbUrl || !appState.sbKey) return null;
+  const res = await fetch(`${appState.sbUrl}/rest/v1/rpc/${fnName}`, {
+    method: "POST",
+    headers: {
+      "apikey": appState.sbKey,
+      "Authorization": `Bearer ${appState.sbKey}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(params)
+  });
+  if (!res.ok) {
+    let errText = "خطای ارتباط با سرور ابری";
+    try {
+      const errJson = await res.json();
+      errText = errJson.message || errJson.error || errJson.details || errText;
+    } catch (_) {}
+    throw new Error(errText);
+  }
+  return await res.json();
+}
+
+function getLocalNotifications() {
+  try {
+    return JSON.parse(localStorage.getItem("gv_notifications")) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveLocalNotifications(list) {
+  try {
+    localStorage.setItem("gv_notifications", JSON.stringify(list));
+  } catch (e) {}
+}
+
+async function addNotification({ recipient_type, student_phone, title, message }) {
+  const item = {
+    id: Date.now() + Math.floor(Math.random() * 1000),
+    recipient_type,
+    student_phone: student_phone || null,
+    title,
+    message,
+    is_read: false,
+    created_at: new Date().toISOString()
+  };
+
+  const list = getLocalNotifications();
+  list.unshift(item);
+  saveLocalNotifications(list.slice(0, 100));
+
+  if (appState.sbUrl && appState.sbKey) {
+    try {
+      await fetch(`${appState.sbUrl}/rest/v1/gv_notifications`, {
+        method: "POST",
+        headers: {
+          "apikey": appState.sbKey,
+          "Authorization": `Bearer ${appState.sbKey}`,
+          "Content-Type": "application/json",
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify({
+          recipient_type: item.recipient_type,
+          student_phone: item.student_phone,
+          title: item.title,
+          message: item.message,
+          is_read: false
+        })
+      });
+    } catch (e) {
+      console.warn("Cloud notification sync offline:", e);
+    }
+  }
+}
+
+async function fetchNotificationsFor(recipientType, studentPhone = null) {
+  let list = [];
+  if (appState.sbUrl && appState.sbKey) {
+    try {
+      let query = `${appState.sbUrl}/rest/v1/gv_notifications?recipient_type=eq.${recipientType}&order=created_at.desc&limit=30`;
+      if (studentPhone && recipientType === "student") {
+        query += `&student_phone=eq.${encodeURIComponent(studentPhone)}`;
+      }
+      const res = await fetch(query, {
+        headers: {
+          "apikey": appState.sbKey,
+          "Authorization": `Bearer ${appState.sbKey}`
+        }
+      });
+      if (res.ok) {
+        const cloudData = await res.json();
+        if (Array.isArray(cloudData)) list = cloudData;
+      }
+    } catch (e) {
+      console.warn("fetchNotifications offline:", e);
+    }
+  }
+
+  if (!list || list.length === 0) {
+    list = getLocalNotifications().filter(n => {
+      if (n.recipient_type !== recipientType) return false;
+      if (studentPhone && n.student_phone && n.student_phone !== studentPhone) return false;
+      return true;
+    });
+  }
+  return list;
+}
+
+async function markNotificationAsRead(notifId) {
+  const localList = getLocalNotifications();
+  const item = localList.find(n => n.id === notifId);
+  if (item) {
+    item.is_read = true;
+    saveLocalNotifications(localList);
+  }
+  if (appState.sbUrl && appState.sbKey && notifId) {
+    try {
+      await fetch(`${appState.sbUrl}/rest/v1/gv_notifications?id=eq.${notifId}`, {
+        method: "PATCH",
+        headers: {
+          "apikey": appState.sbKey,
+          "Authorization": `Bearer ${appState.sbKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ is_read: true })
+      });
+    } catch (e) {
+      console.warn("markNotificationAsRead offline:", e);
+    }
+  }
+}
+
+async function checkStudentNotifications(studentPhone) {
+  if (!studentPhone) return;
+  const notifs = await fetchNotificationsFor("student", studentPhone);
+  const unread = notifs.find(n => !n.is_read);
+  const banner = document.getElementById("studentNotifBanner");
+  const msgEl = document.getElementById("studentNotifMsg");
+  const dismissBtn = document.getElementById("btnDismissStudentNotif");
+
+  if (unread && banner && msgEl) {
+    msgEl.innerHTML = `<strong>${unread.title}:</strong> ${unread.message}`;
+    banner.classList.remove("hidden");
+    dismissBtn.onclick = async () => {
+      await markNotificationAsRead(unread.id);
+      banner.classList.add("hidden");
+    };
+  } else if (banner) {
+    banner.classList.add("hidden");
   }
 }
 
@@ -4703,11 +5071,42 @@ document.getElementById("authForm").addEventListener("submit", async (e) => {
       pinHash: hashed,
       xp: (user && user.xp) || 0,
       completedStages: (user && user.completedStages) || [],
-      mistakes: (user && user.mistakes) || {}
+      mistakes: (user && user.mistakes) || {},
+      accountStatus: "pending",
+      rejectionReason: null,
+      submittedAt: new Date().toISOString(),
+      reviewedAt: null,
+      resubmissionCount: 0
     };
+
+    if (appState.sbUrl && appState.sbKey) {
+      try {
+        await callSupabaseRPC("register_student", {
+          p_phone: code,
+          p_pin_hash: hashed,
+          p_name: name,
+          p_major: major
+        });
+      } catch (rpcErr) {
+        console.warn("register_student RPC failed, falling back to local:", rpcErr);
+        if (rpcErr.message && rpcErr.message.includes("قبلاً")) {
+          authError.textContent = rpcErr.message;
+          authError.classList.remove("hidden");
+          playWrongSound();
+          return;
+        }
+      }
+    }
+
     appState.students[code] = user;
     saveLocal();
-    await syncStudentToCloud(user);
+
+    await addNotification({
+      recipient_type: "teacher",
+      student_phone: code,
+      title: "ثبت‌نام جدید",
+      message: `دانش‌آموز ${name} (${major}) با شماره ${code} ثبت‌نام کرد و منتظر تأیید است.`
+    });
   } else {
     if (!user) {
       authError.textContent = "حسابی با این شماره تلفن پیدا نشد. ابتدا از تب «ثبت‌نام جدید» حساب بسازید.";
@@ -4745,10 +5144,36 @@ document.getElementById("btnLogout").addEventListener("click", () => {
 // 5. VIEW NAVIGATION & DASHBOARD
 // ==========================================
 function showView(viewId) {
-  ["viewAuth", "viewMap", "viewStudy", "viewArena", "viewLeaderboard", "viewTeacher"].forEach(id => {
-    document.getElementById(id).classList.add("hidden");
+  const allViews = [
+    "viewAuth", "viewMap", "viewStudy", "viewArena",
+    "viewLeaderboard", "viewTeacher", "viewPending", "viewRejected"
+  ];
+  allViews.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add("hidden");
   });
-  document.getElementById(viewId).classList.remove("hidden");
+
+  // Guard: Pending or Rejected students cannot access gameplay views
+  const user = appState.currentUserCode ? appState.students[appState.currentUserCode] : null;
+  const isGameplayView = ["viewMap", "viewStudy", "viewArena", "viewLeaderboard"].includes(viewId);
+
+  if (isGameplayView && user) {
+    if (user.accountStatus === "pending") {
+      renderPendingView(user);
+      document.getElementById("viewPending").classList.remove("hidden");
+      document.getElementById("topBar").classList.add("hidden");
+      return;
+    }
+    if (user.accountStatus === "rejected") {
+      renderRejectedView(user);
+      document.getElementById("viewRejected").classList.remove("hidden");
+      document.getElementById("topBar").classList.add("hidden");
+      return;
+    }
+  }
+
+  const target = document.getElementById(viewId);
+  if (target) target.classList.remove("hidden");
 }
 
 function enterDashboard() {
@@ -4758,6 +5183,24 @@ function enterDashboard() {
     return;
   }
 
+  // Account Status Routing
+  if (user.accountStatus === "pending") {
+    renderPendingView(user);
+    showView("viewPending");
+    document.getElementById("topBar").classList.add("hidden");
+    checkStudentNotifications(user.code);
+    return;
+  }
+
+  if (user.accountStatus === "rejected") {
+    renderRejectedView(user);
+    showView("viewRejected");
+    document.getElementById("topBar").classList.add("hidden");
+    checkStudentNotifications(user.code);
+    return;
+  }
+
+  // Approved Student
   document.getElementById("topBar").classList.remove("hidden");
   document.getElementById("userGreeting").textContent = user.name;
   document.getElementById("userXP").textContent = user.xp;
@@ -4765,6 +5208,45 @@ function enterDashboard() {
 
   renderTowerMap();
   showView("viewMap");
+  checkStudentNotifications(user.code);
+}
+
+function renderPendingView(user) {
+  const nameEl = document.getElementById("pendingStudentName");
+  const phoneEl = document.getElementById("pendingStudentPhone");
+  const majorEl = document.getElementById("pendingStudentMajor");
+  const timeEl = document.getElementById("pendingStudentTime");
+  const resubRow = document.getElementById("pendingResubCountRow");
+  const resubCountEl = document.getElementById("pendingResubCount");
+
+  if (nameEl) nameEl.textContent = user.name || "-";
+  if (phoneEl) phoneEl.textContent = user.code || "-";
+  if (majorEl) majorEl.textContent = user.major || "-";
+  if (timeEl) {
+    timeEl.textContent = user.submittedAt
+      ? new Date(user.submittedAt).toLocaleDateString("fa-IR") + " " + new Date(user.submittedAt).toLocaleTimeString("fa-IR", { hour: '2-digit', minute: '2-digit' })
+      : "به تازگی";
+  }
+  if (resubRow && resubCountEl) {
+    if (user.resubmissionCount > 0) {
+      resubRow.style.display = "flex";
+      resubCountEl.textContent = `${user.resubmissionCount} بار`;
+    } else {
+      resubRow.style.display = "none";
+    }
+  }
+}
+
+function renderRejectedView(user) {
+  const reasonEl = document.getElementById("rejectedReasonText");
+  const nameInput = document.getElementById("resubmitName");
+  const majorSelect = document.getElementById("resubmitMajor");
+  const errBox = document.getElementById("resubmitError");
+
+  if (reasonEl) reasonEl.textContent = user.rejectionReason || "دلیلی ثبت نشده است. لطفاً مشخصات خود را بررسی و تصحیح نمایید.";
+  if (nameInput) nameInput.value = user.name || "";
+  if (majorSelect && user.major) majorSelect.value = user.major;
+  if (errBox) errBox.classList.add("hidden");
 }
 
 function switchWorld(wId) {
@@ -5659,7 +6141,9 @@ if (defBackBtn) {
 // 8. LEADERBOARD VIEW
 // ==========================================
 function renderLeaderboardTable() {
-  const allStudents = Object.values(appState.students).sort((a, b) => (b.xp || 0) - (a.xp || 0));
+  const allStudents = Object.values(appState.students)
+    .filter(s => s.accountStatus === "approved" || !s.accountStatus)
+    .sort((a, b) => (b.xp || 0) - (a.xp || 0));
   const currentUser = appState.students[appState.currentUserCode] || {};
   const currentMajor = currentUser.major || "";
 
@@ -5745,12 +6229,223 @@ document.getElementById("versionTrigger").addEventListener("click", () => {
   }
 });
 
+
+// ==========================================
+// TEACHER APPROVAL QUEUE & EVENT HANDLERS
+// ==========================================
+let currentApprovalsFilter = "pending";
+let pendingRejectCode = null;
+
+function renderTeacherApprovals() {
+  const students = Object.values(appState.students);
+
+  const pendingCount = students.filter(s => s.accountStatus === "pending").length;
+  const approvedCount = students.filter(s => s.accountStatus === "approved" || !s.accountStatus).length;
+  const rejectedCount = students.filter(s => s.accountStatus === "rejected").length;
+
+  const countPendingEl = document.getElementById("countFilterPending");
+  const countAllEl = document.getElementById("countFilterAll");
+  const countApprovedEl = document.getElementById("countFilterApproved");
+  const countRejectedEl = document.getElementById("countFilterRejected");
+  const badgeEl = document.getElementById("teacherPendingBadge");
+
+  if (countPendingEl) countPendingEl.textContent = pendingCount;
+  if (countAllEl) countAllEl.textContent = students.length;
+  if (countApprovedEl) countApprovedEl.textContent = approvedCount;
+  if (countRejectedEl) countRejectedEl.textContent = rejectedCount;
+
+  if (badgeEl) {
+    if (pendingCount > 0) {
+      badgeEl.textContent = pendingCount;
+      badgeEl.style.display = "inline-block";
+    } else {
+      badgeEl.style.display = "none";
+    }
+  }
+
+  let filtered = students;
+  if (currentApprovalsFilter === "pending") {
+    filtered = students.filter(s => s.accountStatus === "pending");
+  } else if (currentApprovalsFilter === "approved") {
+    filtered = students.filter(s => s.accountStatus === "approved" || !s.accountStatus);
+  } else if (currentApprovalsFilter === "rejected") {
+    filtered = students.filter(s => s.accountStatus === "rejected");
+  }
+
+  filtered.sort((a, b) => {
+    const tA = a.submittedAt ? new Date(a.submittedAt).getTime() : 0;
+    const tB = b.submittedAt ? new Date(b.submittedAt).getTime() : 0;
+    return tB - tA;
+  });
+
+  const tbody = document.getElementById("teacherApprovalsBody");
+  if (!tbody) return;
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:18px; color:var(--steel);">هیچ رکوردی در این بخش یافت نشد.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(s => {
+    const status = s.accountStatus || "approved";
+    let statusBadge = "";
+    if (status === "pending") {
+      statusBadge = '<span class="badge-status status-pending">در انتظار تأیید</span>';
+    } else if (status === "approved") {
+      statusBadge = '<span class="badge-status status-approved">تأییدشده</span>';
+    } else if (status === "rejected") {
+      statusBadge = `<span class="badge-status status-rejected" title="${s.rejectionReason || ""}">ردشده</span>`;
+    }
+
+    const timeStr = s.submittedAt ? new Date(s.submittedAt).toLocaleDateString("fa-IR") : "-";
+    const resubBadge = (s.resubmissionCount > 0)
+      ? `<span style="font-size:0.7rem; color:var(--amber); margin-right:4px;">(ارسال ${s.resubmissionCount})</span>`
+      : "";
+
+    let actionBtns = "";
+    if (status === "pending") {
+      actionBtns = `
+        <div style="display:flex; gap:6px;">
+          <button class="pixel-btn btn-emerald" onclick="handleTeacherApprove('${s.code}')" style="padding:4px 8px; font-size:0.72rem;">تأیید</button>
+          <button class="pixel-btn btn-wine" onclick="openRejectModal('${s.code}')" style="padding:4px 8px; font-size:0.72rem; background:var(--red); color:#fff;">رد با دلیل</button>
+        </div>
+      `;
+    } else if (status === "rejected") {
+      actionBtns = `
+        <div style="font-size:0.72rem; color:var(--red); max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${s.rejectionReason || ""}">
+          دلیل: ${s.rejectionReason || "-"}
+        </div>
+      `;
+    } else {
+      actionBtns = '<span style="font-size:0.75rem; color:var(--emerald);">فعال در بازی</span>';
+    }
+
+    return `
+      <tr>
+        <td><strong>${s.name}</strong> ${resubBadge}</td>
+        <td class="pixel-num" style="direction:ltr; text-align:right;">${s.code}</td>
+        <td style="color:var(--cyan); font-size:0.78rem;">${s.major || "-"}</td>
+        <td style="font-size:0.75rem; color:var(--steel);">${timeStr}</td>
+        <td>${statusBadge}</td>
+        <td>${actionBtns}</td>
+      </tr>
+    `;
+  }).join("");
+}
+
+async function teacherReviewStudentAction(studentPhone, action, reason = null) {
+  let success = false;
+  try {
+    if (appState.sbUrl && appState.sbKey) {
+      await callSupabaseRPC("teacher_review_student", {
+        p_admin_pass: TEACHER_PASS,
+        p_student_phone: studentPhone,
+        p_action: action,
+        p_reason: reason
+      });
+    }
+    success = true;
+  } catch (rpcErr) {
+    console.warn("Cloud teacher review failed, falling back to local:", rpcErr);
+    success = true;
+  }
+
+  if (success) {
+    const st = appState.students[studentPhone];
+    if (st) {
+      st.accountStatus = action;
+      st.rejectionReason = action === "rejected" ? reason : null;
+      st.reviewedAt = new Date().toISOString();
+      saveLocal();
+    }
+
+    await addNotification({
+      recipient_type: "student",
+      student_phone: studentPhone,
+      title: action === "approved" ? "تأیید حساب کاربری" : "رد درخواست ثبت‌نام",
+      message: action === "approved"
+        ? "حساب کاربری شما توسط دبیر با موفقیت تأیید شد. اکنون می‌توانید وارد قلعه واژگان شوید."
+        : `درخواست ثبت‌نام شما مورد تأیید قرار نگرفت. دلیل دبیر: ${reason || "نامشخص"}`
+    });
+
+    playCorrectSound();
+    renderTeacherApprovals();
+    renderTeacherStudents();
+  }
+}
+
+window.handleTeacherApprove = async function(phone) {
+  if (confirm(`آیا از تأیید حساب کاربری با شماره ${phone} اطمینان دارید؟`)) {
+    await teacherReviewStudentAction(phone, "approved");
+  }
+};
+
+window.openRejectModal = function(phone) {
+  const student = appState.students[phone];
+  if (!student) return;
+  pendingRejectCode = phone;
+  const nameEl = document.getElementById("modalRejectStudentName");
+  const reasonInput = document.getElementById("modalRejectReason");
+  const errEl = document.getElementById("modalRejectError");
+  const modal = document.getElementById("rejectReasonModal");
+
+  if (nameEl) nameEl.textContent = `${student.name} (${student.code})`;
+  if (reasonInput) reasonInput.value = "";
+  if (errEl) errEl.classList.add("hidden");
+  if (modal) modal.classList.remove("hidden");
+};
+
+function closeRejectModal() {
+  pendingRejectCode = null;
+  const modal = document.getElementById("rejectReasonModal");
+  if (modal) modal.classList.add("hidden");
+}
+
+async function loadTeacherNotifications() {
+  const notifs = await fetchNotificationsFor("teacher");
+  const unreadCount = notifs.filter(n => !n.is_read).length;
+  const notifCountBadge = document.getElementById("teacherNotifCount");
+  const notifListEl = document.getElementById("teacherNotifList");
+
+  if (notifCountBadge) {
+    if (unreadCount > 0) {
+      notifCountBadge.textContent = unreadCount;
+      notifCountBadge.style.display = "inline-block";
+    } else {
+      notifCountBadge.style.display = "none";
+    }
+  }
+
+  if (notifListEl) {
+    if (notifs.length > 0) {
+      notifListEl.innerHTML = notifs.slice(0, 10).map(n => `
+        <div style="padding:4px 0; border-bottom:1px solid #1a2438; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <strong style="color:var(--amber);">${n.title}:</strong> ${n.message}
+            <span style="font-size:0.7rem; color:var(--steel); margin-right:6px;">${new Date(n.created_at).toLocaleDateString("fa-IR")}</span>
+          </div>
+          ${!n.is_read ? `<button onclick="handleMarkNotif('${n.id}')" style="font-size:0.68rem; background:none; border:1px solid var(--steel); color:var(--steel); cursor:pointer; padding:2px 5px;">خوانده شد</button>` : ''}
+        </div>
+      `).join("");
+    } else {
+      notifListEl.innerHTML = '<div style="color:var(--steel); text-align:center;">پیام سیستمی جدیدی وجود ندارد.</div>';
+    }
+  }
+}
+
+window.handleMarkNotif = async function(id) {
+  await markNotificationAsRead(id);
+  await loadTeacherNotifications();
+};
+
 async function openTeacherPanel() {
   await syncGlobalState("pull");
   await fetchAllStudentsFromCloud();
   document.getElementById("teacherClassLock").value = appState.classLock;
   document.getElementById("sbUrl").value = appState.sbUrl;
   document.getElementById("sbKey").value = appState.sbKey;
+  renderTeacherApprovals();
+  loadTeacherNotifications();
 
   // Stages Toggle Control
   const stageBox = document.getElementById("teacherStagesControl");
@@ -5906,6 +6601,194 @@ document.getElementById("btnExportCSV").addEventListener("click", () => {
   link.href = URL.createObjectURL(blob);
   link.download = "gozaresh-adabiat-ghale-vajegan.csv";
   link.click();
+});
+
+
+// ==========================================
+// APPROVAL SYSTEM EVENT LISTENERS
+// ==========================================
+
+// Teacher Panel Tab Switching
+document.getElementById("btnTeacherTabCurriculum")?.addEventListener("click", () => {
+  document.getElementById("btnTeacherTabCurriculum").className = "pixel-btn btn-amber active";
+  document.getElementById("btnTeacherTabApprovals").className = "pixel-btn btn-slate";
+  document.getElementById("teacherContentCurriculum")?.classList.remove("hidden");
+  document.getElementById("teacherContentApprovals")?.classList.add("hidden");
+});
+
+document.getElementById("btnTeacherTabApprovals")?.addEventListener("click", () => {
+  document.getElementById("btnTeacherTabCurriculum").className = "pixel-btn btn-slate";
+  document.getElementById("btnTeacherTabApprovals").className = "pixel-btn btn-amber active";
+  document.getElementById("teacherContentCurriculum")?.classList.add("hidden");
+  document.getElementById("teacherContentApprovals")?.classList.remove("hidden");
+  renderTeacherApprovals();
+});
+
+// Teacher Notifications Toggle
+document.getElementById("teacherNotifBell")?.addEventListener("click", () => {
+  const notifList = document.getElementById("teacherNotifList");
+  if (notifList) {
+    notifList.classList.toggle("hidden");
+  }
+});
+
+// Approvals Filter Buttons
+["filterApprPending", "filterApprAll", "filterApprApproved", "filterApprRejected"].forEach(btnId => {
+  document.getElementById(btnId)?.addEventListener("click", () => {
+    ["filterApprPending", "filterApprAll", "filterApprApproved", "filterApprRejected"].forEach(id => {
+      const b = document.getElementById(id);
+      if (b) b.className = "pixel-btn btn-slate";
+    });
+    const activeBtn = document.getElementById(btnId);
+    if (activeBtn) activeBtn.className = "pixel-btn btn-amber";
+    currentApprovalsFilter = btnId.replace("filterAppr", "").toLowerCase();
+    renderTeacherApprovals();
+  });
+});
+
+// Refresh Approvals
+document.getElementById("btnRefreshApprovals")?.addEventListener("click", async () => {
+  const btn = document.getElementById("btnRefreshApprovals");
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = "در حال دریافت...";
+  }
+  await fetchAllStudentsFromCloud();
+  renderTeacherApprovals();
+  if (btn) {
+    btn.disabled = false;
+    btn.textContent = "🔄 به‌روزرسانی لیست";
+  }
+});
+
+// Modal Cancel / Confirm
+document.getElementById("btnCancelRejectModal")?.addEventListener("click", closeRejectModal);
+
+document.getElementById("btnConfirmRejectModal")?.addEventListener("click", async () => {
+  const reason = document.getElementById("modalRejectReason")?.value.trim();
+  const errEl = document.getElementById("modalRejectError");
+  if (!reason) {
+    if (errEl) {
+      errEl.textContent = "ذکر دلیل رد درخواست الزامی است.";
+      errEl.classList.remove("hidden");
+    }
+    return;
+  }
+  if (pendingRejectCode) {
+    await teacherReviewStudentAction(pendingRejectCode, "rejected", reason);
+    closeRejectModal();
+  }
+});
+
+// Student Pending Screen: Refresh Status
+document.getElementById("btnRefreshPending")?.addEventListener("click", async () => {
+  const btn = document.getElementById("btnRefreshPending");
+  const msg = document.getElementById("pendingStatusMsg");
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = "در حال بررسی...";
+  }
+
+  let s = null;
+  if (appState.currentUserCode) {
+    s = await fetchStudentRecord(appState.currentUserCode);
+  }
+
+  if (btn) {
+    btn.disabled = false;
+    btn.textContent = "🔄 بررسی مجدد وضعیت";
+  }
+
+  if (s) {
+    if (s.accountStatus === "approved") {
+      playCorrectSound();
+      enterDashboard();
+      return;
+    } else if (s.accountStatus === "rejected") {
+      playWrongSound();
+      enterDashboard();
+      return;
+    }
+  }
+
+  if (msg) {
+    msg.textContent = "حساب شما هنوز در انتظار بررسی دبیر است. لطفاً کمی بعد مجدداً بررسی فرمایید.";
+    msg.classList.remove("hidden");
+    setTimeout(() => msg.classList.add("hidden"), 4000);
+  }
+});
+
+// Student Pending Screen: Logout
+document.getElementById("btnPendingLogout")?.addEventListener("click", () => {
+  appState.currentUserCode = null;
+  localStorage.removeItem("gv_session_code");
+  showView("viewAuth");
+  document.getElementById("topBar")?.classList.add("hidden");
+});
+
+// Student Rejected Screen: Logout
+document.getElementById("btnRejectedLogout")?.addEventListener("click", () => {
+  appState.currentUserCode = null;
+  localStorage.removeItem("gv_session_code");
+  showView("viewAuth");
+  document.getElementById("topBar")?.classList.add("hidden");
+});
+
+// Student Rejected Screen: Resubmit Form
+document.getElementById("resubmitForm")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const user = appState.students[appState.currentUserCode];
+  if (!user) return;
+
+  const newName = document.getElementById("resubmitName")?.value.trim();
+  const newMajor = document.getElementById("resubmitMajor")?.value;
+  const errBox = document.getElementById("resubmitError");
+  if (errBox) errBox.classList.add("hidden");
+
+  if (!newName) {
+    if (errBox) {
+      errBox.textContent = "لطفاً نام و نام خانوادگی خود را کامل وارد کنید.";
+      errBox.classList.remove("hidden");
+    }
+    return;
+  }
+
+  try {
+    if (appState.sbUrl && appState.sbKey) {
+      await callSupabaseRPC("resubmit_student_registration", {
+        p_phone: user.code,
+        p_pin: user.pinHash,
+        p_name: newName,
+        p_major: newMajor
+      });
+    }
+
+    user.name = newName;
+    user.major = newMajor;
+    user.accountStatus = "pending";
+    user.rejectionReason = null;
+    user.submittedAt = new Date().toISOString();
+    user.resubmissionCount = (user.resubmissionCount || 0) + 1;
+
+    appState.students[user.code] = user;
+    saveLocal();
+
+    await addNotification({
+      recipient_type: "teacher",
+      student_phone: user.code,
+      title: "ارسال مجدد مشخصات",
+      message: `دانش‌آموز ${newName} (${newMajor}) اطلاعات خود را جهت بررسی مجدد ارسال کرد.`
+    });
+
+    playCorrectSound();
+    enterDashboard();
+  } catch (err) {
+    if (errBox) {
+      errBox.textContent = err.message || "خطا در ارسال مجدد اطلاعات.";
+      errBox.classList.remove("hidden");
+    }
+    playWrongSound();
+  }
 });
 
 document.getElementById("btnExitTeacher").addEventListener("click", () => {
