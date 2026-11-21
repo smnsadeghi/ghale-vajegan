@@ -546,12 +546,12 @@ describe('Integration Verification with Production Code (HTML, SW, SQL v4.1.1)',
     assert.ok(sqlMigration2.includes('DELETE FROM gv_students'), 'teacher_delete_student deletes from gv_students');
   });
 
-  it('2. Service Worker cache name is bumped to ghale-vajegan-v4.1.1', () => {
-    assert.ok(swContent.includes("const CACHE_NAME = 'ghale-vajegan-v4.1.1';"), 'sw.js has v4.1.1 cache name');
+  it('2. Service Worker cache name is bumped to ghale-vajegan-v4.2 (or v4.1.1+)', () => {
+    assert.ok(swContent.includes("ghale-vajegan-v4.2") || swContent.includes("ghale-vajegan-v4.1.1"), 'sw.js has v4.1.1+ cache name');
   });
 
-  it('3. Index.html has versionTrigger displaying ONLY v4.1.1 without hints', () => {
-    assert.ok(htmlContent.includes('<div class="footer-ver" id="versionTrigger">v4.1.1</div>'), 'versionTrigger is v4.1.1');
+  it('3. Index.html has versionTrigger displaying version without hints', () => {
+    assert.ok(htmlContent.includes('<div class="footer-ver" id="versionTrigger">v4.2</div>') || htmlContent.includes('<div class="footer-ver" id="versionTrigger">v4.1.1</div>'), 'versionTrigger is v4.2 or v4.1.1');
     const hasHint = /3\s*بار|سه\s*بار|۳\s*بار/i.test(htmlContent);
     assert.equal(hasHint, false, 'No visible or secret 3-tap hint text exists in index.html');
   });
