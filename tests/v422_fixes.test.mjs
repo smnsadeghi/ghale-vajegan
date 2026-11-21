@@ -5,7 +5,7 @@ import fs from 'node:fs';
 const htmlContent = fs.readFileSync('C:/Users/acer/.gemini/antigravity/scratch/ghale-vajegan/index.html', 'utf8');
 const swContent = fs.readFileSync('C:/Users/acer/.gemini/antigravity/scratch/ghale-vajegan/sw.js', 'utf8');
 
-describe('v4.3.0 Zero-Scroll App Shell & Production Architecture', () => {
+describe('v4.3.1 Zero-Scroll App Shell & Production Architecture', () => {
 
   describe('1. Missing Quiz Options & #phaseQuiz Cleanup', () => {
     it('uses correct qzOptions container ID in renderNextQuizQuestion', () => {
@@ -80,12 +80,12 @@ describe('v4.3.0 Zero-Scroll App Shell & Production Architecture', () => {
   });
 
   describe('5. Version & PWA Cache Bump', () => {
-    it('bumps version trigger to v4.3.0', () => {
-      assert.ok(htmlContent.includes('id="versionTrigger">v4.3.0</div>'), 'Version trigger must be v4.3.0');
+    it('bumps version trigger to v4.3.1', () => {
+      assert.ok(htmlContent.includes('id="versionTrigger">v4.3.1</div>'), 'Version trigger must be v4.3.1');
     });
 
-    it('bumps Service Worker cache name to ghale-vajegan-v4.3.0', () => {
-      assert.ok(swContent.includes("const CACHE_NAME = 'ghale-vajegan-v4.3.0';"), 'sw.js cache must be v4.3.0');
+    it('bumps Service Worker cache name to ghale-vajegan-v4.3.1', () => {
+      assert.ok(swContent.includes("const CACHE_NAME = 'ghale-vajegan-v4.3.1';"), 'sw.js cache must be v4.3.1');
     });
   });
 

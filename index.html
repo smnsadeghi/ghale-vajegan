@@ -110,11 +110,26 @@
     }
 
     /* Centered Auth and Status Cards with Zero Empty Void */
+    #viewAuth {
+      background: transparent !important;
+    }
     #viewAuth:not(.hidden),
     #viewPending:not(.hidden),
     #viewRejected:not(.hidden) {
       justify-content: center;
       align-items: stretch;
+      background: transparent !important;
+    }
+
+    /* Browser Autofill Dark Theme Fix */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 1000px #0d1017 inset !important;
+      -webkit-text-fill-color: var(--ink) !important;
+      caret-color: var(--ink) !important;
+      transition: background-color 5000s ease-in-out 0s;
     }
 
     /* Double-Layered Stepped Pixel Windows */
@@ -1167,6 +1182,24 @@
     }
     .footer-ver:hover { color: var(--amber); opacity: 1; }
     body.in-battle .footer-ver { display: none !important; }
+    body.in-battle #topBar,
+    body.in-battle .top-hud:not(.hud-arena),
+    body.in-battle .app-header,
+    body.in-battle header {
+      display: none !important;
+    }
+    body.in-battle #viewArena .rpg-dialog-inner {
+      padding: 10px;
+    }
+    body.in-battle #viewArena .rpg-question {
+      margin-bottom: 8px;
+    }
+    body.in-battle #viewArena .rpg-option-btn {
+      padding: 8px 10px;
+      font-size: 0.82rem;
+      line-height: 1.35;
+      min-height: 40px;
+    }
 
     #viewArena:not(.hidden) {
       flex: 1;
@@ -1568,8 +1601,9 @@
   </div>
 
   <!-- VIEW 1: AUTH (LOGIN & REGISTRATION) -->
-  <div id="viewAuth" class="pixel-window border-amber">
-    <div class="pixel-window-inner">
+  <div id="viewAuth">
+    <div class="pixel-window border-amber" style="height:auto; flex:0 0 auto; margin-bottom:0;">
+      <div class="pixel-window-inner">
       <div style="text-align:center; margin-bottom:16px;">
         <svg viewBox="0 0 32 32" width="44" height="44" style="margin-bottom:4px;" shape-rendering="crispEdges">
           <rect x="2" y="10" width="6" height="18" fill="#566c86" />
@@ -1614,12 +1648,9 @@
               <option value="معماری">معماری</option>
               <option value="حسابداری">حسابداری</option>
               <option value="مکانیک">مکانیک</option>
-              <option value="علوم تجربی">علوم تجربی</option>
-              <option value="ریاضی و فیزیک">ریاضی و فیزیک</option>
-              <option value="ادبیات و علوم انسانی">ادبیات و علوم انسانی</option>
             </select>
           </div>
-          <div class="form-group">
+          <div class="form-group" id="groupClassCode" style="display:none;">
             <label>کد کلاس (در صورت اعلام دبیر)</label>
             <input type="text" id="authClassCode" class="pixel-input" placeholder="اختیاری (مثلاً: 101)" />
           </div>
@@ -1634,8 +1665,9 @@
 
         <button type="submit" id="authSubmitBtn" class="pixel-btn btn-amber" style="width:100%; font-size:0.95rem;">ورود به قلعه</button>
       </form>
-      <div class="footer-ver" id="versionTrigger">v4.3.0</div>
+      <div class="footer-ver" id="versionTrigger">v4.3.1</div>
     </div>
+  </div>
   </div>
 
   <!-- VIEW 2: TOWER MAP (DASHBOARD) -->
@@ -1815,9 +1847,7 @@
         <div class="arena-torch-radial"></div>
       </div>
 
-      <!-- Layer 3: Midground Environmental Props -->
-      <img src="assets/props/prop_dead_tree.png" style="position:absolute; bottom:55px; left:140px; height:50px; z-index:3; pointer-events:none; image-rendering:pixelated;" alt="Dead Tree">
-      <img src="assets/props/prop_signboard.png" style="position:absolute; bottom:32px; right:150px; height:36px; z-index:3; pointer-events:none; image-rendering:pixelated;" alt="Signboard">
+
 
       <!-- Layer 4: Captive Princess & Rescued Portal (Revealed on Stage Victory) -->
       <div id="gatePrincess" class="gate-princess hidden">
@@ -2219,12 +2249,9 @@
             <label style="display:block; font-size:0.75rem; color:var(--steel); margin-bottom:4px;">رشته تحصیلی:</label>
             <select id="resubmitMajor" class="pixel-input" style="width:100%; padding:8px;">
               <option value="شبکه و نرم‌افزار">شبکه و نرم‌افزار</option>
-              <option value="الکتروتکنیک">الکتروتکنیک</option>
-              <option value="مکانیک خودرو">مکانیک خودرو</option>
-              <option value="صنایع چوب">صنایع چوب</option>
-              <option value="متالورژی">متالورژی</option>
-              <option value="ساخت و تولید">ساخت و تولید</option>
-              <option value="عمومی">سایر / عمومی</option>
+              <option value="معماری">معماری</option>
+              <option value="حسابداری">حسابداری</option>
+              <option value="مکانیک">مکانیک</option>
             </select>
           </div>
 
@@ -5310,6 +5337,10 @@ tabRegister.addEventListener("click", () => {
   tabRegister.className = "pixel-btn btn-amber";
   tabLogin.className = "pixel-btn btn-slate";
   registerFields.classList.remove("hidden");
+  const grpClass = document.getElementById("groupClassCode");
+  if (grpClass) {
+    grpClass.style.display = (appState && appState.classLock && appState.classLock.trim().length > 0) ? "block" : "none";
+  }
   authSubmitBtn.textContent = "ساخت حساب و شروع بازی";
   authError.classList.add("hidden");
   playSelectSound();
