@@ -773,6 +773,92 @@
     .world-header.world-3 { border-color: var(--ok); }
     .world-header.world-4 { border-color: var(--red); background: #16070a; }
 
+    
+    /* 4-World Portal Grid & Tabs */
+    .world-portal-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 14px 0 10px 0;
+    }
+    @media (max-width: 520px) {
+      .world-portal-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+    }
+    .portal-tab {
+      min-height: 52px;
+      background: var(--panel);
+      border: 2px solid var(--line);
+      color: var(--ink);
+      padding: 8px 10px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: right;
+      position: relative;
+      transition: all 0.15s steps(2);
+      clip-path: polygon(
+        0 4px, 4px 4px, 4px 0,
+        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
+      );
+    }
+    .portal-tab:hover {
+      background: #1a2233;
+      border-color: var(--ink);
+    }
+    .portal-tab-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+    .portal-name {
+      font-weight: 800;
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+    .portal-counter {
+      font-size: 0.65rem;
+      color: var(--steel);
+    }
+    .portal-tab[data-world="1"].active {
+      border-color: var(--amber);
+      background: #211c14;
+      box-shadow: inset 0 0 0 1px var(--amber), 0 0 10px rgba(240, 181, 96, 0.25);
+    }
+    .portal-tab[data-world="1"].active .portal-name {
+      color: var(--amber);
+    }
+    .portal-tab[data-world="2"].active {
+      border-color: var(--xp);
+      background: #102129;
+      box-shadow: inset 0 0 0 1px var(--xp), 0 0 10px rgba(115, 239, 247, 0.25);
+    }
+    .portal-tab[data-world="2"].active .portal-name {
+      color: var(--xp);
+    }
+    .portal-tab[data-world="3"].active {
+      border-color: var(--ok);
+      background: #112419;
+      box-shadow: inset 0 0 0 1px var(--ok), 0 0 10px rgba(78, 166, 106, 0.25);
+    }
+    .portal-tab[data-world="3"].active .portal-name {
+      color: var(--ok);
+    }
+    .portal-tab[data-world="4"].active {
+      border-color: var(--red);
+      background: #2b1115;
+      box-shadow: inset 0 0 0 1px var(--red), 0 0 12px rgba(177, 62, 83, 0.35);
+    }
+    .portal-tab[data-world="4"].active .portal-name {
+      color: var(--red);
+    }
+
     /* Tower Map Cards */
     .tower-card {
       background: #111724;
@@ -1001,6 +1087,72 @@
             <div style="font-size:1.05rem; font-weight:900; color:var(--ink); margin-top:2px;" class="hard-shadow">نقشه فتح ۴ جهان قلعه واژگان</div>
           </div>
           <button id="btnOpenLeaderboard" class="pixel-btn btn-amber" style="padding:7px 12px; font-size:0.78rem;">جدول رتبه‌ها</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4-WORLD PORTAL GATE SWITCHER -->
+    <div class="world-portal-grid" id="worldPortalTabs">
+      <button class="portal-tab active" data-world="1" onclick="switchWorld(1)">
+        <div class="portal-tab-top">
+          <svg width="20" height="20" viewBox="0 0 20 20" style="shape-rendering:crispEdges; flex-shrink:0;">
+            <path d="M4 2h12v2H4zM3 4h14v12H3zM5 6h4v8H5zM11 6h4v8h-4zM2 16h16v2H2z" fill="#f0b560"/>
+            <path d="M5 6h4v8H5zM11 6h4v8h-4z" fill="#ffd48a"/>
+          </svg>
+          <span class="portal-counter font-pixel" id="portalCount1">0/8</span>
+        </div>
+        <div class="portal-name">واژگان</div>
+      </button>
+
+      <button class="portal-tab" data-world="2" onclick="switchWorld(2)">
+        <div class="portal-tab-top">
+          <svg width="20" height="20" viewBox="0 0 20 20" style="shape-rendering:crispEdges; flex-shrink:0;">
+            <path d="M3 3h10v2H3zM3 5h14v10H3zM5 7h10v2H5zM5 11h7v2H5zM3 15h14v2H3z" fill="#73eff7"/>
+            <path d="M5 7h10v2H5z" fill="#ffffff"/>
+          </svg>
+          <span class="portal-counter font-pixel" id="portalCount2">0/4</span>
+        </div>
+        <div class="portal-name">کنایه</div>
+      </button>
+
+      <button class="portal-tab" data-world="3" onclick="switchWorld(3)">
+        <div class="portal-tab-top">
+          <svg width="20" height="20" viewBox="0 0 20 20" style="shape-rendering:crispEdges; flex-shrink:0;">
+            <path d="M9 2h2v4H9zM3 6h14v2H3zM4 8h4v6H4zM12 8h4v6h-4zM2 14h8v2H2zM10 14h8v2h-8zM8 16h4v2H8z" fill="#4ea66a"/>
+            <path d="M5 9h2v4H5zM13 9h2v4h-2z" fill="#7ee29c"/>
+          </svg>
+          <span class="portal-counter font-pixel" id="portalCount3">0/2</span>
+        </div>
+        <div class="portal-name">ایهام</div>
+      </button>
+
+      <button class="portal-tab" data-world="4" onclick="switchWorld(4)">
+        <div class="portal-tab-top">
+          <svg width="20" height="20" viewBox="0 0 20 20" style="shape-rendering:crispEdges; flex-shrink:0;">
+            <path d="M4 2h2v4H4zM14 2h2v4h-2zM6 4h8v2H6zM3 6h14v8H3zM5 8h3v3H5zM12 8h3v3h-3zM7 13h6v2H7zM5 16h10v2H5z" fill="#b13e53"/>
+            <path d="M8 8h1v2H8zM11 8h1v2h-1z" fill="#f0b560"/>
+          </svg>
+          <span class="portal-counter font-pixel" id="portalCount4" style="color:var(--amber);">2x XP</span>
+        </div>
+        <div class="portal-name">دژ جهنمی</div>
+      </button>
+    </div>
+
+    <!-- COMPACT PIXEL WORLD BANNER -->
+    <div id="worldBanner" class="pixel-window border-line" style="margin-bottom:12px;">
+      <div class="pixel-window-inner" id="worldBannerInner" style="padding:10px 14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <div>
+          <div id="worldBannerTitle" style="font-weight:900; font-size:1rem; color:var(--amber);">جهان واژگان</div>
+          <div id="worldBannerSub" style="font-size:0.75rem; color:var(--steel); margin-top:2px;">۸ مرحله • ۱۶۱ واژه رسمی واژه‌نامه دهم</div>
+        </div>
+        <div style="text-align:left; min-width:110px;">
+          <div style="font-size:0.7rem; color:var(--steel); display:flex; justify-content:space-between; margin-bottom:4px;">
+            <span>پیشرفت:</span>
+            <span id="worldProgressRatio" class="font-pixel" style="color:var(--xp); font-size:0.7rem;">0/8</span>
+          </div>
+          <div style="height:6px; background:#0b0d12; border:1px solid var(--line); overflow:hidden;">
+            <div id="worldProgressBar" style="height:100%; width:0%; background:var(--amber); transition:width 0.2s steps(5);"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -1326,7 +1478,7 @@
   </div>
 
   <!-- Hidden Teacher Access Trigger (3 rapid clicks on version number) -->
-  <div class="footer-ver" id="versionTrigger">v3.2-pixel</div>
+  <div class="footer-ver" id="versionTrigger">v3.4-pixel</div>
 
 </div>
 
@@ -2869,7 +3021,7 @@ const DEFAULT_STAGES = [
     "id": 9,
     "world": 2,
     "worldTitle": "جهان کنایه",
-    "title": "کنایه ۱ · نیمسال اول",
+    "title": "کنایه ۱ · درس اول تا سوم",
     "theme": "cyan",
     "unlocked": false,
     "words": [
@@ -2879,89 +3031,89 @@ const DEFAULT_STAGES = [
           "آماده کار و تلاش شدن"
         ],
         "correct": "آماده کار و تلاش شدن",
-        "tag": "کنایه نیمسال اول",
-        "hint": "کنایه از شروع جدی کار و کوشش"
+        "tag": "کنایه درس ۱ تا ۳",
+        "hint": "آستین بالا زدن برای کوشش"
       },
       {
-        "word": "گندم‌نمای جوفروش",
+        "word": "روی پای خود ایستادن",
+        "meanings": [
+          "مستقل و خودکفا شدن"
+        ],
+        "correct": "مستقل و خودکفا شدن",
+        "tag": "کنایه درس ۱ تا ۳",
+        "hint": "بی‌نیازی از دیگران و استقلال"
+      },
+      {
+        "word": "دست کسی را گرفتن",
+        "meanings": [
+          "یاری کردن و کمک رساندن"
+        ],
+        "correct": "یاری کردن و کمک رساندن",
+        "tag": "کنایه درس ۱ تا ۳",
+        "hint": "دستگیری از نیازمندان و فتوت"
+      },
+      {
+        "word": "گندمنمای جوفروش بودن",
         "meanings": [
           "دورو و فریبکار بودن"
         ],
         "correct": "دورو و فریبکار بودن",
-        "tag": "کنایه نیمسال اول",
-        "hint": "کنایه از ظاهر صالح و باطن فریبکار داشتن"
+        "tag": "کنایه درس ۱ تا ۳",
+        "hint": "ظاهرسازی نیک و باطن تباه"
       },
       {
         "word": "داد از خویشتن دادن",
         "meanings": [
-          "انصاف داشتن در حق خود و دیگران"
+          "انصاف داشتن و خود را قضاوت کردن"
         ],
-        "correct": "انصاف داشتن در حق خود و دیگران",
-        "tag": "کنایه نیمسال اول",
-        "hint": "کنایه از رعایت عدالت و دادگری"
+        "correct": "انصاف داشتن و خود را قضاوت کردن",
+        "tag": "کنایه درس ۱ تا ۳",
+        "hint": "رعایت عدالت و خودانتقادی"
       },
       {
         "word": "از جای شدن",
         "meanings": [
-          "خشمگین و بی‌قرار شدن"
+          "خشمگین شدن و از دست دادن آرامش"
         ],
-        "correct": "خشمگین و بی‌قرار شدن",
-        "tag": "کنایه نیمسال اول",
-        "hint": "کنایه از کنترل از دست دادن از خشم"
+        "correct": "خشمگین شدن و از دست دادن آرامش",
+        "tag": "کنایه درس ۱ تا ۳",
+        "hint": "بی‌تابی و برافروختگی شدید"
       },
       {
-        "word": "صورتک به رو داشتن",
+        "word": "زمین بوسیدن",
         "meanings": [
-          "ریاکار بودن و ظاهرسازی کردن"
+          "نهایت ادب و تعظیم به جا آوردن"
         ],
-        "correct": "ریاکار بودن و ظاهرسازی کردن",
-        "tag": "کنایه نیمسال اول",
-        "hint": "کنایه از پوشاندن چهره و نیت واقعی"
+        "correct": "نهایت ادب و تعظیم به جا آوردن",
+        "tag": "کنایه درس ۱ تا ۳",
+        "hint": "کرنش و فروتنی کامل در برابر بزرگتر"
       },
       {
-        "word": "در نماندن",
+        "word": "دیوار موش داشتن",
         "meanings": [
-          "عاجز و درمانده نشدن"
+          "پنهان نماندن راز و لزوم احتیاط در سخن"
         ],
-        "correct": "عاجز و درمانده نشدن",
-        "tag": "کنایه نیمسال اول",
-        "hint": "کنایه از استقامت و تسلیم نشدن در برابر سختی"
+        "correct": "پنهان نماندن راز و لزوم احتیاط در سخن",
+        "tag": "کنایه درس ۱ تا ۳",
+        "hint": "دیوار موش دارد و موش هم گوش دارد"
       },
       {
-        "word": "گریز رندانه زدن",
+        "word": "به در گفتن تا دیوار بشنود",
         "meanings": [
-          "با زیرکی از مخمصه رهایی یافتن"
+          "غیرمستقیم و با کنایه تذکر دادن"
         ],
-        "correct": "با زیرکی از مخمصه رهایی یافتن",
-        "tag": "کنایه نیمسال اول",
-        "hint": "کنایه از نجات هوشمندانه از تنگنا"
+        "correct": "غیرمستقیم و با کنایه تذکر دادن",
+        "tag": "کنایه درس ۱ تا ۳",
+        "hint": "انتقاد یا پند پوشیده"
       },
       {
-        "word": "سررشته نگاه داشتن",
+        "word": "دیوار کسی کوتاه بودن",
         "meanings": [
-          "حفظ ارتباط و پیوند و مراقبت کار"
+          "بیکس بودن و مورد تعدی قرار گرفتن"
         ],
-        "correct": "حفظ ارتباط و پیوند",
-        "tag": "کنایه نیمسال اول",
-        "hint": "کنایه از گم نکردن مسیر و تداوم ارتباط"
-      },
-      {
-        "word": "پرده دریدن",
-        "meanings": [
-          "فاش کردن راز و رسوا کردن"
-        ],
-        "correct": "فاش کردن راز",
-        "tag": "کنایه نیمسال اول",
-        "hint": "کنایه از برملا ساختن سرّ نهان"
-      },
-      {
-        "word": "به سخره گرفتن",
-        "meanings": [
-          "بی‌ارزش و مسخره جلوه دادن"
-        ],
-        "correct": "بی‌ارزش و مسخره جلوه دادن",
-        "tag": "کنایه نیمسال اول",
-        "hint": "کنایه از استهزا و ناچیز شمردن چیزی"
+        "correct": "بیکس بودن و مورد تعدی قرار گرفتن",
+        "tag": "کنایه درس ۱ تا ۳",
+        "hint": "مظلوم واقع شدن و بی‌پناهی"
       }
     ]
   },
@@ -2969,18 +3121,172 @@ const DEFAULT_STAGES = [
     "id": 10,
     "world": 2,
     "worldTitle": "جهان کنایه",
-    "title": "کنایه ۲ · نیمسال دوم",
+    "title": "کنایه ۲ · درس سوم تا پنجم",
     "theme": "cyan",
     "unlocked": false,
     "words": [
       {
+        "word": "صورتک به رو داشتن",
+        "meanings": [
+          "ریاکار بودن و ظاهرسازی کردن"
+        ],
+        "correct": "ریاکار بودن و ظاهرسازی کردن",
+        "tag": "کنایه درس ۳ تا ۵",
+        "hint": "پنهان کردن چهره واقعی پشت نقاب"
+      },
+      {
+        "word": "دستی نازک داشتن",
+        "meanings": [
+          "بسیار ماهر و ظریفکار بودن"
+        ],
+        "correct": "بسیار ماهر و ظریفکار بودن",
+        "tag": "کنایه درس ۳ تا ۵",
+        "hint": "ظرافت و مهارت فوق‌العاده در هنر"
+      },
+      {
+        "word": "راه دست کسی بودن",
+        "meanings": [
+          "آسان و در توان کسی بودن"
+        ],
+        "correct": "آسان و در توان کسی بودن",
+        "tag": "کنایه درس ۳ تا ۵",
+        "hint": "مناسب و موافق میل بودن کار"
+      },
+      {
+        "word": "اتاق از جا کنده شدن",
+        "meanings": [
+          "سر و صدای بسیار زیاد به پا شدن"
+        ],
+        "correct": "سر و صدای بسیار زیاد به پا شدن",
+        "tag": "کنایه درس ۳ تا ۵",
+        "hint": "همهمه و غوغای کرکننده"
+      },
+      {
+        "word": "در نماندن",
+        "meanings": [
+          "عاجز و درمانده نشدن"
+        ],
+        "correct": "عاجز و درمانده نشدن",
+        "tag": "کنایه درس ۳ تا ۵",
+        "hint": "کم نیاوردن و توانایی پاسخگویی"
+      },
+      {
+        "word": "گریز رندانه زدن",
+        "meanings": [
+          "با زیرکی از مخمصه رهایی یافتن"
+        ],
+        "correct": "با زیرکی از مخمصه رهایی یافتن",
+        "tag": "کنایه درس ۳ تا ۵",
+        "hint": "رهایی هوشمندانه از مخمصه"
+      },
+      {
+        "word": "کار دست کسی دادن",
+        "meanings": [
+          "باعث دردسر و پشیمانی شدن"
+        ],
+        "correct": "باعث دردسر و پشیمانی شدن",
+        "tag": "کنایه درس ۳ تا ۵",
+        "hint": "گرفتاری و خسران پدید آوردن"
+      },
+      {
+        "word": "پرده دریدن",
+        "meanings": [
+          "فاش کردن راز و بیشرمی کردن"
+        ],
+        "correct": "فاش کردن راز و بیشرمی کردن",
+        "tag": "کنایه درس ۳ تا ۵",
+        "hint": "رسوا ساختن و پرده‌پوشی نکردن"
+      },
+      {
+        "word": "بر باد نشاندن",
+        "meanings": [
+          "نابود و هلاک کردن"
+        ],
+        "correct": "نابود و هلاک کردن",
+        "tag": "کنایه درس ۳ تا ۵",
+        "hint": "تباه ساختن و هدر دادن هستی"
+      },
+      {
+        "word": "پای کسی را قلم کردن",
+        "meanings": [
+          "تنبیه سخت کردن و شکستن پا"
+        ],
+        "correct": "تنبیه سخت کردن و شکستن پا",
+        "tag": "کنایه درس ۳ تا ۵",
+        "hint": "مجازات شدید و قطع ارتباط"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "world": 2,
+    "worldTitle": "جهان کنایه",
+    "title": "کنایه ۳ · درس پنجم تا نهم",
+    "theme": "cyan",
+    "unlocked": false,
+    "words": [
+      {
+        "word": "پای لغزیدن",
+        "meanings": [
+          "دچار خطا و گناه شدن"
+        ],
+        "correct": "دچار خطا و گناه شدن",
+        "tag": "کنایه درس ۵ تا ۹",
+        "hint": "اشتباه کردن و از راه راست منحرف شدن"
+      },
+      {
+        "word": "سررشته نگاه داشتن",
+        "meanings": [
+          "حفظ پیوند و ارتباط"
+        ],
+        "correct": "حفظ پیوند و ارتباط",
+        "tag": "کنایه درس ۵ تا ۹",
+        "hint": "گسسته نشدن رشته الفت و کار"
+      },
+      {
+        "word": "جامه دریدن",
+        "meanings": [
+          "بیتابی و شوق بسیار کردن"
+        ],
+        "correct": "بیتابی و شوق بسیار کردن",
+        "tag": "کنایه درس ۵ تا ۹",
+        "hint": "شوریدگی و از خود بی‌خود شدن"
+      },
+      {
+        "word": "به سیم آخر زدن",
+        "meanings": [
+          "بیملاحظه و از روی عصبانیت هر کاری کردن"
+        ],
+        "correct": "بیملاحظه و از روی عصبانیت هر کاری کردن",
+        "tag": "کنایه درس ۵ تا ۹",
+        "hint": "دست به هر کاری زدن بدون پروایی"
+      },
+      {
+        "word": "به سخره گرفتن",
+        "meanings": [
+          "بیارزش و ناچیز جلوه دادن"
+        ],
+        "correct": "بیارزش و ناچیز جلوه دادن",
+        "tag": "کنایه درس ۵ تا ۹",
+        "hint": "تمسخر و دست انداختن"
+      },
+      {
+        "word": "کلاه از سر عقل افتادن",
+        "meanings": [
+          "شگفتزده شدن از بزرگی و عظمت"
+        ],
+        "correct": "شگفتزده شدن از بزرگی و عظمت",
+        "tag": "کنایه درس ۵ تا ۹",
+        "hint": "حیرت و مبهوت شدن عقل"
+      },
+      {
         "word": "راست و ریس کردن",
         "meanings": [
-          "آماده و مهیا کردن کارها"
+          "آماده و مهیا کردن"
         ],
-        "correct": "آماده و مهیا کردن کارها",
-        "tag": "کنایه نیمسال دوم",
-        "hint": "کنایه از مرتب کردن اسباب کار"
+        "correct": "آماده و مهیا کردن",
+        "tag": "کنایه درس ۵ تا ۹",
+        "hint": "مرتب کردن و سروسامان دادن"
       },
       {
         "word": "به آب زدن",
@@ -2988,8 +3294,8 @@ const DEFAULT_STAGES = [
           "با شجاعت وارد خطر شدن"
         ],
         "correct": "با شجاعت وارد خطر شدن",
-        "tag": "کنایه نیمسال دوم",
-        "hint": "کنایه از دل به دریا زدن و اقدام جسورانه"
+        "tag": "کنایه درس ۵ تا ۹",
+        "hint": "دلیری و بی‌پروایی در سختی"
       },
       {
         "word": "با خاک انس گرفتن",
@@ -2997,8 +3303,36 @@ const DEFAULT_STAGES = [
           "فروتنی و تواضع در برابر خدا"
         ],
         "correct": "فروتنی و تواضع در برابر خدا",
-        "tag": "کنایه نیمسال دوم",
-        "hint": "کنایه از نهایت افتادگی عارفانه"
+        "tag": "کنایه درس ۵ تا ۹",
+        "hint": "خاکساری و عبودیت"
+      },
+      {
+        "word": "آتش خرمن کسی بودن",
+        "meanings": [
+          "مایه نابودی و هلاک دشمن بودن"
+        ],
+        "correct": "مایه نابودی و هلاک دشمن بودن",
+        "tag": "کنایه درس ۵ تا ۹",
+        "hint": "سوزاننده و از بین‌برنده هستی خصم"
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "world": 2,
+    "worldTitle": "جهان کنایه",
+    "title": "کنایه ۴ · درس یازدهم تا نیایش",
+    "theme": "cyan",
+    "unlocked": false,
+    "words": [
+      {
+        "word": "سر همنبرد به گرد آوردن",
+        "meanings": [
+          "شکست دادن و به خاک افکندن حریف"
+        ],
+        "correct": "شکست دادن و به خاک افکندن حریف",
+        "tag": "کنایه درس ۱۱ تا نیایش",
+        "hint": "سرنگون کردن دشمن در میدان نبرد"
       },
       {
         "word": "عنان را گران کردن",
@@ -3006,17 +3340,35 @@ const DEFAULT_STAGES = [
           "متوقف کردن اسب و بازایستادن"
         ],
         "correct": "متوقف کردن اسب و بازایستادن",
-        "tag": "کنایه نیمسال دوم",
-        "hint": "کنایه از ایستادن و کشیدن مهار"
+        "tag": "کنایه درس ۱۱ تا نیایش",
+        "hint": "کشیدن دهنه اسب برای توقف"
       },
       {
-        "word": "سر به گرد آوردن",
+        "word": "خیره ماندن",
         "meanings": [
-          "شکست دادن و به خاک افکندن حریف"
+          "مات و مبهوت شدن"
         ],
-        "correct": "شکست دادن و به خاک افکندن حریف",
-        "tag": "کنایه نیمسال دوم",
-        "hint": "کنایه از سرنگون ساختن پهلوان هماورد"
+        "correct": "مات و مبهوت شدن",
+        "tag": "کنایه درس ۱۱ تا نیایش",
+        "hint": "شگفتی و سرگشتگی تمام"
+      },
+      {
+        "word": "درازدستی کردن",
+        "meanings": [
+          "ظلم و تجاوز به حقوق مردم"
+        ],
+        "correct": "ظلم و تجاوز به حقوق مردم",
+        "tag": "کنایه درس ۱۱ تا نیایش",
+        "hint": "تعدی و ستمگری بر بی‌پناهان"
+      },
+      {
+        "word": "سر گرگ هم اول بریدن",
+        "meanings": [
+          "جلوگیری از ظلم پیش از گسترش آن"
+        ],
+        "correct": "جلوگیری از ظلم پیش از گسترش آن",
+        "tag": "کنایه درس ۱۱ تا نیایش",
+        "hint": "دفع فتنه در همان آغاز کار"
       },
       {
         "word": "سپر انداختن",
@@ -3024,26 +3376,26 @@ const DEFAULT_STAGES = [
           "تسلیم شدن و پذیرش شکست"
         ],
         "correct": "تسلیم شدن و پذیرش شکست",
-        "tag": "کنایه نیمسال دوم",
-        "hint": "کنایه از واگذار کردن میدان نبرد"
+        "tag": "کنایه درس ۱۱ تا نیایش",
+        "hint": "کنار گذاشتن سلاح و امان خواستن"
       },
       {
         "word": "کمیت کسی لنگ بودن",
         "meanings": [
-          "ناتوان بودن در انجام کاری"
+          "ناتوان بودن و ضعف داشتن در کاری"
         ],
-        "correct": "ناتوان بودن در انجام کاری",
-        "tag": "کنایه نیمسال دوم",
-        "hint": "کنایه از نقص و کم‌آوردن در مهارت"
+        "correct": "ناتوان بودن و ضعف داشتن در کاری",
+        "tag": "کنایه درس ۱۱ تا نیایش",
+        "hint": "نقصان و ناتوانی در پیشبرد امر"
       },
       {
         "word": "خشت زدن",
         "meanings": [
-          "کار بیهوده کردن و شعر بی‌ارزش گفتن"
+          "کار بیهوده کردن و شعر بیارزش گفتن"
         ],
-        "correct": "کار بیهوده کردن و شعر بی‌ارزش گفتن",
-        "tag": "کنایه نیمسال دوم",
-        "hint": "کنایه از طبع‌آزمایی پوچ و بی‌حاصل"
+        "correct": "کار بیهوده کردن و شعر بیارزش گفتن",
+        "tag": "کنایه درس ۱۱ تا نیایش",
+        "hint": "سخن بی‌فایده و یاوه‌گویی"
       },
       {
         "word": "باب دندان بودن",
@@ -3051,192 +3403,342 @@ const DEFAULT_STAGES = [
           "کاملاً مطابق میل و دلخواه بودن"
         ],
         "correct": "کاملاً مطابق میل و دلخواه بودن",
-        "tag": "کنایه نیمسال دوم",
-        "hint": "کنایه از سازگار بودن با سلیقه فرد"
+        "tag": "کنایه درس ۱۱ تا نیایش",
+        "hint": "پسندیده و خوشایند طبع"
       },
       {
         "word": "دم برنیاوردن",
         "meanings": [
-          "سکوت کردن و سخنی نگفتن"
+          "سکوت کردن و چیزی نگفتن"
         ],
-        "correct": "سکوت کردن و سخنی نگفتن",
-        "tag": "کنایه نیمسال دوم",
-        "hint": "کنایه از خویشتن‌داری و لب فروبستن"
+        "correct": "سکوت کردن و چیزی نگفتن",
+        "tag": "کنایه درس ۱۱ تا نیایش",
+        "hint": "خاموشی گزیدن و اعتراض نکردن"
       }
     ]
   },
   {
-    "id": 11,
+    "id": 13,
     "world": 3,
     "worldTitle": "جهان ایهام",
-    "title": "ایهام · معماهای دوگانه",
+    "title": "ایهام ۱ · درس اول تا پنجم",
     "theme": "ok",
     "unlocked": false,
     "words": [
       {
         "word": "مهر",
-        "tag": "ایهام دوگانه",
         "meanings": [
-          "خورشید تابان",
-          "محبت و عشق"
+          "خورشید",
+          "محبت"
         ],
-        "hint": "پرتو مهر خورشید و مهر مادری",
-        "prompt": "دو معنای دقیق و ایهام‌دار واژه «مهر» در ادبیات دهم کدام است؟",
         "correct": "خورشید / محبت",
+        "tag": "ایهام درس ۱ تا ۵",
+        "hint": "دو معنی پرکاربرد: مهر تابان آسمان و مهر و دوستی دل",
         "distractors": [
-          "خورشید / انگشتر پادشاه",
-          "محبت / ماه هفتم سال",
-          "عهد و پیمان / خورشید"
+          "خورشید / مهر و موم نامه",
+          "محبت و دوستی / سجده‌گاه نماز",
+          "ماهِ پاییز / پرتو آفتاب"
         ]
       },
       {
         "word": "بو",
-        "tag": "ایهام دوگانه",
         "meanings": [
           "رایحه و عطر",
           "آرزو و امید"
         ],
-        "hint": "بوی گل سرخ و بوی وصال یار",
-        "prompt": "دو معنای ایهام‌دار واژه «بو» در غزلیات فارسی کدامند؟",
         "correct": "رایحه و عطر / آرزو و امید",
+        "tag": "ایهام درس ۱ تا ۵",
+        "hint": "شمیم گل و امید در دل داشتن (بوی وصال)",
         "distractors": [
-          "رایحه و عطر / جست‌وجو در بیابان",
-          "آرزو و امید / نسیم خنک بهار",
-          "شمیم خوش / طعم میوه رسیده"
+          "رایحه و عطر / رنگ و نگار گل",
+          "آرزو و امید / مزه و طعم طعام",
+          "شمیم خوش / باد بهاری"
         ]
       },
       {
         "word": "پرده",
-        "tag": "ایهام دوگانه",
         "meanings": [
           "حجاب و پوشش",
           "راز و دستگاه موسیقی"
         ],
-        "hint": "پرده‌نشین راز و پرده عشاق",
-        "prompt": "معانی دوگانه و ایهام‌دار واژه «پرده» در شعر فارسی چیست؟",
         "correct": "حجاب و پوشش / راز و دستگاه موسیقی",
+        "tag": "ایهام درس ۱ تا ۵",
+        "hint": "پوشش حیا و پرده موسیقی در شعر حافظ",
         "distractors": [
-          "حجاب و پوشش / تار و سیم‌های ساز",
-          "راز و دستگاه موسیقی / لباس ابریشمی",
-          "دیوار خانه / نغمه و آهنگ سنتی"
-        ]
-      },
-      {
-        "word": "قلب",
-        "tag": "ایهام دوگانه",
-        "meanings": [
-          "عضو صنوبری بدن",
-          "میانه لشکر در میدان جنگ"
-        ],
-        "hint": "تپش قلب و قلب سپاه",
-        "prompt": "دو معنای ایهام‌دار واژه «قلب» در کتب کهن کدام است؟",
-        "correct": "عضو بدن / میانه لشکر",
-        "distractors": [
-          "عضو بدن / سکه تقلبی بازار",
-          "میانه لشکر / خون تازه و پاک",
-          "دل و جان / نوک پیکان نبرد"
+          "حجاب و پوشش / خانه و کاشانه",
+          "دستگاه موسیقی / نغمه و سرود",
+          "راز و نهان / جامه فاخر"
         ]
       },
       {
         "word": "روان",
-        "tag": "ایهام دوگانه",
         "meanings": [
-          "جاری و رونده",
-          "روح و جان انسان"
+          "روح و جان",
+          "جاری و رونده"
         ],
-        "hint": "آب روان و روان پاکیزه",
-        "prompt": "دو معنای ایهام‌دار واژه «روان» کدامند؟",
-        "correct": "جاری و رونده / روح و جان",
+        "correct": "روح و جان / جاری و رونده",
+        "tag": "ایهام درس ۱ تا ۵",
+        "hint": "آب روان و روان و روح آدمی",
         "distractors": [
-          "جاری و رونده / فکر و خیال پوچ",
-          "روح و جان / حرکت سریع باد",
-          "آسان و ساده / چشمه زلال کوه"
+          "روح و جان / عقل و خرد",
+          "جاری و رونده / آب زلال چشمه",
+          "آسان و ساده / جان آدمی"
         ]
       },
       {
-        "word": "رخ",
-        "tag": "ایهام دوگانه",
+        "word": "داد",
         "meanings": [
-          "چهره و صورت زیبا",
-          "مهره قلعه در شطرنج"
+          "عدالت و انصاف",
+          "فریاد و فغان"
         ],
-        "hint": "رخ زیبای یار و رخ شطرنج‌بازان",
-        "prompt": "معانی دوگانه و ایهام‌دار واژه «رخ» در ادبیات کدامند؟",
-        "correct": "چهره و صورت / مهره قلعه در شطرنج",
+        "correct": "عدالت و انصاف / فریاد و فغان",
+        "tag": "ایهام درس ۱ تا ۵",
+        "hint": "دادگری و عدل / دادخواهی و فریاد زدن",
         "distractors": [
-          "چهره و صورت / خط و خال مژگان",
-          "مهره قلعه در شطرنج / زلف پریشان",
-          "پادشاه شطرنج / گونه سرخ معشوق"
+          "عدالت و انصاف / بخشش و عطا",
+          "فریاد و فغان / ناله بیمار",
+          "قانون و دادگری / غریو جنگاور"
         ]
       },
       {
-        "word": "آهو",
-        "tag": "ایهام دوگانه",
+        "word": "حال",
         "meanings": [
-          "غزال و حیوان دشت",
-          "عیب و نقص باطنی"
+          "وضعیت و چگونگی",
+          "زمان اکنون"
         ],
-        "hint": "چشم آهو و چشم‌پوشی از آهوی یار",
-        "prompt": "دو معنای ایهام‌دار واژه «آهو» در شعر کهن فارسی چیست؟",
-        "correct": "غزال / عیب و نقص",
+        "correct": "وضعیت و چگونگی / زمان اکنون",
+        "tag": "ایهام درس ۱ تا ۵",
+        "hint": "احوال دل و زمان حال در برابر گذشته",
         "distractors": [
-          "غزال / ترس و رمیدگی در دشت",
-          "عیب و نقص / حیوان وحشی کوه",
-          "شکار تیزپا / گناه و نافرمانی"
+          "وضعیت و احوال / شادی و نشاط",
+          "زمان اکنون / روزگار گذشته",
+          "وجد و شور عارفانه / رنجوری تن"
         ]
       },
       {
-        "word": "دوش",
-        "tag": "ایهام دوگانه",
+        "word": "هوا",
         "meanings": [
-          "شانه و کتف انسان",
-          "دیشب و شامگاه گذشته"
+          "آرزو و میل",
+          "جو و فضای آسمان"
         ],
-        "hint": "دوش بر دوش و دوش وقت سحر",
-        "prompt": "معانی دوگانه و ایهام‌دار واژه «دوش» در ابیات ادبیات دهم چیست؟",
-        "correct": "شانه و کتف / دیشب",
+        "correct": "آرزو و میل / جو و فضای آسمان",
+        "tag": "ایهام درس ۱ تا ۵",
+        "hint": "هوای نفس و میل / نسیم و هوای آسمان",
         "distractors": [
-          "شانه و کتف / دیروز در بازار",
-          "دیشب / تاریکی و سیاهی شب",
-          "آغوش محبت / گذشته‌های دور"
+          "آرزو و میل / خیال و گمان باطل",
+          "فضای آسمان / باد و باران تند",
+          "هوای نفس / آسمان پر ستاره"
+        ]
+      },
+      {
+        "word": "صحبت",
+        "meanings": [
+          "همنشینی و دوستی",
+          "گفت‌وگو و سخن"
+        ],
+        "correct": "همنشینی و دوستی / گفت‌وگو و سخن",
+        "tag": "ایهام درس ۱ تا ۵",
+        "hint": "هم‌صحبتی و همنشینی در متون کهن",
+        "distractors": [
+          "همنشینی و الفت / پیوند خویشاوندی",
+          "گفت‌وگو و کلام / درس و تدریس استاد",
+          "سخن دلنشین / مهمانی شبانه"
         ]
       },
       {
         "word": "عهد",
-        "tag": "ایهام دوگانه",
         "meanings": [
-          "روزگار، عصر و دوران",
-          "پیمان، سوگند و وفاداری"
+          "پیمان و قرار",
+          "روزگار و زمانه"
         ],
-        "hint": "در عهد شاه عباس و وفای به عهد",
-        "prompt": "معانی ایهام‌دار واژه «عهد» در زبان فارسی کدام است؟",
-        "correct": "روزگار و دوران / پیمان",
+        "correct": "پیمان و قرار / روزگار و زمانه",
+        "tag": "ایهام درس ۱ تا ۵",
+        "hint": "عهد و پیمان بستن / در عهد قدیم",
         "distractors": [
-          "روزگار و دوران / وعده دروغین",
-          "پیمان / سالیان دراز پیری",
-          "عصر پادشاهی / سوگند وفاداری سرباز"
+          "پیمان و میثاق / فرمان پادشاه",
+          "روزگار و زمانه / فصل بهار",
+          "وفاداری و پیمان / تاریخ کهن"
         ]
       },
       {
-        "word": "شیر",
-        "tag": "ایهام دوگانه",
+        "word": "سودا",
         "meanings": [
-          "حیوان درنده بیشه",
-          "مایع سفید خوردنی مغذی"
+          "عشق و جنون",
+          "معامله و تجارت"
         ],
-        "hint": "آن یکی شیر است اندر بادیه...",
-        "prompt": "دو معنای مشهور و ایهام‌دار واژه «شیر» در شعر مولوی کدامند؟",
-        "correct": "حیوان درنده / مایع سفید خوردنی",
+        "correct": "عشق و جنون / معامله و تجارت",
+        "tag": "ایهام درس ۱ تا ۵",
+        "hint": "سودای عشق در سر داشتن / سوداگری و داد و ستد",
         "distractors": [
-          "حیوان درنده / ابزار آب در خانه",
-          "مایع سفید خوردنی / پهلوان دلیر",
-          "شیر بیشه / دلاور بی‌باک میدان"
+          "عشق و دلباختگی / اندوه و پریشانی",
+          "معامله و تجارت / زر و سیم بازار",
+          "شوریدگی و جنون / سفر بازرگانی"
         ]
       }
     ]
   },
   {
-    "id": 12,
+    "id": 14,
+    "world": 3,
+    "worldTitle": "جهان ایهام",
+    "title": "ایهام ۲ · درس پنجم تا سیزدهم",
+    "theme": "ok",
+    "unlocked": false,
+    "words": [
+      {
+        "word": "قلب",
+        "meanings": [
+          "عضو بدن",
+          "میانه لشکر"
+        ],
+        "correct": "عضو بدن / میانه لشکر",
+        "tag": "ایهام درس ۵ تا ۱۳",
+        "hint": "دل آدمی و قلب سپاه در شاهنامه",
+        "distractors": [
+          "عضو تپنده بدن / روح و جان",
+          "میانه لشکر / فرمانده و سالار سپاه",
+          "سکه تقلبی / کانون عواطف"
+        ]
+      },
+      {
+        "word": "رخ",
+        "meanings": [
+          "چهره و صورت",
+          "مهره قلعه در شطرنج"
+        ],
+        "correct": "چهره و صورت / مهره قلعه در شطرنج",
+        "tag": "ایهام درس ۵ تا ۱۳",
+        "hint": "رخسار زیبا و مهره رخ شطرنج",
+        "distractors": [
+          "چهره و صورت / زلف و گیسو",
+          "مهره شطرنج / تخته بازی نرد",
+          "جمال و طلعت / سنگر و دژ نبرد"
+        ]
+      },
+      {
+        "word": "کام",
+        "meanings": [
+          "مراد و آرزو",
+          "سقف دهان"
+        ],
+        "correct": "مراد و آرزو / سقف دهان",
+        "tag": "ایهام درس ۵ تا ۱۳",
+        "hint": "به کام دل رسیدن / تلخی در کام ریختن",
+        "distractors": [
+          "مراد و مقصود / بخت و اقبال نیک",
+          "سقف دهان / زبان و دندان",
+          "شیرینی و لذت / دهان و حلق"
+        ]
+      },
+      {
+        "word": "بر",
+        "meanings": [
+          "سینه و پهلو",
+          "روی و بالا"
+        ],
+        "correct": "سینه و پهلو / روی و بالا",
+        "tag": "ایهام درس ۵ تا ۱۳",
+        "hint": "در بر گرفتن و بر فراز چیزی بودن",
+        "distractors": [
+          "سینه و آغوش / دست و بازو",
+          "خشکی و زمین / پهلوی یاران",
+          "میوه و بار درخت / بلندی کوه"
+        ]
+      },
+      {
+        "word": "تیز",
+        "meanings": [
+          "تند و سریع",
+          "برنده و نوک‌تیز"
+        ],
+        "correct": "تند و سریع / برنده و نوک‌تیز",
+        "tag": "ایهام درس ۵ تا ۱۳",
+        "hint": "تک تیز اسب و تیغ تیز شمشیر",
+        "distractors": [
+          "تند و شتابان / اسب چالاک",
+          "برنده و قاطع / تیغ صیقلی",
+          "زیرک و باهوش / خشمگین و عاصی"
+        ]
+      },
+      {
+        "word": "شیر",
+        "meanings": [
+          "حیوان درنده",
+          "مایع سفید خوردنی"
+        ],
+        "correct": "حیوان درنده / مایع سفید خوردنی",
+        "tag": "ایهام درس ۵ تا ۱۳",
+        "hint": "آن یکی شیر است اندر بادیه / وان یکی شیر است کادم می‌خورد",
+        "distractors": [
+          "حیوان درنده / پهلوان دلاور",
+          "مایع نوشیدنی / شیره انگور",
+          "شیر بیشه / دوشاب و عسل"
+        ]
+      },
+      {
+        "word": "شور",
+        "meanings": [
+          "هیجان و غوغا",
+          "نام دستگاه موسیقی ایرانی"
+        ],
+        "correct": "هیجان و غوغا / نام دستگاه موسیقی ایرانی",
+        "tag": "ایهام درس ۵ تا ۱۳",
+        "hint": "شور و اشتیاق / آواز و پرده شور در موسیقی",
+        "distractors": [
+          "هیجان و آشوب / خشم و غضب",
+          "دستگاه موسیقی / نغمه و ترانه ساز",
+          "طعم نمکین / بلوا و قیام"
+        ]
+      },
+      {
+        "word": "قضا",
+        "meanings": [
+          "سرنوشت و تقدیر",
+          "حکم و داوری"
+        ],
+        "correct": "سرنوشت و تقدیر / حکم و داوری",
+        "tag": "ایهام درس ۵ تا ۱۳",
+        "hint": "قضا و قدر الهی / قضاوت کردن و حاکم بودن",
+        "distractors": [
+          "سرنوشت محتوم / بلا و مصیبت دهر",
+          "حکم و قضاوت / مجازات و قصاص",
+          "تقدیر الهی / نماز به جا نیاورده"
+        ]
+      },
+      {
+        "word": "طبع",
+        "meanings": [
+          "سرشت و خو",
+          "ذوق شاعری"
+        ],
+        "correct": "سرشت و خو / ذوق شاعری",
+        "tag": "ایهام درس ۵ تا ۱۳",
+        "hint": "طبع سلیم و طبع روان در سرودن شعر",
+        "distractors": [
+          "سرشت و نهاد / جسم و مزاج آدمی",
+          "ذوق شاعری / قلم و کتابت",
+          "طبیعت جهان / قریحه نویسندگی"
+        ]
+      },
+      {
+        "word": "حرم",
+        "meanings": [
+          "کعبه و مکان مقدس",
+          "حریم و جایگاه معشوق"
+        ],
+        "correct": "کعبه و مکان مقدس / حریم و جایگاه معشوق",
+        "tag": "ایهام درس ۵ تا ۱۳",
+        "hint": "حرم امن کعبه / محرم حرم راز و وصل یار",
+        "distractors": [
+          "کعبه و بیت‌الله / مسجد پیامبر",
+          "حریم و خانه یار / پرده‌نشینان حرمسرا",
+          "مقام امن الهی / قصر باصلابت پادشاه"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 15,
     "world": 4,
     "worldTitle": "دژ جهنمی",
     "title": "دژ جهنمی · نبرد نهایی واژه‌ها",
@@ -3252,17 +3754,43 @@ const TEACHER_PASS = "431380";
 // ==========================================
 // 2. STATE & STORAGE ENGINE (gv_stages_v32)
 // ==========================================
+function loadStages() {
+  const saved = localStorage.getItem("gv_stages_v34");
+  if (!saved) return JSON.parse(JSON.stringify(DEFAULT_STAGES));
+  try {
+    const parsed = JSON.parse(saved);
+    if (!Array.isArray(parsed) || parsed.length !== DEFAULT_STAGES.length) {
+      return JSON.parse(JSON.stringify(DEFAULT_STAGES));
+    }
+    const stageMap = new Map(parsed.map(s => [s.id, s]));
+    return DEFAULT_STAGES.map(def => {
+      const copy = JSON.parse(JSON.stringify(def));
+      const s = stageMap.get(def.id);
+      if (s) {
+        copy.unlocked = !!s.unlocked;
+        if (s.words && s.words.length > def.words.length) {
+          copy.words = s.words;
+        }
+      }
+      return copy;
+    });
+  } catch (e) {
+    return JSON.parse(JSON.stringify(DEFAULT_STAGES));
+  }
+}
+
 let appState = {
-  stages: JSON.parse(localStorage.getItem("gv_stages_v32")) || DEFAULT_STAGES,
+  stages: loadStages(),
   students: JSON.parse(localStorage.getItem("gv_students")) || {},
   classLock: localStorage.getItem("gv_classLock") || "",
   sbUrl: localStorage.getItem("gv_sbUrl") || "https://lqwnjcnpizkdtowoezxi.supabase.co",
   sbKey: localStorage.getItem("gv_sbKey") || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxd25qY25waXprZHRvd29lenhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUxMTk4MDMsImV4cCI6MjExMDY5NTgwM30.vv8FcpUXhYSVGgEQ2kt-1zsb9EvmGeANXi-7MKvTgik",
-  currentUserCode: localStorage.getItem("gv_session_code") || null
+  currentUserCode: localStorage.getItem("gv_session_code") || null,
+  selectedWorld: 1
 };
 
 function saveLocal() {
-  localStorage.setItem("gv_stages_v32", JSON.stringify(appState.stages));
+  localStorage.setItem("gv_stages_v34", JSON.stringify(appState.stages));
   localStorage.setItem("gv_students", JSON.stringify(appState.students));
   localStorage.setItem("gv_classLock", appState.classLock);
 }
@@ -3291,13 +3819,24 @@ async function syncGlobalState(action = "push") {
   };
   try {
     if (action === "push") {
+      const unlockedIds = appState.stages.filter(s => s.unlocked).map(s => s.id);
+      const customCards = [];
+      appState.stages.forEach(st => {
+        const def = DEFAULT_STAGES.find(d => d.id === st.id);
+        if (def && st.words && st.words.length > def.words.length) {
+          const extra = st.words.slice(def.words.length);
+          customCards.push({ stageId: st.id, words: extra });
+        }
+      });
+
       await fetch(`${appState.sbUrl}/rest/v1/gv_state`, {
         method: "POST",
         headers,
         body: JSON.stringify({
           id: "global",
           payload: {
-            stages: appState.stages,
+            unlockedIds,
+            customCards,
             classLock: appState.classLock
           }
         })
@@ -3312,8 +3851,28 @@ async function syncGlobalState(action = "push") {
       if (res.ok) {
         const data = await res.json();
         if (data && data[0] && data[0].payload) {
-          appState.stages = data[0].payload.stages || appState.stages;
-          appState.classLock = data[0].payload.classLock || "";
+          const payload = data[0].payload;
+          if (Array.isArray(payload.unlockedIds)) {
+            const unlockedSet = new Set(payload.unlockedIds);
+            appState.stages.forEach(st => {
+              st.unlocked = unlockedSet.has(st.id);
+            });
+          } else if (Array.isArray(payload.stages)) {
+            const oldUnlocked = new Set(payload.stages.filter(s => s.unlocked).map(s => s.id));
+            appState.stages.forEach(st => {
+              if (oldUnlocked.has(st.id)) st.unlocked = true;
+            });
+          }
+          if (Array.isArray(payload.customCards)) {
+            payload.customCards.forEach(c => {
+              const st = appState.stages.find(s => s.id === c.stageId);
+              if (st && Array.isArray(c.words)) {
+                const def = DEFAULT_STAGES.find(d => d.id === st.id);
+                st.words = [...(def ? def.words : []), ...c.words];
+              }
+            });
+          }
+          appState.classLock = payload.classLock || "";
           saveLocal();
         }
       }
@@ -3323,7 +3882,6 @@ async function syncGlobalState(action = "push") {
   }
 }
 
-// Per-Student Cloud Operations (gv_students table)
 async function fetchStudentRecord(code) {
   if (!appState.sbUrl || !appState.sbKey || !code) return null;
   try {
@@ -3672,56 +4230,138 @@ function enterDashboard() {
   showView("viewMap");
 }
 
+function switchWorld(wId) {
+  playSelectSound();
+  appState.selectedWorld = wId;
+  renderTowerMap();
+}
+window.switchWorld = switchWorld;
+
 function renderTowerMap() {
-  const list = document.getElementById("towersList");
-  list.innerHTML = "";
   const user = appState.students[appState.currentUserCode] || {};
   const completed = user.completedStages || [];
 
-  let currentRenderedWorld = null;
+  // 1. Calculate World completion counts
+  const w1Stages = appState.stages.filter(s => s.world === 1);
+  const w2Stages = appState.stages.filter(s => s.world === 2);
+  const w3Stages = appState.stages.filter(s => s.world === 3);
+  const w4Stages = appState.stages.filter(s => s.world === 4);
 
-  appState.stages.forEach((st, idx) => {
-    // World Section Headers
-    if (st.world !== currentRenderedWorld) {
-      currentRenderedWorld = st.world;
-      const wHeader = document.createElement("div");
-      wHeader.className = `world-header world-${st.world}`;
-      let worldDesc = "";
-      let themeColor = "var(--amber)";
-      if (st.world === 1) {
-        worldDesc = "۸ مرحله • ۱۶۱ واژه رسمی واژه‌نامه دهم";
-        themeColor = "var(--amber)";
-      } else if (st.world === 2) {
-        worldDesc = "۲ مرحله • ۲۰ کنایه مهم و امتحانی";
-        themeColor = "var(--xp)";
-      } else if (st.world === 3) {
-        worldDesc = "۱ مرحله • ۱۰ واژه ایهام‌دار چالشی";
-        themeColor = "var(--ok)";
-      } else if (st.world === 4) {
-        worldDesc = "نبرد ترکیبی چالش‌برانگیز • پاداش ۲ برابر XP";
-        themeColor = "var(--red)";
-      }
+  const w1Completed = w1Stages.filter(s => completed.includes(s.id)).length;
+  const w2Completed = w2Stages.filter(s => completed.includes(s.id)).length;
+  const w3Completed = w3Stages.filter(s => completed.includes(s.id)).length;
+  const w4Completed = w4Stages.filter(s => completed.includes(s.id)).length;
 
-      wHeader.innerHTML = `
-        <div>
-          <span style="font-weight:900; font-size:0.9rem; color:${themeColor};">${st.worldTitle}</span>
-          <span style="font-size:0.75rem; color:var(--steel); margin-right:8px;">(${worldDesc})</span>
-        </div>
-      `;
-      list.appendChild(wHeader);
-    }
+  const p1 = document.getElementById("portalCount1");
+  const p2 = document.getElementById("portalCount2");
+  const p3 = document.getElementById("portalCount3");
+  const p4 = document.getElementById("portalCount4");
+  if (p1) p1.textContent = `${w1Completed}/${w1Stages.length}`;
+  if (p2) p2.textContent = `${w2Completed}/${w2Stages.length}`;
+  if (p3) p3.textContent = `${w3Completed}/${w3Stages.length}`;
+  if (p4) p4.textContent = w4Completed > 0 ? "فتح شد" : "2x XP";
 
+  // 2. Highlight active portal tab
+  document.querySelectorAll(".portal-tab").forEach(tab => {
+    const wId = parseInt(tab.dataset.world, 10);
+    tab.classList.toggle("active", wId === appState.selectedWorld);
+  });
+
+  // 3. Update compact World Banner
+  const bannerTitle = document.getElementById("worldBannerTitle");
+  const bannerSub = document.getElementById("worldBannerSub");
+  const progressRatio = document.getElementById("worldProgressRatio");
+  const progressBar = document.getElementById("worldProgressBar");
+
+  let activeStages = [];
+  if (appState.selectedWorld === 1) {
+    if (bannerTitle) { bannerTitle.textContent = "جهان واژگان"; bannerTitle.style.color = "var(--amber)"; }
+    if (bannerSub) bannerSub.textContent = "۸ مرحله • ۱۶۱ واژه رسمی واژه‌نامه دهم";
+    if (progressRatio) progressRatio.textContent = `${w1Completed}/${w1Stages.length}`;
+    if (progressBar) { progressBar.style.width = `${Math.round((w1Completed / w1Stages.length) * 100)}%`; progressBar.style.background = "var(--amber)"; }
+    activeStages = w1Stages;
+  } else if (appState.selectedWorld === 2) {
+    if (bannerTitle) { bannerTitle.textContent = "جهان کنایه"; bannerTitle.style.color = "var(--xp)"; }
+    if (bannerSub) bannerSub.textContent = "۴ مرحله • ۴۰ کنایه مهم و امتحانی کتاب درسی";
+    if (progressRatio) progressRatio.textContent = `${w2Completed}/${w2Stages.length}`;
+    if (progressBar) { progressBar.style.width = `${Math.round((w2Completed / w2Stages.length) * 100)}%`; progressBar.style.background = "var(--xp)"; }
+    activeStages = w2Stages;
+  } else if (appState.selectedWorld === 3) {
+    if (bannerTitle) { bannerTitle.textContent = "جهان ایهام"; bannerTitle.style.color = "var(--ok)"; }
+    if (bannerSub) bannerSub.textContent = "۲ مرحله • ۲۰ واژه ایهام‌دار با معانی دوگانه و چالش‌برانگیز";
+    if (progressRatio) progressRatio.textContent = `${w3Completed}/${w3Stages.length}`;
+    if (progressBar) { progressBar.style.width = `${Math.round((w3Completed / w3Stages.length) * 100)}%`; progressBar.style.background = "var(--ok)"; }
+    activeStages = w3Stages;
+  } else if (appState.selectedWorld === 4) {
+    if (bannerTitle) { bannerTitle.textContent = "دژ جهنمی · نبرد نهایی"; bannerTitle.style.color = "var(--red)"; }
+    if (bannerSub) bannerSub.textContent = "نبرد ترکیبی از واژه‌ها، کنایات و ایهام‌ها • پاداش ۲ برابر XP";
+    if (progressRatio) progressRatio.textContent = w4Completed > 0 ? "1/1" : "0/1";
+    if (progressBar) { progressBar.style.width = w4Completed > 0 ? "100%" : "0%"; progressBar.style.background = "var(--red)"; }
+    activeStages = w4Stages;
+  }
+
+  // 4. Render ONLY stages for currently selected world
+  const list = document.getElementById("towersList");
+  list.innerHTML = "";
+
+  if (appState.selectedWorld === 4) {
+    const st = activeStages[0] || appState.stages.find(s => s.id === 15);
     const isCompleted = completed.includes(st.id);
-    const prevCompleted = idx === 0 || completed.includes(appState.stages[idx - 1].id);
-    const isUnlocked = st.unlocked && (idx === 0 || prevCompleted);
+    const isUnlocked = st.unlocked;
+
+    const hellCard = document.createElement("div");
+    hellCard.className = "pixel-window border-line hell-portal-card";
+    hellCard.style.cssText = "margin-bottom:12px; border:2px solid var(--red); background:radial-gradient(circle at center, #250d12 0%, #0d0608 100%); position:relative; overflow:hidden;";
+
+    hellCard.innerHTML = `
+      <div class="crt-scanlines"></div>
+      <div class="pixel-window-inner" style="padding:16px; position:relative; z-index:2; text-align:center;">
+        <div style="display:flex; justify-content:center; margin-bottom:10px;">
+          <svg width="52" height="52" viewBox="0 0 20 20" style="shape-rendering:crispEdges; filter:drop-shadow(0 0 8px rgba(177,62,83,0.7));">
+            <path d="M4 2h2v4H4zM14 2h2v4h-2zM6 4h8v2H6zM3 6h14v8H3zM5 8h3v3H5zM12 8h3v3h-3zM7 13h6v2H7zM5 16h10v2H5z" fill="#b13e53"/>
+            <path d="M8 8h1v2H8zM11 8h1v2h-1z" fill="#ffd48a"/>
+          </svg>
+        </div>
+        <div style="font-weight:900; font-size:1.15rem; color:var(--red); text-shadow:2px 2px 0 #000;">
+          دژ جهنمی · نبرد نهایی واژه‌ها
+        </div>
+        <div style="display:inline-block; margin:6px auto; padding:2px 10px; background:var(--wine); border:1px solid var(--red); font-size:0.75rem; color:var(--amber); font-weight:800;" class="font-pixel">
+          پاداش ۲ برابر XP (2x REWARD)
+        </div>
+        <p style="font-size:0.82rem; color:var(--moon); line-height:1.6; margin:8px 0 16px 0;">
+          ترکیبی چالش‌برانگیز از ۱۰ واژه، کنایه و ایهام امتحانی از کل کتاب با اولویت لغاتی که قبلاً در آن‌ها اشتباه داشته‌اید.
+        </p>
+        ${isUnlocked ? `
+          <button class="pixel-btn btn-crimson" style="width:100%; min-height:48px; font-size:0.95rem; font-weight:900; box-shadow:0 0 14px rgba(177,62,83,0.4);" onclick="playSelectSound(); startBattleMode(appState.stages.find(s => s.id === ${st.id}))">
+            ورود به نبرد جهنمی (2x XP)
+          </button>
+        ` : `
+          <div style="padding:12px; background:#14080a; border:1px dashed var(--red); color:var(--steel); font-size:0.85rem;">
+            دروازه دژ جهنمی بسته است (قفل توسط استاد)
+          </div>
+        `}
+      </div>
+    `;
+    list.appendChild(hellCard);
+    return;
+  }
+
+  // Worlds 1, 2, 3: render stages
+  activeStages.forEach((st, idxInWorld) => {
+    const isCompleted = completed.includes(st.id);
+    const prevInWorldCompleted = (idxInWorld === 0) || completed.includes(activeStages[idxInWorld - 1].id);
+    const isUnlocked = st.unlocked && (idxInWorld === 0 || prevInWorldCompleted);
 
     const card = document.createElement("div");
     card.className = `tower-card world-${st.world} ${isCompleted ? "completed" : (isUnlocked ? "unlocked" : "locked")}`;
 
     const infoDiv = document.createElement("div");
-    let countLabel = st.isHellMix ? "۱۰ چالش ترکیبی" : `${st.words.length} واژه/کنایه`;
-    let statusLabel = isCompleted ? "فتح شده" : (isUnlocked ? "آماده ورود" : "قفل برج قبلی");
-    let titleColor = isCompleted ? "var(--ok)" : (isUnlocked ? (st.world === 2 ? "var(--xp)" : (st.world === 3 ? "var(--ok)" : (st.world === 4 ? "var(--red)" : "var(--amber)"))) : "var(--steel)");
+    let countLabel = `${st.words.length} واژه/کنایه`;
+    if (st.world === 2) countLabel = `${st.words.length} کنایه امتحانی`;
+    if (st.world === 3) countLabel = `${st.words.length} واژه ایهام‌دار`;
+
+    let statusLabel = isCompleted ? "فتح شده" : (isUnlocked ? "آماده ورود" : (!st.unlocked ? "قفل استاد" : "قفل برج قبلی"));
+    let titleColor = isCompleted ? "var(--ok)" : (isUnlocked ? (st.world === 2 ? "var(--xp)" : (st.world === 3 ? "var(--ok)" : "var(--amber)")) : "var(--steel)");
 
     infoDiv.innerHTML = `
       <div style="font-weight:900; font-size:0.95rem; color:${titleColor};">
@@ -3737,25 +4377,21 @@ function renderTowerMap() {
       const actionsDiv = document.createElement("div");
       actionsDiv.style.cssText = "display:flex; gap:8px; align-items:center; flex-wrap:wrap;";
 
-      // Study Mode Button (Not for Hell mix)
-      if (!st.isHellMix) {
-        const studyBtn = document.createElement("button");
-        studyBtn.className = "pixel-btn btn-slate";
-        studyBtn.style.cssText = "min-height:44px; padding:8px 14px; font-size:0.85rem;";
-        studyBtn.textContent = "یادگیری";
-        studyBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          playSelectSound();
-          openStudyMode(st);
-        });
-        actionsDiv.appendChild(studyBtn);
-      }
+      const studyBtn = document.createElement("button");
+      studyBtn.className = "pixel-btn btn-slate";
+      studyBtn.style.cssText = "min-height:44px; padding:8px 14px; font-size:0.85rem;";
+      studyBtn.textContent = "یادگیری";
+      studyBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        playSelectSound();
+        openStudyMode(st);
+      });
+      actionsDiv.appendChild(studyBtn);
 
-      // Battle Mode Button
       const battleBtn = document.createElement("button");
-      battleBtn.className = st.world === 4 ? "pixel-btn btn-crimson" : (st.world === 2 ? "pixel-btn btn-cyan" : (st.world === 3 ? "pixel-btn btn-emerald" : "pixel-btn btn-amber"));
+      battleBtn.className = st.world === 2 ? "pixel-btn btn-cyan" : (st.world === 3 ? "pixel-btn btn-emerald" : "pixel-btn btn-amber");
       battleBtn.style.cssText = "min-height:44px; padding:8px 14px; font-size:0.85rem;";
-      battleBtn.textContent = st.world === 4 ? "نبرد جهنمی" : "نبرد دروازه";
+      battleBtn.textContent = "نبرد دروازه";
       battleBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         playSelectSound();
@@ -3765,24 +4401,15 @@ function renderTowerMap() {
 
       card.appendChild(actionsDiv);
     } else {
-      const lockedBadge = document.createElement("div");
-      lockedBadge.className = "pixel-num";
-      lockedBadge.style.cssText = "font-size:0.75rem; color:var(--steel);";
-      lockedBadge.textContent = "[قفل]";
-      card.appendChild(lockedBadge);
+      const lockTag = document.createElement("span");
+      lockTag.style.cssText = "font-size:0.75rem; color:var(--steel); border:1px solid var(--line); padding:4px 8px; background:#0b0d12;";
+      lockTag.textContent = !st.unlocked ? "قفل استاد" : "قفل مرحله قبل";
+      card.appendChild(lockTag);
     }
 
     list.appendChild(card);
   });
 }
-
-// ==========================================
-// 6. DEDICATED FLASHCARD STUDY MODE (یادگیری)
-// ==========================================
-let studyStage = null;
-let studyDeck = [];
-let studyIndex = 0;
-let isCardFlipped = false;
 
 function openStudyMode(stage) {
   studyStage = stage;
@@ -3965,17 +4592,25 @@ function sampleHellDeck(userMistakes) {
     }).slice(0, count);
   };
 
-  // World 1 pool (Stages 1-8)
+  // World 1 pool (Stages 1-8, 161 words)
   let w1Pool = [];
-  for (let i = 0; i < 8; i++) w1Pool.push(...appState.stages[i].words);
+  appState.stages.filter(s => s.world === 1).forEach(s => {
+    if (s.words) w1Pool.push(...s.words);
+  });
   const w1Sample = getTopMistakes(w1Pool, 4);
 
-  // World 2 pool (Stages 9-10)
-  let w2Pool = [...appState.stages[8].words, ...appState.stages[9].words];
+  // World 2 pool (Stages 9-12, 40 idioms)
+  let w2Pool = [];
+  appState.stages.filter(s => s.world === 2).forEach(s => {
+    if (s.words) w2Pool.push(...s.words);
+  });
   const w2Sample = getTopMistakes(w2Pool, 3);
 
-  // World 3 pool (Stage 11)
-  let w3Pool = [...appState.stages[10].words];
+  // World 3 pool (Stages 13-14, 20 ambiguities)
+  let w3Pool = [];
+  appState.stages.filter(s => s.world === 3).forEach(s => {
+    if (s.words) w3Pool.push(...s.words);
+  });
   const w3Sample = getTopMistakes(w3Pool, 3);
 
   return [...w1Sample, ...w2Sample, ...w3Sample].sort(() => 0.5 - Math.random());
