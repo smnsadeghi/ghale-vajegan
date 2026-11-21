@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ghale Vajegan — Isolated Battle Scene Prototype (Phase 3A)</title>
+  <link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="prototype-header">
+    <div class="prototype-title">
+      <h1>Phase 3A: Isolated Battle Scene Prototype</h1>
+      <p>World 1: Vocabulary Kingdom (جهان واژگان) · 16-Bit Dark Fantasy Pixel Art Validation</p>
+    </div>
+    <div class="header-badges">
+      <span class="badge">Vanilla DOM + CSS</span>
+      <span class="badge">Zero Permanent Loops</span>
+      <span class="badge">Isolated Staging</span>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="prototype-workspace">
+
+    <!-- Viewport / Device Wrapper -->
+    <div class="viewport-wrapper">
+      <div class="device-frame mode-desktop" id="deviceFrame">
+        <div class="mock-game-view">
+          
+          <!-- Mock Top Bar (Context Only) -->
+          <div class="mock-top-bar">
+            <span>واژگان · مرحله ۱ (ستایش)</span>
+            <span>🕯️🕯️🕯️ &nbsp;🔒 3/10 &nbsp;⚡ 120 XP</span>
+          </div>
+
+          <!-- ============================================================
+               THE BATTLE SCENE PROTOTYPE (Multi-Layer Pixel Art Architecture)
+               ============================================================ -->
+          <div class="battle-scene" id="battleScene">
+            
+            <!-- Layer 0: Deep Background Environment -->
+            <img src="../backgrounds/bg_w1_battle_ruins.webp" class="layer-bg" id="layerBg" alt="Ruined Castle Background">
+
+            <!-- Layer 1: Ambient Lighting Gradient -->
+            <div class="layer-ambient-lighting" id="layerAmbient"></div>
+
+            <!-- Layer 2: Wall Torches with Animated Strips & Radial Light -->
+            <div class="layer-torches" id="layerTorches">
+              <!-- Left Arch Torch -->
+              <div class="torch-fixture" style="top: 88px; left: 62px;">
+                <img src="../props/prop_wall_torch.png" class="torch-sconce" alt="Wall Torch Sconce">
+                <div class="torch-flame-sprite"></div>
+                <div class="torch-light-radial"></div>
+              </div>
+              <!-- Right Broken Gate Torch -->
+              <div class="torch-fixture" style="top: 96px; right: 148px;">
+                <img src="../props/prop_wall_torch.png" class="torch-sconce" alt="Wall Torch Sconce">
+                <div class="torch-flame-sprite"></div>
+                <div class="torch-light-radial"></div>
+              </div>
+            </div>
+
+            <!-- Layer 3: Midground Environmental Props -->
+            <div class="layer-props" id="layerProps">
+              <!-- Dead tree in distant midground -->
+              <img src="../props/prop_dead_tree.png" class="prop-element" style="bottom: calc(var(--ground-y) + 35px); left: 160px; height: 58px;" alt="Dead Tree">
+              <!-- Hanging Iron Chain on stone arch -->
+              <img src="../props/prop_iron_chain.png" class="prop-element" style="top: 68px; left: 10px; height: 45px;" alt="Iron Chain">
+              <!-- Signboard near gate path -->
+              <img src="../props/prop_signboard.png" class="prop-element" style="bottom: calc(var(--ground-y) + 12px); right: 170px; height: 42px;" alt="Signboard">
+            </div>
+
+            <!-- Layer 4: Captive Princess & Portal Aura -->
+            <div class="layer-princess" id="layerPrincess">
+              <div class="portal-aura-glow"></div>
+              <img src="../sprites/spr_princess_standing.png" class="princess-sprite" id="princessSprite" alt="Captive Princess">
+            </div>
+
+            <!-- Layer 5: Obstacle / Road Monster -->
+            <div class="layer-obstacle" id="layerObstacle">
+              <img src="../sprites/obs_shadow_bear.png" class="obstacle-sprite" id="obstacleSprite" alt="Road Monster">
+            </div>
+
+            <!-- Layer 6: Knight Hero Actor (Bottom-Center Ground Anchored) -->
+            <div class="layer-knight" id="layerKnight">
+              <img src="../sprites/spr_knight_idle.png" class="knight-sprite" id="knightSprite" alt="Knight Hero">
+            </div>
+
+            <!-- Layer 7: Combat Sparks & Strike FX -->
+            <div class="layer-combat-fx" id="layerCombatFx">
+              <div class="sword-spark-instance" id="combatFxSpark"></div>
+            </div>
+
+            <!-- Layer 8: Ground Fog Layer -->
+            <div class="layer-ground-fog" id="layerFog"></div>
+
+            <!-- Layer 9: Atmospheric Particles (Floating Golden Dust) -->
+            <div class="layer-particles" id="layerParticles"></div>
+
+            <!-- Layer 10: Foreground Props & Depth Vignette -->
+            <div class="layer-foreground" id="layerForeground">
+              <!-- Foreground ruined pillar -->
+              <img src="../props/prop_broken_pillar.png" class="foreground-pillar" alt="Foreground Pillar">
+              <!-- Foreground mossy boulders -->
+              <img src="../props/prop_mossy_boulders.png" class="foreground-boulders" alt="Foreground Boulders">
+            </div>
+
+            <!-- Debug Guides Overlay -->
+            <div class="layer-debug-guides" id="debugGuides">
+              <div class="debug-ground-line"></div>
+              <div class="debug-ground-label">ROAD BASELINE (GROUND CONTACT)</div>
+            </div>
+
+          </div>
+          <!-- ============================================================ -->
+
+          <!-- Mock Quiz Panel (Showing Real Proportions in Game Context) -->
+          <div class="mock-quiz-panel">
+            <div class="mock-card">
+              <strong>قفل ۳ از ۱۰:</strong> معنی واژه «سفینه» چیست؟
+            </div>
+            <div class="mock-btn-group">
+              <div class="mock-btn">۱. کشتی</div>
+              <div class="mock-btn">۲. پیمانه</div>
+              <div class="mock-btn">۳. ستاره</div>
+              <div class="mock-btn">۴. کتابچه</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         INTERACTIVE CONTROL PANEL (PROTOTYPE CONTROLS)
+         ============================================================ -->
+    <aside class="prototype-controls">
+
+      <!-- Section 1: Dimensions Comparison -->
+      <div class="control-section">
+        <h3>1. Scene Dimensions</h3>
+        <div class="btn-row">
+          <button class="ctrl-btn active" data-dim="480x270" onclick="setSceneDimension('480x270')">480 × 270 (16:9 Standard)</button>
+          <button class="ctrl-btn" data-dim="480x312" onclick="setSceneDimension('480x312')">480 × 312 (16:10.4 Tall)</button>
+        </div>
+      </div>
+
+      <!-- Section 2: Mobile Display Simulation -->
+      <div class="control-section">
+        <h3>2. Display Simulation</h3>
+        <div class="btn-row">
+          <button class="ctrl-btn active" data-device="desktop" onclick="setDeviceMode('desktop')">Desktop View</button>
+          <button class="ctrl-btn" data-device="mobile-360" onclick="setDeviceMode('mobile-360')">Mobile 360px</button>
+          <button class="ctrl-btn" data-device="mobile-390" onclick="setDeviceMode('mobile-390')">Mobile 390px (iPhone)</button>
+        </div>
+      </div>
+
+      <!-- Section 3: Knight Character States -->
+      <div class="control-section">
+        <h3>3. Knight States (Animation Baseline)</h3>
+        <div class="btn-row">
+          <button class="ctrl-btn active" data-knight-state="idle" onclick="setKnightState('idle')">Idle</button>
+          <button class="ctrl-btn" data-knight-state="walk" onclick="setKnightState('walk')">Walk</button>
+          <button class="ctrl-btn" data-knight-state="attack" onclick="setKnightState('attack')">Attack (Spark)</button>
+          <button class="ctrl-btn" data-knight-state="damage" onclick="setKnightState('damage')">Damage (Shake)</button>
+          <button class="ctrl-btn" data-knight-state="kneel" onclick="setKnightState('kneel')">Kneel (Defeat)</button>
+        </div>
+      </div>
+
+      <!-- Section 4: Knight Scale -->
+      <div class="control-section">
+        <h3>4. Knight Sprite Scale</h3>
+        <div class="btn-row">
+          <button class="ctrl-btn" data-scale="0.30" onclick="setKnightScale(0.30)">Small (0.30x · 63px)</button>
+          <button class="ctrl-btn active" data-scale="0.38" onclick="setKnightScale(0.38)">Balanced (0.38x · 80px)</button>
+          <button class="ctrl-btn" data-scale="0.45" onclick="setKnightScale(0.45)">Large (0.45x · 95px)</button>
+        </div>
+      </div>
+
+      <!-- Section 5: Road Progress Slider -->
+      <div class="control-section">
+        <h3>5. Knight Bridge Progression</h3>
+        <div class="slider-group">
+          <input type="range" id="progressSlider" min="0" max="100" value="35">
+          <span class="slider-val" id="progressVal">35%</span>
+        </div>
+      </div>
+
+      <!-- Section 6: Obstacle Placement -->
+      <div class="control-section">
+        <h3>6. Obstacle / Monster</h3>
+        <div class="btn-row">
+          <button class="ctrl-btn" data-obstacle="none" onclick="setObstacle('none')">None (Clear Road)</button>
+          <button class="ctrl-btn" data-obstacle="trap" onclick="setObstacle('trap')">Spike Trap</button>
+          <button class="ctrl-btn active" data-obstacle="bear" onclick="setObstacle('bear')">Shadow Bear</button>
+          <button class="ctrl-btn" data-obstacle="dragon" onclick="setObstacle('dragon')">Shadow Dragon (Boss)</button>
+        </div>
+      </div>
+
+      <!-- Section 7: Environmental & Atmospheric Layer Toggles -->
+      <div class="control-section">
+        <h3>7. Atmospheric Layers & FX</h3>
+        <div class="toggle-group">
+          <label class="toggle-label">
+            <input type="checkbox" checked onchange="toggleLayer('fog', this.checked)"> Ground Fog
+          </label>
+          <label class="toggle-label">
+            <input type="checkbox" checked onchange="toggleLayer('particles', this.checked)"> Golden Dust
+          </label>
+          <label class="toggle-label">
+            <input type="checkbox" checked onchange="toggleLayer('torches', this.checked)"> Wall Torches (4-FPS)
+          </label>
+          <label class="toggle-label">
+            <input type="checkbox" checked onchange="toggleLayer('ambient', this.checked)"> Ambient Vignette
+          </label>
+          <label class="toggle-label">
+            <input type="checkbox" checked onchange="toggleLayer('princess', this.checked)"> Princess Portal
+          </label>
+          <label class="toggle-label">
+            <input type="checkbox" onchange="toggleLayer('guides', this.checked)"> Baseline Guides
+          </label>
+        </div>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <script src="prototype.js"></script>
+</body>
+</html>

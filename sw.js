@@ -1,9 +1,33 @@
-const CACHE_NAME = 'ghale-vajegan-v3.5.1';
+const CACHE_NAME = 'ghale-vajegan-v3.6-visual';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icon.svg'
+  './icon.svg',
+  './assets/bg/bg_w1_battle_ruins.webp',
+  './assets/bg/bg_w1_citadel_bridge.webp',
+  './assets/sprites/spr_knight_idle.png',
+  './assets/sprites/spr_knight_walk.png',
+  './assets/sprites/spr_knight_attack.png',
+  './assets/sprites/spr_knight_damage.png',
+  './assets/sprites/spr_knight_kneel.png',
+  './assets/sprites/spr_princess_standing.png',
+  './assets/sprites/obs_spike_trap.png',
+  './assets/sprites/obs_shadow_bear.png',
+  './assets/sprites/obs_shadow_dragon.png',
+  './assets/props/prop_wall_torch.png',
+  './assets/props/prop_broken_pillar.png',
+  './assets/props/prop_mossy_boulders.png',
+  './assets/props/prop_dead_tree.png',
+  './assets/props/prop_signboard.png',
+  './assets/props/prop_iron_chain.png',
+  './assets/props/prop_lantern_lit.png',
+  './assets/fx/fx_torch_flames_strip.png',
+  './assets/fx/fx_ground_fog.png',
+  './assets/fx/fx_golden_dust.png',
+  './assets/fx/fx_portal_aura.png',
+  './assets/fx/fx_sword_sparks.png',
+  './assets/fx/fx_amber_impact.png'
 ];
 
 self.addEventListener('install', (event) => {

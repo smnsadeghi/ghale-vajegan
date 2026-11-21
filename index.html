@@ -1071,6 +1071,320 @@
     .footer-ver:hover { color: var(--amber); }
 
     .hidden { display: none !important; }
+  
+    /* ==========================================================================
+       MULTI-LAYER HYBRID PIXEL ART BATTLE SCENE & 4 WORLDS (v3.6-visual)
+       ========================================================================== */
+    .stage-wrapper {
+      position: relative;
+      width: 100%;
+      height: 270px;
+      border: 4px solid var(--ink);
+      box-shadow: 0 6px 0 #07090f;
+      margin-bottom: 14px;
+      overflow: hidden;
+      background: #060810;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+
+    .stage-bg-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: bottom center;
+      z-index: 1;
+      image-rendering: pixelated;
+      transition: filter 0.4s ease;
+    }
+
+    .stage-ambient-vignette {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 35%, transparent 40%, rgba(5, 6, 11, 0.7) 100%),
+                  linear-gradient(to bottom, transparent 60%, rgba(6, 8, 14, 0.75) 100%);
+      transition: background 0.4s ease;
+    }
+
+    /* World 1: Amber / Vocabulary Kingdom (جهان واژگان) */
+    .stage-wrapper.theme-amber .stage-bg-layer {
+      filter: none;
+    }
+    .stage-wrapper.theme-amber .stage-ambient-vignette {
+      background: radial-gradient(circle at 50% 35%, transparent 40%, rgba(7, 8, 14, 0.7) 100%),
+                  linear-gradient(to bottom, transparent 60%, rgba(15, 12, 18, 0.8) 100%);
+    }
+
+    /* World 2: Cyan / Metaphor Realm (قلمرو کنایه - ویرانه‌های سیل‌زده) */
+    .stage-wrapper.theme-cyan .stage-bg-layer {
+      filter: hue-rotate(160deg) saturate(1.15) brightness(0.85);
+    }
+    .stage-wrapper.theme-cyan .stage-ambient-vignette {
+      background: radial-gradient(circle at 50% 35%, rgba(93, 226, 235, 0.08) 0%, transparent 50%, rgba(6, 14, 20, 0.75) 100%),
+                  linear-gradient(to bottom, transparent 60%, rgba(8, 20, 28, 0.85) 100%);
+    }
+
+    /* World 3: Emerald / Ambiguity Wilds (بیشه ایهام - جنگل باستانی معبد) */
+    .stage-wrapper.theme-ok .stage-bg-layer {
+      filter: hue-rotate(90deg) saturate(1.1) brightness(0.8);
+    }
+    .stage-wrapper.theme-ok .stage-ambient-vignette {
+      background: radial-gradient(circle at 50% 35%, rgba(62, 160, 102, 0.08) 0%, transparent 50%, rgba(6, 16, 10, 0.75) 100%),
+                  linear-gradient(to bottom, transparent 60%, rgba(8, 22, 12, 0.85) 100%);
+    }
+
+    /* World 4: Crimson / Infernal Citadel (دژ جهنمی - قلعه آتشفشانی) */
+    .stage-wrapper.theme-hell .stage-bg-layer,
+    .stage-wrapper.hell-mode .stage-bg-layer {
+      filter: hue-rotate(310deg) saturate(1.35) brightness(0.75);
+    }
+    .stage-wrapper.theme-hell .stage-ambient-vignette,
+    .stage-wrapper.hell-mode .stage-ambient-vignette {
+      background: radial-gradient(circle at 50% 35%, rgba(177, 62, 83, 0.12) 0%, transparent 50%, rgba(18, 6, 8, 0.8) 100%),
+                  linear-gradient(to bottom, transparent 55%, rgba(24, 7, 10, 0.9) 100%);
+    }
+
+    /* Wall Torches with pure CSS 4-frame animated flame strip */
+    .arena-torch {
+      position: absolute;
+      width: 18px;
+      height: 44px;
+      z-index: 3;
+      pointer-events: none;
+    }
+    .arena-torch-sconce {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      image-rendering: pixelated;
+    }
+    .arena-torch-flame {
+      position: absolute;
+      top: -16px;
+      left: -8px;
+      width: 34px;
+      height: 32px;
+      background-image: url('assets/fx/fx_torch_flames_strip.png');
+      background-repeat: no-repeat;
+      background-size: 136px 32px;
+      image-rendering: pixelated;
+      animation: playTorchStrip 0.4s steps(4) infinite;
+      filter: drop-shadow(0 0 6px rgba(240, 181, 96, 0.85));
+    }
+    @keyframes playTorchStrip {
+      from { background-position: 0 0; }
+      to { background-position: -136px 0; }
+    }
+    .arena-torch-radial {
+      position: absolute;
+      top: -20px;
+      left: -18px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(240, 181, 96, 0.4) 0%, rgba(240, 150, 60, 0.15) 50%, transparent 70%);
+      animation: flickerRadial 1.8s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    @keyframes flickerRadial {
+      0% { transform: scale(0.95); opacity: 0.85; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(0.98); opacity: 0.9; }
+    }
+
+    /* Ground Fog Layer */
+    .road-ground-fog {
+      position: absolute;
+      bottom: 0;
+      left: -20px;
+      width: calc(100% + 40px);
+      height: 55px;
+      background-image: url('assets/fx/fx_ground_fog.png');
+      background-size: 160px 55px;
+      background-repeat: repeat-x;
+      background-position: bottom left;
+      mix-blend-mode: screen;
+      opacity: 0.65;
+      z-index: 6;
+      pointer-events: none;
+      animation: fogShift 12s linear infinite alternate;
+    }
+    @keyframes fogShift {
+      from { transform: translateX(0); }
+      to { transform: translateX(-24px); }
+    }
+
+    /* Ambient Golden Dust / Ash */
+    .ambient-particles {
+      position: absolute;
+      inset: 0;
+      z-index: 7;
+      pointer-events: none;
+      background-image: url('assets/fx/fx_golden_dust.png');
+      background-size: 110px 114px;
+      background-repeat: repeat;
+      mix-blend-mode: screen;
+      opacity: 0.45;
+      animation: dustDrift 16s linear infinite;
+    }
+    @keyframes dustDrift {
+      from { background-position: 0 0; }
+      to { background-position: 110px 114px; }
+    }
+
+    /* Captive Princess & Portal Aura */
+    .gate-princess {
+      position: absolute;
+      bottom: 24px;
+      left: 28px;
+      z-index: 4;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      transition: opacity 0.3s ease;
+    }
+    .princess-sprite-img {
+      height: 54px;
+      width: auto;
+      image-rendering: pixelated;
+      vertical-align: bottom;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7));
+    }
+    .princess-portal-aura {
+      position: absolute;
+      bottom: -4px;
+      left: -12px;
+      width: 64px;
+      height: 64px;
+      background-image: url('assets/fx/fx_portal_aura.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      mix-blend-mode: screen;
+      opacity: 0.8;
+      animation: pulsePortal 3s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    @keyframes pulsePortal {
+      0% { transform: scale(0.9); opacity: 0.6; }
+      100% { transform: scale(1.1); opacity: 0.9; }
+    }
+
+    /* Knight Actor */
+    .knight-actor {
+      position: absolute;
+      bottom: 22px;
+      right: 24px;
+      z-index: 5;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      transform-origin: bottom center;
+      transition: right 0.35s steps(6);
+    }
+    .knight-sprite-img {
+      height: 52px;
+      width: auto;
+      image-rendering: pixelated;
+      vertical-align: bottom;
+      filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.8));
+    }
+    .knight-walk-bob {
+      animation: walkBob 0.3s steps(2) infinite alternate;
+    }
+    @keyframes walkBob {
+      from { transform: translateY(0); }
+      to { transform: translateY(-2px); }
+    }
+    .knight-damage-fx {
+      animation: knightStagger 0.4s ease-out;
+    }
+    @keyframes knightStagger {
+      0% { transform: translateX(0); filter: brightness(2) contrast(1.5); }
+      25% { transform: translateX(5px); filter: brightness(1.6); }
+      50% { transform: translateX(-3px); }
+      100% { transform: translateX(0); filter: none; }
+    }
+
+    /* Obstacle / Monster Actor */
+    .road-obstacle {
+      position: absolute;
+      bottom: 22px;
+      z-index: 4;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      transform-origin: bottom center;
+      transition: opacity 0.3s ease;
+    }
+    .obstacle-sprite-img {
+      width: auto;
+      image-rendering: pixelated;
+      vertical-align: bottom;
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.8));
+    }
+    .obstacle-hit {
+      animation: obstacleDamage 0.4s steps(4) forwards;
+    }
+    @keyframes obstacleDamage {
+      0% { transform: scale(1); filter: brightness(2.5) contrast(2); }
+      30% { transform: scale(1.2) translateY(-4px); filter: brightness(2); }
+      70% { transform: scale(0.9) translateY(2px); opacity: 0.8; }
+      100% { transform: scale(0.4); opacity: 0; }
+    }
+
+    /* Combat Sparks Strike Effect */
+    .combat-spark-fx {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-image: url('assets/fx/fx_sword_sparks.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      mix-blend-mode: screen;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 8;
+      transform-origin: center center;
+    }
+    .combat-spark-fx.active {
+      animation: sparkBurst 0.35s ease-out forwards;
+    }
+    @keyframes sparkBurst {
+      0% { opacity: 1; transform: scale(0.5) rotate(0deg); }
+      50% { opacity: 1; transform: scale(1.1) rotate(15deg); }
+      100% { opacity: 0; transform: scale(1.3) rotate(30deg); }
+    }
+
+    /* Foreground Props */
+    .stage-fg-pillar {
+      position: absolute;
+      bottom: -4px;
+      left: -8px;
+      height: 65px;
+      width: auto;
+      z-index: 9;
+      image-rendering: pixelated;
+      pointer-events: none;
+      filter: drop-shadow(4px 0 8px rgba(0, 0, 0, 0.85));
+    }
+    .stage-fg-boulders {
+      position: absolute;
+      bottom: -4px;
+      right: -8px;
+      height: 42px;
+      width: auto;
+      z-index: 9;
+      image-rendering: pixelated;
+      pointer-events: none;
+      filter: drop-shadow(-4px 0 8px rgba(0, 0, 0, 0.85));
+    }
+
   </style>
 </head>
 <body>
@@ -1334,112 +1648,42 @@
     </div>
 
     <!-- 312px STAGE SCENE (Dynamic Theme Frame) -->
+    <!-- 270px HYBRID PIXEL ART BATTLE SCENE -->
     <div class="stage-wrapper theme-amber" id="stageScene">
       <div class="crt-overlay"></div>
-      <div class="stage-sky"></div>
+      
+      <!-- Layer 0: Deep Background Environment -->
+      <img src="assets/bg/bg_w1_battle_ruins.webp" class="stage-bg-layer" id="stageBgLayer" alt="Castle Ruins Battleground">
 
-      <!-- Subtle Twinkling Stars -->
-      <div class="pixel-star" style="top:18px; left:35px;"></div>
-      <div class="pixel-star" style="top:48px; left:110px; animation-delay:0.5s;"></div>
-      <div class="pixel-star" style="top:28px; left:190px; animation-delay:1.2s;"></div>
-      <div class="pixel-star" style="top:62px; left:290px; animation-delay:0.3s;"></div>
-      <div class="pixel-star" style="top:16px; right:75px; animation-delay:0.8s;"></div>
+      <!-- Layer 1: Ambient Lighting Gradient -->
+      <div class="stage-ambient-vignette" id="stageAmbientVignette"></div>
 
-      <!-- Pale Crescent Moon with Violet Haze -->
-      <div class="pixel-moon"></div>
+      <!-- Layer 2: Wall Torches with pure CSS 4-frame animated flame strip -->
+      <div class="arena-torch" style="top: 86px; left: 58px;">
+        <img src="assets/props/prop_wall_torch.png" class="arena-torch-sconce" alt="Torch Sconce">
+        <div class="arena-torch-flame"></div>
+        <div class="arena-torch-radial"></div>
+      </div>
+      <div class="arena-torch" style="top: 94px; right: 130px;">
+        <img src="assets/props/prop_wall_torch.png" class="arena-torch-sconce" alt="Torch Sconce">
+        <div class="arena-torch-flame"></div>
+        <div class="arena-torch-radial"></div>
+      </div>
 
-      <!-- Distant Stepped Mountains with Ruined Tower (Atmospheric Perspective) -->
-      <svg class="mountains-layer" viewBox="0 0 400 95" preserveAspectRatio="none" shape-rendering="crispEdges">
-        <!-- Far Hazy Ridge (deep violet/indigo) -->
-        <polygon points="0,95 0,38 35,38 35,22 75,22 75,44 130,44 130,14 180,14 180,52 250,52 250,28 310,28 310,56 400,56 400,95" fill="#131627" />
-        <!-- Ruined Tower on mountain ridge -->
-        <rect x="175" y="6" width="12" height="18" fill="#131627" />
-        <rect x="173" y="4" width="4" height="4" fill="#131627" />
-        <rect x="183" y="4" width="4" height="4" fill="#131627" />
-        <!-- Near Mountain Ridge (darker slate) -->
-        <polygon points="15,95 15,55 55,55 55,40 105,40 105,60 165,60 165,34 225,34 225,66 295,66 295,44 365,44 365,95" fill="#0d111b" />
-      </svg>
+      <!-- Layer 3: Midground Environmental Props -->
+      <img src="assets/props/prop_dead_tree.png" style="position:absolute; bottom:55px; left:140px; height:50px; z-index:3; pointer-events:none; image-rendering:pixelated;" alt="Dead Tree">
+      <img src="assets/props/prop_signboard.png" style="position:absolute; bottom:32px; right:150px; height:36px; z-index:3; pointer-events:none; image-rendering:pixelated;" alt="Signboard">
 
-      <!-- Castle Silhouette, Weathered Walls, Lanterns, Balcony & Dignified Princess -->
-      <svg class="castle-silhouette" viewBox="0 0 170 120" shape-rendering="crispEdges">
-        <!-- Main Keep & Weathered Stone -->
-        <rect x="35" y="30" width="100" height="90" fill="#07090e" />
-        <!-- Dark Moss patches on stone -->
-        <rect x="38" y="70" width="8" height="6" fill="#19281c" />
-        <rect x="42" y="74" width="6" height="4" fill="#233827" />
-        <rect x="120" y="65" width="10" height="8" fill="#19281c" />
-        <!-- Wooden Beams & Chains -->
-        <rect x="35" y="48" width="100" height="3" fill="#241711" />
-        <rect x="18" y="38" width="2" height="18" fill="#4d5c70" />
-        <rect x="142" y="38" width="2" height="18" fill="#4d5c70" />
-        <!-- Crenellations Keep -->
-        <rect x="35" y="20" width="16" height="10" fill="#07090e" />
-        <rect x="59" y="20" width="16" height="10" fill="#07090e" />
-        <rect x="83" y="20" width="16" height="10" fill="#07090e" />
-        <rect x="107" y="20" width="16" height="10" fill="#07090e" />
-        <rect x="119" y="20" width="16" height="10" fill="#07090e" />
-        <!-- Left Flank Tower -->
-        <rect x="15" y="10" width="24" height="110" fill="#07090e" />
-        <rect x="15" y="2" width="6" height="8" fill="#07090e" />
-        <rect x="25" y="2" width="6" height="8" fill="#07090e" />
-        <rect x="33" y="2" width="6" height="8" fill="#07090e" />
-        <!-- Right Flank Tower -->
-        <rect x="131" y="10" width="24" height="110" fill="#07090e" />
-        <rect x="131" y="2" width="6" height="8" fill="#07090e" />
-        <rect x="139" y="2" width="6" height="8" fill="#07090e" />
-        <rect x="149" y="2" width="6" height="8" fill="#07090e" />
-        <!-- Weathered Flag on left tower -->
-        <rect x="26" y="-12" width="2" height="14" fill="#3a4759" />
-        <polygon class="castle-flag" points="28,-12 45,-7 28,-2" fill="#5e1f2b" />
-
-        <!-- Wall Lanterns with Stepped Bloom -->
-        <!-- Left Lantern -->
-        <rect x="20" y="48" width="4" height="6" fill="#f0b560" />
-        <rect x="18" y="46" width="8" height="10" fill="none" stroke="#7a461e" stroke-width="1" />
-        <!-- Right Lantern -->
-        <rect x="138" y="48" width="4" height="6" fill="#f0b560" />
-        <rect x="136" y="46" width="8" height="10" fill="none" stroke="#7a461e" stroke-width="1" />
-
-        <!-- UPPER CASTLE BALCONY -->
-        <rect x="62" y="24" width="46" height="14" fill="#0c1018" />
-        <rect x="60" y="24" width="50" height="2" fill="#2d3749" />
-        <!-- Balustrade Crenellations -->
-        <rect x="62" y="22" width="4" height="4" fill="#182130" />
-        <rect x="70" y="22" width="4" height="4" fill="#182130" />
-        <rect x="78" y="22" width="4" height="4" fill="#182130" />
-        <rect x="86" y="22" width="4" height="4" fill="#182130" />
-        <rect x="94" y="22" width="4" height="4" fill="#182130" />
-        <rect x="102" y="22" width="4" height="4" fill="#182130" />
-
-        <!-- DIGNIFIED PIXEL PRINCESS ON BALCONY -->
-        <g id="balconyPrincess" class="balcony-princess">
-          <!-- Royal Violet Dress -->
-          <polygon points="82,12 80,18 78,28 92,28 90,18 88,12" fill="#281a38" />
-          <!-- Gold Embroidery / Sash -->
-          <rect x="81" y="20" width="8" height="1" fill="#f0b560" />
-          <rect x="84" y="16" width="2" height="12" fill="#ffcf86" />
-          <!-- Princess Head & Hair with subtle warm rim-lighting -->
-          <rect x="83" y="8" width="4" height="4" fill="#dcd0b8" />
-          <polygon points="81,6 89,6 90,15 88,15 87,10 85,10 84,15 82,15" fill="#171221" />
-          <rect x="87" y="7" width="1" height="5" fill="#f0b560" /> <!-- Warm rim light from lanterns -->
-          <!-- Golden Tiara -->
-          <polygon points="83,5 85,7 87,5" fill="#ffcf86" />
-        </g>
-
-        <!-- Lower Windows with Warm Theme Glow -->
-        <rect class="win-glow" x="48" y="52" width="8" height="12" fill="#f0b560" />
-        <rect class="win-glow" x="114" y="52" width="8" height="12" fill="#f0b560" />
-        <rect class="win-glow" x="23" y="32" width="6" height="10" fill="#f0b560" />
-        <rect class="win-glow" x="140" y="32" width="6" height="10" fill="#f0b560" />
-
-        <!-- Arched Castle Gate Portal (Warm Light Spills onto road) -->
-        <rect x="71" y="80" width="28" height="40" fill="#10141f" />
-      </svg>
+      <!-- Layer 4: Captive Princess & Rescued Portal (Revealed on Stage Victory) -->
+      <div id="gatePrincess" class="gate-princess hidden">
+        <div class="princess-portal-aura"></div>
+        <img src="assets/sprites/spr_princess_standing.png" class="princess-sprite-img" alt="Princess">
+      </div>
 
       <!-- Volumetric Gate Glow & Light Rays -->
       <div id="gateGlow" class="gate-glow"></div>
 
-      <!-- Hanging Wooden Board with 2 chains -->
+      <!-- Hanging Wooden Board with 2 chains for Target Word -->
       <div class="hanging-board-wrap">
         <div class="hanging-chains">
           <div class="chain-line"></div>
@@ -1453,44 +1697,28 @@
       <!-- 10 Pixel Locks Row -->
       <div class="stage-locks-row" id="locksRow"></div>
 
-      <!-- Weathered Stone Road with Cracks & Low-Lying Fog -->
-      <div class="stone-road">
-        <div class="road-fog-band"></div>
+      <!-- Layer 5: Obstacle / Road Monster -->
+      <div id="roadObstacle" class="road-obstacle hidden">
+        <img id="obstacleSpriteImg" class="obstacle-sprite-img" src="assets/sprites/obs_shadow_bear.png" alt="Obstacle">
       </div>
 
-      <!-- RANDOM ROAD ENCOUNTER CONTAINER -->
-      <div id="roadObstacle" class="road-obstacle hidden"></div>
-
-      <!-- SEMI-REALISTIC PIXEL KNIGHT ACTOR (Small, realistic proportions, wine cloak, grounded shadow) -->
+      <!-- Layer 6: Knight Hero Actor (Bottom-Center Ground Anchored) -->
       <div id="knightActor" class="knight-actor">
-        <svg viewBox="0 0 26 34" width="28" height="36" shape-rendering="crispEdges">
-          <!-- Grounded Shadow (Deep Violet) -->
-          <ellipse cx="13" cy="32" rx="10" ry="2" fill="#15182b" />
-          <!-- Tattered Wine Cloak Behind -->
-          <polygon points="5,12 2,29 6,28 10,30 9,14" fill="#4d1722" />
-          <!-- Steel Legs & Boots -->
-          <rect x="8" y="24" width="3" height="7" fill="#3a4759" />
-          <rect x="13" y="24" width="3" height="7" fill="#485970" />
-          <rect x="7" y="30" width="4" height="2" fill="#202936" />
-          <rect x="13" y="30" width="4" height="2" fill="#202936" />
-          <!-- Torso & Cuirass -->
-          <rect x="7" y="12" width="10" height="12" fill="#303b4d" />
-          <rect x="7" y="12" width="1" height="11" fill="#f0b560" /> <!-- Warm rim facing gate -->
-          <!-- Belt & Buckle -->
-          <rect x="7" y="22" width="10" height="2" fill="#1d2430" />
-          <rect x="11" y="22" width="2" height="2" fill="#f0b560" />
-          <!-- Helmet & Visor -->
-          <rect x="8" y="4" width="8" height="8" fill="#485970" />
-          <rect x="8" y="4" width="1" height="8" fill="#f0b560" /> <!-- Amber rim light -->
-          <rect x="9" y="8" width="6" height="2" fill="#15182b" /> <!-- Visor slit -->
-          <polygon points="9,2 15,2 14,4 10,4" fill="#5e1f2b" /> <!-- Plume -->
-          <!-- Sword & Guard -->
-          <rect x="18" y="8" width="2" height="16" fill="#8a97a3" />
-          <rect x="18" y="8" width="1" height="16" fill="#dcd0b8" />
-          <rect x="16" y="14" width="6" height="2" fill="#f0b560" />
-          <rect x="18" y="16" width="2" height="4" fill="#7a461e" />
-        </svg>
+        <img id="knightSpriteImg" class="knight-sprite-img" src="assets/sprites/spr_knight_idle.png" alt="Knight Hero">
       </div>
+
+      <!-- Layer 7: Combat Sparks & Strike FX -->
+      <div class="combat-spark-fx" id="combatFxSpark"></div>
+
+      <!-- Layer 8: Ground Fog Layer -->
+      <div class="road-ground-fog"></div>
+
+      <!-- Layer 9: Ambient Floating Particles -->
+      <div class="ambient-particles"></div>
+
+      <!-- Layer 10: Foreground Ruins -->
+      <img src="assets/props/prop_broken_pillar.png" class="stage-fg-pillar" alt="Pillar">
+      <img src="assets/props/prop_mossy_boulders.png" class="stage-fg-boulders" alt="Boulders">
     </div>
 
     <!-- RPG DIALOG WINDOW (Battle Direct) -->
@@ -1527,6 +1755,20 @@
         </div>
 
         <!-- VICTORY SCREEN -->
+                <!-- PHASE DEFEAT (Candles Extinguished) -->
+        <div id="phaseDefeat" class="hidden" style="text-align:center; padding:10px 0;">
+          <div style="font-weight:900; font-size:1.15rem; color:var(--red); margin-bottom:8px;" class="hard-shadow">
+            خاموشی شمع‌های نبرد!
+          </div>
+          <div style="font-size:0.85rem; color:var(--ink); line-height:1.7; margin-bottom:14px;">
+            هر ۳ شمع نبرد شما در این مرحله خاموش شدند. برای شکستن تمام ۱۰ قفل این دروازه و رهایی شاهدخت، باید با دقت بیشتر دوباره تلاش کنید.
+          </div>
+          <div style="display:flex; gap:10px; justify-content:center;">
+            <button id="btnRetryStage" class="pixel-btn btn-amber" style="flex:1; min-height:46px; font-size:0.9rem;">تلاش مجدد</button>
+            <button id="btnDefeatBackToMap" class="pixel-btn btn-slate" style="flex:1; min-height:46px; font-size:0.9rem;">نقشه قلعه</button>
+          </div>
+        </div>
+
         <div id="phaseVictory" class="hidden" style="text-align:center; padding:10px 0;">
           <h2 style="margin:0 0 8px; color:var(--ok); font-weight:900; font-size:1.4rem;" class="hard-shadow">
             دروازه فتح شد!
@@ -1670,6 +1912,8 @@
 // ==========================================
 // 1. COMPLETE 10TH GRADE CURRICULUM DATA
 // ==========================================
+const TEACHER_PASS = "431380";
+
 const DEFAULT_STAGES = [
   {
     "id": 1,
@@ -5012,6 +5256,65 @@ function sampleHellDeck(userMistakes) {
   return [...w1Sample, ...w2Sample, ...w3Sample].sort(() => 0.5 - Math.random());
 }
 
+// ==========================================
+// BATTLE ARENA & CHARACTER STATE CONTROLLER (v3.6-visual)
+// ==========================================
+function setKnightState(state) {
+  const kImg = document.getElementById("knightSpriteImg");
+  const kActor = document.getElementById("knightActor");
+  if (!kImg || !kActor) return;
+  kActor.classList.remove("knight-walk-bob", "knight-damage-fx");
+  if (state === "walk") {
+    kImg.src = "assets/sprites/spr_knight_walk.png";
+    kActor.classList.add("knight-walk-bob");
+  } else if (state === "attack") {
+    kImg.src = "assets/sprites/spr_knight_attack.png";
+    triggerCombatFx();
+  } else if (state === "damage") {
+    kImg.src = "assets/sprites/spr_knight_damage.png";
+    kActor.classList.add("knight-damage-fx");
+  } else if (state === "kneel") {
+    kImg.src = "assets/sprites/spr_knight_kneel.png";
+  } else {
+    kImg.src = "assets/sprites/spr_knight_idle.png";
+  }
+}
+
+function setRoadObstacle(type) {
+  const rObs = document.getElementById("roadObstacle");
+  const oImg = document.getElementById("obstacleSpriteImg");
+  if (!rObs || !oImg) return;
+  if (!type || type === "none") {
+    rObs.className = "road-obstacle hidden";
+    rObs.style.display = "none";
+    currentObstacle = null;
+    return;
+  }
+  currentObstacle = type;
+  const obsMap = {
+    trap: { src: "assets/sprites/obs_spike_trap.png", height: "28px" },
+    bear: { src: "assets/sprites/obs_shadow_bear.png", height: "34px" },
+    dragon: { src: "assets/sprites/obs_shadow_dragon.png", height: "52px" }
+  };
+  const data = obsMap[type] || obsMap.bear;
+  oImg.src = data.src;
+  oImg.style.height = data.height;
+  rObs.style.display = "flex";
+  rObs.classList.remove("hidden");
+}
+
+function triggerCombatFx() {
+  const fx = document.getElementById("combatFxSpark");
+  const kActor = document.getElementById("knightActor");
+  if (!fx || !kActor) return;
+  const kRight = parseInt(kActor.style.right || "24", 10);
+  fx.style.right = `${kRight + 32}px`;
+  fx.style.bottom = "36px";
+  fx.classList.remove("active");
+  void fx.offsetWidth;
+  fx.classList.add("active");
+}
+
 function startBattleMode(stage) {
   currentStage = stage;
   isHellRound = !!stage.isHellMix;
@@ -5038,15 +5341,15 @@ function startBattleMode(stage) {
   comboCount = 0;
   selectedOptionIdx = -1;
 
-  // Visual Theme Application
+  // Visual Theme Application (World 1: amber, World 2: cyan, World 3: ok, World 4: hell)
   const stageScene = document.getElementById("stageScene");
   stageScene.className = "stage-wrapper";
   if (stage.theme === "cyan") {
     stageScene.classList.add("theme-cyan");
   } else if (stage.theme === "ok") {
     stageScene.classList.add("theme-ok");
-  } else if (stage.theme === "hell") {
-    stageScene.classList.add("hell-mode");
+  } else if (stage.theme === "hell" || isHellRound) {
+    stageScene.classList.add("theme-hell");
   } else {
     stageScene.classList.add("theme-amber");
   }
@@ -5062,11 +5365,12 @@ function startBattleMode(stage) {
   document.getElementById("arenaStageTitle").textContent = stage.title.split(":")[0];
   document.getElementById("arenaCounter").textContent = `0/${totalInitialWords}`;
   document.getElementById("gateGlow").classList.remove("gate-open");
-  currentObstacle = null;
-  const rObsReset = document.getElementById("roadObstacle");
-  if (rObsReset) { rObsReset.className = "road-obstacle hidden"; rObsReset.style.display = "none"; rObsReset.innerHTML = ""; }
-  const kActorReset = document.getElementById("knightActor");
-  if (kActorReset) kActorReset.innerHTML = KNIGHT_STANDING_SVG;
+
+  // Reset Actors & Princess
+  const princessEl = document.getElementById("gatePrincess");
+  if (princessEl) princessEl.classList.add("hidden");
+  setRoadObstacle("none");
+  setKnightState("idle");
 
   document.getElementById("dialogXP").textContent = `${user.xp || 0} XP`;
 
@@ -5128,6 +5432,9 @@ function getQuizOptionsForCard(card, stage) {
 function renderNextQuizQuestion() {
   document.getElementById("phaseQuiz").classList.remove("hidden");
   document.getElementById("phaseVictory").classList.add("hidden");
+  const defEl = document.getElementById("phaseDefeat");
+  if (defEl) defEl.classList.add("hidden");
+
   document.getElementById("speakerTag").textContent = isHellRound ? "دیو جهنمی" : "نگهبان دروازه";
 
   if (quizQueue.length === 0) {
@@ -5139,32 +5446,25 @@ function renderNextQuizQuestion() {
   document.getElementById("stageTargetWord").textContent = currentQuizItem.word;
   selectedOptionIdx = -1;
 
-  // SPAWN OBSTACLE LOGIC: 50% probability, guaranteed on Question 2 (masteredCount === 1)
-  const roadObs = document.getElementById("roadObstacle");
-  if (roadObs) {
-    roadObs.className = "road-obstacle hidden";
-    roadObs.style.display = "none";
-    roadObs.innerHTML = "";
-    currentObstacle = null;
+  // SPAWN OBSTACLE LOGIC: Stage-dependent (Trap: Stg 1-2, Bear: Stg 3-5, Dragon: Stg 6-8/Boss/Hell)
+  const isQuestion2 = (masteredCount === 1 && mistakesThisStage === 0);
+  const shouldSpawn = isQuestion2 || (Math.random() < 0.50);
 
-    const isQuestion2 = (masteredCount === 1 && mistakesThisStage === 0);
-    const shouldSpawn = isQuestion2 || (Math.random() < 0.50);
+  if (shouldSpawn) {
+    const isBoss = isHellRound || (currentStage && currentStage.id >= 6);
+    const isMid = (currentStage && currentStage.id >= 3);
+    const chosenType = isBoss ? "dragon" : (isMid ? "bear" : "trap");
 
-    if (shouldSpawn) {
-      const obsKeys = ["trap", "bear", "dragon"];
-      const chosen = obsKeys[Math.floor(Math.random() * obsKeys.length)];
-      currentObstacle = chosen;
-      roadObs.innerHTML = OBSTACLE_SVGS[chosen];
-
-      // Position visibly ahead of knight on stone road
+    setRoadObstacle(chosenType);
+    const roadObs = document.getElementById("roadObstacle");
+    if (roadObs) {
       const currentKnightRight = 24 + ((masteredCount / Math.max(1, totalInitialWords)) * 135);
       const obsRight = Math.min(195, currentKnightRight + 44);
       roadObs.style.right = `${obsRight}px`;
-      roadObs.style.bottom = "24px";
-      roadObs.style.zIndex = "10";
-      roadObs.style.display = "block";
-      roadObs.classList.remove("hidden");
+      roadObs.style.bottom = "22px";
     }
+  } else {
+    setRoadObstacle("none");
   }
 
   // Prompt Text
@@ -5190,22 +5490,24 @@ function renderNextQuizQuestion() {
   // Render 4 Options
   const grid = document.getElementById("qzOptionsGrid");
   grid.innerHTML = "";
-  const options = getQuizOptionsForCard(currentQuizItem);
+  const options = getQuizOptionsForCard(currentQuizItem, currentStage);
 
   options.forEach((optText, idx) => {
     const btn = document.createElement("button");
     btn.className = "quiz-choice-btn";
     btn.innerHTML = `<span class="choice-num">${idx + 1}</span> <span>${optText}</span>`;
     btn.addEventListener("click", () => {
-      handleQuizAnswer(optText === currentQuizItem.correct, btn, currentQuizItem.correct);
+      const allBtns = grid.querySelectorAll(".quiz-choice-btn");
+      handleQuizAnswer(btn, optText === currentQuizItem.correct, currentQuizItem, allBtns);
     });
     grid.appendChild(btn);
   });
 }
 
 function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
-  allBtns.forEach(b => b.style.pointerEvents = "none");
-  document.getElementById("btnConfirmAnswer").disabled = true;
+  if (allBtns) allBtns.forEach(b => b.style.pointerEvents = "none");
+  const confirmBtn = document.getElementById("btnConfirmAnswer");
+  if (confirmBtn) confirmBtn.disabled = true;
 
   const user = appState.students[appState.currentUserCode];
 
@@ -5215,38 +5517,42 @@ function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
     updateComboBadge();
 
     let baseXP = item.isRetry ? 5 : 10;
-    if (isHellRound) {
-      baseXP *= 2; // 2x XP in Hell Mode
-    }
-    if (comboCount >= 3) {
-      baseXP *= 3; // x3 Combo multiplier
-    }
+    if (isHellRound) baseXP *= 2;
+    if (comboCount >= 3) baseXP *= 3;
 
     user.xp += baseXP;
     document.getElementById("userXP").textContent = user.xp;
     document.getElementById("dialogXP").textContent = `${user.xp} XP`;
 
     playCorrectSound();
+    setKnightState("attack");
+
     if (currentObstacle) {
-      const kEl = document.getElementById("knightActor");
       const rObs = document.getElementById("roadObstacle");
-      if (kEl) kEl.classList.add("knight-strike");
       if (rObs) rObs.classList.add("obstacle-hit");
       setTimeout(() => {
-        if (kEl) kEl.classList.remove("knight-strike");
-        if (rObs) { rObs.classList.add("hidden"); rObs.classList.remove("obstacle-hit"); }
+        setRoadObstacle("none");
       }, 400);
     }
+
     quizQueue.shift();
     masteredCount++;
 
     const progressPct = (masteredCount / totalInitialWords) * 100;
-    updateKnightPosition(progressPct);
+    setTimeout(() => {
+      setKnightState("walk");
+      updateKnightPosition(progressPct);
+    }, 200);
+
+    setTimeout(() => {
+      setKnightState("idle");
+    }, 550);
+
     updateLocksRow(masteredCount, totalInitialWords);
     document.getElementById("arenaCounter").textContent = `${masteredCount}/${totalInitialWords}`;
 
     saveLocal();
-    setTimeout(renderNextQuizQuestion, 600);
+    setTimeout(renderNextQuizQuestion, 650);
   } else {
     selectedBtn.classList.add("wrong");
     comboCount = 0;
@@ -5256,26 +5562,50 @@ function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
     updateCandlesHUD();
     triggerScreenShake();
     playWrongSound();
+    setKnightState("damage");
 
     user.mistakes[item.word] = (user.mistakes[item.word] || 0) + 1;
 
     // Highlight correct answer
     const correctText = (item.correct || (item.meanings ? item.meanings.join(" / ") : "")).trim();
-    allBtns.forEach(b => {
-      const txt = b.querySelector("span:nth-child(2)").textContent.trim();
-      if (txt === correctText) b.classList.add("correct");
-    });
+    if (allBtns) {
+      allBtns.forEach(b => {
+        const txt = b.querySelector("span:nth-child(2)").textContent.trim();
+        if (txt === correctText) b.classList.add("correct");
+      });
+    }
+
+    saveLocal();
+    syncStudentToCloud(user);
+
+    // Check Defeat Condition (3 candles extinguished)
+    if (mistakesThisStage >= 3) {
+      setTimeout(() => {
+        completeStageDefeat();
+      }, 900);
+      return;
+    }
+
+    setTimeout(() => {
+      setKnightState("idle");
+    }, 700);
 
     // Spaced repetition: push failed item to end of queue
     const failed = quizQueue.shift();
     failed.isRetry = true;
     quizQueue.push(failed);
 
-    saveLocal();
-    syncStudentToCloud(user);
-
     setTimeout(renderNextQuizQuestion, 1400);
   }
+}
+
+function completeStageDefeat() {
+  setKnightState("kneel");
+  document.getElementById("phaseQuiz").classList.add("hidden");
+  document.getElementById("phaseVictory").classList.add("hidden");
+  const defEl = document.getElementById("phaseDefeat");
+  if (defEl) defEl.classList.remove("hidden");
+  document.getElementById("speakerTag").textContent = "شکست در نبرد";
 }
 
 function completeStageVictory() {
@@ -5289,12 +5619,18 @@ function completeStageVictory() {
 
   playVictorySound();
   document.getElementById("gateGlow").classList.add("gate-open");
-      const kActor = document.getElementById("knightActor");
-      if (kActor) kActor.innerHTML = KNIGHT_KNEEL_SVG;
+
+  // Reveal Rescued Princess at Gate & Knight Kneels before her
+  const princessEl = document.getElementById("gatePrincess");
+  if (princessEl) princessEl.classList.remove("hidden");
+  setKnightState("kneel");
+
   updateKnightPosition(100);
   updateLocksRow(totalInitialWords, totalInitialWords);
 
   document.getElementById("phaseQuiz").classList.add("hidden");
+  const defEl = document.getElementById("phaseDefeat");
+  if (defEl) defEl.classList.add("hidden");
   document.getElementById("phaseVictory").classList.remove("hidden");
   document.getElementById("speakerTag").textContent = "فتح دروازه";
   document.getElementById("userXP").textContent = user.xp;
@@ -5307,6 +5643,17 @@ function completeStageVictory() {
 
 document.getElementById("btnBackToMap").addEventListener("click", enterDashboard);
 document.getElementById("btnVictoryContinue").addEventListener("click", enterDashboard);
+
+const retryBtn = document.getElementById("btnRetryStage");
+if (retryBtn) {
+  retryBtn.addEventListener("click", () => {
+    startBattleMode(currentStage);
+  });
+}
+const defBackBtn = document.getElementById("btnDefeatBackToMap");
+if (defBackBtn) {
+  defBackBtn.addEventListener("click", enterDashboard);
+}
 
 // ==========================================
 // 8. LEADERBOARD VIEW

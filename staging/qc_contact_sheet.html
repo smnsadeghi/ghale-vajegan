@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ghale Vajegan — Visual Asset QC Contact Sheet (World 1)</title>
+  <style>
+    :root {
+      --bg-color: #07080d;
+      --panel-bg: #121522;
+      --border-color: #272c44;
+      --accent: #f0b560;
+      --text: #dcd0b8;
+      --text-muted: #8b8ea4;
+      --zoom: 1;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0a0c14;
+      color: var(--text);
+      padding: 24px;
+      line-height: 1.5;
+    }
+
+    header {
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    h1 { font-size: 22px; color: var(--accent); letter-spacing: 0.5px; }
+    .subtitle { font-size: 13px; color: var(--text-muted); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      background: var(--panel-bg);
+      padding: 10px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+    }
+
+    .ctrl-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+    }
+
+    .btn {
+      background: #1b2033;
+      color: var(--text);
+      border: 1px solid var(--border-color);
+      padding: 5px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover { background: #28304c; border-color: var(--accent); }
+    .btn.active { background: var(--accent); color: #0b0c12; border-color: var(--accent); }
+
+    section {
+      margin-bottom: 36px;
+    }
+
+    h2 {
+      font-size: 16px;
+      color: #fff;
+      margin-bottom: 14px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge {
+      font-size: 11px;
+      background: #1e2438;
+      color: var(--accent);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-preview {
+      min-height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      background-color: var(--preview-bg, #07080d);
+    }
+
+    /* Background modes */
+    .bg-checker {
+      background-image: 
+        linear-gradient(45deg, #1c202d 25%, transparent 25%), 
+        linear-gradient(-45deg, #1c202d 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #1c202d 75%), 
+        linear-gradient(-45deg, transparent 75%, #1c202d 75%) !important;
+      background-size: 16px 16px !important;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0px !important;
+      background-color: #121520 !important;
+    }
+
+    .bg-dark { background-color: #07080d !important; }
+    .bg-amber { background-color: #17131e !important; }
+    .bg-cyan { background-color: #08151c !important; }
+    .bg-light { background-color: #ebebeb !important; }
+
+    .card-img {
+      max-width: 100%;
+      height: auto;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      transform-origin: center center;
+      transform: scale(var(--zoom));
+      transition: transform 0.1s ease;
+    }
+
+    .baseline-guide {
+      position: absolute;
+      bottom: 16px;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: rgba(240, 181, 96, 0.4);
+      pointer-events: none;
+    }
+
+    .card-info {
+      padding: 12px;
+      border-top: 1px solid var(--border-color);
+      background: #0f121c;
+      font-size: 12px;
+    }
+
+    .card-name {
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+      word-break: break-all;
+    }
+
+    .card-meta {
+      color: var(--text-muted);
+      font-family: monospace;
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .bg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+      gap: 16px;
+    }
+
+    .bg-card-preview {
+      height: 250px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bg-card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      image-rendering: pixelated;
+    }
+
+    .anim-box {
+      width: 90px;
+      height: 86px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      background: #111422;
+      padding: 14px 20px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 13px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-label { color: var(--text-muted); font-size: 11px; text-transform: uppercase; }
+    .stat-val { color: var(--accent); font-weight: bold; font-size: 16px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div>
+      <h1>Ghale Vajegan — Visual Quality Control Sheet</h1>
+      <div class="subtitle">World 1: Vocabulary Kingdom (Eastward-inspired 16-bit dark pixel art)</div>
+    </div>
+
+    <div class="controls">
+      <div class="ctrl-group">
+        <span>Background:</span>
+        <button class="btn active" onclick="setBg('bg-checker')">Checker</button>
+        <button class="btn" onclick="setBg('bg-dark')">Deep Dark</button>
+        <button class="btn" onclick="setBg('bg-amber')">Amber Dark</button>
+        <button class="btn" onclick="setBg('bg-light')">Light</button>
+      </div>
+      <div class="ctrl-group">
+        <span>Zoom:</span>
+        <button class="btn active" onclick="setZoom(1)">1x</button>
+        <button class="btn" onclick="setZoom(2)">2x</button>
+        <button class="btn" onclick="setZoom(3)">3x</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-label">Total Extracted Assets</span>
+      <span class="stat-val">49 Files</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Backgrounds</span>
+      <span class="stat-val">2 WebP + 2 Previews</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Environment Props</span>
+      <span class="stat-val">13 Transparent PNGs</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Characters & Obstacles</span>
+      <span class="stat-val">15 Transparent PNGs</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Visual Effects</span>
+      <span class="stat-val">17 PNGs</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Chroma Key Fringe Audit</span>
+      <span class="stat-val" style="color: #4ade80;">100% CLEAN (0 Halos)</span>
+    </div>
+  </div>
+
+  <!-- SECTION 1: BACKGROUNDS -->
+  <section>
+    <h2>Background Environments <span class="badge">1024x571 WebP</span></h2>
+    <div class="bg-grid">
+      <div class="card">
+        <div class="bg-card-preview">
+          <img src="backgrounds/bg_w1_battle_ruins.webp" class="bg-card-img" alt="Ruined Castle Bridge">
+        </div>
+        <div class="card-info">
+          <div class="card-name">bg_w1_battle_ruins.webp</div>
+          <div class="card-meta"><span>1024 x 571</span><span>105.8 KB (WebP q90)</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="bg-card-preview">
+          <img src="backgrounds/bg_w1_citadel_bridge.webp" class="bg-card-img" alt="Citadel Banners Bridge">
+        </div>
+        <div class="card-info">
+          <div class="card-name">bg_w1_citadel_bridge.webp</div>
+          <div class="card-meta"><span>1024 x 571</span><span>109.3 KB (WebP q90)</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: CHARACTERS & ENEMIES -->
+  <section>
+    <h2>Character & Enemy Sprites <span class="badge">15 Sprites · 32-bit Transparent PNG</span></h2>
+    <div class="grid">
+      <!-- Knight Poses -->
+      <div class="card">
+        <div class="card-preview bg-checker"><div class="baseline-guide"></div><img src="sprites/spr_knight_idle.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">spr_knight_idle.png</div><div class="card-meta"><span>99 x 211</span><span>37.1 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><div class="baseline-guide"></div><img src="sprites/spr_knight_walk.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">spr_knight_walk.png</div><div class="card-meta"><span>115 x 204</span><span>28.0 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><div class="baseline-guide"></div><img src="sprites/spr_knight_attack.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">spr_knight_attack.png</div><div class="card-meta"><span>131 x 207</span><span>28.4 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><div class="baseline-guide"></div><img src="sprites/spr_knight_damage.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">spr_knight_damage.png</div><div class="card-meta"><span>142 x 141</span><span>25.5 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><div class="baseline-guide"></div><img src="sprites/spr_knight_kneel.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">spr_knight_kneel.png</div><div class="card-meta"><span>121 x 134</span><span>19.5 KB</span></div></div>
+      </div>
+
+      <!-- Knight Turnaround -->
+      <div class="card">
+        <div class="card-preview bg-checker"><div class="baseline-guide"></div><img src="sprites/spr_knight_front.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">spr_knight_front.png</div><div class="card-meta"><span>102 x 219</span><span>39.1 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><div class="baseline-guide"></div><img src="sprites/spr_knight_side.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">spr_knight_side.png</div><div class="card-meta"><span>120 x 218</span><span>27.1 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><div class="baseline-guide"></div><img src="sprites/spr_knight_back.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">spr_knight_back.png</div><div class="card-meta"><span>101 x 217</span><span>29.7 KB</span></div></div>
+      </div>
+
+      <!-- Princess -->
+      <div class="card">
+        <div class="card-preview bg-checker"><div class="baseline-guide"></div><img src="sprites/spr_princess_standing.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">spr_princess_standing.png</div><div class="card-meta"><span>86 x 217</span><span>34.7 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><div class="baseline-guide"></div><img src="sprites/spr_princess_side.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">spr_princess_side.png</div><div class="card-meta"><span>70 x 217</span><span>25.3 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><div class="baseline-guide"></div><img src="sprites/spr_princess_back.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">spr_princess_back.png</div><div class="card-meta"><span>86 x 217</span><span>32.3 KB</span></div></div>
+      </div>
+
+      <!-- Monsters & Obstacles -->
+      <div class="card">
+        <div class="card-preview bg-checker"><div class="baseline-guide"></div><img src="sprites/obs_shadow_bear.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">obs_shadow_bear.png</div><div class="card-meta"><span>134 x 108</span><span>22.3 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><div class="baseline-guide"></div><img src="sprites/obs_spike_trap.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">obs_spike_trap.png</div><div class="card-meta"><span>140 x 102</span><span>28.0 KB</span></div></div>
+      </div>
+      <div class="card" style="grid-column: span 2;">
+        <div class="card-preview bg-checker"><div class="baseline-guide"></div><img src="sprites/obs_shadow_dragon.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">obs_shadow_dragon.png</div><div class="card-meta"><span>292 x 201</span><span>78.3 KB</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: ENVIRONMENT PROPS -->
+  <section>
+    <h2>Environment Props <span class="badge">13 Props · 32-bit Transparent PNG</span></h2>
+    <div class="grid">
+      <div class="card">
+        <div class="card-preview bg-checker"><img src="props/prop_lantern_lit.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">prop_lantern_lit.png</div><div class="card-meta"><span>68 x 121</span><span>15.7 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><img src="props/prop_lantern_unlit.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">prop_lantern_unlit.png</div><div class="card-meta"><span>67 x 121</span><span>13.3 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><img src="props/prop_broken_pillar.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">prop_broken_pillar.png</div><div class="card-meta"><span>101 x 133</span><span>22.3 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><img src="props/prop_mossy_boulders.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">prop_mossy_boulders.png</div><div class="card-meta"><span>166 x 105</span><span>30.9 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><img src="props/prop_wooden_barrel.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">prop_wooden_barrel.png</div><div class="card-meta"><span>98 x 127</span><span>25.8 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><img src="props/prop_wooden_crate.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">prop_wooden_crate.png</div><div class="card-meta"><span>139 x 129</span><span>36.3 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><img src="props/prop_iron_chain.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">prop_iron_chain.png</div><div class="card-meta"><span>69 x 123</span><span>11.4 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><img src="props/prop_signboard.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">prop_signboard.png</div><div class="card-meta"><span>119 x 136</span><span>23.8 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><img src="props/prop_stone_arch.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">prop_stone_arch.png</div><div class="card-meta"><span>171 x 141</span><span>29.4 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><img src="props/prop_mossy_fence.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">prop_mossy_fence.png</div><div class="card-meta"><span>180 x 119</span><span>33.4 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><img src="props/prop_wall_torch.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">prop_wall_torch.png</div><div class="card-meta"><span>48 x 117</span><span>8.0 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><img src="props/prop_dead_tree.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">prop_dead_tree.png</div><div class="card-meta"><span>118 x 141</span><span>13.4 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-checker"><img src="props/prop_treasure_chest.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">prop_treasure_chest.png</div><div class="card-meta"><span>143 x 117</span><span>35.7 KB</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: VISUAL EFFECTS -->
+  <section>
+    <h2>Visual Effects & Animation Strips <span class="badge">17 FX PNGs</span></h2>
+    <div class="grid">
+      <!-- Animated Torch Preview -->
+      <div class="card">
+        <div class="card-preview bg-dark">
+          <div class="anim-box" id="animTorch">
+            <img src="fx/fx_torch_frame_1.png" id="torchImg" class="card-img">
+          </div>
+        </div>
+        <div class="card-info">
+          <div class="card-name">Torch Loop Preview</div>
+          <div class="card-meta"><span>4 Frames (10 fps)</span><span>Animated</span></div>
+        </div>
+      </div>
+
+      <!-- Animated Candle Preview -->
+      <div class="card">
+        <div class="card-preview bg-dark">
+          <div class="anim-box" id="animCandle" style="width: 30px; height: 46px;">
+            <img src="fx/fx_candle_frame_1.png" id="candleImg" class="card-img">
+          </div>
+        </div>
+        <div class="card-info">
+          <div class="card-name">Candle Loop Preview</div>
+          <div class="card-meta"><span>3 Frames (8 fps)</span><span>Animated</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-preview bg-dark"><img src="fx/fx_amber_spark.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">fx_amber_spark.png</div><div class="card-meta"><span>134 x 124</span><span>8.0 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-dark"><img src="fx/fx_golden_dust.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">fx_golden_dust.png</div><div class="card-meta"><span>121 x 124</span><span>11.2 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-dark"><img src="fx/fx_ground_fog.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">fx_ground_fog.png</div><div class="card-meta"><span>182 x 124</span><span>21.5 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-dark"><img src="fx/fx_amber_impact.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">fx_amber_impact.png</div><div class="card-meta"><span>153 x 136</span><span>23.2 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-dark"><img src="fx/fx_portal_aura.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">fx_portal_aura.png</div><div class="card-meta"><span>152 x 136</span><span>28.2 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-dark"><img src="fx/fx_magic_burst.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">fx_magic_burst.png</div><div class="card-meta"><span>203 x 222</span><span>50.9 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-dark"><img src="fx/fx_falling_ash.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">fx_falling_ash.png</div><div class="card-meta"><span>166 x 222</span><span>30.0 KB</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-preview bg-dark"><img src="fx/fx_sword_sparks.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">fx_sword_sparks.png</div><div class="card-meta"><span>170 x 222</span><span>31.6 KB</span></div></div>
+      </div>
+
+      <!-- Strips -->
+      <div class="card" style="grid-column: span 2;">
+        <div class="card-preview bg-dark"><img src="fx/fx_torch_flames_strip.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">fx_torch_flames_strip.png</div><div class="card-meta"><span>375 x 86</span><span>50.3 KB</span></div></div>
+      </div>
+      <div class="card" style="grid-column: span 2;">
+        <div class="card-preview bg-dark"><img src="fx/fx_candle_flames_strip.png" class="card-img"></div>
+        <div class="card-info"><div class="card-name">fx_candle_flames_strip.png</div><div class="card-meta"><span>272 x 59</span><span>18.8 KB</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function setBg(cls) {
+      document.querySelectorAll('.btn').forEach(b => {
+        if (b.innerText.toLowerCase().includes('checker') || 
+            b.innerText.toLowerCase().includes('dark') || 
+            b.innerText.toLowerCase().includes('amber') || 
+            b.innerText.toLowerCase().includes('light')) {
+          b.classList.remove('active');
+        }
+      });
+      event.target.classList.add('active');
+
+      const previews = document.querySelectorAll('.card-preview');
+      previews.forEach(p => {
+        p.className = 'card-preview ' + cls;
+      });
+    }
+
+    function setZoom(lvl) {
+      document.documentElement.style.setProperty('--zoom', lvl);
+      const zoomBtns = document.querySelectorAll('.ctrl-group:last-child .btn');
+      zoomBtns.forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    // Animate Torch Frames
+    const torchFrames = [
+      'fx/fx_torch_frame_1.png',
+      'fx/fx_torch_frame_2.png',
+      'fx/fx_torch_frame_3.png',
+      'fx/fx_torch_frame_4.png'
+    ];
+    let torchIdx = 0;
+    const torchImg = document.getElementById('torchImg');
+    setInterval(() => {
+      torchIdx = (torchIdx + 1) % torchFrames.length;
+      if (torchImg) torchImg.src = torchFrames[torchIdx];
+    }, 100);
+
+    // Animate Candle Frames
+    const candleFrames = [
+      'fx/fx_candle_frame_1.png',
+      'fx/fx_candle_frame_2.png',
+      'fx/fx_candle_frame_3.png'
+    ];
+    let candleIdx = 0;
+    const candleImg = document.getElementById('candleImg');
+    setInterval(() => {
+      candleIdx = (candleIdx + 1) % candleFrames.length;
+      if (candleImg) candleImg.src = candleFrames[candleIdx];
+    }, 125);
+  </script>
+</body>
+</html>
