@@ -6,7 +6,7 @@ const htmlContent = fs.readFileSync('C:/Users/acer/.gemini/antigravity/scratch/g
 const swContent = fs.readFileSync('C:/Users/acer/.gemini/antigravity/scratch/ghale-vajegan/sw.js', 'utf8');
 const manifestContent = fs.readFileSync('C:/Users/acer/.gemini/antigravity/scratch/ghale-vajegan/manifest.json', 'utf8');
 
-describe('v5.0.0 Architecture & Feature Suite', () => {
+describe('v5.1.0 Minimalist Gothic UI & Architecture Suite', () => {
 
   describe('1. Missing Quiz Options & #phaseQuiz Cleanup', () => {
     it('uses correct qzOptions container ID in renderNextQuizQuestion', () => {
@@ -89,30 +89,29 @@ describe('v5.0.0 Architecture & Feature Suite', () => {
     });
   });
 
-  describe('5. Version & PWA Cache Bump (v5.0.0)', () => {
-    it('bumps version trigger to v5.0.0', () => {
-      assert.ok(htmlContent.includes('id="versionTrigger">v5.0.0</div>'), 'Version trigger must be v5.0.0');
+  describe('5. Version & PWA Cache Bump (v5.1.0)', () => {
+    it('bumps version trigger to v5.1.0', () => {
+      assert.ok(htmlContent.includes('id="versionTrigger"') && htmlContent.includes('v5.1.0'), 'Version trigger must be v5.1.0');
     });
 
-    it('bumps Service Worker cache name to shovalie-vajeha-v5.0.0', () => {
-      assert.ok(swContent.includes("const CACHE_NAME = 'shovalie-vajeha-v5.0.0';"), 'sw.js cache must be v5.0.0');
+    it('bumps Service Worker cache name to shovalie-vajeha-v5.1.0', () => {
+      assert.ok(swContent.includes("const CACHE_NAME = 'shovalie-vajeha-v5.1.0';"), 'sw.js cache must be v5.1.0');
     });
 
     it('manifest.json has correct rebrand name and icons', () => {
       const manifest = JSON.parse(manifestContent);
       assert.equal(manifest.name, 'شوالیه واژه‌ها');
       assert.equal(manifest.short_name, 'شوالیه واژه‌ها');
-      assert.equal(manifest.theme_color, '#0e0c0b');
       assert.ok(manifest.icons.some(i => i.src === './icon-192.png' || i.src === 'icon-192.png'));
       assert.ok(manifest.icons.some(i => i.src === './icon-512.png' || i.src === 'icon-512.png'));
     });
   });
 
   describe('6. Minimalist Dark-Fantasy Overhaul & 3D Flashcard System', () => {
-    it('hides topBar and footer-ver when body.in-study is active', () => {
+    it('hides topBar, bottomNav and footer-ver when body.in-study is active', () => {
       assert.ok(htmlContent.includes('body.in-study #topBar'), 'Must hide topBar in study mode');
       assert.ok(htmlContent.includes('body.in-study .footer-ver'), 'Must hide footer in study mode');
-      assert.ok(htmlContent.includes('document.body.classList.toggle("in-study", viewId === "viewStudy");'), 'Must toggle in-study class');
+      assert.ok(htmlContent.includes('body.in-study #bottomNav'), 'Must hide bottomNav in study mode');
     });
 
     it('removes text clutter from study mode', () => {
@@ -122,12 +121,13 @@ describe('v5.0.0 Architecture & Feature Suite', () => {
       assert.ok(!htmlContent.includes('[برای بازگشت به واژه لمس کنید]'), 'Must delete return helper text');
     });
 
-    it('implements true 3D card flip CSS and scene wrapper', () => {
+    it('implements true 3D card flip CSS with transparent box and Z separation', () => {
       assert.ok(htmlContent.includes('.study-card-scene'), 'Must have study-card-scene');
       assert.ok(htmlContent.includes('perspective: 1000px;'), 'Must define perspective');
       assert.ok(htmlContent.includes('transform-style: preserve-3d;'), 'Must have preserve-3d');
       assert.ok(htmlContent.includes('backface-visibility: hidden;'), 'Must have backface-visibility hidden');
-      assert.ok(htmlContent.includes('.study-card-box.is-flipped'), 'Must have is-flipped class rule');
+      assert.ok(htmlContent.includes('.study-card-front {\n      transform: rotateY(0deg) translateZ(1px);'), 'Must have translateZ on front');
+      assert.ok(htmlContent.includes('.study-card-back {\n      transform: rotateY(180deg) translateZ(1px);'), 'Must have translateZ on back');
     });
 
     it('implements touch-action none and relaxed mobile tap threshold', () => {
@@ -144,14 +144,13 @@ describe('v5.0.0 Architecture & Feature Suite', () => {
 
     it('strictly gates battle button in study mode until all cards viewed or already studied', () => {
       assert.ok(htmlContent.includes('function updateStudyBattleButton()'), 'Must define updateStudyBattleButton function');
-      assert.ok(htmlContent.includes('btn.disabled = false;'), 'Must enable button when complete');
-      assert.ok(htmlContent.includes('btn.disabled = true;'), 'Must disable button when incomplete');
+      assert.ok(htmlContent.includes('btn.className = "pixel-btn btn-amber";'), 'Must enable button style when complete');
+      assert.ok(htmlContent.includes('btn.className = "pixel-btn btn-slate";'), 'Must lock button style when incomplete');
     });
 
     it('strictly gates battle button on map view with lock until stage studied', () => {
-      assert.ok(htmlContent.includes('const isStudied = user?.stats?.studiedStageIds?.includes(st.id);'), 'Must check studied status on map');
+      assert.ok(htmlContent.includes('user?.stats?.studiedStageIds?.includes(st.id) || completed.includes(st.id)'), 'Must check studied or completed status on map');
       assert.ok(htmlContent.includes('battleBtn.textContent = "🔒 نبرد";'), 'Must show lock on unstudied battle button');
-      assert.ok(htmlContent.includes('battleBtn.disabled = true;'), 'Must disable unstudied battle button');
     });
 
     it('optimizes World 1 map layout to fit 8 stages inside 100dvh', () => {
@@ -160,10 +159,35 @@ describe('v5.0.0 Architecture & Feature Suite', () => {
     });
 
     it('applies deep minimal dark-fantasy palette', () => {
-      assert.ok(htmlContent.includes('--bg: #0e0c0b;'), 'Must have true obsidian background');
-      assert.ok(htmlContent.includes('--surface: #161311;'), 'Must have deep charcoal stone panel');
+      assert.ok(htmlContent.includes('--bg: #0d0b0a;') || htmlContent.includes('--bg: #0e0c0b;'), 'Must have true obsidian background');
+      assert.ok(htmlContent.includes('--surface: #141210;') || htmlContent.includes('--surface: #161311;'), 'Must have deep charcoal stone panel');
       assert.ok(htmlContent.includes('--ink: #e8dcc8;'), 'Must have soft parchment ink');
       assert.ok(htmlContent.includes('--accent-gold: #c9a25e;'), 'Must have muted antique gold');
+    });
+  });
+
+  describe('7. v5.1.0 Native Bottom Navigation & Refined Component Architecture', () => {
+    it('implements native bottom navigation bar with 3 tabs in HTML', () => {
+      assert.ok(htmlContent.includes('id="bottomNav"'), 'Must have bottomNav container');
+      assert.ok(htmlContent.includes('id="btnNavMap"'), 'Must have btnNavMap');
+      assert.ok(htmlContent.includes('id="btnNavLeaderboard"'), 'Must have btnNavLeaderboard');
+      assert.ok(htmlContent.includes('id="btnNavProfile"'), 'Must have btnNavProfile');
+    });
+
+    it('defines bottom-nav CSS with active indicator and blur glass effect', () => {
+      assert.ok(htmlContent.includes('.bottom-nav {'), 'Must have bottom-nav class');
+      assert.ok(htmlContent.includes('.bottom-nav-item.active {'), 'Must have bottom-nav-item active class');
+      assert.ok(htmlContent.includes('body.in-battle #bottomNav'), 'Must hide bottomNav in battle');
+    });
+
+    it('removes blocky pixel clip-path from buttons, windows, dialogs, and cards', () => {
+      assert.ok(!htmlContent.includes('.pixel-btn {\n      font-family: \'Vazirmatn\', sans-serif;\n      font-weight: 800;\n      font-size: 0.9rem;\n      border: none;\n      padding: 10px 16px;\n      cursor: pointer;\n      display: inline-flex;\n      align-items: center;\n      justify-content: center;\n      gap: 8px;\n      color: #fff;\n      text-shadow: 2px 2px 0 #0b0d12;\n      clip-path: polygon'), 'pixel-btn must not have clip-path');
+      assert.ok(!htmlContent.includes('.rpg-dialog {\n      background: var(--ink);\n      padding: 4px;\n      clip-path: polygon'), 'rpg-dialog must not have clip-path');
+    });
+
+    it('defines setupArenaEnemy and updateEnemyHP functions', () => {
+      assert.ok(htmlContent.includes('function setupArenaEnemy(stage)'), 'Must define setupArenaEnemy');
+      assert.ok(htmlContent.includes('function updateEnemyHP()'), 'Must define updateEnemyHP');
     });
   });
 

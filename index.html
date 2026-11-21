@@ -16,40 +16,53 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Vazirmatn:wght@500;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Base & Surfaces */
-      --bg: #0e0c0b;
-      --surface: #161311;
-      --surface-elevated: #1e1a17;
-      --border-subtle: #332a23;
-      --border-accent: #7a6348;
+      /* Deep Obsidian Foundations */
+      --bg: #0d0b0a;
+      --surface: #141210;
+      --surface-elevated: #1b1714;
+      --surface-glass: rgba(20, 18, 16, 0.94);
 
-      /* Dignified Muted Accents */
+      /* Ultra-thin Antique Bronze / Hairline Frames */
+      --border-subtle: #2e261f;
+      --border-accent: #544434;
+      --border-gold: #8f7247;
+
+      /* Dignified Typography & Parchment Ink */
       --ink: #e8dcc8;
       --ink-muted: #9e8f7b;
-      --accent-gold: #c9a25e;
-      --accent-terracotta: #a85646;
-      --accent-sage: #55756a;
-      --accent-ochre: #b06c3b;
+      --ink-dim: #6e6254;
 
-      /* Semantic & Legacy Aliases */
+      /* Antique Gold / Brass */
+      --accent-gold: #c9a25e;
+      --accent-gold-glow: rgba(201, 162, 94, 0.22);
+
+      /* Muted Jewel Tones (4 Worlds) */
+      --accent-w1: #9e584e; /* Terracotta / Rose */
+      --accent-w2: #4f7368; /* Verdigris / Sage */
+      --accent-w3: #b3733e; /* Ochre / Amber */
+      --accent-w4: #8c323a; /* Deep Crimson */
+
+      --accent-sage: #55756a;
+      --accent-terracotta: #a85646;
+
+      /* Backward Compatibility Aliases */
       --panel: var(--surface);
       --panel-alt: var(--surface-elevated);
       --panel-dark: #0a0908;
       --line: var(--border-subtle);
       --line-hi: var(--border-accent);
-      --ink-dim: var(--ink-muted);
       --shadow-deep: #060505;
       --shadow-violet: #120e0c;
       --amber: var(--accent-gold);
       --gold: var(--accent-gold);
       --amber-hi: #dbb574;
       --amber-lo: #574326;
-      --wine: #381a1d;
-      --red: var(--accent-terracotta);
+      --wine: #2a1114;
+      --red: var(--accent-w4);
       --steel: var(--ink-muted);
       --moon: var(--ink-muted);
-      --xp: var(--accent-ochre);
-      --cyan: #468c87;
+      --xp: var(--accent-w3);
+      --cyan: var(--accent-w2);
       --ok: var(--accent-sage);
       --bad: var(--accent-terracotta);
     }
@@ -150,83 +163,90 @@
     .pixel-window {
       background: var(--surface);
       border: 1px solid var(--border-subtle);
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 3px;
       margin-bottom: 8px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+      box-shadow: inset 0 1px 0 rgba(232, 220, 200, 0.06), 0 10px 28px rgba(0, 0, 0, 0.45);
       position: relative;
+      clip-path: none !important;
     }
-
     .pixel-window.border-amber { border-color: var(--accent-gold); }
-    .pixel-window.border-cyan { border-color: var(--cyan); }
+    .pixel-window.border-cyan { border-color: var(--accent-w2); }
     .pixel-window.border-ok { border-color: var(--accent-sage); }
     .pixel-window.border-line { border-color: var(--border-subtle); }
-    .pixel-window.border-wine { border-color: var(--wine); }
-    .pixel-window.border-hell { border-color: var(--accent-terracotta); }
+    .pixel-window.border-wine { border-color: var(--accent-w4); }
+    .pixel-window.border-hell { border-color: var(--accent-w4); }
 
     .pixel-window-inner {
-      background: var(--surface);
+      background: transparent;
       border-radius: 10px;
-      padding: 12px 14px;
+      padding: 10px 12px;
       box-sizing: border-box;
+      clip-path: none !important;
     }
 
     /* Stepped Pixel Buttons */
     .pixel-btn {
       font-family: 'Vazirmatn', sans-serif;
-      font-weight: 800;
-      font-size: 0.9rem;
-      border: none;
-      padding: 10px 16px;
+      font-weight: 700;
+      font-size: 0.86rem;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 9px 15px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       color: #fff;
-      text-shadow: 2px 2px 0 #0b0d12;
-      clip-path: polygon(
-        0 4px, 4px 4px, 4px 0,
-        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
-        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
-        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
-      );
-      box-shadow: 0 4px 0 #07090f;
-      transition: none;
+      text-shadow: none;
+      clip-path: none !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      transition: transform 0.12s ease, filter 0.15s ease, background 0.15s ease, border-color 0.15s ease;
     }
-
     .pixel-btn:active {
-      transform: translateY(2px);
-      box-shadow: 0 2px 0 #07090f;
+      transform: scale(0.98);
+      box-shadow: none;
     }
-
     .pixel-btn:disabled {
       opacity: 0.45;
       cursor: not-allowed;
       transform: none !important;
-      box-shadow: 0 4px 0 #07090f !important;
     }
 
-    .btn-amber {
-      background: var(--amber);
-      color: #0b0d12;
-      text-shadow: none;
+    .pixel-btn.btn-amber, .btn-amber {
+      background: linear-gradient(180deg, #c9a25e 0%, #9e7b3c 100%);
+      color: #0e0c0b;
       font-weight: 900;
+      border-color: #dfba78;
+      box-shadow: 0 2px 10px rgba(201, 162, 94, 0.25);
     }
-    .btn-amber:hover { background: var(--amber-hi); }
-    .btn-cyan {
-      background: var(--xp);
-      color: #0b0d12;
-      text-shadow: none;
-      font-weight: 900;
+    .pixel-btn.btn-amber:hover, .btn-amber:hover {
+      background: linear-gradient(180deg, #d8b26e 0%, #ad8a49 100%);
     }
-    .btn-wine { background: var(--wine); color: var(--ink); }
-    .btn-emerald { background: var(--ok); color: #fff; }
-    .btn-crimson { background: var(--red); color: #fff; }
-    .btn-slate {
-      background: #1b2434;
+    .pixel-btn.btn-slate, .btn-slate {
+      background: var(--surface-elevated);
       color: var(--ink);
-      border: 1px solid var(--line);
+      border-color: var(--border-subtle);
+    }
+    .pixel-btn.btn-slate:hover, .btn-slate:hover {
+      background: #231f1b;
+      border-color: var(--border-accent);
+    }
+    .pixel-btn.btn-cyan, .btn-cyan {
+      background: linear-gradient(180deg, #4f7368 0%, #36524a 100%);
+      color: #fff;
+      border-color: #6b9c8e;
+    }
+    .pixel-btn.btn-emerald, .btn-emerald {
+      background: linear-gradient(180deg, #b3733e 0%, #875429 100%);
+      color: #fff;
+      border-color: #d49157;
+    }
+    .pixel-btn.btn-crimson, .btn-crimson, .pixel-btn.btn-wine, .btn-wine {
+      background: linear-gradient(180deg, #8c323a 0%, #632026 100%);
+      color: #fff;
+      border-color: #b54a54;
     }
 
     /* Stepped Pixel Inputs */
@@ -264,17 +284,14 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: linear-gradient(180deg, #182230 0%, #0d121a 100%);
-      border: 2px solid #364860;
-      padding: 8px 12px;
-      margin-bottom: 12px;
-      clip-path: polygon(
-        0 4px, 4px 4px, 4px 0,
-        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
-        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
-        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
-      );
-      box-shadow: 0 4px 0 #07090f, inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      background: var(--surface-glass);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 6px 12px;
+      margin-bottom: 8px;
+      clip-path: none !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
     }
 
     .hud-candles {
@@ -811,26 +828,18 @@
 
     /* RPG DIALOG WINDOW */
     .rpg-dialog {
-      background: var(--ink);
-      padding: 4px;
-      clip-path: polygon(
-        0 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0,
-        calc(100% - 6px) 0, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px,
-        100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%,
-        6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0 calc(100% - 6px)
-      );
-      box-shadow: 0 6px 0 #07090f;
-      margin-bottom: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 2px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      margin-bottom: 0;
+      clip-path: none !important;
     }
     .rpg-dialog-inner {
-      background: var(--panel);
-      padding: 16px;
-      clip-path: polygon(
-        0 4px, 2px 4px, 2px 2px, 4px 2px, 4px 0,
-        calc(100% - 4px) 0, calc(100% - 4px) 2px, calc(100% - 2px) 2px, calc(100% - 2px) 4px, 100% 4px,
-        100% calc(100% - 4px), calc(100% - 2px) calc(100% - 4px), calc(100% - 2px) calc(100% - 2px), calc(100% - 4px) calc(100% - 2px), calc(100% - 4px) 100%,
-        4px 100%, 4px calc(100% - 2px), 2px calc(100% - 2px), 2px calc(100% - 4px), 0 calc(100% - 4px)
-      );
+      background: transparent;
+      padding: 10px 12px;
+      clip-path: none !important;
     }
     .rpg-header {
       display: flex;
@@ -841,17 +850,14 @@
       padding-bottom: 8px;
     }
     .speaker-tag {
-      background: var(--amber);
-      color: #0b0d12;
-      font-weight: 900;
-      font-size: 0.8rem;
-      padding: 4px 10px;
-      clip-path: polygon(
-        0 3px, 3px 3px, 3px 0,
-        calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
-        100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
-        3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px)
-      );
+      background: rgba(201, 162, 94, 0.15);
+      color: var(--accent-gold);
+      border: 1px solid var(--border-accent);
+      font-weight: 800;
+      font-size: 0.78rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      clip-path: none !important;
     }
     .rpg-stats {
       display: flex;
@@ -909,26 +915,29 @@
       margin-bottom: 0;
     }
     .rpg-option-btn {
-      min-height: 44px;
-      background: linear-gradient(180deg, #182230 0%, #0d121c 100%);
-      border: 2px solid #364860;
+      min-height: 42px;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
       color: var(--ink);
       display: flex;
       align-items: center;
-      padding: 8px 12px;
-      gap: 12px;
+      padding: 8px 10px;
+      gap: 10px;
       cursor: pointer;
       text-align: right;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       font-weight: 700;
-      clip-path: polygon(
-        0 4px, 4px 4px, 4px 0,
-        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
-        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
-        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
-      );
-      box-shadow: 0 3px 0 #07090f, inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      transition: transform 0.12s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      clip-path: none !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+      transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    .rpg-option-btn:hover {
+      border-color: var(--accent-gold);
+      background: #24201c;
+    }
+    .rpg-option-btn:active {
+      transform: scale(0.98);
     }
     .rpg-option-btn:hover {
       border-color: var(--amber);
@@ -1011,23 +1020,29 @@
     }
     .portal-tab {
       min-height: 40px;
-      background: var(--panel);
-      border: 2px solid var(--line);
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
       color: var(--ink);
-      padding: 4px 6px;
+      padding: 5px 8px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       text-align: right;
       position: relative;
-      transition: all 0.15s steps(2);
-      clip-path: polygon(
-        0 3px, 3px 3px, 3px 0,
-        calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
-        100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
-        3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px)
-      );
+      transition: all 0.15s ease;
+      clip-path: none !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+    .portal-tab:hover {
+      background: #1e1a17;
+      border-color: var(--border-accent);
+    }
+    .portal-tab.active {
+      border-color: var(--accent-gold);
+      background: #1f1b17;
+      box-shadow: 0 0 12px rgba(201, 162, 94, 0.18);
     }
     .portal-tab:hover {
       background: #141926;
@@ -1160,8 +1175,9 @@
 
     /* Tower Map Cards (Zero-Clip Compact) */
     .tower-card {
-      background: var(--panel);
-      border: 2px solid var(--line);
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
       padding: 6px 8px;
       margin-bottom: 0;
       display: flex;
@@ -1169,14 +1185,16 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 4px;
-      clip-path: polygon(
-        0 3px, 3px 3px, 3px 0,
-        calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
-        100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
-        3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px)
-      );
-      box-shadow: 0 2px 0 #020305;
+      clip-path: none !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      transition: transform 0.12s ease, border-color 0.15s ease;
     }
+    .tower-card.unlocked { border-top: 2px solid var(--accent-gold); }
+    .tower-card.world-2.unlocked { border-top: 2px solid var(--accent-w2); }
+    .tower-card.world-3.unlocked { border-top: 2px solid var(--accent-w3); }
+    .tower-card.world-4.unlocked { border-top: 2px solid var(--accent-w4); background: #180e10; }
+    .tower-card.completed { border-top: 2px solid var(--accent-sage); opacity: 0.9; }
+    .tower-card.locked { opacity: 0.45; }
     .tower-card.unlocked { border-color: var(--amber); }
     .tower-card.world-2.unlocked { border-color: var(--xp); }
     .tower-card.world-3.unlocked { border-color: var(--ok); }
@@ -1240,15 +1258,14 @@
       height: 100%;
       transform-style: preserve-3d;
       -webkit-transform-style: preserve-3d;
-      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
       touch-action: none;
       cursor: grab;
       user-select: none;
       will-change: transform, opacity;
-      background: var(--surface);
-      border: 1px solid var(--border-accent);
-      border-radius: 14px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      background: transparent;
+      border: none;
+      box-shadow: none;
     }
     .study-card-box.is-flipped {
       transform: rotateY(180deg);
@@ -1267,17 +1284,17 @@
       padding: 18px 16px;
       box-sizing: border-box;
       text-align: center;
-      background: var(--surface);
+      background: #141210;
       border-radius: 14px;
-      border: 1px solid var(--border-subtle);
+      border: 1px solid #3a3026;
+      box-shadow: inset 0 1px 0 rgba(232, 220, 200, 0.06), 0 10px 28px rgba(0, 0, 0, 0.45);
     }
     .study-card-front {
-      z-index: 2;
-      transform: rotateY(0deg);
+      transform: rotateY(0deg) translateZ(1px);
     }
     .study-card-back {
-      transform: rotateY(180deg);
-      overflow-y: auto;
+      transform: rotateY(180deg) translateZ(1px);
+      overflow: visible;
     }
     .study-card-word {
       font-size: 2.1rem;
@@ -1293,14 +1310,61 @@
       overflow-y: auto;
     }
     .study-meaning-item {
-      background: #121622;
-      border: 1px solid var(--line);
+      background: #1c1815;
+      border: 1px solid #3a3026;
+      border-radius: 8px;
       padding: 7px 10px;
       margin-bottom: 5px;
       width: 100%;
       text-align: right;
       font-size: 0.86rem;
       line-height: 1.45;
+      color: var(--ink);
+    }
+
+    /* Native Bottom Navigation Bar */
+    .bottom-nav {
+      height: 54px;
+      background: rgba(18, 16, 14, 0.96);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid #2e261f;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-shrink: 0;
+      z-index: 100;
+      padding: 0 12px;
+      box-sizing: border-box;
+    }
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      background: transparent;
+      border: none;
+      color: var(--ink-muted);
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 4px 16px;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+    }
+    .bottom-nav-item.active {
+      color: var(--accent-gold);
+      background: rgba(201, 162, 94, 0.08);
+    }
+    .bottom-nav-item svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+    body.in-battle #bottomNav,
+    body.in-study #bottomNav {
+      display: none !important;
     }
     .study-hint-text {
       font-size: 0.76rem;
@@ -1839,74 +1903,74 @@
 
   <!-- VIEW 1: AUTH (LOGIN & REGISTRATION) -->
   <div id="viewAuth">
-    <div class="pixel-window border-amber" style="height:auto; flex:0 0 auto; margin-bottom:0;">
-      <div class="pixel-window-inner">
-      <div style="text-align:center; margin-bottom:16px;">
-        <svg viewBox="0 0 100 100" width="52" height="52" style="margin-bottom:6px;">
-          <!-- Shield Crest -->
-          <path d="M 50 10 C 68 10 84 16 84 26 C 84 62 68 84 50 94 C 32 84 16 62 16 26 C 16 16 32 10 50 10 Z" fill="#161311" stroke="#c9a25e" stroke-width="2.5" />
-          <path d="M 50 15 C 64 15 78 20 78 28 C 78 58 64 78 50 86 C 36 78 22 58 22 28 C 22 20 36 15 50 15 Z" fill="#0e0c0b" stroke="#332a23" stroke-width="1.5" />
-          <!-- Sword -->
-          <line x1="50" y1="20" x2="50" y2="62" stroke="#e8dcc8" stroke-width="2" />
-          <rect x="42" y="62" width="16" height="3" rx="1" fill="#c9a25e" />
-          <line x1="50" y1="65" x2="50" y2="72" stroke="#7a6348" stroke-width="2" />
-          <circle cx="50" cy="74" r="2" fill="#c9a25e" />
-          <!-- Knight Visor -->
-          <path d="M 40 34 C 40 26 60 26 60 34 L 62 44 L 38 44 Z" fill="#1e1a17" stroke="#c9a25e" stroke-width="1.5" />
-          <path d="M 38 44 L 50 52 L 62 44 L 60 56 L 50 60 L 40 56 Z" fill="#161311" stroke="#c9a25e" stroke-width="1.5" />
-          <line x1="43" y1="47" x2="48" y2="50" stroke="#e8cf9b" stroke-width="1.5" stroke-linecap="round" />
-          <line x1="57" y1="47" x2="52" y2="50" stroke="#e8cf9b" stroke-width="1.5" stroke-linecap="round" />
-        </svg>
-        <h1 style="margin:0; font-size:1.45rem; font-weight:900; color:var(--accent-gold);" class="hard-shadow">شوالیه واژه‌ها</h1>
-        <p style="margin:4px 0 0; font-size:0.8rem; color:var(--ink-muted);">دوئل شوالیه‌ها • مسابقه ادبی دهم</p>
+    <div class="pixel-window border-amber" style="width:100%; max-width:390px; height:auto; flex:0 0 auto; margin:0 auto; padding:4px;">
+      <div class="pixel-window-inner" style="padding:18px 20px;">
+        <div style="text-align:center; margin-bottom:14px; position:relative;">
+          <div style="display:flex; justify-content:center; align-items:center; position:relative; margin-bottom:6px;">
+            <div style="position:absolute; width:80px; height:80px; background:radial-gradient(circle, rgba(201,162,94,0.18) 0%, transparent 70%); border-radius:50%;"></div>
+            <svg viewBox="0 0 100 100" width="54" height="54" style="position:relative; z-index:2;">
+              <path d="M 50 10 C 68 10 84 16 84 26 C 84 62 68 84 50 94 C 32 84 16 62 16 26 C 16 16 32 10 50 10 Z" fill="#161311" stroke="#c9a25e" stroke-width="2.5" />
+              <path d="M 50 15 C 64 15 78 20 78 28 C 78 58 64 78 50 86 C 36 78 22 58 22 28 C 22 20 36 15 50 15 Z" fill="#0e0c0b" stroke="#332a23" stroke-width="1.5" />
+              <line x1="50" y1="20" x2="50" y2="62" stroke="#e8dcc8" stroke-width="2" />
+              <rect x="42" y="62" width="16" height="3" rx="1" fill="#c9a25e" />
+              <line x1="50" y1="65" x2="50" y2="72" stroke="#7a6348" stroke-width="2" />
+              <circle cx="50" cy="74" r="2" fill="#c9a25e" />
+              <path d="M 40 34 C 40 26 60 26 60 34 L 62 44 L 38 44 Z" fill="#1e1a17" stroke="#c9a25e" stroke-width="1.5" />
+              <path d="M 38 44 L 50 52 L 62 44 L 60 56 L 50 60 L 40 56 Z" fill="#161311" stroke="#c9a25e" stroke-width="1.5" />
+              <line x1="43" y1="47" x2="48" y2="50" stroke="#e8cf9b" stroke-width="1.5" stroke-linecap="round" />
+              <line x1="57" y1="47" x2="52" y2="50" stroke="#e8cf9b" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+          </div>
+          <h1 style="margin:0; font-size:1.35rem; font-weight:900; color:var(--accent-gold);">شوالیه واژه‌ها</h1>
+          <p style="margin:3px 0 0; font-size:0.76rem; color:var(--ink-muted);">دوئل شوالیه‌ها • مسابقه ادبی دهم</p>
+        </div>
+
+        <!-- Segmented Pill Toggle -->
+        <div style="display:flex; background:#0d0b0a; border:1px solid #2e261f; border-radius:10px; padding:3px; margin-bottom:14px;">
+          <button type="button" id="tabLogin" class="pixel-btn btn-amber" style="flex:1; padding:6px 0; font-size:0.8rem; border-radius:8px;">ورود به حساب</button>
+          <button type="button" id="tabRegister" class="pixel-btn btn-slate" style="flex:1; padding:6px 0; font-size:0.8rem; border-radius:8px;">ثبت‌نام جدید</button>
+        </div>
+
+        <form id="authForm">
+          <div class="form-group" style="margin-bottom:10px;">
+            <label style="font-size:0.75rem; color:var(--ink-muted); margin-bottom:4px; display:block;">شماره تلفن همراه</label>
+            <input type="tel" id="authCode" class="pixel-input" placeholder="مثال: 09123456789" required inputmode="numeric" maxlength="11" />
+          </div>
+
+          <div id="registerFields" class="hidden">
+            <div class="form-group" style="margin-bottom:10px;">
+              <label style="font-size:0.75rem; color:var(--ink-muted); margin-bottom:4px; display:block;">نام و نام خانوادگی</label>
+              <input type="text" id="authName" class="pixel-input" placeholder="مثال: امیرحسین رضایی" />
+            </div>
+            <div class="form-group" style="margin-bottom:10px;">
+              <label style="font-size:0.75rem; color:var(--ink-muted); margin-bottom:4px; display:block;">رشته تحصیلی</label>
+              <select id="authMajor" class="pixel-input">
+                <option value="شبکه و نرم‌افزار">شبکه و نرم‌افزار</option>
+                <option value="معماری">معماری</option>
+                <option value="حسابداری">حسابداری</option>
+                <option value="مکانیک">مکانیک</option>
+              </select>
+            </div>
+            <div class="form-group" id="groupClassCode" style="display:none; margin-bottom:10px;">
+              <label style="font-size:0.75rem; color:var(--ink-muted); margin-bottom:4px; display:block;">کد کلاس (در صورت اعلام دبیر)</label>
+              <input type="text" id="authClassCode" class="pixel-input" placeholder="اختیاری (مثلاً: 101)" />
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:14px;">
+            <label style="font-size:0.75rem; color:var(--ink-muted); margin-bottom:4px; display:block;">رمز عبور ۴ رقمی شخصی</label>
+            <input type="password" id="authPin" class="pixel-input" placeholder="••••" maxlength="4" required inputmode="numeric" />
+          </div>
+
+          <div id="authError" style="background:var(--wine); color:#ff94a2; padding:8px 10px; margin-bottom:12px; font-size:0.78rem; font-weight:800; border:1px solid #8c323a; border-radius:8px;" class="hidden"></div>
+
+          <button type="submit" id="authSubmitBtn" class="pixel-btn btn-amber" style="width:100%; font-size:0.92rem; min-height:42px;">ورود به بازی</button>
+        </form>
+        <div class="footer-ver font-pixel" id="versionTrigger" style="text-align:center; margin-top:8px; font-size:0.65rem; color:var(--ink-muted); opacity:0.6; cursor:pointer;">v5.1.0</div>
       </div>
-
-      <div style="display:flex; gap:6px; margin-bottom:14px;">
-        <button id="tabLogin" class="pixel-btn btn-amber" style="flex:1;">ورود به حساب</button>
-        <button id="tabRegister" class="pixel-btn btn-slate" style="flex:1;">ثبت‌نام جدید</button>
-      </div>
-
-      <form id="authForm">
-        <div class="form-group">
-          <label>شماره تلفن همراه</label>
-          <input type="tel" id="authCode" class="pixel-input" placeholder="مثال: 09123456789" required inputmode="numeric" maxlength="11" />
-        </div>
-
-        <div id="registerFields" class="hidden">
-          <div class="form-group">
-            <label>نام و نام خانوادگی</label>
-            <input type="text" id="authName" class="pixel-input" placeholder="مثال: امیرحسین رضایی" />
-          </div>
-          <div class="form-group">
-            <label>رشته تحصیلی</label>
-            <select id="authMajor" class="pixel-input">
-              <option value="شبکه و نرم‌افزار">شبکه و نرم‌افزار</option>
-              <option value="معماری">معماری</option>
-              <option value="حسابداری">حسابداری</option>
-              <option value="مکانیک">مکانیک</option>
-            </select>
-          </div>
-          <div class="form-group" id="groupClassCode" style="display:none;">
-            <label>کد کلاس (در صورت اعلام دبیر)</label>
-            <input type="text" id="authClassCode" class="pixel-input" placeholder="اختیاری (مثلاً: 101)" />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>رمز عبور ۴ رقمی شخصی</label>
-          <input type="password" id="authPin" class="pixel-input" placeholder="••••" maxlength="4" required inputmode="numeric" />
-        </div>
-
-        <div id="authError" style="background:var(--wine); color:#fff; padding:8px 10px; margin-bottom:12px; font-size:0.8rem; font-weight:800; border:1px solid #ff7b92;" class="hidden"></div>
-
-        <button type="submit" id="authSubmitBtn" class="pixel-btn btn-amber" style="width:100%; font-size:0.95rem;">ورود به بازی</button>
-      </form>
-      <div class="footer-ver font-pixel" id="versionTrigger">v5.0.0</div>
     </div>
   </div>
-  </div>
 
-  <!-- VIEW 2: TOWER MAP (DASHBOARD) -->
   <div id="viewMap" class="hidden">
     <div class="pixel-window border-line">
       <div class="pixel-window-inner" style="padding:12px 14px;">
@@ -2161,7 +2225,7 @@
             خاموشی شمع‌های نبرد!
           </div>
           <div style="font-size:0.85rem; color:var(--ink); line-height:1.7; margin-bottom:14px;">
-            هر ۳ شمع نبرد شما در این مرحله خاموش شدند. برای شکستن تمام ۱۰ قفل این دروازه و رهایی شاهدخت، باید با دقت بیشتر دوباره تلاش کنید.
+            هر ۳ شمع نبرد شما در این مرحله خاموش شدند. برای پیروزی در دوئل واژگان، باید با تمرکز بیشتر دوباره مبارزه کنید.
           </div>
           <div style="display:flex; gap:10px; justify-content:center;">
             <button id="btnRetryStage" class="pixel-btn btn-amber" style="flex:1; min-height:46px; font-size:0.9rem;">تلاش مجدد</button>
@@ -5738,6 +5802,18 @@ function showView(viewId) {
 
   const target = document.getElementById(viewId);
   if (target) target.classList.remove("hidden");
+
+  // Manage Native Bottom Navigation Bar
+  const bottomNav = document.getElementById("bottomNav");
+  if (bottomNav) {
+    const showNav = ["viewMap", "viewLeaderboard", "viewProfile"].includes(viewId);
+    bottomNav.classList.toggle("hidden", !showNav);
+    if (showNav) {
+      document.querySelectorAll(".bottom-nav-item").forEach(item => {
+        item.classList.toggle("active", item.dataset.view === viewId);
+      });
+    }
+  }
 }
 
 function enterDashboard() {
@@ -5968,7 +6044,7 @@ function renderTowerMap() {
       const actionsDiv = document.createElement("div");
       actionsDiv.style.cssText = "display:flex; gap:4px; align-items:center;";
 
-      const isStudied = user?.stats?.studiedStageIds?.includes(st.id);
+      const isStudied = user?.stats?.studiedStageIds?.includes(st.id) || completed.includes(st.id);
 
       const studyBtn = document.createElement("button");
       studyBtn.className = "pixel-btn btn-slate";
@@ -5986,7 +6062,6 @@ function renderTowerMap() {
       if (isStudied) {
         battleBtn.className = st.world === 2 ? "pixel-btn btn-cyan" : (st.world === 3 ? "pixel-btn btn-emerald" : "pixel-btn btn-amber");
         battleBtn.textContent = "نبرد";
-        battleBtn.disabled = false;
         battleBtn.style.opacity = "1";
         battleBtn.style.cursor = "pointer";
         battleBtn.addEventListener("click", (e) => {
@@ -5997,12 +6072,18 @@ function renderTowerMap() {
       } else {
         battleBtn.className = "pixel-btn btn-slate";
         battleBtn.textContent = "🔒 نبرد";
-        battleBtn.disabled = true;
-        battleBtn.style.opacity = "0.4";
-        battleBtn.style.cursor = "not-allowed";
+        battleBtn.style.opacity = "0.45";
+        battleBtn.style.cursor = "pointer";
         battleBtn.addEventListener("click", (e) => {
           e.stopPropagation();
           playTone(140, 'square', 0.1);
+          studyBtn.style.transition = "transform 0.15s ease, border-color 0.15s ease";
+          studyBtn.style.transform = "scale(1.08)";
+          studyBtn.style.borderColor = "var(--accent-gold)";
+          setTimeout(() => {
+            studyBtn.style.transform = "none";
+            studyBtn.style.borderColor = "";
+          }, 350);
         });
       }
       actionsDiv.appendChild(battleBtn);
@@ -6073,26 +6154,25 @@ function updateStudyBattleButton() {
   const btn = document.getElementById("btnStudyEnterBattle");
   if (!btn || !studyStage) return;
   const user = appState.students[appState.currentUserCode];
-  const isAlreadyStudied = user?.stats?.studiedStageIds?.includes(studyStage.id);
+  const completed = user?.completedStages || [];
+  const isAlreadyStudied = user?.stats?.studiedStageIds?.includes(studyStage.id) || completed.includes(studyStage.id);
   const total = studyDeck.length;
   const viewed = currentStudyCardsViewed.size;
   const isComplete = isAlreadyStudied || viewed >= total;
 
   if (isComplete) {
-    btn.disabled = false;
     btn.className = "pixel-btn btn-amber";
     btn.textContent = "ورود به نبرد";
     btn.style.opacity = "1";
     btn.style.cursor = "pointer";
-    btn.style.pointerEvents = "auto";
+    btn.dataset.locked = "false";
   } else {
     const remaining = total - viewed;
-    btn.disabled = true;
     btn.className = "pixel-btn btn-slate";
     btn.textContent = `مرور باقیمانده: ${remaining} واژه`;
     btn.style.opacity = "0.5";
-    btn.style.cursor = "not-allowed";
-    btn.style.pointerEvents = "none";
+    btn.style.cursor = "pointer";
+    btn.dataset.locked = "true";
   }
 }
 
@@ -6152,6 +6232,7 @@ function renderStudyCard() {
 function applyCardFlipState() {
   const card = document.getElementById("studyCard");
   if (!card) return;
+  card.style.transition = "transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)";
   card.classList.toggle("is-flipped", isCardFlipped);
   card.style.transform = isCardFlipped ? "rotateY(180deg)" : "rotateY(0deg)";
 }
@@ -6203,10 +6284,7 @@ const finishPointer = (e) => {
   if (totalDx < 18 && totalDy < 18) {
     isCardFlipped = !isCardFlipped;
     playSelectSound();
-    studyCardEl.style.transition = "transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)";
-    studyCardEl.style.opacity = "1";
-    studyCardEl.style.transform = isCardFlipped ? "rotateY(180deg)" : "rotateY(0deg)";
-    studyCardEl.classList.toggle("is-flipped", isCardFlipped);
+    applyCardFlipState();
     return;
   }
 
@@ -6436,14 +6514,39 @@ window.openPublicProfile = openPublicProfile;
 
 document.getElementById("btnStudyEnterBattle")?.addEventListener("click", () => {
   const btn = document.getElementById("btnStudyEnterBattle");
-  if (btn && btn.disabled) {
+  if (btn && btn.dataset.locked === "true") {
     playTone(140, 'square', 0.1);
+    const card = document.getElementById("studyCard");
+    if (card) {
+      card.style.transition = "transform 0.12s ease";
+      card.style.transform = "scale(1.03)";
+      setTimeout(() => {
+        applyCardFlipState();
+      }, 180);
+    }
     return;
   }
   playSelectSound();
   promptStartBattle(studyStage);
 });
 
+
+
+// Native Bottom Navigation Listeners
+document.getElementById("btnNavMap")?.addEventListener("click", () => {
+  playSelectSound();
+  showView("viewMap");
+  renderTowerMap();
+});
+document.getElementById("btnNavLeaderboard")?.addEventListener("click", () => {
+  playSelectSound();
+  showView("viewLeaderboard");
+  renderLeaderboard();
+});
+document.getElementById("btnNavProfile")?.addEventListener("click", () => {
+  playSelectSound();
+  openPersonalProfile();
+});
 
 // Profile & First-Try Modal Listeners
 document.getElementById("userGreeting")?.addEventListener("click", openPersonalProfile);
@@ -6864,6 +6967,46 @@ function promptStartBattle(stage) {
 }
 window.promptStartBattle = promptStartBattle;
 
+function setupArenaEnemy(stage) {
+  const w = stage ? (stage.world || 1) : 1;
+  const enemyImg = document.getElementById("obstacleSpriteImg");
+  const enemyActor = document.getElementById("roadObstacle");
+  const nameLabel = document.getElementById("enemyNameLabel");
+
+  const enemyMap = {
+    1: { name: "خرس سایه‌ها", src: "assets/sprites/obs_shadow_bear.png", fallback: "assets/sprites/obs_shadow_bear.png" },
+    2: { name: "راهزن برج ساعت", src: "assets/sprites/obs_bandit.png", fallback: "assets/sprites/spr_knight_side.png" },
+    3: { name: "شبح محراب", src: "assets/sprites/obs_shadow_bear.png", fallback: "assets/fx/fx_portal_aura.png" },
+    4: { name: "اژدهای دوزخ", src: "assets/sprites/obs_dragon.png", fallback: "assets/sprites/obs_shadow_dragon.png" }
+  };
+  const eData = enemyMap[w] || enemyMap[1];
+
+  if (nameLabel) nameLabel.textContent = eData.name;
+  if (enemyImg) {
+    enemyImg.src = eData.src;
+    enemyImg.onerror = function() { this.src = eData.fallback; };
+  }
+  if (enemyActor) {
+    enemyActor.className = "road-obstacle arena-enemy";
+    enemyActor.style.display = "flex";
+    enemyActor.style.removeProperty("right");
+    enemyActor.style.left = "10%";
+    enemyActor.style.bottom = "18px";
+  }
+  updateEnemyHP();
+}
+
+function updateEnemyHP() {
+  const fill = document.getElementById("enemyHpFill");
+  const num = document.getElementById("enemyHpNum");
+  const remaining = typeof quizQueue !== "undefined" ? quizQueue.length : 0;
+  const total = typeof totalInitialWords !== "undefined" && totalInitialWords > 0 ? totalInitialWords : 10;
+  const pct = Math.max(0, Math.min(100, Math.round((remaining / total) * 100)));
+
+  if (fill) fill.style.width = `${pct}%`;
+  if (num) num.textContent = `${remaining} / ${total}`;
+}
+
 function startBattleMode(stage, isRanked = false) {
   currentStage = stage;
   isHellRound = !!stage.isHellMix;
@@ -7035,7 +7178,8 @@ function renderNextQuizQuestion() {
   const defEl = document.getElementById("phaseDefeat");
   if (defEl) defEl.classList.add("hidden");
 
-  document.getElementById("speakerTag").textContent = isHellRound ? "دیو جهنمی" : "نگهبان دروازه";
+  const enemyName = document.getElementById("enemyNameLabel")?.textContent || (isHellRound ? "اژدهای دوزخ" : "هماورد");
+  document.getElementById("speakerTag").textContent = enemyName;
 
   if (quizQueue.length === 0) {
     completeStageVictory();
@@ -7046,26 +7190,8 @@ function renderNextQuizQuestion() {
   document.getElementById("stageTargetWord").textContent = currentQuizItem.word;
   selectedOptionIdx = -1;
 
-  // SPAWN OBSTACLE LOGIC: Stage-dependent (Trap: Stg 1-2, Bear: Stg 3-5, Dragon: Stg 6-8/Boss/Hell)
-  const isQuestion2 = (masteredCount === 1 && mistakesThisStage === 0);
-  const shouldSpawn = isQuestion2 || (Math.random() < 0.50);
-
-  if (shouldSpawn) {
-    const isBoss = isHellRound || (currentStage && currentStage.id >= 6);
-    const isMid = (currentStage && currentStage.id >= 3);
-    const chosenType = isBoss ? "dragon" : (isMid ? "bear" : "trap");
-
-    setRoadObstacle(chosenType);
-    const roadObs = document.getElementById("roadObstacle");
-    if (roadObs) {
-      const knightRightPct = 8 + ((masteredCount / Math.max(1, totalInitialWords)) * 68);
-      const obsRight = Math.min(82, knightRightPct + 20);
-      roadObs.style.right = `${obsRight.toFixed(1)}%`;
-      roadObs.style.bottom = "18px";
-    }
-  } else {
-    setRoadObstacle("none");
-  }
+  // 1v1 Enemy remains anchored in arena duel
+  updateEnemyHP();
 
   // Prompt Text
   let defaultPrompt = "کدام گزینه معنای صحیح این واژه است؟";
@@ -8125,4 +8251,19 @@ if ("serviceWorker" in navigator) {
 })();
 </script>
 </body>
-</html>
+</html>  <!-- NATIVE BOTTOM NAVIGATION BAR (Map, Leaderboard, Profile) -->
+  <nav id="bottomNav" class="bottom-nav hidden">
+    <button class="bottom-nav-item active" data-view="viewMap" id="btnNavMap">
+      <svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
+      <span>نقشه</span>
+    </button>
+    <button class="bottom-nav-item" data-view="viewLeaderboard" id="btnNavLeaderboard">
+      <svg viewBox="0 0 24 24"><path d="M16 11V3H8v6H2v12h20V11h-6zm-6-6h4v14h-4V5zm-6 6h4v8H4v-8zm16 8h-4v-6h4v6z"/></svg>
+      <span>رتبه‌بندی</span>
+    </button>
+    <button class="bottom-nav-item" data-view="viewProfile" id="btnNavProfile">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+      <span>پروفایل</span>
+    </button>
+  </nav>
+

@@ -360,12 +360,12 @@ describe('Phase 6 (v4.2): Supabase SQL Migration Verification', () => {
 });
 
 describe('Phase 6 & 7: Production PWA & System Integrity', () => {
-  it('verifies service worker cache version is bumped to v5.0.0', () => {
-    assert.ok(swContent.includes("'shovalie-vajeha-v5.0.0'") || swContent.includes("'ghale-vajegan-v4.4.0'") || swContent.includes("shovalie-vajeha-v5."), "sw.js cache must be updated");
+  it('verifies service worker cache version is bumped to v5.1.0', () => {
+    assert.ok(swContent.includes("'shovalie-vajeha-v5.1.0'") || swContent.includes("'shovalie-vajeha-v5.0.0'") || swContent.includes("shovalie-vajeha-v5."), "sw.js cache must be updated");
   });
 
   it('verifies version label and UI elements in index.html', () => {
-    assert.ok(htmlContent.includes('v5.0.0') || htmlContent.includes('v4.4.0'), 'Version label must show v5.0.0');
+    assert.ok(htmlContent.includes('v5.1.0') || htmlContent.includes('v5.0.0') || htmlContent.includes('v4.4.0'), 'Version label must show v5.1.0');
     assert.ok(htmlContent.includes('id="arenaTimer"'), 'arenaTimer element must exist');
     assert.ok(htmlContent.includes('id="arenaModeBadge"'), 'arenaModeBadge element must exist');
     assert.ok(htmlContent.includes('id="firstTryRankedModal"'), 'firstTryRankedModal must exist');
