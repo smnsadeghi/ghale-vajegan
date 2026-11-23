@@ -1404,6 +1404,82 @@
       100% { filter: brightness(1); background: linear-gradient(90deg, #c9777f, #df9098); }
     }
 
+    /* ============================================================ */
+    /* BATTLE VISUAL EFFECTS OVERLAYS (audio/battle_effects.js)     */
+    /* ============================================================ */
+    .battle-effects-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: inherit;
+      z-index: 18;
+    }
+    .fx-vignette {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 32%, var(--world, #c9a24d) 100%);
+      opacity: 0;
+      will-change: opacity;
+    }
+    .fx-particles-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      image-rendering: pixelated;
+    }
+    .fx-flash {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      opacity: 0;
+      pointer-events: none;
+      will-change: opacity;
+    }
+    .fx-wrong-pulse {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at center, transparent 25%, rgba(180, 20, 20, 0.45) 100%);
+      opacity: 0;
+      pointer-events: none;
+      will-change: opacity;
+    }
+    .hud-candles.intensity-fast-flicker .candle-flame {
+      animation-duration: 0.9s !important;
+    }
+    .enemy-hp-fill.intensity-ember {
+      background: linear-gradient(90deg, #d9703a, #ff9100) !important;
+      box-shadow: 0 0 10px rgba(217, 112, 58, 0.8) !important;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hud-candles.intensity-fast-flicker .candle-flame {
+        animation: none !important;
+      }
+      .fx-flash, .fx-wrong-pulse {
+        display: none !important;
+      }
+      .fx-particles-canvas {
+        display: none !important;
+      }
+    }
+
     /* Plaque Target Word - Hidden in arena stage (Word is now directly in quiz prompt) */
     .stage-target-plaque {
       display: none !important;
@@ -5547,6 +5623,14 @@
           <div class="enemy-hp-fill" id="enemyHpFill" style="width: 100%;"></div>
         </div>
       </div>
+
+      <!-- Battle Visual Effects Overlay (Over scene only, pointer-events: none) -->
+      <div id="battleEffectsOverlay" class="battle-effects-overlay" aria-hidden="true">
+        <div id="fxVignette" class="fx-vignette"></div>
+        <canvas id="fxParticlesCanvas" class="fx-particles-canvas"></canvas>
+        <div id="fxFlash" class="fx-flash"></div>
+        <div id="fxWrongPulse" class="fx-wrong-pulse"></div>
+      </div>
     </div>
 
     <!-- RPG DIALOG WINDOW (Battle Direct Glass Card) -->
@@ -6091,6 +6175,7 @@
 <script src="./audio/tracks/battle-kenayeh.js"></script>
 <script src="./audio/tracks/battle-inferno.js"></script>
 <script src="./audio/engine.js"></script>
+<script src="./audio/battle_effects.js"></script>
 
 <script>
 // ==========================================
@@ -9145,6 +9230,9 @@ function cleanupArenaTimersAndSprites() {
   }
   const optsWrap = document.getElementById("qzOptions");
   if (optsWrap) optsWrap.style.pointerEvents = "";
+  if (typeof BattleEffects !== "undefined") {
+    BattleEffects.stop();
+  }
 }
 window.cleanupArenaTimersAndSprites = cleanupArenaTimersAndSprites;
 
@@ -11203,6 +11291,7 @@ function startArenaAmbient(worldId = 1) {
 
   initAmbientParticles(worldId, w, h);
   ambientLastTime = performance.now();
+  let ambientSimTime = performance.now();
 
   function loop(now) {
     if (document.hidden) {
@@ -11210,19 +11299,22 @@ function startArenaAmbient(worldId = 1) {
       return;
     }
 
-    const dt = Math.min(now - ambientLastTime, 64);
+    const speedMult = (typeof window !== "undefined" && window.arenaAmbientSpeedMult) ? window.arenaAmbientSpeedMult : 1.0;
+    const rawDt = Math.min(now - ambientLastTime, 64);
+    const dt = rawDt * speedMult;
     ambientLastTime = now;
+    ambientSimTime += dt;
 
     ctx.clearRect(0, 0, w, h);
 
     if (currentAmbientWorld === 1) {
-      renderAmbientWorld1(ctx, w, h, now, dt);
+      renderAmbientWorld1(ctx, w, h, ambientSimTime, dt);
     } else if (currentAmbientWorld === 2) {
-      renderAmbientWorld2(ctx, w, h, now, dt);
+      renderAmbientWorld2(ctx, w, h, ambientSimTime, dt);
     } else if (currentAmbientWorld === 3) {
-      renderAmbientWorld3(ctx, w, h, now, dt);
+      renderAmbientWorld3(ctx, w, h, ambientSimTime, dt);
     } else if (currentAmbientWorld === 4) {
-      renderAmbientWorld4(ctx, w, h, now, dt);
+      renderAmbientWorld4(ctx, w, h, ambientSimTime, dt);
     }
 
     arenaAmbientAnimId = requestAnimationFrame(loop);
@@ -11488,6 +11580,9 @@ function startBattleMode(stage, isRanked = false) {
   startArenaAmbient(stage ? (stage.world || 1) : 1);
   if (typeof AudioEngine !== "undefined") {
     AudioEngine.startBattleMusic(stage, { crossfadeMs: 1000 });
+  }
+  if (typeof BattleEffects !== "undefined") {
+    BattleEffects.start(stage ? (stage.world || 1) : 1);
   }
 
   const user = appState.students[appState.currentUserCode] || {};
@@ -11942,20 +12037,28 @@ function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
 
       // Check if last word conquered
       if (quizQueue.length === 0) {
-        // Enemy Defeat (Row 3, freeze on last frame, fps: 6)
-        playSprite(enemyEl, 3, { fps: 6, holdLast: true });
+        const proceedWithVictorySequence = () => {
+          // Enemy Defeat (Row 3, freeze on last frame, fps: 6)
+          playSprite(enemyEl, 3, { fps: 6, holdLast: true });
 
-        // 500ms later: Knight Victory (Row 3, fps: 6)
-        const tVic = setTimeout(() => {
-          playSprite(knightEl, 3, { fps: 6, loop: true });
+          // 500ms later: Knight Victory (Row 3, fps: 6)
+          const tVic = setTimeout(() => {
+            playSprite(knightEl, 3, { fps: 6, loop: true });
 
-          // Show Victory Overlay
-          const tVicEnd = setTimeout(() => {
-            completeStageVictory();
-          }, 600);
-          if (window._arenaCombatTimeouts) window._arenaCombatTimeouts.push(tVicEnd);
-        }, 500);
-        if (window._arenaCombatTimeouts) window._arenaCombatTimeouts.push(tVic);
+            // Show Victory Overlay
+            const tVicEnd = setTimeout(() => {
+              completeStageVictory();
+            }, 600);
+            if (window._arenaCombatTimeouts) window._arenaCombatTimeouts.push(tVicEnd);
+          }, 500);
+          if (window._arenaCombatTimeouts) window._arenaCombatTimeouts.push(tVic);
+        };
+
+        if (typeof BattleEffects !== "undefined" && typeof BattleEffects.triggerKillMoment === "function") {
+          BattleEffects.triggerKillMoment(proceedWithVictorySequence);
+        } else {
+          proceedWithVictorySequence();
+        }
       } else {
         // Enemy Hurt (Row 2, fps: 8)
         playSprite(enemyEl, 2, { fps: 8 });
@@ -11970,6 +12073,9 @@ function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
     if (window._arenaCombatTimeouts) window._arenaCombatTimeouts.push(tSpark);
 
   } else {
+    if (typeof BattleEffects !== "undefined" && typeof BattleEffects.triggerWrongPulse === "function") {
+      BattleEffects.triggerWrongPulse();
+    }
     selectedBtn.classList.add("wrong");
     const iconEl = selectedBtn.querySelector(".opt-status-icon");
     if (iconEl) iconEl.innerHTML = crossSvg;

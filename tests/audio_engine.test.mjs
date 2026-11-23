@@ -431,4 +431,131 @@ describe('Data-Driven Procedural Audio Engine & Tracks Suite', () => {
     AudioEngine.dismissJingle();
     assert.equal(AudioEngine.isJinglePlaying(), false);
   });
+
+  test('17. BattleIntensity single source of truth store', () => {
+    const BI = AudioEngine.battleIntensity;
+    assert.ok(BI, 'AudioEngine exposes battleIntensity');
+    assert.equal(typeof BI.getState, 'function');
+    assert.equal(typeof BI.subscribe, 'function');
+    assert.equal(typeof BI.setProgress, 'function');
+    assert.equal(typeof BI.reset, 'function');
+
+    // Subscribe to state updates
+    let lastState = null;
+    const unsub = BI.subscribe(state => {
+      lastState = state;
+    });
+
+    // Reset World 1-3 baseline
+    BI.reset(false);
+    assert.equal(lastState.level, 0);
+    assert.equal(lastState.p, 0);
+    assert.equal(lastState.isHell, false);
+
+    // Level 1: p = 0.55
+    let res = BI.setProgress(0.55, false);
+    assert.equal(res.level, 1);
+    assert.equal(lastState.level, 1);
+
+    // Level 2: p = 0.75
+    res = BI.setProgress(0.75, false);
+    assert.equal(res.level, 2);
+    assert.equal(lastState.level, 2);
+
+    // Level 3: p = 0.92
+    res = BI.setProgress(0.92, false);
+    assert.equal(res.level, 3);
+    assert.equal(lastState.level, 3);
+
+    // Inferno baseline (Hell Mode starts at Level 1)
+    BI.reset(true);
+    assert.equal(lastState.level, 1);
+    assert.equal(lastState.isHell, true);
+
+    // Inferno Level 2 at p = 0.52
+    res = BI.setProgress(0.52, true);
+    assert.equal(res.level, 2);
+
+    // Inferno Level 3 at p = 0.72
+    res = BI.setProgress(0.72, true);
+    assert.equal(res.level, 3);
+
+    unsub();
+  });
+
+  test('18. Beat Clock APIs & Mute Persistence (TASK 1)', () => {
+    assert.equal(typeof AudioEngine.getBeatPhase, 'function');
+    assert.equal(typeof AudioEngine.onBeat, 'function');
+    assert.equal(typeof AudioEngine.isDownbeat, 'function');
+
+    // When stopped, phase must return 0
+    AudioEngine.stopMusic({ fadeMs: 0 });
+    assert.equal(AudioEngine.getBeatPhase(), 0);
+    assert.equal(typeof AudioEngine.isDownbeat(), 'boolean');
+
+    // onBeat subscription returns an unsubscribe function
+    let beatReceived = false;
+    const unsub = AudioEngine.onBeat(() => { beatReceived = true; });
+    assert.equal(typeof unsub, 'function');
+    unsub();
+
+    // Muted operation continues running
+    AudioEngine.setMuted(true);
+    assert.equal(AudioEngine.isMuted(), true);
+    assert.equal(typeof AudioEngine.getBeatPhase(), 'number');
+    AudioEngine.setMuted(false);
+  });
+
+  test('19. BattleEffects module and LEVEL_CONFIG mapping (TASK 2 & 3)', async () => {
+    const { default: BattleEffects } = await import('../audio/battle_effects.js');
+    assert.ok(BattleEffects, 'BattleEffects module loads successfully');
+    assert.ok(BattleEffects.LEVEL_CONFIG, 'LEVEL_CONFIG exists');
+
+    const cfg = BattleEffects.LEVEL_CONFIG;
+
+    // Level 0: Baseline, no vignette, no particles, no glow
+    assert.equal(cfg[0].vignetteBase, 0.0);
+    assert.equal(cfg[0].particlesCount, 0);
+    assert.equal(cfg[0].enemyGlow, false);
+    assert.equal(cfg[0].downbeatShake, false);
+
+    // Level 1: Breathing vignette (pulse <= 0.12), candle flicker
+    assert.ok(cfg[1].vignetteBase > 0);
+    assert.ok(cfg[1].vignettePulse <= 0.12, 'Vignette pulse swing must not exceed 0.12 for photosensitivity');
+    assert.equal(cfg[1].candleFlicker, true);
+    assert.equal(cfg[1].particlesCount, 0);
+
+    // Level 2: 12-20 soul/ember particles, HP beat pulse, ember color shift, enemy glow
+    assert.ok(cfg[2].particlesCount >= 12 && cfg[2].particlesCount <= 20, 'Particles capped at 12-20');
+    assert.equal(cfg[2].hpPulse, true);
+    assert.equal(cfg[2].hpColorShift, true);
+    assert.equal(cfg[2].enemyGlow, true);
+
+    // Level 3: Stronger vignette, downbeat shake (80ms), downbeat flicker
+    assert.ok(cfg[3].vignetteBase > cfg[2].vignetteBase, 'Level 3 vignette is stronger');
+    assert.equal(cfg[3].downbeatShake, true);
+    assert.equal(cfg[3].downbeatFlicker, true);
+  });
+
+  test('20. BattleEffects Kill Moment & Wrong Pulse triggers', async (t) => {
+    const { default: BattleEffects } = await import('../audio/battle_effects.js');
+
+    // Wrong answer pulse callable without error
+    assert.doesNotThrow(() => {
+      BattleEffects.triggerWrongPulse();
+    });
+
+    // Kill moment executes 150ms hit stop callback
+    await new Promise((resolve) => {
+      const startT = Date.now();
+      BattleEffects.triggerKillMoment(() => {
+        const elapsed = Date.now() - startT;
+        assert.ok(elapsed >= 140, 'Hit-stop must delay death callback by ~150ms');
+        resolve();
+      });
+    });
+
+    BattleEffects.stop();
+    assert.equal(BattleEffects.isRunning(), false);
+  });
 });

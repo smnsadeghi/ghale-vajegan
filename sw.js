@@ -4,7 +4,8 @@
 // const CACHE_NAME = 'shovalie-vajeha-v6.0.0';
 // const CACHE_NAME = 'shovalie-vajeha-v6.1.0';
 // const CACHE_NAME = 'shovalie-vajeha-v6.2.0';
-const CACHE_NAME = 'shovalie-vajeha-v6.3.0';
+// const CACHE_NAME = 'shovalie-vajeha-v6.3.0';
+const CACHE_NAME = 'shovalie-vajeha-v6.4.0';
 const ASSETS = [
   './',
   './index.html',
@@ -16,6 +17,7 @@ const ASSETS = [
   './apple-touch-icon.png',
   './favicon-32.png',
   './audio/engine.js',
+  './audio/battle_effects.js',
   './audio/tracks/battle.js',
   './audio/tracks/flashcards-chill.js',
   './audio/tracks/battle-vazhgan.js',

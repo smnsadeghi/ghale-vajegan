@@ -95,6 +95,21 @@
   let battleMaxProgress = 0;
   let climaxTriggered = false;
 
+  // Beat Clock & Scheduling Queue (TASK 1)
+  const beatListeners = new Set();
+  const scheduledBeatQueue = [];
+  let lastBeatQuarterTime = 0;
+  let isCurrentDownbeat = false;
+
+  // Battle Intensity Single Source of Truth Store (TASK 1)
+  const battleIntensityListeners = new Set();
+  const battleIntensityState = {
+    p: 0,
+    level: 0,
+    isHell: false,
+    effectiveBpm: 100
+  };
+
   // Active voice nodes for leak-free cleanup
   const activeVoiceNodes = new Set();
 
@@ -659,6 +674,19 @@
     }
   }
 
+  function checkScheduledBeats() {
+    if (!audioCtx) return;
+    const now = audioCtx.currentTime;
+    while (scheduledBeatQueue.length > 0 && scheduledBeatQueue[0].time <= now) {
+      const b = scheduledBeatQueue.shift();
+      lastBeatQuarterTime = b.time;
+      isCurrentDownbeat = b.isDownbeat;
+      beatListeners.forEach(cb => {
+        try { cb({ isDownbeat: b.isDownbeat, beatNumber: b.beatNumber, time: b.time }); } catch (_) {}
+      });
+    }
+  }
+
   /**
    * Main Lookahead Scheduler Loop
    */
@@ -666,9 +694,20 @@
     if (!isPlaying || !currentTrack || !audioCtx) return;
 
     try {
+      checkScheduledBeats();
       const totalSteps = (currentTrack.loopLengthBars || 8) * 16;
 
       while (nextNoteTime < audioCtx.currentTime + SCHEDULE_AHEAD_TIME_SEC) {
+        // Enqueue beat clock event when step is a beat (every 4 16th steps)
+        if (currentStep % 4 === 0) {
+          const isDownbeat = (currentStep % 16 === 0);
+          scheduledBeatQueue.push({
+            time: nextNoteTime,
+            isDownbeat,
+            beatNumber: Math.floor(currentStep / 4)
+          });
+        }
+
         // Trigger climax crash and drum fill on the next bar line if queued (p >= 0.9)
         if (pendingClimaxFill && (currentStep % 16 === 0)) {
           pendingClimaxFill = false;
@@ -792,6 +831,8 @@
       currentLayerGains = newLayerGains;
       currentStep = 0;
       nextNoteTime = audioCtx.currentTime + 0.05;
+      lastBeatQuarterTime = audioCtx.currentTime;
+      scheduledBeatQueue.length = 0;
       isPlaying = true;
 
       // Ensure strictly one scheduler interval runs
@@ -818,6 +859,8 @@
     isPlaying = false;
     currentTrack = null;
     currentTrackId = null;
+    lastBeatQuarterTime = 0;
+    scheduledBeatQueue.length = 0;
 
     if (schedulerTimer) {
       clearInterval(schedulerTimer);
@@ -931,6 +974,148 @@
 
   /**
    * ============================================================================
+   * BATTLE INTENSITY STORE (Single Source of Truth - TASK 1)
+   * ============================================================================
+   */
+  const BattleIntensity = {
+    getState() {
+      return { ...battleIntensityState };
+    },
+    subscribe(listener) {
+      battleIntensityListeners.add(listener);
+      try { listener({ ...battleIntensityState }); } catch (_) {}
+      return () => battleIntensityListeners.delete(listener);
+    },
+    setProgress(p, isHell = false) {
+      const clampedP = Math.max(0, Math.min(1, p));
+      battleIntensityState.p = clampedP;
+      battleIntensityState.isHell = !!isHell;
+
+      // Determine level (0 - 3)
+      let targetLevel = 0;
+      let targetTempo = 1.00;
+      let targetLayer = 0;
+
+      if (battleIntensityState.isHell) {
+        if (clampedP < 0.5) {
+          targetLevel = 1;
+          targetTempo = 1.10;
+          targetLayer = 1;
+        } else if (clampedP < 0.7) {
+          targetLevel = 2;
+          targetTempo = 1.18;
+          targetLayer = 2;
+        } else if (clampedP < 0.9) {
+          targetLevel = 3;
+          targetTempo = 1.28;
+          targetLayer = 3;
+        } else {
+          targetLevel = 3;
+          targetTempo = 1.40;
+          targetLayer = 3;
+        }
+      } else {
+        if (clampedP < 0.5) {
+          targetLevel = 0;
+          targetTempo = 1.00;
+          targetLayer = 0;
+        } else if (clampedP < 0.7) {
+          targetLevel = 1;
+          targetTempo = 1.08;
+          targetLayer = 1;
+        } else if (clampedP < 0.9) {
+          targetLevel = 2;
+          targetTempo = 1.18;
+          targetLayer = 2;
+        } else {
+          targetLevel = 3;
+          targetTempo = 1.30;
+          targetLayer = 3;
+        }
+      }
+
+      battleIntensityState.level = targetLevel;
+      if (currentTrack) {
+        battleIntensityState.effectiveBpm = (currentTrack.bpm || 100) * targetTempo;
+      }
+
+      // Update audio engine tempo & layer smoothly
+      setTempoMultiplier(targetTempo, { rampMs: 1500 });
+      setLayerLevel(targetLayer, { rampMs: 1500 });
+
+      // Final hit climax trigger (p >= 0.9)
+      if (clampedP >= 0.9 && !climaxTriggered) {
+        climaxTriggered = true;
+        queueClimaxFill();
+      }
+
+      // Notify subscribers
+      battleIntensityListeners.forEach(cb => {
+        try { cb({ ...battleIntensityState }); } catch (_) {}
+      });
+
+      updateDevPanelUI();
+      return { ...battleIntensityState, tempo: targetTempo, layer: targetLayer };
+    },
+    setLevel(level) {
+      const lvl = Math.max(0, Math.min(3, Math.round(level)));
+      battleIntensityState.level = lvl;
+      setLayerLevel(lvl, { rampMs: 800 });
+      battleIntensityListeners.forEach(cb => {
+        try { cb({ ...battleIntensityState }); } catch (_) {}
+      });
+      updateDevPanelUI();
+      return { ...battleIntensityState };
+    },
+    reset(isHell = false) {
+      battleIntensityState.p = 0;
+      battleIntensityState.level = isHell ? 1 : 0;
+      battleIntensityState.isHell = !!isHell;
+      const baselineTempo = isHell ? 1.10 : 1.00;
+      const baselineLayer = isHell ? 1 : 0;
+      setTempoMultiplier(baselineTempo);
+      setLayerLevel(baselineLayer);
+      battleIntensityState.effectiveBpm = (currentTrack ? (currentTrack.bpm || 100) : 100) * baselineTempo;
+      climaxTriggered = false;
+      pendingClimaxFill = false;
+
+      battleIntensityListeners.forEach(cb => {
+        try { cb({ ...battleIntensityState }); } catch (_) {}
+      });
+      updateDevPanelUI();
+    }
+  };
+
+  /**
+   * ============================================================================
+   * BEAT CLOCK & SCHEDULER DISPATCH (TASK 1)
+   * ============================================================================
+   */
+  function getBeatPhase() {
+    if (!isPlaying || !audioCtx) return 0;
+    checkScheduledBeats();
+    const bpm = (currentTrack ? (currentTrack.bpm || 100) : 100) * getCurrentTempoMultiplier();
+    const secPerBeat = 60.0 / bpm;
+    if (secPerBeat <= 0) return 0;
+
+    const t = audioCtx.currentTime;
+    if (lastBeatQuarterTime <= 0) return 0;
+    const elapsed = t - lastBeatQuarterTime;
+    const phase = (elapsed % secPerBeat) / secPerBeat;
+    return Math.max(0, Math.min(1, phase));
+  }
+
+  function isDownbeat() {
+    return isCurrentDownbeat;
+  }
+
+  function onBeat(callback) {
+    beatListeners.add(callback);
+    return () => beatListeners.delete(callback);
+  }
+
+  /**
+   * ============================================================================
    * BATTLE MUSIC & DYNAMIC INTENSITY CONTROL (TASKS 1, 2, 3)
    * ============================================================================
    */
@@ -973,13 +1158,7 @@
     pendingClimaxFill = false;
     dismissJingle();
 
-    // Baseline configuration:
-    // Inferno starts at Layer 1, Tempo 1.10; others start at Layer 0, Tempo 1.00
-    const baselineTempo = isHell ? 1.10 : 1.00;
-    const baselineLayer = isHell ? 1 : 0;
-
-    setTempoMultiplier(baselineTempo);
-    setLayerLevel(baselineLayer);
+    BattleIntensity.reset(isHell);
 
     playTrack(trackId, { crossfadeMs });
     return trackId;
@@ -994,52 +1173,8 @@
     battleMaxProgress = Math.max(battleMaxProgress, rawP);
     const p = battleMaxProgress;
 
-    let targetTempo = 1.00;
-    let targetLayer = 0;
-
-    if (isHell) {
-      // Inferno Fortress baseline: starts at Layer 1, Tempo 1.10
-      if (p < 0.5) {
-        targetTempo = 1.10;
-        targetLayer = 1;
-      } else if (p < 0.7) {
-        targetTempo = 1.18;
-        targetLayer = 2;
-      } else if (p < 0.9) {
-        targetTempo = 1.28;
-        targetLayer = 3;
-      } else {
-        targetTempo = 1.40;
-        targetLayer = 3;
-      }
-    } else {
-      // Worlds 1, 2, 3
-      if (p < 0.5) {
-        targetTempo = 1.00;
-        targetLayer = 0;
-      } else if (p < 0.7) {
-        targetTempo = 1.08;
-        targetLayer = 1;
-      } else if (p < 0.9) {
-        targetTempo = 1.18;
-        targetLayer = 2;
-      } else {
-        targetTempo = 1.30;
-        targetLayer = 3;
-      }
-    }
-
-    // Final hit climax trigger (p >= 0.9): crash cymbal & drum fill on next bar line
-    if (p >= 0.9 && !climaxTriggered) {
-      climaxTriggered = true;
-      queueClimaxFill();
-    }
-
-    // Smooth ramping over ~1500ms
-    setTempoMultiplier(targetTempo, { rampMs: 1500 });
-    setLayerLevel(targetLayer, { rampMs: 1500 });
-
-    return { p, tempo: targetTempo, layer: targetLayer };
+    const res = BattleIntensity.setProgress(p, isHell);
+    return { p: res.p, tempo: res.tempo, layer: res.layer, level: res.level };
   }
 
   function handleBattleVictory(options = {}) {
@@ -1177,6 +1312,17 @@
           break;
         }
 
+        case 'crash': {
+          schedulePercussion(
+            (currentTrack && currentTrack.instruments && currentTrack.instruments.drums) || {},
+            { type: 'crash', velocity: 0.95 },
+            now,
+            dest,
+            reverbNode
+          );
+          break;
+        }
+
         case 'chime':
           [220, 277.18, 329.63, 440].forEach((f, idx) => {
             const osc = audioCtx.createOscillator();
@@ -1295,6 +1441,22 @@
         <div style="font-size:9px; color:#8c836f; margin-top:4px;">0:Base 1:+Arp 2:+Snare 3:Full</div>
       </div>
 
+      <!-- Battle Intensity Progress Slider (0.0 to 1.0 - TASK 4) -->
+      <div style="margin-bottom:10px; background:#181410; padding:8px 10px; border-radius:4px; border:1px solid rgba(201,162,77,0.15);">
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+          <span>Battle Progress (p):</span>
+          <span id="devProgressVal" style="color:#6fb8a8; font-weight:bold;">${battleIntensityState.p.toFixed(2)} (L${battleIntensityState.level})</span>
+        </div>
+        <input id="devProgressSlider" type="range" min="0.0" max="1.0" step="0.02" value="${battleIntensityState.p}" style="width:100%; accent-color:#6fb8a8; cursor:pointer;" />
+        <div style="display:flex; justify-content:space-between; font-size:9px; color:#8c836f; margin-top:2px;">
+          <span>0 (L0)</span>
+          <span>0.5 (L1)</span>
+          <span>0.7 (L2)</span>
+          <span>0.9 (L3)</span>
+          <span>1.0</span>
+        </div>
+      </div>
+
       <!-- Track List -->
       <div style="margin-bottom:10px;">
         <div style="font-weight:bold; margin-bottom:6px; color:#c9a24d;">Tracks:</div>
@@ -1335,6 +1497,14 @@
       stopMusic({ fadeMs: 300 });
     };
 
+    const progressSlider = panel.querySelector('#devProgressSlider');
+    if (progressSlider) {
+      progressSlider.oninput = (e) => {
+        const val = parseFloat(e.target.value);
+        BattleIntensity.setProgress(val, battleIntensityState.isHell);
+      };
+    }
+
     updateDevPanelUI();
   }
 
@@ -1374,6 +1544,16 @@
       btn.style.color = (layerLevel === lvl) ? '#0f0d0b' : '#f1e8d4';
     });
 
+    // Battle Progress Slider & Val
+    const progressVal = panel.querySelector('#devProgressVal');
+    if (progressVal) {
+      progressVal.textContent = `${battleIntensityState.p.toFixed(2)} (L${battleIntensityState.level})`;
+    }
+    const devProgressSlider = panel.querySelector('#devProgressSlider');
+    if (devProgressSlider && Math.abs(parseFloat(devProgressSlider.value) - battleIntensityState.p) > 0.001) {
+      devProgressSlider.value = battleIntensityState.p;
+    }
+
     // Tracks list
     const listEl = panel.querySelector('#devTracksList');
     if (listEl) {
@@ -1410,6 +1590,8 @@
 
   // Pre-register any tracks loaded before engine and mount dev panel
   if (typeof window !== 'undefined') {
+    window.BattleIntensity = BattleIntensity;
+
     if (window.AudioTracks) {
       Object.keys(window.AudioTracks).forEach(id => {
         registerTrack(window.AudioTracks[id]);
@@ -1475,6 +1657,11 @@
     stopBattleMusic,
     isJinglePlaying,
     dismissJingle,
-    queueClimaxFill
+    queueClimaxFill,
+    // Beat clock & Battle Intensity APIs
+    battleIntensity: BattleIntensity,
+    getBeatPhase,
+    onBeat,
+    isDownbeat
   };
 });
