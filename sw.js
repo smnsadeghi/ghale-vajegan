@@ -9,7 +9,8 @@
 // const CACHE_NAME = 'shovalie-vajeha-v6.5.0';
 // const CACHE_NAME = 'shovalie-vajeha-v6.6.0';
 // const CACHE_NAME = 'shovalie-vajeha-v6.7.0';
-const CACHE_NAME = 'shovalie-vajeha-v6.8.0';
+// const CACHE_NAME = 'shovalie-vajeha-v6.8.0';
+const CACHE_NAME = 'shovalie-vajeha-v7.0.0';
 const ASSETS = [
   './',
   './index.html',
@@ -106,6 +107,19 @@ self.addEventListener('fetch', (event) => {
   if (event.request.url.includes('supabase.co') || event.request.method !== 'GET') {
     return;
   }
+
+  // Network-first for HTML navigation so deployed updates appear immediately, falling back to cache offline
+  if (event.request.mode === 'navigate' || event.request.destination === 'document') {
+    event.respondWith(
+      fetch(event.request).then((response) => {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        return response;
+      }).catch(() => caches.match('./index.html'))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cached) => {
       return cached || fetch(event.request).then((response) => {

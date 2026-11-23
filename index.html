@@ -5933,7 +5933,7 @@
         </div>
       </form>
 
-      <div class="auth-version font-pixel footer-ver" id="versionTrigger" data-baseline="v5.1.0">v6.0.0</div>
+      <div class="auth-version font-pixel footer-ver" id="versionTrigger" data-baseline="v5.1.0">v7.0.0</div>
     </div>
   </div>
 
@@ -12119,7 +12119,16 @@ document.getElementById("btnExitTeacher").addEventListener("click", () => {
 // ==========================================
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch(() => {});
+    navigator.serviceWorker.register("./sw.js").then((reg) => {
+      reg.update().catch(() => {});
+    }).catch(() => {});
+  });
+  let swRefreshing = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!swRefreshing) {
+      swRefreshing = true;
+      window.location.reload();
+    }
   });
 }
 
