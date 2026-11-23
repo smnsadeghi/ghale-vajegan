@@ -1,7 +1,7 @@
 {
   "name": "شوالیه واژه‌ها",
   "short_name": "شوالیه واژه‌ها",
-  "description": "دوئل کارتی شوالیه‌ها و یادگیری هوشمند واژگان ادبیات فارسی دهم",
+  "description": "دوئل کارتی شوالیه‌ها • مسابقه ادبی دهم و یازدهم",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait",
@@ -11,25 +11,25 @@
   "lang": "fa",
   "icons": [
     {
-      "src": "icon.svg",
+      "src": "./icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "icon-192.png",
+      "src": "./icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-512.png",
+      "src": "./icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-maskable-512.png",
+      "src": "./icon-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

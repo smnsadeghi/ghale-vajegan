@@ -8,17 +8,20 @@
 // const CACHE_NAME = 'shovalie-vajeha-v6.4.0';
 // const CACHE_NAME = 'shovalie-vajeha-v6.5.0';
 // const CACHE_NAME = 'shovalie-vajeha-v6.6.0';
-const CACHE_NAME = 'shovalie-vajeha-v6.7.0';
+// const CACHE_NAME = 'shovalie-vajeha-v6.7.0';
+const CACHE_NAME = 'shovalie-vajeha-v6.8.0';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './icon.svg',
+  './assets/icon.svg',
   './icon-192.png',
   './icon-512.png',
   './icon-maskable-512.png',
   './apple-touch-icon.png',
   './favicon-32.png',
+  './data/curriculum_bank.js',
   './audio/engine.js',
   './audio/battle_effects.js',
   './audio/tracks/battle.js',
