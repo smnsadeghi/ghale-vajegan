@@ -6084,6 +6084,10 @@
   </nav>
 </div>
 
+<script src="./audio/tracks/battle.js"></script>
+<script src="./audio/tracks/flashcards-chill.js"></script>
+<script src="./audio/engine.js"></script>
+
 <script>
 // ==========================================
 // 1. COMPLETE 10TH GRADE CURRICULUM DATA
@@ -8837,12 +8841,20 @@ async function hashPin(pin) {
 }
 
 // ==========================================
-// 3. 8-BIT RETRO SYNTHESIZER & SOUND SYSTEM
+// 3. 8-BIT RETRO SYNTHESIZER & PROCEDURAL AUDIO SYSTEM
 // ==========================================
-let audioCtx = null;
-let isAudioMuted = localStorage.getItem("gv_sound_muted") === "true";
+let audioCtx = (typeof AudioEngine !== "undefined" && typeof AudioEngine.initAudio === "function")
+  ? AudioEngine.initAudio()
+  : null;
+let isAudioMuted = (typeof AudioEngine !== "undefined" && typeof AudioEngine.isMuted === "function")
+  ? AudioEngine.isMuted()
+  : (localStorage.getItem("gv_sound_muted") === "true");
 
 function initAudio() {
+  if (typeof AudioEngine !== "undefined" && typeof AudioEngine.initAudio === "function") {
+    audioCtx = AudioEngine.initAudio();
+    return audioCtx;
+  }
   if (!audioCtx) {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     if (AudioContext) audioCtx = new AudioContext();
@@ -8850,9 +8862,14 @@ function initAudio() {
   if (audioCtx && audioCtx.state === "suspended") {
     audioCtx.resume();
   }
+  return audioCtx;
 }
 
 function playTone(freq, dur = 0.1, type = "square") {
+  if (typeof AudioEngine !== "undefined" && typeof AudioEngine.playTone === "function") {
+    AudioEngine.playTone(freq, dur, type);
+    return;
+  }
   if (isAudioMuted) return;
   try {
     initAudio();
@@ -8870,97 +8887,49 @@ function playTone(freq, dur = 0.1, type = "square") {
   } catch (e) {}
 }
 
-
 function playPortalChime() {
-  if (isAudioMuted) return;
-  try {
-    const ctx = getAudioCtx();
-    const now = ctx.currentTime;
-    const notes = [220, 277.18, 329.63, 440];
-    notes.forEach((freq, idx) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(freq, now + idx * 0.05);
-      gain.gain.setValueAtTime(0.12, now + idx * 0.05);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.05 + 0.18);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now + idx * 0.05);
-      osc.stop(now + idx * 0.05 + 0.2);
-    });
-  } catch (e) {}
+  if (typeof AudioEngine !== "undefined" && typeof AudioEngine.playSfx === "function") {
+    AudioEngine.playSfx("chime");
+    return;
+  }
 }
 
 function playSelectSound() {
+  if (typeof AudioEngine !== "undefined" && typeof AudioEngine.playSfx === "function") {
+    AudioEngine.playSfx("select");
+    return;
+  }
   playTone(587.33, 0.05, "square");
 }
 
 function playCorrectSound() {
-  if (isAudioMuted) return;
-  try {
-    initAudio();
-    if (!audioCtx) return;
-    const now = audioCtx.currentTime;
-    [523.25, 659.25, 783.99, 1046.50].forEach((f, idx) => {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = "square";
-      osc.frequency.setValueAtTime(f, now + idx * 0.06);
-      gain.gain.setValueAtTime(0.12, now + idx * 0.06);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.12);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(now + idx * 0.06);
-      osc.stop(now + idx * 0.06 + 0.12);
-    });
-  } catch (e) {}
+  if (typeof AudioEngine !== "undefined" && typeof AudioEngine.playSfx === "function") {
+    AudioEngine.playSfx("correct");
+    return;
+  }
 }
 
 function playWrongSound() {
-  if (isAudioMuted) return;
-  try {
-    initAudio();
-    if (!audioCtx) return;
-    const now = audioCtx.currentTime;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = "sawtooth";
-    osc.frequency.setValueAtTime(160, now);
-    osc.frequency.exponentialRampToValueAtTime(95, now + 0.25);
-    gain.gain.setValueAtTime(0.2, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start(now);
-    osc.stop(now + 0.25);
-  } catch (e) {}
+  if (typeof AudioEngine !== "undefined" && typeof AudioEngine.playSfx === "function") {
+    AudioEngine.playSfx("wrong");
+    return;
+  }
 }
 
 function playVictorySound() {
-  if (isAudioMuted) return;
-  try {
-    initAudio();
-    if (!audioCtx) return;
-    const now = audioCtx.currentTime;
-    [523.25, 659.25, 783.99, 1046.50, 1318.51].forEach((f, idx) => {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = "square";
-      osc.frequency.setValueAtTime(f, now + idx * 0.1);
-      gain.gain.setValueAtTime(0.15, now + idx * 0.1);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.2);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(now + idx * 0.1);
-      osc.stop(now + idx * 0.1 + 0.2);
-    });
-  } catch (e) {}
+  if (typeof AudioEngine !== "undefined" && typeof AudioEngine.playSfx === "function") {
+    AudioEngine.playSfx("victory");
+    return;
+  }
 }
 
 function updateAudioUI() {
   const icon = document.getElementById("svgSoundIcon");
-  if (isAudioMuted) {
+  if (!icon) return;
+  const muted = (typeof AudioEngine !== "undefined" && typeof AudioEngine.isMuted === "function")
+    ? AudioEngine.isMuted()
+    : isAudioMuted;
+  if (muted) {
     icon.innerHTML = '<polygon points="1,5 5,5 9,2 9,14 5,11 1,11" /><line x1="12" y1="4" x2="16" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="square"/><line x1="16" y1="4" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="square"/>';
   } else {
     icon.innerHTML = '<polygon points="1,5 5,5 9,2 9,14 5,11 1,11" /><path d="M12,4 C13.5,6 13.5,10 12,12 M14,2 C16.5,5.5 16.5,10.5 14,14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" />';
@@ -8969,8 +8938,16 @@ function updateAudioUI() {
 
 document.getElementById("btnAudio").addEventListener("click", () => {
   initAudio();
-  isAudioMuted = !isAudioMuted;
-  localStorage.setItem("gv_sound_muted", isAudioMuted);
+  const currentMuted = (typeof AudioEngine !== "undefined" && typeof AudioEngine.isMuted === "function")
+    ? AudioEngine.isMuted()
+    : isAudioMuted;
+  const nextMuted = !currentMuted;
+  isAudioMuted = nextMuted;
+  if (typeof AudioEngine !== "undefined" && typeof AudioEngine.setMuted === "function") {
+    AudioEngine.setMuted(nextMuted);
+  } else {
+    localStorage.setItem("gv_sound_muted", String(nextMuted));
+  }
   updateAudioUI();
 });
 updateAudioUI();
@@ -9179,6 +9156,14 @@ function showView(viewId) {
 
   if (viewId !== "viewArena") {
     cleanupArenaTimersAndSprites();
+    if (typeof AudioEngine !== "undefined" && AudioEngine.getCurrentTrackId() === "battle-theme") {
+      AudioEngine.stopMusic({ fadeMs: 800 });
+    }
+  }
+  if (viewId !== "viewStudy") {
+    if (typeof AudioEngine !== "undefined" && AudioEngine.getCurrentTrackId() === "flashcards-chill") {
+      AudioEngine.stopMusic({ fadeMs: 800 });
+    }
   }
   document.body.classList.toggle("in-battle", viewId === "viewArena");
   document.body.classList.toggle("in-study", viewId === "viewStudy");
@@ -9788,6 +9773,26 @@ function openStudyMode(stage) {
   renderStudyCard();
   showView("viewStudy");
 
+  // Play "flashcards-chill" on Flashcard screen after the first user tap (or immediately if AudioContext is already unlocked)
+  if (typeof AudioEngine !== "undefined") {
+    const startStudyChill = () => {
+      if (document.body.classList.contains("in-study")) {
+        AudioEngine.playTrack("flashcards-chill", { crossfadeMs: 1200 });
+      }
+    };
+    if (AudioEngine.isAudioContextRunning()) {
+      startStudyChill();
+    } else {
+      const onFirstStudyTap = () => {
+        startStudyChill();
+        window.removeEventListener("pointerdown", onFirstStudyTap, true);
+        window.removeEventListener("keydown", onFirstStudyTap, true);
+      };
+      window.addEventListener("pointerdown", onFirstStudyTap, true);
+      window.addEventListener("keydown", onFirstStudyTap, true);
+    }
+  }
+
   // First-time tutorial: show only once per user, dismissed on tap anywhere
   const tutorialSeen = localStorage.getItem("flashcard_tutorial_seen") === "true";
   if (!tutorialSeen && studyDeck.length > 0) {
@@ -10044,6 +10049,9 @@ const finishPointer = (e) => {
     isFlipping = true;
     setTimeout(() => { isFlipping = false; }, 360);
     isCardFlipped = !isCardFlipped;
+    if (typeof AudioEngine !== "undefined" && AudioEngine.getCurrentTrackId() !== "flashcards-chill") {
+      AudioEngine.playTrack("flashcards-chill", { crossfadeMs: 1200 });
+    }
     playSelectSound();
     applyCardFlipState();
     return;
@@ -10453,6 +10461,9 @@ document.getElementById("studyCard")?.addEventListener("keydown", (e) => {
     isFlipping = true;
     setTimeout(() => { isFlipping = false; }, 360);
     isCardFlipped = !isCardFlipped;
+    if (typeof AudioEngine !== "undefined" && AudioEngine.getCurrentTrackId() !== "flashcards-chill") {
+      AudioEngine.playTrack("flashcards-chill", { crossfadeMs: 1200 });
+    }
     playSelectSound();
     applyCardFlipState();
   }
@@ -11450,6 +11461,9 @@ function startBattleMode(stage, isRanked = false) {
   }
   currentStage = stage;
   startArenaAmbient(stage ? (stage.world || 1) : 1);
+  if (typeof AudioEngine !== "undefined") {
+    AudioEngine.playTrack("battle-theme", { crossfadeMs: 800 });
+  }
   isHellRound = !!stage.isHellMix;
 
   const user = appState.students[appState.currentUserCode] || {};
