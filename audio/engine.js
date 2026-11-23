@@ -82,7 +82,18 @@
   let currentStep = 0;
   let nextNoteTime = 0;
   let tempoMultiplier = 1.0;
+  let tempoRampStartVal = 1.0;
+  let tempoRampTargetVal = 1.0;
+  let tempoRampStartTime = 0;
+  let tempoRampDurationMs = 0;
   let layerLevel = 3; // 0 = base, 1 = +arp/hats, 2 = +snare/counter, 3 = full/fills
+
+  // Battle dynamics & ending jingle state
+  let pendingClimaxFill = false;
+  let isEndingJinglePlaying = false;
+  let jingleTimeout = null;
+  let battleMaxProgress = 0;
+  let climaxTriggered = false;
 
   // Active voice nodes for leak-free cleanup
   const activeVoiceNodes = new Set();
@@ -586,7 +597,7 @@
   function scheduleStep(track, stepIndex, stepTime, trackGainNode, reverbSendNode) {
     if (!track || !track.patterns) return;
 
-    const secondsPerBeat = 60.0 / ((track.bpm || 100) * tempoMultiplier);
+    const secondsPerBeat = 60.0 / ((track.bpm || 100) * getCurrentTempoMultiplier());
     const secondsPer16th = secondsPerBeat / 4.0;
     const rootMidi = noteToMidi(track.root || 'C3');
     const scale = track.scale || [0, 2, 4, 5, 7, 9, 11];
@@ -658,8 +669,24 @@
       const totalSteps = (currentTrack.loopLengthBars || 8) * 16;
 
       while (nextNoteTime < audioCtx.currentTime + SCHEDULE_AHEAD_TIME_SEC) {
+        // Trigger climax crash and drum fill on the next bar line if queued (p >= 0.9)
+        if (pendingClimaxFill && (currentStep % 16 === 0)) {
+          pendingClimaxFill = false;
+          try {
+            const drumInst = (currentTrack.instruments && currentTrack.instruments.drums) || {};
+            // 1. Crash cymbal on bar line
+            schedulePercussion(drumInst, { type: 'crash', velocity: 0.95 }, nextNoteTime, currentTrackGain, reverbNode);
+            // 2. Short energetic drum fill across first 4 sixteenth notes of bar line
+            const curBpm = (currentTrack.bpm || 100) * getCurrentTempoMultiplier();
+            const stepSec = (60.0 / curBpm) / 4.0;
+            ['tom_hi', 'snare', 'tom_mid', 'tom_low'].forEach((tName, idx) => {
+              schedulePercussion(drumInst, { type: tName, velocity: 0.85 }, nextNoteTime + idx * stepSec, currentTrackGain, reverbNode);
+            });
+          } catch (_) {}
+        }
+
         // Dynamic BPM check on every step for smooth runtime tempo changes
-        const currentBpm = (currentTrack.bpm || 100) * tempoMultiplier;
+        const currentBpm = (currentTrack.bpm || 100) * getCurrentTempoMultiplier();
         const secondsPerBeat = 60.0 / currentBpm;
         const secondsPer16th = secondsPerBeat / 4.0;
 
@@ -844,12 +871,38 @@
   }
 
   function setTempoMultiplier(multiplier, options = {}) {
-    tempoMultiplier = Math.max(0.5, Math.min(2.5, multiplier));
+    const target = Math.max(0.5, Math.min(2.5, multiplier));
+    const rampMs = options.rampMs !== undefined ? options.rampMs : 0;
+    if (rampMs > 0 && typeof performance !== 'undefined') {
+      tempoRampStartVal = getCurrentTempoMultiplier();
+      tempoRampTargetVal = target;
+      tempoRampStartTime = performance.now();
+      tempoRampDurationMs = rampMs;
+    } else {
+      tempoMultiplier = target;
+      tempoRampStartVal = target;
+      tempoRampTargetVal = target;
+      tempoRampDurationMs = 0;
+    }
     updateDevPanelUI();
   }
 
-  function getTempoMultiplier() {
+  function getCurrentTempoMultiplier() {
+    if (tempoRampDurationMs > 0 && typeof performance !== 'undefined') {
+      const elapsed = performance.now() - tempoRampStartTime;
+      if (elapsed >= tempoRampDurationMs) {
+        tempoMultiplier = tempoRampTargetVal;
+        tempoRampDurationMs = 0;
+      } else {
+        const t = elapsed / tempoRampDurationMs;
+        tempoMultiplier = tempoRampStartVal + (tempoRampTargetVal - tempoRampStartVal) * t;
+      }
+    }
     return tempoMultiplier;
+  }
+
+  function getTempoMultiplier() {
+    return getCurrentTempoMultiplier();
   }
 
   function setLayerLevel(level, options = {}) {
@@ -874,6 +927,155 @@
 
   function getLayerLevel() {
     return layerLevel;
+  }
+
+  /**
+   * ============================================================================
+   * BATTLE MUSIC & DYNAMIC INTENSITY CONTROL (TASKS 1, 2, 3)
+   * ============================================================================
+   */
+
+  function queueClimaxFill() {
+    pendingClimaxFill = true;
+  }
+
+  function isJinglePlaying() {
+    return isEndingJinglePlaying;
+  }
+
+  function dismissJingle() {
+    isEndingJinglePlaying = false;
+    if (jingleTimeout) {
+      clearTimeout(jingleTimeout);
+      jingleTimeout = null;
+    }
+  }
+
+  function startBattleMusic(stage, options = {}) {
+    const crossfadeMs = options.crossfadeMs !== undefined ? options.crossfadeMs : 1000;
+    const world = stage ? (stage.world || 1) : 1;
+    const isHell = !!(stage && stage.isHellMix) || (world === 4);
+
+    let trackId = 'battle-vazhgan';
+    if (isHell) {
+      trackId = 'battle-inferno';
+    } else if (world === 2) {
+      trackId = 'battle-kenayeh';
+    } else if (world === 3) {
+      trackId = 'battle-iham';
+    } else {
+      trackId = 'battle-vazhgan';
+    }
+
+    // Reset battle state for new battle
+    battleMaxProgress = 0;
+    climaxTriggered = false;
+    pendingClimaxFill = false;
+    dismissJingle();
+
+    // Baseline configuration:
+    // Inferno starts at Layer 1, Tempo 1.10; others start at Layer 0, Tempo 1.00
+    const baselineTempo = isHell ? 1.10 : 1.00;
+    const baselineLayer = isHell ? 1 : 0;
+
+    setTempoMultiplier(baselineTempo);
+    setLayerLevel(baselineLayer);
+
+    playTrack(trackId, { crossfadeMs });
+    return trackId;
+  }
+
+  function updateBattleMusicProgress(enemyHp, enemyMaxHp, isHell = false) {
+    const maxHp = (typeof enemyMaxHp === 'number' && enemyMaxHp > 0) ? enemyMaxHp : 10;
+    const curHp = (typeof enemyHp === 'number') ? Math.max(0, enemyHp) : 0;
+    const rawP = 1.0 - (curHp / maxHp);
+
+    // Wrong answers never lower the level: progress only advances
+    battleMaxProgress = Math.max(battleMaxProgress, rawP);
+    const p = battleMaxProgress;
+
+    let targetTempo = 1.00;
+    let targetLayer = 0;
+
+    if (isHell) {
+      // Inferno Fortress baseline: starts at Layer 1, Tempo 1.10
+      if (p < 0.5) {
+        targetTempo = 1.10;
+        targetLayer = 1;
+      } else if (p < 0.7) {
+        targetTempo = 1.18;
+        targetLayer = 2;
+      } else if (p < 0.9) {
+        targetTempo = 1.28;
+        targetLayer = 3;
+      } else {
+        targetTempo = 1.40;
+        targetLayer = 3;
+      }
+    } else {
+      // Worlds 1, 2, 3
+      if (p < 0.5) {
+        targetTempo = 1.00;
+        targetLayer = 0;
+      } else if (p < 0.7) {
+        targetTempo = 1.08;
+        targetLayer = 1;
+      } else if (p < 0.9) {
+        targetTempo = 1.18;
+        targetLayer = 2;
+      } else {
+        targetTempo = 1.30;
+        targetLayer = 3;
+      }
+    }
+
+    // Final hit climax trigger (p >= 0.9): crash cymbal & drum fill on next bar line
+    if (p >= 0.9 && !climaxTriggered) {
+      climaxTriggered = true;
+      queueClimaxFill();
+    }
+
+    // Smooth ramping over ~1500ms
+    setTempoMultiplier(targetTempo, { rampMs: 1500 });
+    setLayerLevel(targetLayer, { rampMs: 1500 });
+
+    return { p, tempo: targetTempo, layer: targetLayer };
+  }
+
+  function handleBattleVictory(options = {}) {
+    const fadeMs = options.fadeMs !== undefined ? options.fadeMs : 600;
+    stopMusic({ fadeMs });
+
+    isEndingJinglePlaying = true;
+    playSfx('victory');
+
+    if (jingleTimeout) clearTimeout(jingleTimeout);
+    jingleTimeout = setTimeout(() => {
+      isEndingJinglePlaying = false;
+      jingleTimeout = null;
+    }, 2000);
+  }
+
+  function handleBattleDefeat(options = {}) {
+    const fadeMs = options.fadeMs !== undefined ? options.fadeMs : 1500;
+    // Slow downward tempo drop over 1.5s
+    setTempoMultiplier(0.50, { rampMs: fadeMs });
+    stopMusic({ fadeMs });
+
+    isEndingJinglePlaying = true;
+    playSfx('defeat');
+
+    if (jingleTimeout) clearTimeout(jingleTimeout);
+    jingleTimeout = setTimeout(() => {
+      isEndingJinglePlaying = false;
+      jingleTimeout = null;
+    }, 2500);
+  }
+
+  function stopBattleMusic(options = {}) {
+    const fadeMs = options.fadeMs !== undefined ? options.fadeMs : 800;
+    dismissJingle();
+    stopMusic({ fadeMs });
   }
 
   /**
@@ -954,6 +1156,26 @@
             osc.stop(now + idx * 0.1 + 0.2);
           });
           break;
+
+        case 'defeat': {
+          // Descending mournful dark chiptune motif (G4 -> F4 -> Eb4 -> D4 -> C4 -> G3)
+          const defeatPitches = [392.00, 349.23, 311.13, 293.66, 261.63, 196.00];
+          defeatPitches.forEach((freq, idx) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            const noteStart = now + idx * 0.22;
+            osc.frequency.setValueAtTime(freq, noteStart);
+            gain.gain.setValueAtTime(0.18, noteStart);
+            gain.gain.exponentialRampToValueAtTime(0.0001, noteStart + 0.35);
+            osc.connect(gain);
+            gain.connect(dest);
+            osc.start(noteStart);
+            osc.stop(noteStart + 0.38);
+            osc.onended = () => { try { osc.disconnect(); gain.disconnect(); } catch (_) {} };
+          });
+          break;
+        }
 
         case 'chime':
           [220, 277.18, 329.63, 440].forEach((f, idx) => {
@@ -1194,6 +1416,32 @@
       });
     }
 
+    // Autoplay unlock on first user gesture
+    const unlockAudio = () => {
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
+    };
+    ['pointerdown', 'keydown', 'touchstart'].forEach(evt => {
+      window.addEventListener(evt, unlockAudio, { passive: true });
+    });
+
+    // Pause audio on hidden tab, resume when visible
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', () => {
+        if (!audioCtx) return;
+        if (document.hidden) {
+          if (audioCtx.state === 'running') {
+            audioCtx.suspend().catch(() => {});
+          }
+        } else {
+          if (audioCtx.state === 'suspended' && !isMutedState) {
+            audioCtx.resume().catch(() => {});
+          }
+        }
+      });
+    }
+
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', mountDevAuditionPanel);
     } else {
@@ -1218,6 +1466,15 @@
     playSfx,
     getCurrentTrackId,
     isAudioContextRunning,
-    mountDevAuditionPanel
+    mountDevAuditionPanel,
+    // Battle audio APIs
+    startBattleMusic,
+    updateBattleMusicProgress,
+    handleBattleVictory,
+    handleBattleDefeat,
+    stopBattleMusic,
+    isJinglePlaying,
+    dismissJingle,
+    queueClimaxFill
   };
 });

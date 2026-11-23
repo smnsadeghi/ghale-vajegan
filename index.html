@@ -5622,7 +5622,7 @@
 
         <div class="arena-modal-actions">
           <button id="btnVictoryContinue" class="btn-primary" style="flex:1;">ادامه</button>
-          <button id="btnVictoryBackToMap" class="btn-ghost" style="flex:1;" onclick="playSelectSound(); showView('viewMap'); renderTowerMap();">بازگشت به نقشه</button>
+          <button id="btnVictoryBackToMap" class="btn-ghost" style="flex:1;" onclick="playSelectSound(); if (typeof AudioEngine !== 'undefined') AudioEngine.dismissJingle(); showView('viewMap'); renderTowerMap();">بازگشت به نقشه</button>
         </div>
       </div>
     </div>
@@ -9160,8 +9160,12 @@ function showView(viewId) {
 
   if (viewId !== "viewArena") {
     cleanupArenaTimersAndSprites();
-    if (typeof AudioEngine !== "undefined" && AudioEngine.getCurrentTrackId() === "battle-theme") {
-      AudioEngine.stopMusic({ fadeMs: 800 });
+    if (typeof AudioEngine !== "undefined") {
+      AudioEngine.dismissJingle();
+      const curTrack = AudioEngine.getCurrentTrackId();
+      if (curTrack && (curTrack.startsWith("battle") || curTrack === "battle-theme")) {
+        AudioEngine.stopBattleMusic({ fadeMs: 800 });
+      }
     }
   }
   if (viewId !== "viewStudy") {
@@ -9781,7 +9785,18 @@ function openStudyMode(stage) {
   if (typeof AudioEngine !== "undefined") {
     const startStudyChill = () => {
       if (document.body.classList.contains("in-study")) {
-        AudioEngine.playTrack("flashcards-chill", { crossfadeMs: 1200 });
+        if (typeof AudioEngine.isJinglePlaying === "function" && AudioEngine.isJinglePlaying()) {
+          const checkJingle = setInterval(() => {
+            if (!document.body.classList.contains("in-study") || !AudioEngine.isJinglePlaying()) {
+              clearInterval(checkJingle);
+              if (document.body.classList.contains("in-study")) {
+                AudioEngine.playTrack("flashcards-chill", { crossfadeMs: 1200 });
+              }
+            }
+          }, 100);
+        } else {
+          AudioEngine.playTrack("flashcards-chill", { crossfadeMs: 1200 });
+        }
       }
     };
     if (AudioEngine.isAudioContextRunning()) {
@@ -11444,6 +11459,11 @@ function updateEnemyHP() {
   const total = typeof totalInitialWords !== "undefined" && totalInitialWords > 0 ? totalInitialWords : 10;
   const pct = Math.max(0, Math.min(100, Math.round((remaining / total) * 100)));
 
+  if (typeof AudioEngine !== "undefined" && typeof AudioEngine.updateBattleMusicProgress === "function") {
+    const isHell = (typeof isHellRound !== "undefined" ? isHellRound : false) || (currentStage && (currentStage.world === 4 || currentStage.isHellMix));
+    AudioEngine.updateBattleMusicProgress(remaining, total, !!isHell);
+  }
+
   if (fill) {
     const prevWidth = parseFloat(fill.style.width) || 100;
     fill.style.width = `${pct}%`;
@@ -11464,11 +11484,11 @@ function startBattleMode(stage, isRanked = false) {
     return;
   }
   currentStage = stage;
+  isHellRound = !!(stage && (stage.isHellMix || stage.world === 4));
   startArenaAmbient(stage ? (stage.world || 1) : 1);
   if (typeof AudioEngine !== "undefined") {
-    AudioEngine.playTrack("battle-theme", { crossfadeMs: 800 });
+    AudioEngine.startBattleMusic(stage, { crossfadeMs: 1000 });
   }
-  isHellRound = !!stage.isHellMix;
 
   const user = appState.students[appState.currentUserCode] || {};
   const userMistakes = user.mistakes || {};
@@ -12027,6 +12047,9 @@ function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
 function completeStageDefeat() {
   clearInterval(arenaTimerInterval);
   setKnightState("kneel");
+  if (typeof AudioEngine !== "undefined" && typeof AudioEngine.handleBattleDefeat === "function") {
+    AudioEngine.handleBattleDefeat({ fadeMs: 1500 });
+  }
   document.getElementById("phaseQuiz").classList.add("hidden");
   document.getElementById("phaseVictory").classList.add("hidden");
   const defEl = document.getElementById("phaseDefeat");
@@ -12094,7 +12117,11 @@ function completeStageVictory() {
     quickDrawStreak
   });
 
-  playVictorySound();
+  if (typeof AudioEngine !== "undefined" && typeof AudioEngine.handleBattleVictory === "function") {
+    AudioEngine.handleBattleVictory({ fadeMs: 600 });
+  } else {
+    playVictorySound();
+  }
   document.getElementById("gateGlow")?.classList.add("gate-open");
 
   const princessEl = document.getElementById("gatePrincess");
@@ -12135,18 +12162,28 @@ function completeStageVictory() {
     : "این نبرد تمرینی بود؛ رکورد رسمی پیشین شما در جدول رده‌بندی دست‌نخورده باقی ماند.";
 }
 
-document.getElementById("btnBackToMap").addEventListener("click", enterDashboard);
-document.getElementById("btnVictoryContinue").addEventListener("click", enterDashboard);
+document.getElementById("btnBackToMap").addEventListener("click", () => {
+  if (typeof AudioEngine !== "undefined" && typeof AudioEngine.dismissJingle === "function") AudioEngine.dismissJingle();
+  enterDashboard();
+});
+document.getElementById("btnVictoryContinue").addEventListener("click", () => {
+  if (typeof AudioEngine !== "undefined" && typeof AudioEngine.dismissJingle === "function") AudioEngine.dismissJingle();
+  enterDashboard();
+});
 
 const retryBtn = document.getElementById("btnRetryStage");
 if (retryBtn) {
   retryBtn.addEventListener("click", () => {
+    if (typeof AudioEngine !== "undefined" && typeof AudioEngine.dismissJingle === "function") AudioEngine.dismissJingle();
     promptStartBattle(currentStage);
   });
 }
 const defBackBtn = document.getElementById("btnDefeatBackToMap");
 if (defBackBtn) {
-  defBackBtn.addEventListener("click", enterDashboard);
+  defBackBtn.addEventListener("click", () => {
+    if (typeof AudioEngine !== "undefined" && typeof AudioEngine.dismissJingle === "function") AudioEngine.dismissJingle();
+    enterDashboard();
+  });
 }
 
 // ==========================================

@@ -3,7 +3,8 @@
 // const CACHE_NAME = 'shovalie-vajeha-v5.3.0';
 // const CACHE_NAME = 'shovalie-vajeha-v6.0.0';
 // const CACHE_NAME = 'shovalie-vajeha-v6.1.0';
-const CACHE_NAME = 'shovalie-vajeha-v6.2.0';
+// const CACHE_NAME = 'shovalie-vajeha-v6.2.0';
+const CACHE_NAME = 'shovalie-vajeha-v6.3.0';
 const ASSETS = [
   './',
   './index.html',

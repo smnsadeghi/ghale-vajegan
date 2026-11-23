@@ -301,4 +301,134 @@ describe('Data-Driven Procedural Audio Engine & Tracks Suite', () => {
     delete globalThis.window;
     delete globalThis.document;
   });
+
+  test('12. Track per World routing and baseline configuration (TASK 1)', () => {
+    // World 1 (Vazhgan)
+    const t1 = AudioEngine.startBattleMusic({ world: 1 });
+    assert.equal(t1, 'battle-vazhgan');
+    assert.equal(AudioEngine.getTempoMultiplier(), 1.00);
+    assert.equal(AudioEngine.getLayerLevel(), 0);
+
+    // World 2 (Kenayeh)
+    const t2 = AudioEngine.startBattleMusic({ world: 2 });
+    assert.equal(t2, 'battle-kenayeh');
+    assert.equal(AudioEngine.getTempoMultiplier(), 1.00);
+    assert.equal(AudioEngine.getLayerLevel(), 0);
+
+    // World 3 (Iham)
+    const t3 = AudioEngine.startBattleMusic({ world: 3 });
+    assert.equal(t3, 'battle-iham');
+    assert.equal(AudioEngine.getTempoMultiplier(), 1.00);
+    assert.equal(AudioEngine.getLayerLevel(), 0);
+
+    // World 4 (Inferno Fortress)
+    const t4 = AudioEngine.startBattleMusic({ world: 4 });
+    assert.equal(t4, 'battle-inferno');
+    assert.equal(AudioEngine.getTempoMultiplier(), 1.10, 'Inferno baseline tempo is 1.10');
+    assert.equal(AudioEngine.getLayerLevel(), 1, 'Inferno baseline layer is 1');
+
+    // Hell Mix stage
+    const tHell = AudioEngine.startBattleMusic({ isHellMix: true });
+    assert.equal(tHell, 'battle-inferno');
+    assert.equal(AudioEngine.getTempoMultiplier(), 1.10);
+    assert.equal(AudioEngine.getLayerLevel(), 1);
+  });
+
+  test('13. Enemy HP Progress maps to Tempo and Layer ramping (TASK 2)', () => {
+    // Normal World (World 1, 2, 3)
+    AudioEngine.startBattleMusic({ world: 1 });
+
+    // p < 0.5 (10 remaining of 10 -> p = 0.0)
+    let res = AudioEngine.updateBattleMusicProgress(10, 10, false);
+    assert.equal(res.p, 0.0);
+    assert.equal(res.tempo, 1.00);
+    assert.equal(res.layer, 0);
+
+    // p = 0.5 (5 remaining of 10 -> p = 0.5)
+    res = AudioEngine.updateBattleMusicProgress(5, 10, false);
+    assert.equal(res.p, 0.5);
+    assert.equal(res.tempo, 1.08);
+    assert.equal(res.layer, 1);
+
+    // p = 0.7 (3 remaining of 10 -> p = 0.7)
+    res = AudioEngine.updateBattleMusicProgress(3, 10, false);
+    assert.equal(res.p, 0.7);
+    assert.equal(res.tempo, 1.18);
+    assert.equal(res.layer, 2);
+
+    // p = 0.9 (1 remaining of 10 -> p = 0.9, climax)
+    res = AudioEngine.updateBattleMusicProgress(1, 10, false);
+    assert.equal(res.p, 0.9);
+    assert.equal(res.tempo, 1.30);
+    assert.equal(res.layer, 3);
+
+    // Final hit (0 remaining -> p = 1.0)
+    res = AudioEngine.updateBattleMusicProgress(0, 10, false);
+    assert.equal(res.p, 1.0);
+    assert.equal(res.tempo, 1.30);
+    assert.equal(res.layer, 3);
+  });
+
+  test('14. Inferno Fortress escalates from higher baseline (TASK 2)', () => {
+    AudioEngine.startBattleMusic({ world: 4 });
+
+    // Baseline: p < 0.5 -> tempo 1.10, layer 1
+    let res = AudioEngine.updateBattleMusicProgress(10, 10, true);
+    assert.equal(res.tempo, 1.10);
+    assert.equal(res.layer, 1);
+
+    // p >= 0.5 -> tempo 1.18, layer 2
+    res = AudioEngine.updateBattleMusicProgress(5, 10, true);
+    assert.equal(res.tempo, 1.18);
+    assert.equal(res.layer, 2);
+
+    // p >= 0.7 -> tempo 1.28, layer 3
+    res = AudioEngine.updateBattleMusicProgress(3, 10, true);
+    assert.equal(res.tempo, 1.28);
+    assert.equal(res.layer, 3);
+
+    // p >= 0.9 -> tempo 1.40, layer 3
+    res = AudioEngine.updateBattleMusicProgress(1, 10, true);
+    assert.equal(res.tempo, 1.40);
+    assert.equal(res.layer, 3);
+  });
+
+  test('15. Wrong answers do not lower level; battle reset restores baseline (TASK 2)', () => {
+    AudioEngine.startBattleMusic({ world: 1 });
+
+    // Progress up to p = 0.7 (layer 2, tempo 1.18)
+    AudioEngine.updateBattleMusicProgress(3, 10, false);
+    assert.equal(AudioEngine.getLayerLevel(), 2);
+
+    // Wrong answer / spaced repetition adds item back (remaining becomes 4 -> rawP = 0.6)
+    // Level must NOT drop!
+    const res = AudioEngine.updateBattleMusicProgress(4, 10, false);
+    assert.equal(res.p, 0.7, 'Progress must remain at maximum reached');
+    assert.equal(res.layer, 2, 'Layer must not drop on wrong answer');
+    assert.equal(res.tempo, 1.18, 'Tempo must not drop on wrong answer');
+
+    // Starting a new battle must reset to baseline
+    AudioEngine.startBattleMusic({ world: 1 });
+    assert.equal(AudioEngine.getTempoMultiplier(), 1.00);
+    assert.equal(AudioEngine.getLayerLevel(), 0);
+  });
+
+  test('16. Victory, Defeat, and Jingle dismissal lifecycle (TASK 3)', () => {
+    // Victory handling
+    AudioEngine.startBattleMusic({ world: 1 });
+    AudioEngine.handleBattleVictory({ fadeMs: 600 });
+    assert.equal(AudioEngine.isJinglePlaying(), true);
+
+    // Dismiss jingle on user tap
+    AudioEngine.dismissJingle();
+    assert.equal(AudioEngine.isJinglePlaying(), false);
+
+    // Defeat handling
+    AudioEngine.startBattleMusic({ world: 1 });
+    AudioEngine.handleBattleDefeat({ fadeMs: 1500 });
+    assert.equal(AudioEngine.isJinglePlaying(), true);
+
+    AudioEngine.dismissJingle();
+    assert.equal(AudioEngine.isJinglePlaying(), false);
+  });
 });
