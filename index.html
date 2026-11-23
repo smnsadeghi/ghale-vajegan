@@ -5898,35 +5898,32 @@
       <button id="btnOpenLeaderboard" class="btn-ghost">جدول رتبه‌ها</button>
     </div>
 
-    <!-- 4-WORLD PORTAL GATE SWITCHER (Task 2 & 3: Equal grid, 24px line icons, gold underline) -->
+    <!-- 4-WORLD PORTAL GATE SWITCHER (Equal grid, 24px line icons, clean counter, zero name clutter) -->
     <div class="world-portal-grid" id="worldPortalTabs">
-      <button class="portal-tab portal-tab--w1 active" data-world="1" onclick="switchWorld(1)" aria-label="برج واژگان">
+      <button class="portal-tab portal-tab--w1 active" data-world="1" onclick="switchWorld(1)" aria-label="گورستان واژه" title="گورستان واژه">
         <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
           <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
         </svg>
-        <span class="portal-name">برج واژگان</span>
         <span class="portal-counter font-pixel" id="portalCount1">۰/۸</span>
       </button>
 
-      <button class="portal-tab portal-tab--w2" data-world="2" onclick="switchWorld(2)" aria-label="معبد کنایه و ایهام">
+      <button class="portal-tab portal-tab--w2" data-world="2" onclick="switchWorld(2)" aria-label="برج کنایه و ایهام" title="برج کنایه و ایهام">
         <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
         </svg>
-        <span class="portal-name">معبد کنایه و ایهام</span>
         <span class="portal-counter font-pixel" id="portalCount2">۰/۴</span>
       </button>
 
-      <button class="portal-tab portal-tab--w3" data-world="3" onclick="switchWorld(3)" aria-label="تالار تاریخ ادبیات">
+      <button class="portal-tab portal-tab--w3" data-world="3" onclick="switchWorld(3)" aria-label="معبد تاریخ ادبیات" title="معبد تاریخ ادبیات">
         <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
           <path d="M2 12a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V7h-3a8 8 0 0 0-5 2 8 8 0 0 0-5-2H2Z"/>
           <path d="M6 11c1.5 0 3 .5 3 2-2 0-3 0-3-2Z"/>
           <path d="M18 11c-1.5 0-3 .5-3 2 2 0 3 0 3-2Z"/>
         </svg>
-        <span class="portal-name">تالار تاریخ ادبیات</span>
         <span class="portal-counter font-pixel" id="portalCount3">۰/۲</span>
       </button>
 
-      <button class="portal-tab portal-tab--w4" data-world="4" onclick="switchWorld(4)" aria-label="دژ جهنمی">
+      <button class="portal-tab portal-tab--w4" data-world="4" onclick="switchWorld(4)" aria-label="شهر سوخته" title="شهر سوخته">
         <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
           <path d="M5 21h14"/>
           <path d="M7 21V10h10v11"/>
@@ -5934,8 +5931,7 @@
           <path d="M7 10V7h2v2h2V7h2v2h2V7h2v3"/>
           <path d="M12 1.5c1 1.2 1.8 2.2 1.8 3.5a1.8 1.8 0 1 1-3.6 0c0-1.3.8-2.3 1.8-3.5z"/>
         </svg>
-        <span class="portal-name">دژ جهنمی</span>
-        <span class="portal-counter font-pixel" id="portalCount4"><span class="portal-xp-chip">۲× XP</span></span>
+        <span class="portal-counter font-pixel" id="portalCount4">۰/۲</span>
       </button>
     </div>
 
@@ -5950,7 +5946,7 @@
       </svg>
       <div id="worldBannerTitle" style="display:none;"></div>
       <div class="summary-text-row">
-        <span id="worldBannerSub" class="summary-title">جهان واژگان</span>
+        <span id="worldBannerSub" class="summary-title">گورستان واژه</span>
         <span id="worldProgressRatio" class="summary-percent font-pixel">۸ مرحله • ۰٪ فتح شده</span>
       </div>
       <div class="progress-bar-track">
@@ -6830,92 +6826,92 @@ function buildStagesForGrade(grade) {
   const h = (data.world3_history || []).map(c => normalizeCard(c, 3, "تاریخ ادبیات"));
 
   if (grade === "10") {
-    // World 1 (برج واژگان - 8 stages, 162 cards: 14, 15, 23, 24, 25, 25, 25, 11)
+    // World 1 (گورستان واژه - 8 stages, 162 cards: 14, 15, 23, 24, 25, 25, 25, 11)
     stages.push({
-      id: `${prefix}_w1_s1`, world: 1, worldTitle: "برج واژگان",
+      id: `${prefix}_w1_s1`, world: 1, worldTitle: "گورستان واژه",
       title: "واژگان ۰۱: ستایش و درس ۱", subtitle: "ستایش و درس ۱ (از آموختن ننگ مدار)",
       theme: "amber", unlocked: true,
       words: v.filter(c => [0, 1].includes(c.lesson))
     });
     stages.push({
-      id: `${prefix}_w1_s2`, world: 1, worldTitle: "برج واژگان",
+      id: `${prefix}_w1_s2`, world: 1, worldTitle: "گورستان واژه",
       title: "واژگان ۰۲: درس ۳", subtitle: "درس ۳ (کلاس نقاشی)",
       theme: "amber", unlocked: false,
       words: v.filter(c => c.lesson === 3)
     });
     stages.push({
-      id: `${prefix}_w1_s3`, world: 1, worldTitle: "برج واژگان",
+      id: `${prefix}_w1_s3`, world: 1, worldTitle: "گورستان واژه",
       title: "واژگان ۰۳: درس ۵ و ۷", subtitle: "درس ۵ و ۷ (مهر و وفا • پاسداری از حقیقت)",
       theme: "amber", unlocked: false,
       words: v.filter(c => [5, 7].includes(c.lesson))
     });
     stages.push({
-      id: `${prefix}_w1_s4`, world: 1, worldTitle: "برج واژگان",
+      id: `${prefix}_w1_s4`, world: 1, worldTitle: "گورستان واژه",
       title: "واژگان ۰۴: درس ۹", subtitle: "درس ۹ (دریادلان صفشکن)",
       theme: "amber", unlocked: false,
       words: v.filter(c => c.lesson === 9)
     });
     stages.push({
-      id: `${prefix}_w1_s5`, world: 1, worldTitle: "برج واژگان",
+      id: `${prefix}_w1_s5`, world: 1, worldTitle: "گورستان واژه",
       title: "واژگان ۰۵: درس ۱۱", subtitle: "درس ۱۱ (رستم و اشکبوس)",
       theme: "amber", unlocked: false,
       words: v.filter(c => c.lesson === 11)
     });
     const l13 = v.filter(c => c.lesson === 13);
     stages.push({
-      id: `${prefix}_w1_s6`, world: 1, worldTitle: "برج واژگان",
+      id: `${prefix}_w1_s6`, world: 1, worldTitle: "گورستان واژه",
       title: "واژگان ۰۶: درس ۱۳ (۱)", subtitle: "درس ۱۳ (خسرو - بخش اول)",
       theme: "amber", unlocked: false,
       words: l13.slice(0, 25)
     });
     stages.push({
-      id: `${prefix}_w1_s7`, world: 1, worldTitle: "برج واژگان",
+      id: `${prefix}_w1_s7`, world: 1, worldTitle: "گورستان واژه",
       title: "واژگان ۰۷: درس ۱۳ (۲)", subtitle: "درس ۱۳ (خسرو - بخش دوم)",
       theme: "amber", unlocked: false,
       words: l13.slice(25)
     });
     stages.push({
-      id: `${prefix}_w1_s8`, world: 1, worldTitle: "برج واژگان",
+      id: `${prefix}_w1_s8`, world: 1, worldTitle: "گورستان واژه",
       title: "واژگان ۰۸: درس ۱۵ و نیایش", subtitle: "درس ۱۵ و نیایش (نشانی از خدا)",
       theme: "amber", unlocked: false,
       words: v.filter(c => [15, 16].includes(c.lesson))
     });
 
-    // World 2 (معبد کنایه و ایهام - 3 stages, 34 cards: 16, 10, 8)
+    // World 2 (برج کنایه و ایهام - 3 stages, 34 cards: 16, 10, 8)
     stages.push({
-      id: `${prefix}_w2_s1`, world: 2, worldTitle: "معبد کنایه و ایهام",
+      id: `${prefix}_w2_s1`, world: 2, worldTitle: "برج کنایه و ایهام",
       title: "کنایه و ایهام ۰۱: درس‌های ۱ تا ۵", subtitle: "کنایه و ایهام (درسهای ۱ تا ۵)",
       theme: "teal", unlocked: false,
       words: k.filter(c => [1, 3, 5].includes(c.lesson))
     });
     stages.push({
-      id: `${prefix}_w2_s2`, world: 2, worldTitle: "معبد کنایه و ایهام",
+      id: `${prefix}_w2_s2`, world: 2, worldTitle: "برج کنایه و ایهام",
       title: "کنایه و ایهام ۰۲: درس‌های ۷ و ۹", subtitle: "کنایه (درسهای ۷ و ۹)",
       theme: "teal", unlocked: false,
       words: k.filter(c => [7, 9].includes(c.lesson))
     });
     stages.push({
-      id: `${prefix}_w2_s3`, world: 2, worldTitle: "معبد کنایه و ایهام",
+      id: `${prefix}_w2_s3`, world: 2, worldTitle: "برج کنایه و ایهام",
       title: "کنایه و ایهام ۰۳: درس‌های ۱۱ تا ۱۵", subtitle: "کنایه (درسهای ۱۱ تا ۱۵)",
       theme: "teal", unlocked: false,
       words: k.filter(c => [11, 13, 15].includes(c.lesson))
     });
 
-    // World 3 (تالار تاریخ ادبیات - 2 stages, 16 cards: 8, 8)
+    // World 3 (معبد تاریخ ادبیات - 2 stages, 16 cards: 8, 8)
     stages.push({
-      id: `${prefix}_w3_s1`, world: 3, worldTitle: "تالار تاریخ ادبیات",
+      id: `${prefix}_w3_s1`, world: 3, worldTitle: "معبد تاریخ ادبیات",
       title: "تاریخ ادبیات ۰۱: ستایش تا درس ۷", subtitle: "تاریخ ادبیات (ستایش تا درس ۷)",
       theme: "rose", unlocked: false,
       words: h.slice(0, 8)
     });
     stages.push({
-      id: `${prefix}_w3_s2`, world: 3, worldTitle: "تالار تاریخ ادبیات",
+      id: `${prefix}_w3_s2`, world: 3, worldTitle: "معبد تاریخ ادبیات",
       title: "تاریخ ادبیات ۰۲: درس ۹ تا نیایش", subtitle: "تاریخ ادبیات (درس ۹ تا نیایش)",
       theme: "rose", unlocked: false,
       words: h.slice(8)
     });
 
-    // World 4 (دژ جهنمی - 2 boss stages, deterministic 20-card mix each)
+    // World 4 (شهر سوخته - 2 boss stages, deterministic 20-card mix each)
     const hell10_s1 = [
       ...[0, 15, 30, 45, 60, 75, 90, 105, 120, 135].map(idx => v[idx % v.length]),
       ...[0, 6, 12, 18, 24, 30].map(idx => k[idx % k.length]),
@@ -6928,111 +6924,111 @@ function buildStagesForGrade(grade) {
     ];
 
     stages.push({
-      id: `${prefix}_w4_s1`, world: 4, worldTitle: "دژ جهنمی",
-      title: "دژ جهنمی ۰۱: دروازه دژ", subtitle: "دروازه دژ جهنمی (آزمون جامع ۱)",
+      id: `${prefix}_w4_s1`, world: 4, worldTitle: "شهر سوخته",
+      title: "شهر سوخته ۰۱: دروازه شهر", subtitle: "دروازه شهر سوخته (آزمون جامع ۱)",
       theme: "hell", isHellMix: true, unlocked: false,
       words: hell10_s1
     });
     stages.push({
-      id: `${prefix}_w4_s2`, world: 4, worldTitle: "دژ جهنمی",
-      title: "دژ جهنمی ۰۲: تاج‌وتخت دژ", subtitle: "تاجوتخت دژ جهنمی (آزمون جامع ۲)",
+      id: `${prefix}_w4_s2`, world: 4, worldTitle: "شهر سوخته",
+      title: "شهر سوخته ۰۲: قلب شهر سوخته", subtitle: "قلب شهر سوخته (آزمون جامع ۲)",
       theme: "hell", isHellMix: true, unlocked: false,
       words: hell10_s2
     });
   } else {
     // Grade 11
-    // World 1 (برج واژگان - 8 stages, 199 cards: 27, 29, 15, 26, 33, 28, 28, 13)
+    // World 1 (گورستان واژه - 8 stages, 199 cards: 27, 29, 15, 26, 33, 28, 28, 13)
     stages.push({
-      id: `${prefix}_w1_s1`, world: 1, worldTitle: "برج واژگان",
+      id: `${prefix}_w1_s1`, world: 1, worldTitle: "گورستان واژه",
       title: "واژگان ۰۱: ستایش و درس ۱", subtitle: "ستایش و درس ۱ (نیکی)",
       theme: "amber", unlocked: true,
       words: v.filter(c => [0, 1].includes(c.lesson))
     });
     stages.push({
-      id: `${prefix}_w1_s2`, world: 1, worldTitle: "برج واژگان",
+      id: `${prefix}_w1_s2`, world: 1, worldTitle: "گورستان واژه",
       title: "واژگان ۰۲: درس ۳", subtitle: "درس ۳ (آغازگری تنها)",
       theme: "amber", unlocked: false,
       words: v.filter(c => c.lesson === 3)
     });
     stages.push({
-      id: `${prefix}_w1_s3`, world: 1, worldTitle: "برج واژگان",
+      id: `${prefix}_w1_s3`, world: 1, worldTitle: "گورستان واژه",
       title: "واژگان ۰۳: درس ۵", subtitle: "درس ۵ (پرورده عشق)",
       theme: "amber", unlocked: false,
       words: v.filter(c => c.lesson === 5)
     });
     stages.push({
-      id: `${prefix}_w1_s4`, world: 1, worldTitle: "برج واژگان",
+      id: `${prefix}_w1_s4`, world: 1, worldTitle: "گورستان واژه",
       title: "واژگان ۰۴: درس ۷ و ۹", subtitle: "درس ۷ و ۹ (ذوق لطیف • یاران عاشق)",
       theme: "amber", unlocked: false,
       words: v.filter(c => [7, 9].includes(c.lesson))
     });
     stages.push({
-      id: `${prefix}_w1_s5`, world: 1, worldTitle: "برج واژگان",
+      id: `${prefix}_w1_s5`, world: 1, worldTitle: "گورستان واژه",
       title: "واژگان ۰۵: درس ۱۱", subtitle: "درس ۱۱ (کاوه دادخواه)",
       theme: "amber", unlocked: false,
       words: v.filter(c => c.lesson === 11)
     });
     const l13 = v.filter(c => c.lesson === 13);
     stages.push({
-      id: `${prefix}_w1_s6`, world: 1, worldTitle: "برج واژگان",
+      id: `${prefix}_w1_s6`, world: 1, worldTitle: "گورستان واژه",
       title: "واژگان ۰۶: درس ۱۳ (۱)", subtitle: "درس ۱۳ (کبوتر طوقدار - بخش اول)",
       theme: "amber", unlocked: false,
       words: l13.slice(0, 28)
     });
     stages.push({
-      id: `${prefix}_w1_s7`, world: 1, worldTitle: "برج واژگان",
+      id: `${prefix}_w1_s7`, world: 1, worldTitle: "گورستان واژه",
       title: "واژگان ۰۷: درس ۱۳ (۲)", subtitle: "درس ۱۳ (کبوتر طوقدار - بخش دوم)",
       theme: "amber", unlocked: false,
       words: l13.slice(28)
     });
     stages.push({
-      id: `${prefix}_w1_s8`, world: 1, worldTitle: "برج واژگان",
+      id: `${prefix}_w1_s8`, world: 1, worldTitle: "گورستان واژه",
       title: "واژگان ۰۸: درس ۱۴ و نیایش", subtitle: "درس ۱۴ و نیایش (خوان عدل)",
       theme: "amber", unlocked: false,
       words: v.filter(c => [14, 15].includes(c.lesson))
     });
 
-    // World 2 (معبد کنایه و ایهام - 4 stages, 83 cards: 22, 14, 22, 25)
+    // World 2 (برج کنایه و ایهام - 4 stages, 83 cards: 22, 14, 22, 25)
     stages.push({
-      id: `${prefix}_w2_s1`, world: 2, worldTitle: "معبد کنایه و ایهام",
+      id: `${prefix}_w2_s1`, world: 2, worldTitle: "برج کنایه و ایهام",
       title: "کنایه و ایهام ۰۱: ستایش تا درس ۳", subtitle: "کنایه و ایهام (ستایش تا درس ۳)",
       theme: "teal", unlocked: false,
       words: k.filter(c => [0, 1, 3].includes(c.lesson))
     });
     stages.push({
-      id: `${prefix}_w2_s2`, world: 2, worldTitle: "معبد کنایه و ایهام",
+      id: `${prefix}_w2_s2`, world: 2, worldTitle: "برج کنایه و ایهام",
       title: "کنایه و ایهام ۰۲: درس‌های ۵ تا ۹", subtitle: "کنایه و ایهام (درسهای ۵ تا ۹)",
       theme: "teal", unlocked: false,
       words: k.filter(c => [5, 7, 9].includes(c.lesson))
     });
     stages.push({
-      id: `${prefix}_w2_s3`, world: 2, worldTitle: "معبد کنایه و ایهام",
+      id: `${prefix}_w2_s3`, world: 2, worldTitle: "برج کنایه و ایهام",
       title: "کنایه و ایهام ۰۳: درس ۱۱", subtitle: "کنایه و ایهام (درس ۱۱: کاوه دادخواه)",
       theme: "teal", unlocked: false,
       words: k.filter(c => c.lesson === 11)
     });
     stages.push({
-      id: `${prefix}_w2_s4`, world: 2, worldTitle: "معبد کنایه و ایهام",
+      id: `${prefix}_w2_s4`, world: 2, worldTitle: "برج کنایه و ایهام",
       title: "کنایه و ایهام ۰۴: درس ۱۳ تا نیایش", subtitle: "کنایه (درس ۱۳، ۱۴ و نیایش)",
       theme: "teal", unlocked: false,
       words: k.filter(c => [13, 14, 15].includes(c.lesson))
     });
 
-    // World 3 (تالار تاریخ ادبیات - 2 stages, 26 cards: 13, 13)
+    // World 3 (معبد تاریخ ادبیات - 2 stages, 26 cards: 13, 13)
     stages.push({
-      id: `${prefix}_w3_s1`, world: 3, worldTitle: "تالار تاریخ ادبیات",
+      id: `${prefix}_w3_s1`, world: 3, worldTitle: "معبد تاریخ ادبیات",
       title: "تاریخ ادبیات ۰۱: ستایش تا درس ۷", subtitle: "تاریخ ادبیات (ستایش تا درس ۷)",
       theme: "rose", unlocked: false,
       words: h.slice(0, 13)
     });
     stages.push({
-      id: `${prefix}_w3_s2`, world: 3, worldTitle: "تالار تاریخ ادبیات",
+      id: `${prefix}_w3_s2`, world: 3, worldTitle: "معبد تاریخ ادبیات",
       title: "تاریخ ادبیات ۰۲: درس ۹ تا نیایش", subtitle: "تاریخ ادبیات (درس ۹ تا نیایش)",
       theme: "rose", unlocked: false,
       words: h.slice(13)
     });
 
-    // World 4 (دژ جهنمی - 2 boss stages, deterministic 20-card mix each)
+    // World 4 (شهر سوخته - 2 boss stages, deterministic 20-card mix each)
     const hell11_s1 = [
       ...[0, 18, 36, 54, 72, 90, 108, 126, 144, 162].map(idx => v[idx % v.length]),
       ...[0, 14, 28, 42, 56, 70].map(idx => k[idx % k.length]),
@@ -7045,14 +7041,14 @@ function buildStagesForGrade(grade) {
     ];
 
     stages.push({
-      id: `${prefix}_w4_s1`, world: 4, worldTitle: "دژ جهنمی",
-      title: "دژ جهنمی ۰۱: دروازه دژ", subtitle: "دروازه دژ جهنمی (آزمون جامع ۱)",
+      id: `${prefix}_w4_s1`, world: 4, worldTitle: "شهر سوخته",
+      title: "شهر سوخته ۰۱: دروازه شهر", subtitle: "دروازه شهر سوخته (آزمون جامع ۱)",
       theme: "hell", isHellMix: true, unlocked: false,
       words: hell11_s1
     });
     stages.push({
-      id: `${prefix}_w4_s2`, world: 4, worldTitle: "دژ جهنمی",
-      title: "دژ جهنمی ۰۲: تاج‌وتخت دژ", subtitle: "تاجوتخت دژ جهنمی (آزمون جامع ۲)",
+      id: `${prefix}_w4_s2`, world: 4, worldTitle: "شهر سوخته",
+      title: "شهر سوخته ۰۲: قلب شهر سوخته", subtitle: "قلب شهر سوخته (آزمون جامع ۲)",
       theme: "hell", isHellMix: true, unlocked: false,
       words: hell11_s2
     });
@@ -8156,9 +8152,7 @@ function renderTowerMap() {
   if (p1) p1.textContent = `${toFaDigits(w1Completed)}/${toFaDigits(w1Stages.length)}`;
   if (p2) p2.textContent = `${toFaDigits(w2Completed)}/${toFaDigits(w2Stages.length)}`;
   if (p3) p3.textContent = `${toFaDigits(w3Completed)}/${toFaDigits(w3Stages.length)}`;
-  if (p4) {
-    p4.innerHTML = w4Completed > 0 ? `<span class="portal-xp-chip">فتح شد</span>` : `<span class="portal-xp-chip">۲× XP</span>`;
-  }
+  if (p4) p4.textContent = `${toFaDigits(w4Completed)}/${toFaDigits(w4Stages.length)}`;
 
   // 2. Highlight active portal tab
   document.querySelectorAll(".portal-tab").forEach(tab => {
@@ -8168,10 +8162,10 @@ function renderTowerMap() {
 
   // Category Accent Metadata
   const worldConfig = {
-    1: { name: "برج واژگان", accent: "var(--gold)", accentGlow: "var(--gold-glow)", hex: "#c9a24d" },
-    2: { name: "معبد کنایه و ایهام", accent: "var(--teal)", accentGlow: "var(--teal-glow)", hex: "#6fb8a8" },
-    3: { name: "تالار تاریخ ادبیات", accent: "var(--rose)", accentGlow: "var(--rose-glow)", hex: "#c9777f" },
-    4: { name: "دژ جهنمی", accent: "var(--ember)", accentGlow: "var(--ember-glow)", hex: "#d9703a" }
+    1: { name: "گورستان واژه", accent: "var(--gold)", accentGlow: "var(--gold-glow)", hex: "#c9a24d" },
+    2: { name: "برج کنایه و ایهام", accent: "var(--teal)", accentGlow: "var(--teal-glow)", hex: "#6fb8a8" },
+    3: { name: "معبد تاریخ ادبیات", accent: "var(--rose)", accentGlow: "var(--rose-glow)", hex: "#c9777f" },
+    4: { name: "شهر سوخته", accent: "var(--ember)", accentGlow: "var(--ember-glow)", hex: "#d9703a" }
   };
   const currentCfg = worldConfig[currentWorld] || worldConfig[1];
 
@@ -8256,19 +8250,19 @@ function renderTowerMap() {
             <p class="boss-desc">
               ${idxInWorld === 0 
                 ? "رویارویی تن‌به‌تن با اهریمن واژگان در عمیق‌ترین تالار قلعه. سرعت عمل بالا و پاسخ‌های بدون خطا، امتیاز تجربه شما را دوبرابر خواهد کرد."
-                : "نبرد نهایی بر سر تاج‌وتخت دژ جهنمی. تمامی آموخته‌های خود از واژگان، کنایه‌ها و تاریخ ادبیات را به کار بگیرید!"}
+                : "نبرد نهایی در قلب شهر سوخته. تمامی آموخته‌های خود از واژگان، کنایه‌ها و تاریخ ادبیات را به کار بگیرید!"}
             </p>
           </div>
         </div>
         ${isUnlocked ? `
           <button class="btn-primary boss-enter-btn" style="width:100%; min-height:44px; font-size:0.9rem; font-weight:900;">
-            ${isCompleted ? "تکرار نبرد جهنمی (2x XP)" : "ورود به نبرد جهنمی (2x XP)"}
+            ${isCompleted ? "تکرار نبرد شهر سوخته (2x XP)" : "ورود به نبرد شهر سوخته (2x XP)"}
           </button>
         ` : `
           <div class="boss-locked-condition">
             <div class="boss-lock-label-wrap">
               <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <span class="boss-lock-text">${idxInWorld === 0 ? `شرط بازگشایی: فتح تمام ${toFaDigits(priorTotalCount)} مرحله پیشین` : "شرط بازگشایی: پیروزی در دروازه دژ"}</span>
+              <span class="boss-lock-text">${idxInWorld === 0 ? `شرط بازگشایی: فتح تمام ${toFaDigits(priorTotalCount)} مرحله پیشین` : "شرط بازگشایی: پیروزی در دروازه شهر"}</span>
             </div>
             <span class="boss-lock-ratio">${idxInWorld === 0 ? `${toFaDigits(priorCompletedCount)} / ${toFaDigits(priorTotalCount)}` : (completed.includes(activeStages[0].id) ? "۱ / ۱" : "۰ / ۱")}</span>
           </div>
@@ -8459,7 +8453,7 @@ function renderTowerMap() {
         <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       </div>
       <div class="hint-text">
-        <strong>۲ مرحله دیگر</strong> تا باز شدن دروازه «دژ جهنمی» و دوئل نهایی با غول واژگان
+        <strong>۲ مرحله دیگر</strong> تا باز شدن دروازه «شهر سوخته» و دوئل نهایی با غول واژگان
       </div>
     `;
     pathContainer.appendChild(hint);
@@ -9802,8 +9796,8 @@ const ACHIEVEMENTS_DEF = [
   },
   {
     id: "hell_survivor",
-    title: "بازمانده دژ جهنمی",
-    desc: "فتح مرحله ۱۵ (دژ جهنمی)",
+    title: "بازمانده شهر سوخته",
+    desc: "فتح مرحله ۱۵ (شهر سوخته)",
     icon: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" shape-rendering="crispEdges"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12C11 10 9 8 9 8C9 8 13 8 13 11C13 13 15 14 15 16C15 18.2 13.2 20 11 20C8.8 20 7 18.2 7 16C7 15.4 7.2 14.9 7.5 14.5M12 2L15 6L9 6L12 2Z"/></svg>'
   },
   {
@@ -10684,8 +10678,8 @@ function formatQuizPrompt(word, world, isHell, customPrompt, cardTag) {
   }
 
   if (isHell) {
-    badgeText = "چالش جهنمی";
-    leadText = "پاسخ صحیح چالش جهنمی کدام است؟";
+    badgeText = "شهر سوخته";
+    leadText = "پاسخ صحیح چالش شهر سوخته کدام است؟";
   }
 
   if (customPrompt) {

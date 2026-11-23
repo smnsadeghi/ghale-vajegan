@@ -98,10 +98,10 @@ describe('Multi-Grade Wiring - Step 2: Stages, Worlds & Curriculum Isolation', a
   it('1. HTML includes #userGradePill in top-hud and 4 updated world portal names', () => {
     assert.ok(html.includes('id="userGradePill"'), '#userGradePill must exist in HTML');
     assert.ok(html.includes('class="grade-indicator-pill"'), '.grade-indicator-pill must exist in HTML');
-    assert.ok(html.includes('برج واژگان'), 'Portal Tab 1 name must be برج واژگان');
-    assert.ok(html.includes('معبد کنایه و ایهام'), 'Portal Tab 2 name must be معبد کنایه و ایهام');
-    assert.ok(html.includes('تالار تاریخ ادبیات'), 'Portal Tab 3 name must be تالار تاریخ ادبیات');
-    assert.ok(html.includes('دژ جهنمی'), 'Portal Tab 4 name must be دژ جهنمی');
+    assert.ok(html.includes('گورستان واژه'), 'World 1 name must be گورستان واژه');
+    assert.ok(html.includes('برج کنایه و ایهام'), 'World 2 name must be برج کنایه و ایهام');
+    assert.ok(html.includes('معبد تاریخ ادبیات'), 'World 3 name must be معبد تاریخ ادبیات');
+    assert.ok(html.includes('شهر سوخته'), 'World 4 name must be شهر سوخته');
   });
 
   it('2. Grade 10 stages: exactly 15 stages with exact card distributions', () => {
@@ -218,7 +218,7 @@ describe('Multi-Grade Wiring - Step 2: Stages, Worlds & Curriculum Isolation', a
 
     // Hell
     const p5 = runtime.formatQuizPrompt('امتحان نهایی', 4, true, null, 'واژه');
-    assert.ok(p5.includes('چالش جهنمی'), 'Hell prompt must show چالش جهنمی badge');
+    assert.ok(p5.includes('شهر سوخته'), 'Hell prompt must show شهر سوخته badge');
   });
 
   it('6. Demo user grade toggle switches between Grade 10 and Grade 11', () => {

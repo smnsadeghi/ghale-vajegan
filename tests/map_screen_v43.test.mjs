@@ -55,8 +55,8 @@ describe('Map Screen & Battle Review Gating Suite (v4.3)', () => {
       assert.ok(htmlContent.includes('<div id="worldBanner" class="section-summary">\n      <!-- Subtle Gothic Arch Motif Watermark ONLY behind world summary title area -->'), 'Arch watermark must be inside worldBanner, not crossing tabs');
     });
 
-    it('displays compact 2x XP chip for World 4 tab', () => {
-      assert.ok(htmlContent.includes('class="portal-xp-chip">۲× XP</span>'), 'World 4 must have compact 2x XP chip');
+    it('has clean portal-counter without label clutter and keeps portal-xp-chip CSS', () => {
+      assert.ok(htmlContent.includes('id="portalCount4">۰/۲</span>'), 'World 4 must have clean counter');
       assert.ok(htmlContent.includes('.portal-xp-chip {'), 'Must have portal-xp-chip CSS styling');
     });
   });
