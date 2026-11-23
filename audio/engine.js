@@ -57,8 +57,8 @@
   'use strict';
 
   // Constants & Scheduling Limits
-  const LOOKAHEAD_INTERVAL_MS = 25;       // Scheduler tick frequency (~25ms)
-  const SCHEDULE_AHEAD_TIME_SEC = 0.100;   // Scheduling lookahead window (~100ms)
+  const LOOKAHEAD_INTERVAL_MS = 30;       // Scheduler tick frequency (~30ms)
+  const SCHEDULE_AHEAD_TIME_SEC = 0.220;   // Scheduling lookahead window (~220ms safe buffer against mobile UI lag)
   const STORAGE_KEY_MUTED = 'gv_sound_muted';
 
   // Audio Context & Global Nodes
@@ -156,7 +156,7 @@
     if (distortionCurves.has(amount)) {
       return distortionCurves.get(amount);
     }
-    const n_samples = 44100;
+    const n_samples = 2048;
     const curve = new Float32Array(n_samples);
     const deg = Math.PI / 180;
     for (let i = 0; i < n_samples; ++i) {
@@ -168,9 +168,9 @@
   }
 
   /**
-   * Procedural Convolution Reverb Impulse Response Generator
+   * Procedural Convolution Reverb Impulse Response Generator (optimized lightweight buffer)
    */
-  function createImpulseResponse(ctx, duration = 1.8, decay = 2.4) {
+  function createImpulseResponse(ctx, duration = 0.6, decay = 1.8) {
     const sampleRate = ctx.sampleRate;
     const length = Math.floor(sampleRate * duration);
     const impulse = ctx.createBuffer(2, length, sampleRate);
@@ -231,7 +231,7 @@
 
         // Shared Convolution Reverb
         reverbNode = audioCtx.createConvolver();
-        reverbNode.buffer = createImpulseResponse(audioCtx, 1.8, 2.4);
+        reverbNode.buffer = createImpulseResponse(audioCtx, 0.6, 1.8);
 
         reverbReturnGain = audioCtx.createGain();
         reverbReturnGain.gain.setValueAtTime(0.35, audioCtx.currentTime);
@@ -314,7 +314,7 @@
       if (instrument.distortion && audioCtx.createWaveShaper) {
         const shaper = audioCtx.createWaveShaper();
         shaper.curve = getDistortionCurve(instrument.distortion);
-        shaper.oversample = '2x';
+        shaper.oversample = 'none';
         shaper.connect(targetNode);
         targetNode = shaper;
       }
@@ -696,6 +696,11 @@
     try {
       checkScheduledBeats();
       const totalSteps = (currentTrack.loopLengthBars || 8) * 16;
+
+      // Resync if main thread was blocked/paused to prevent note bursts and crackling
+      if (nextNoteTime < audioCtx.currentTime - 0.08) {
+        nextNoteTime = audioCtx.currentTime + 0.02;
+      }
 
       while (nextNoteTime < audioCtx.currentTime + SCHEDULE_AHEAD_TIME_SEC) {
         // Enqueue beat clock event when step is a beat (every 4 16th steps)

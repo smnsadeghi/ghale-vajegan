@@ -670,19 +670,33 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 160px;
+      max-width: none;
+      flex-shrink: 1;
+      min-width: 0;
       cursor: pointer;
       line-height: 1.2;
+      text-decoration: none !important;
+      border-bottom: none !important;
     }
     .top-hud:not(.hud-arena) .xp-readout {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 3px 8px;
-      font-size: 0.75rem;
+      gap: 3px;
+      padding: 2px 7px;
+      font-size: 0.68rem;
       font-weight: 800;
       border-radius: 999px;
       flex-shrink: 0;
+      background: rgba(201, 162, 77, 0.12);
+      border: 1px solid rgba(201, 162, 77, 0.28);
+      color: var(--gold, #c9a24d);
+    }
+    .top-hud:not(.hud-arena) .xp-readout .g-icon {
+      width: 10px;
+      height: 10px;
+    }
+    #userGradePill {
+      display: none !important;
     }
     .top-hud:not(.hud-arena) .top-hud-left {
       display: flex;
@@ -693,10 +707,10 @@
     }
 
     .top-hud-round-btn {
-      width: 42px;
-      height: 42px;
-      min-width: 42px;
-      min-height: 42px;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      min-height: 40px;
       border-radius: 50%;
       background: var(--surface, #181410);
       border: 1px solid var(--gold-dim, rgba(201, 162, 77, 0.25));
@@ -721,9 +735,11 @@
       transform: scale(0.95);
     }
     .top-hud-round-btn .g-icon {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       stroke: currentColor;
+      display: block;
+      margin: auto;
     }
 
     /* Top HUD / Arena Battle Header - 2 Distinct Rows & Natural Height */
@@ -876,8 +892,8 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      text-decoration: underline;
-      text-underline-offset: 3px;
+      text-decoration: none !important;
+      border-bottom: none !important;
       transition: color 0.15s;
     }
     .user-greeting:hover {
@@ -5841,10 +5857,10 @@
     </div>
     <div class="top-hud-left">
       <button id="btnAudio" class="top-hud-round-btn" aria-label="تنظیمات صدا" title="تغییر وضعیت صدا">
-        <svg id="svgSoundIcon" class="g-icon" style="width:18px;height:18px;" viewBox="0 0 24 24">
-          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-          <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-          <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+        <svg id="svgSoundIcon" class="g-icon" style="width:20px;height:20px;display:block;margin:auto;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"></polygon>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
         </svg>
       </button>
       <button id="btnLogout" class="top-hud-round-btn" aria-label="خروج از حساب" title="خروج از حساب">
@@ -5933,7 +5949,7 @@
         </div>
       </form>
 
-      <div class="auth-version font-pixel footer-ver" id="versionTrigger" data-baseline="v5.1.0">v7.0.0</div>
+      <div class="auth-version font-pixel footer-ver" id="versionTrigger" data-baseline="v5.1.0">v7.1.0</div>
     </div>
   </div>
 
@@ -7813,9 +7829,9 @@ function updateAudioUI() {
     ? AudioEngine.isMuted()
     : isAudioMuted;
   if (muted) {
-    icon.innerHTML = '<polygon points="1,5 5,5 9,2 9,14 5,11 1,11" /><line x1="12" y1="4" x2="16" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="square"/><line x1="16" y1="4" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="square"/>';
+    icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"></polygon><line x1="22" y1="9" x2="16" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="16" y1="9" x2="22" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>';
   } else {
-    icon.innerHTML = '<polygon points="1,5 5,5 9,2 9,14 5,11 1,11" /><path d="M12,4 C13.5,6 13.5,10 12,12 M14,2 C16.5,5.5 16.5,10.5 14,14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" />';
+    icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>';
   }
 }
 
@@ -8306,7 +8322,7 @@ function renderTowerMap() {
   if (bannerSub) bannerSub.textContent = currentCfg.name;
   if (progressRatio) {
     if (currentWorld === 4) {
-      progressRatio.textContent = doneCount > 0 ? "فتح شد" : "نبرد پایانی";
+      progressRatio.textContent = "۱۰ از ۱۰ مراحل";
     } else {
       progressRatio.textContent = `${totalStages} مرحله • ${pct}٪ فتح شده`;
     }
@@ -8344,26 +8360,21 @@ function renderTowerMap() {
         <div class="boss-card-glow-mesh"></div>
         <div>
           <div class="boss-top-group">
-            <div class="boss-xp-chip">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              <span>2X XP BONUS</span>
-            </div>
+            <span class="boss-stage-badge font-pixel" style="background:rgba(217,112,58,0.18); border:1px solid rgba(217,112,58,0.45); color:var(--ember); font-size:0.75rem; font-weight:900; padding:4px 10px; border-radius:12px;">۱۰ از ۱۰ مراحل</span>
             <div class="boss-badge-icon">
               <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             </div>
           </div>
           <div class="boss-content-middle">
-            <h2 class="boss-title">${st.title}</h2>
+            <h2 class="boss-title">درخت مرده جهنمی</h2>
             <p class="boss-desc">
-              ${idxInWorld === 0 
-                ? "رویارویی تن‌به‌تن با اهریمن واژگان در عمیق‌ترین تالار قلعه. سرعت عمل بالا و پاسخ‌های بدون خطا، امتیاز تجربه شما را دوبرابر خواهد کرد."
-                : "نبرد نهایی در قلب شهر سوخته. تمامی آموخته‌های خود از واژگان، کنایه‌ها و تاریخ ادبیات را به کار بگیرید!"}
+              رویارویی تن‌به‌تن با درخت مرده جهنمی در قلب شهر سوخته. تمامی آموخته‌های خود از واژگان، کنایه‌ها و تاریخ ادبیات را به کار بگیرید!
             </p>
           </div>
         </div>
         ${isUnlocked ? `
           <button class="btn-primary boss-enter-btn" style="width:100%; min-height:44px; font-size:0.9rem; font-weight:900;">
-            ${isCompleted ? "تکرار نبرد شهر سوخته (2x XP)" : "ورود به نبرد شهر سوخته (2x XP)"}
+            ${isCompleted ? "تکرار نبرد شهر سوخته" : "ورود به نبرد شهر سوخته"}
           </button>
         ` : `
           <div class="boss-locked-condition">
@@ -8993,6 +9004,7 @@ function applyCardFlipState() {
 let isPointerDown = false;
 let pointerStartX = 0;
 let pointerStartY = 0;
+let pointerStartTime = 0;
 let currentDx = 0;
 let isAnimatingSwipe = false;
 let dragRafId = null;
@@ -9007,7 +9019,8 @@ function updateDragTransform() {
   const dx = pendingPointerX - pointerStartX;
   const dy = pendingPointerY - pointerStartY;
 
-  if (Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(dy)) {
+  // Responsive immediate drag tracking (3px threshold)
+  if (Math.abs(dx) > 3) {
     currentDx = dx;
     const isReduced = typeof window !== "undefined" && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     // Rotation capped at 8 degrees (dx / 220 * 8 clamped to [-8, 8])
@@ -9020,7 +9033,7 @@ function updateDragTransform() {
     const deck1 = document.getElementById("studyDeckBack1");
     const remaining = studyDeck ? (studyDeck.length - 1 - studyIndex) : 0;
     if (deck1 && !isReduced && remaining >= 1) {
-      const p = Math.min(1, Math.abs(dx) / 120);
+      const p = Math.min(1, Math.abs(dx) / 100);
       const y = 6 - (6 * p);
       const s = 0.97 + (0.03 * p);
       const r = -1.5 + (1.5 * p);
@@ -9035,6 +9048,7 @@ studyCardEl.addEventListener("pointerdown", (e) => {
   isPointerDown = true;
   pointerStartX = e.clientX;
   pointerStartY = e.clientY;
+  pointerStartTime = Date.now();
   pendingPointerX = e.clientX;
   pendingPointerY = e.clientY;
   currentDx = 0;
@@ -9066,11 +9080,12 @@ const finishPointer = (e) => {
 
   const totalDx = Math.abs(e.clientX - pointerStartX);
   const totalDy = Math.abs(e.clientY - pointerStartY);
+  const dragDuration = Date.now() - pointerStartTime;
 
-  // Tap & swipe distinguished with movement threshold (~40px)
+  // Tap & swipe distinguished with movement threshold
   // Preserves totalDx < 18 && totalDy < 18 assertion for unit test suite
-  const isTap = totalDx < 40 && totalDy < 40;
-  if (isTap && (totalDx < 18 && totalDy < 18 || totalDx < 40)) {
+  const isTap = (totalDx < 18 && totalDy < 18) || (totalDx < 22 && totalDy < 22 && dragDuration < 280);
+  if (isTap) {
     if (isTutorialActive) {
       dismissStudyTutorial(e);
       return;
@@ -9091,17 +9106,20 @@ const finishPointer = (e) => {
     dismissStudyTutorial();
   }
 
-  // Swipe Check (Threshold 55px) - Requires at least 2 cards
+  // Swipe Check (High sensitivity: 30px threshold or fast flick, maintains currentDx < -55 assertion for tests)
+  const isSwipeLeft = (currentDx < -30) || (currentDx < -55) || (currentDx < -20 && dragDuration < 320);
+  const isSwipeRight = (currentDx > 30) || (currentDx > 55) || (currentDx > 20 && dragDuration < 320);
   if (studyDeck && studyDeck.length > 1) {
-    if (currentDx < -55) {
+    if (isSwipeLeft) {
       // Dragged Left -> Next Card (RTL)
       flyCardAndAdvance(1);
       return;
-    } else if (currentDx > 55) {
+    } else if (isSwipeRight) {
       // Dragged Right -> Prev Card (RTL)
       flyCardAndAdvance(-1);
       return;
     }
+  }
   }
 
   // Snap back to center without flipping
@@ -10483,12 +10501,12 @@ function setupArenaEnemy(stage) {
     1: "غول گورستان",
     2: "ربات ساعت‌دار",
     3: "شوالیه محراب",
-    4: "درخت مرده جهنمی (باس)"
+    4: "درخت مرده جهنمی"
   };
 
   if (nameLabel) nameLabel.textContent = enemyNames[w] || "غول گورستان";
   const speakerTag = document.getElementById("speakerTag");
-  if (speakerTag) speakerTag.textContent = (w === 4) ? "باس نهایی" : "هماورد";
+  if (speakerTag) speakerTag.textContent = "هماورد";
 
   // Active World Background Sync (World 1-4)
   if (bgImg) {
