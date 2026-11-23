@@ -7,14 +7,27 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Import track configs and engine in Node environment
+// Import all track configs and engine in Node environment
 const flashcardTrack = (await import('../audio/tracks/flashcards-chill.js')).default;
 const battleTrack = (await import('../audio/tracks/battle.js')).default;
+const vazhganTrack = (await import('../audio/tracks/battle-vazhgan.js')).default;
+const ihamTrack = (await import('../audio/tracks/battle-iham.js')).default;
+const kenayehTrack = (await import('../audio/tracks/battle-kenayeh.js')).default;
+const infernoTrack = (await import('../audio/tracks/battle-inferno.js')).default;
 const AudioEngine = (await import('../audio/engine.js')).default;
 
 describe('Data-Driven Procedural Audio Engine & Tracks Suite', () => {
-  test('1. Track Configs conform to data-driven specification', () => {
-    [flashcardTrack, battleTrack].forEach(track => {
+  const allTracks = [
+    flashcardTrack,
+    battleTrack,
+    vazhganTrack,
+    ihamTrack,
+    kenayehTrack,
+    infernoTrack
+  ];
+
+  test('1. All Track Configs conform to data-driven specification', () => {
+    allTracks.forEach(track => {
       assert.ok(track.id, 'Track must have an id');
       assert.ok(typeof track.bpm === 'number' && track.bpm > 0, 'Track must have positive numeric BPM');
       assert.ok(track.root, 'Track must have a key root note');
@@ -57,56 +70,235 @@ describe('Data-Driven Procedural Audio Engine & Tracks Suite', () => {
     assert.ok(flashcardTrack.swing > 0, 'Must have gentle swing');
   });
 
-  test('3. Engine API methods are defined and callable', () => {
+  test('3. "battle-vazhgan" (World 1: Graveyard) satisfies Gothic Heroic requirements', () => {
+    assert.equal(vazhganTrack.id, 'battle-vazhgan');
+    assert.equal(vazhganTrack.bpm, 100, 'BPM must be 100');
+    assert.ok(vazhganTrack.root.startsWith('A'), 'Root must be A');
+    assert.deepEqual(vazhganTrack.scale, [0, 2, 3, 5, 7, 8, 11], 'Scale must be A Harmonic Minor');
+    assert.equal(vazhganTrack.loopLengthBars, 8, 'Loop length must be 8 bars');
+    assert.equal(vazhganTrack.chordProgression.length, 8, 'Chord progression must have 8 bars');
+
+    // Instruments
+    const inst = vazhganTrack.instruments;
+    assert.ok(inst.lead, 'Must have brass-like lead');
+    const leadOsc = Array.isArray(inst.lead.oscillator) ? inst.lead.oscillator : [inst.lead.oscillator];
+    assert.ok(leadOsc.includes('sawtooth'), 'Lead oscillator should be or include sawtooth for brass tone');
+    assert.ok((inst.lead.filter && inst.lead.filter.envAmount > 0) || inst.lead.filterEnvelope, 'Lead must have filter envelope swell');
+
+    assert.ok(inst.bass, 'Must have bass');
+    assert.ok(Array.isArray(inst.bass.oscillator), 'Bass should use detuned oscillators (triangle/saw)');
+
+    assert.ok(inst.pad, 'Must have dark pad');
+    assert.ok(Array.isArray(inst.pad.oscillator), 'Pad should use detuned oscillators');
+
+    assert.ok(inst.drums, 'Must have drums');
+    assert.ok(inst.counter, 'Must have counter melody');
+
+    // Patterns & Layers
+    const pat = vazhganTrack.patterns;
+    assert.equal(pat.bass.length, 128, 'Bass pattern must have 128 sixteenth notes (8 bars)');
+    assert.equal(pat.lead.length, 128, 'Lead pattern must have 128 sixteenth notes');
+    assert.equal(pat.drums.length, 128, 'Drums pattern must have 128 sixteenth notes');
+
+    // Check timpani hits on beats 1 and 3 (steps 0, 8, 16, 24...)
+    const timpaniHits = pat.drums.filter(d => d && d.type === 'timpani');
+    assert.ok(timpaniHits.length >= 8, 'Must feature timpani on beats 1 and 3');
+
+    // Check bar-end fills and crash
+    const crashes = pat.fills ? pat.fills.filter(d => d && d.type === 'crash') : pat.drums.filter(d => d && d.type === 'crash');
+    assert.ok(crashes.length > 0, 'Must feature crash cymbals');
+    const toms = pat.fills ? pat.fills.filter(d => d && d.type && d.type.startsWith('tom')) : pat.drums.filter(d => d && d.type && d.type.startsWith('tom'));
+    assert.ok(toms.length > 0, 'Must feature tom fills at bar ends');
+  });
+
+  test('4. "battle-iham" (World 3: Forest of Iham) satisfies Phrygian Dominant & Dual Meaning', () => {
+    assert.equal(ihamTrack.id, 'battle-iham');
+    assert.equal(ihamTrack.bpm, 104, 'BPM must be 104');
+    assert.ok(ihamTrack.root.startsWith('D'), 'Root must be D');
+    assert.deepEqual(ihamTrack.scale, [0, 1, 4, 5, 7, 8, 10], 'Scale must be D Phrygian Dominant');
+    assert.equal(ihamTrack.loopLengthBars, 8, 'Loop length must be 8 bars');
+
+    // Instruments
+    const inst = ihamTrack.instruments;
+    assert.ok(inst.lead.vibrato, 'Lead must have vibrato for mysterious shimmer');
+    assert.ok(inst.arp && inst.arp.filter && inst.arp.filter.type === 'bandpass', 'Arp must use resonant bandpass filter for eerie forest feel');
+    assert.ok(inst.pad && inst.pad.filter, 'Pad must define lowpass/bandpass filter');
+
+    // Dual-meaning melodic check: alternates Major 3rd (F#) and Minor 3rd (F)
+    const pat = ihamTrack.patterns;
+    const leadNotes = pat.lead.filter(Boolean).map(n => n.note);
+    const hasMajor3rd = leadNotes.some(n => n.includes('F#'));
+    const hasMinor3rd = leadNotes.some(n => n.includes('F') && !n.includes('F#'));
+    assert.ok(hasMajor3rd && hasMinor3rd, 'Melody must alternate Major 3rd (F#) and Minor 3rd (F) for Iham (double meaning)');
+
+    // Register-shifting arpeggio
+    assert.ok(pat.arp && pat.arp.length === 128, 'Must have 8-bar arpeggio pattern');
+  });
+
+  test('5. "battle-kenayeh" (World 2: Realm of Kenayeh) satisfies E Dorian syncopation', () => {
+    assert.equal(kenayehTrack.id, 'battle-kenayeh');
+    assert.equal(kenayehTrack.bpm, 112, 'BPM must be 112');
+    assert.ok(kenayehTrack.root.startsWith('E'), 'Root must be E');
+    assert.deepEqual(kenayehTrack.scale, [0, 2, 3, 5, 7, 9, 10], 'Scale must be E Dorian');
+    assert.equal(kenayehTrack.loopLengthBars, 8, 'Loop length must be 8 bars');
+
+    // Check syncopated staccato lead & off-beat bass
+    const pat = kenayehTrack.patterns;
+    assert.ok(pat.bass && pat.bass.length === 128);
+    // Check off-beat bass hits (step index % 4 === 2)
+    let offBeatHits = 0;
+    pat.bass.forEach((step, idx) => {
+      if (step && (idx % 4 === 2)) offBeatHits++;
+    });
+    assert.ok(offBeatHits > 10, 'Bass must emphasize syncopated off-beats');
+
+    // Call-and-response between lead & arp: verify both exist and have active notes
+    const activeLead = pat.lead.filter(Boolean).length;
+    const activeArp = pat.arp.filter(Boolean).length;
+    assert.ok(activeLead > 0 && activeArp > 0, 'Must have active lead and arpeggio for call-and-response');
+
+    // Snare hits on beats 2 and 4 (steps 4, 12 in every bar of 16 steps)
+    const snarePattern = pat.snare || pat.drums;
+    const snareHits = snarePattern.filter((d, idx) => d && (d.type === 'snare' || d.type === 'snare_body') && (idx % 8 === 4));
+    assert.ok(snareHits.length > 5, 'Snare must hit consistently on backbeats 2 & 4');
+  });
+
+  test('6. "battle-inferno" (World 4: Inferno Fortress) satisfies Heavy Climactic Phrygian', () => {
+    assert.equal(infernoTrack.id, 'battle-inferno');
+    assert.equal(infernoTrack.bpm, 128, 'BPM must be 128 (fastest)');
+    assert.ok(infernoTrack.root.startsWith('F#'), 'Root must be F#');
+    assert.deepEqual(infernoTrack.scale, [0, 1, 3, 5, 7, 8, 10], 'Scale must be F# Phrygian');
+    assert.equal(infernoTrack.loopLengthBars, 8, 'Loop length must be 8 bars');
+
+    // Distortion settings on bass
+    const inst = infernoTrack.instruments;
+    assert.ok(inst.bass.distortion && inst.bass.distortion > 0, 'Bass must have waveshaper distortion');
+
+    // Dissonance check: Tritone (C) and Minor 2nd (G)
+    const pat = infernoTrack.patterns;
+    const bassNotes = pat.bass.filter(Boolean).map(b => b.note);
+    const hasTritoneC = bassNotes.some(n => n.startsWith('C'));
+    const hasMinor2ndG = bassNotes.some(n => n.startsWith('G') && !n.startsWith('G#'));
+    assert.ok(hasTritoneC, 'Bass must contain Tritone (C) tension');
+    assert.ok(hasMinor2ndG, 'Bass must contain Minor 2nd (G) tension');
+
+    // Double-time kick drum pattern check: lots of kicks
+    const kicks = pat.drums.filter(d => d && (d.type === 'kick' || d.type === 'kick_and_hat'));
+    assert.ok(kicks.length >= 32, 'Drums must feature heavy double-time kick drum');
+  });
+
+  test('7. Engine API methods are defined and callable', () => {
     const methods = [
-      'initAudio', 'registerTrack', 'getTrack', 'playTrack',
-      'stopMusic', 'setMuted', 'isMuted', 'setTempoMultiplier',
-      'setLayerLevel', 'playTone', 'playSfx', 'getCurrentTrackId'
+      'initAudio', 'registerTrack', 'getTrack', 'getAllRegisteredTracks', 'playTrack',
+      'stopMusic', 'setMuted', 'isMuted', 'setTempoMultiplier', 'getTempoMultiplier',
+      'setLayerLevel', 'getLayerLevel', 'playTone', 'playSfx', 'getCurrentTrackId',
+      'mountDevAuditionPanel'
     ];
     methods.forEach(m => {
       assert.equal(typeof AudioEngine[m], 'function', `AudioEngine.${m} must be a function`);
     });
   });
 
-  test('4. Registering and retrieving tracks works dynamically', () => {
-    AudioEngine.registerTrack(flashcardTrack);
-    AudioEngine.registerTrack(battleTrack);
+  test('8. Registering and retrieving all 4 epic tracks works dynamically', () => {
+    AudioEngine.registerTrack(vazhganTrack);
+    AudioEngine.registerTrack(ihamTrack);
+    AudioEngine.registerTrack(kenayehTrack);
+    AudioEngine.registerTrack(infernoTrack);
 
-    assert.equal(AudioEngine.getTrack('flashcards-chill').id, 'flashcards-chill');
-    assert.equal(AudioEngine.getTrack('battle-theme').id, 'battle-theme');
+    assert.equal(AudioEngine.getTrack('battle-vazhgan').id, 'battle-vazhgan');
+    assert.equal(AudioEngine.getTrack('battle-iham').id, 'battle-iham');
+    assert.equal(AudioEngine.getTrack('battle-kenayeh').id, 'battle-kenayeh');
+    assert.equal(AudioEngine.getTrack('battle-inferno').id, 'battle-inferno');
+
+    const registered = AudioEngine.getAllRegisteredTracks();
+    assert.ok(registered.length >= 4, 'Must have at least all 4 epic tracks registered');
   });
 
-  test('5. Dynamic custom track can be registered without engine modification', () => {
-    const customTrack = {
-      id: 'custom-ambient',
-      bpm: 90,
-      root: 'C3',
-      scale: [0, 2, 4, 5, 7, 9, 11],
-      loopLengthBars: 2,
-      chordProgression: [0, 4],
-      masterGain: 0.25,
-      reverbSend: 0.2,
-      instruments: {
-        chime: {
-          oscillator: 'sine',
-          envelope: { attack: 0.01, decay: 0.5, sustain: 0, release: 0.5 },
-          gain: 0.3
-        }
-      },
-      patterns: {
-        chime: [ { degree: 0 }, null, { degree: 2 }, null ]
-      }
-    };
+  test('9. Dynamic Layer Level (0 - 3) and Tempo Multiplier (1.0 - 1.4) state management', () => {
+    // Layer Level
+    AudioEngine.setLayerLevel(0);
+    assert.equal(AudioEngine.getLayerLevel(), 0);
 
-    AudioEngine.registerTrack(customTrack);
-    assert.equal(AudioEngine.getTrack('custom-ambient').id, 'custom-ambient');
+    AudioEngine.setLayerLevel(2);
+    assert.equal(AudioEngine.getLayerLevel(), 2);
+
+    AudioEngine.setLayerLevel(3);
+    assert.equal(AudioEngine.getLayerLevel(), 3);
+
+    // Clamping checks
+    AudioEngine.setLayerLevel(5);
+    assert.equal(AudioEngine.getLayerLevel(), 3, 'Layer level should clamp to 3');
+    AudioEngine.setLayerLevel(-1);
+    assert.equal(AudioEngine.getLayerLevel(), 0, 'Layer level should clamp to 0');
+
+    // Tempo Multiplier
+    AudioEngine.setTempoMultiplier(1.0);
+    assert.equal(AudioEngine.getTempoMultiplier(), 1.0);
+
+    AudioEngine.setTempoMultiplier(1.25);
+    assert.equal(AudioEngine.getTempoMultiplier(), 1.25);
+
+    AudioEngine.setTempoMultiplier(1.4);
+    assert.equal(AudioEngine.getTempoMultiplier(), 1.4);
+
+    // Clamping checks
+    AudioEngine.setTempoMultiplier(0.2);
+    assert.equal(AudioEngine.getTempoMultiplier(), 0.5, 'Tempo multiplier minimum clamp');
+    AudioEngine.setTempoMultiplier(5.0);
+    assert.equal(AudioEngine.getTempoMultiplier(), 2.5, 'Tempo multiplier maximum clamp');
+
+    // Reset back to normal 1.0
+    AudioEngine.setTempoMultiplier(1.0);
   });
 
-  test('6. Mute state persistence and toggling', () => {
+  test('10. Mute state persistence and toggling', () => {
     AudioEngine.setMuted(true);
     assert.equal(AudioEngine.isMuted(), true);
 
     AudioEngine.setMuted(false);
     assert.equal(AudioEngine.isMuted(), false);
+  });
+
+  test('11. Dev Audition Panel mounts only when ?audioDebug=1 is present', () => {
+    // 1. Without audioDebug=1 -> must NOT mount
+    const mockDoc = {
+      getElementById: (id) => null,
+      createElement: (tag) => {
+        const el = {
+          id: '',
+          style: {},
+          setAttribute: () => {},
+          querySelector: () => ({ oninput: null, onclick: null, textContent: '' }),
+          querySelectorAll: () => []
+        };
+        return el;
+      },
+      body: {
+        appendChild: () => {
+          assert.fail('Should NOT append panel when audioDebug=1 is absent');
+        }
+      }
+    };
+
+    globalThis.window = { location: { search: '' } };
+    globalThis.document = mockDoc;
+    AudioEngine.mountDevAuditionPanel();
+
+    // 2. With ?audioDebug=1 -> MUST mount
+    let appended = false;
+    let appendedId = null;
+    mockDoc.body.appendChild = (el) => {
+      appended = true;
+      appendedId = el.id;
+    };
+    globalThis.window = { location: { search: '?audioDebug=1' } };
+    AudioEngine.mountDevAuditionPanel();
+
+    assert.ok(appended, 'Must append panel to body when ?audioDebug=1 is in URL');
+    assert.equal(appendedId, 'devAudioPanel', 'Element must have id="devAudioPanel"');
+
+    // Clean up globals
+    delete globalThis.window;
+    delete globalThis.document;
   });
 });

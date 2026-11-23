@@ -2,7 +2,8 @@
 // const CACHE_NAME = 'shovalie-vajeha-v5.2.0';
 // const CACHE_NAME = 'shovalie-vajeha-v5.3.0';
 // const CACHE_NAME = 'shovalie-vajeha-v6.0.0';
-const CACHE_NAME = 'shovalie-vajeha-v6.1.0';
+// const CACHE_NAME = 'shovalie-vajeha-v6.1.0';
+const CACHE_NAME = 'shovalie-vajeha-v6.2.0';
 const ASSETS = [
   './',
   './index.html',
@@ -16,6 +17,10 @@ const ASSETS = [
   './audio/engine.js',
   './audio/tracks/battle.js',
   './audio/tracks/flashcards-chill.js',
+  './audio/tracks/battle-vazhgan.js',
+  './audio/tracks/battle-iham.js',
+  './audio/tracks/battle-kenayeh.js',
+  './audio/tracks/battle-inferno.js',
   './assets/redesign/bg_w1.webp',
   './assets/redesign/bg_w2.webp',
   './assets/redesign/bg_w3.webp',
