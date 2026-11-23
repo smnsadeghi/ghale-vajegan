@@ -608,8 +608,101 @@
       text-shadow: 1px 1px 0 #0b0d12;
     }
 
+    /* Top HUD / Player Header Bar (Task 1: Single compact row, 56-64px, vertically centered) */
+    .top-hud:not(.hud-arena) {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: 60px;
+      min-height: 56px;
+      max-height: 64px;
+      background: rgba(24, 20, 16, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--gold-dim, rgba(201, 162, 77, 0.25));
+      box-shadow: inset 0 0 0 1px rgba(143, 114, 71, 0.15), 0 4px 16px rgba(0, 0, 0, 0.4);
+      border-radius: 14px;
+      padding: 0 12px;
+      margin-bottom: 6px;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      clip-path: none !important;
+      gap: 10px;
+    }
+    .top-hud:not(.hud-arena) .top-hud-right {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+    }
+    .top-hud:not(.hud-arena) .user-greeting {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--text, #f1e8d4);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 160px;
+      cursor: pointer;
+      line-height: 1.2;
+    }
+    .top-hud:not(.hud-arena) .xp-readout {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      border-radius: 999px;
+      flex-shrink: 0;
+    }
+    .top-hud:not(.hud-arena) .top-hud-left {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .top-hud-round-btn {
+      width: 42px;
+      height: 42px;
+      min-width: 42px;
+      min-height: 42px;
+      border-radius: 50%;
+      background: var(--surface, #181410);
+      border: 1px solid var(--gold-dim, rgba(201, 162, 77, 0.25));
+      color: var(--text-muted, #8c836f);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.18s ease, border-color 0.18s ease, transform 0.18s ease, background 0.18s ease;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      touch-action: manipulation;
+    }
+    .top-hud-round-btn:hover {
+      color: var(--gold, #c9a24d);
+      border-color: var(--gold, #c9a24d);
+      background: #251f18;
+      transform: scale(1.05);
+    }
+    .top-hud-round-btn:active {
+      transform: scale(0.95);
+    }
+    .top-hud-round-btn .g-icon {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+    }
+
     /* Top HUD / Arena Battle Header - 2 Distinct Rows & Natural Height */
-    .top-hud,
     .top-hud.hud-arena {
       display: flex;
       flex-direction: column;
@@ -2121,35 +2214,27 @@
       position: relative;
     }
 
-    /* Subtle Gothic Arch Motif Watermark */
-    .gothic-arch-bg {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 220px;
-      height: 280px;
-      pointer-events: none;
-      opacity: 0.06;
-      z-index: 0;
-    }
-
-    /* 4-World Portal Grid & Tabs */
+    /* 4-World Portal Grid & Tabs (Task 2: Equal width grid, 64px fixed height, 24px line icons) */
     .world-portal-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 4px;
-      margin: 4px 0 6px;
+      gap: 0;
+      margin: 0;
+      width: 100%;
       flex-shrink: 0;
       border-bottom: 1px solid rgba(41, 34, 27, 0.4);
-      padding: 0 4px;
+      padding: 0;
+      box-sizing: border-box;
     }
     .portal-tab {
-      min-height: 52px;
+      height: 64px;
+      min-height: 64px;
+      max-height: 64px;
       background: transparent;
       border: none;
-      border-bottom: 2px solid transparent;
-      color: var(--ink-muted);
-      padding: 6px 2px 8px;
+      border-bottom: 2.5px solid transparent;
+      color: var(--text-muted, #8c836f);
+      padding: 6px 2px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
@@ -2157,71 +2242,100 @@
       justify-content: center;
       gap: 3px;
       position: relative;
-      transition: color 0.18s ease, transform 0.18s ease;
+      transition: color 0.18s ease;
       clip-path: none !important;
       box-shadow: none;
       text-decoration: none;
+      box-sizing: border-box;
+      width: 100%;
     }
     .portal-tab:hover {
-      color: var(--ink);
+      color: var(--text, #f1e8d4);
     }
     .portal-tab.active {
-      color: var(--ink);
+      color: var(--text, #f1e8d4);
       transform: scale(1.04);
       z-index: 2;
-    }
-    .portal-tab.active::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 12%;
-      right: 12%;
-      height: 2.5px;
-      background: var(--gold);
-      border-radius: 3px 3px 0 0;
-      box-shadow: 0 -1px 6px var(--gold-glow);
+      border-bottom-color: var(--gold, #c9a24d);
     }
     .portal-tab svg {
-      width: 17px;
-      height: 17px;
+      width: 24px;
+      height: 24px;
       stroke: currentColor;
       fill: none;
-      stroke-width: 1.8;
+      stroke-width: 1.75;
       stroke-linecap: round;
       stroke-linejoin: round;
       transition: color 0.18s ease, stroke 0.18s ease;
+      flex-shrink: 0;
     }
-    .portal-tab[data-world="1"].active svg { stroke: var(--gold); color: var(--gold); }
-    .portal-tab[data-world="2"].active svg { stroke: var(--teal); color: var(--teal); }
-    .portal-tab[data-world="3"].active svg { stroke: var(--rose); color: var(--rose); }
-    .portal-tab[data-world="4"].active svg { stroke: var(--ember); color: var(--ember); }
+    .portal-tab[data-world="1"].active svg { stroke: var(--gold, #c9a24d); color: var(--gold, #c9a24d); }
+    .portal-tab[data-world="2"].active svg { stroke: var(--teal, #6fb8a8); color: var(--teal, #6fb8a8); }
+    .portal-tab[data-world="3"].active svg { stroke: var(--rose, #c9777f); color: var(--rose, #c9777f); }
+    .portal-tab[data-world="4"].active svg { stroke: var(--ember, #d9703a); color: var(--ember, #d9703a); }
 
-    .portal-tab[data-world="1"].active .portal-name { color: var(--ink); }
-    .portal-tab[data-world="2"].active .portal-name { color: var(--ink); }
-    .portal-tab[data-world="3"].active .portal-name { color: var(--ink); }
-    .portal-tab[data-world="4"].active .portal-name { color: var(--ink); }
+    .portal-tab[data-world="1"].active .portal-name { color: var(--gold, #c9a24d); }
+    .portal-tab[data-world="2"].active .portal-name { color: var(--teal, #6fb8a8); }
+    .portal-tab[data-world="3"].active .portal-name { color: var(--rose, #c9777f); }
+    .portal-tab[data-world="4"].active .portal-name { color: var(--ember, #d9703a); }
 
     .portal-name {
-      font-weight: 800;
-      font-size: 0.72rem;
+      font-weight: 700;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      transition: color 0.18s ease;
+      line-height: 1.2;
+    }
+    .portal-counter {
+      font-size: 0.65rem;
+      color: var(--text-muted, #8c836f);
+      line-height: 1;
+      height: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       white-space: nowrap;
       transition: color 0.18s ease;
     }
-    .portal-counter {
-      font-size: 0.62rem;
-      color: var(--ink-muted);
-      opacity: 0.8;
-      transition: color 0.18s ease;
+    .portal-xp-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1px 4px;
+      border-radius: 4px;
+      background: rgba(217, 112, 58, 0.15);
+      border: 1px solid rgba(217, 112, 58, 0.3);
+      color: var(--ember, #d9703a);
+      font-size: 0.6rem;
+      font-weight: 800;
+      line-height: 1;
     }
 
-    /* Section Summary */
+    /* Section Summary & Subtle Gothic Arch Watermark (Placed ONLY behind world summary) */
     #worldBanner, .section-summary {
-      padding: 6px 14px 10px;
+      position: relative;
+      overflow: hidden;
+      padding: 8px 14px 12px;
       display: flex;
       flex-direction: column;
       gap: 6px;
       flex-shrink: 0;
       border-bottom: 1px solid rgba(41, 34, 27, 0.4);
+    }
+    .gothic-arch-bg {
+      position: absolute;
+      top: -20px;
+      right: 10px;
+      width: 140px;
+      height: 180px;
+      pointer-events: none;
+      opacity: 0.055;
+      z-index: 0;
+    }
+    .summary-text-row,
+    .progress-bar-track {
+      position: relative;
+      z-index: 1;
     }
     .summary-text-row {
       display: flex;
@@ -2430,12 +2544,13 @@
     }
     .stage-progress-row {
       display: flex;
-      align-items: center;
-      gap: 8px;
+      flex-direction: column;
+      gap: 4px;
       margin-top: 4px;
+      width: 100%;
     }
     .stage-progress-track {
-      flex: 1;
+      width: 100%;
       height: 4px;
       background: #110e0c;
       border-radius: 2px;
@@ -2445,12 +2560,39 @@
       height: 100%;
       border-radius: 2px;
       background: var(--accent-color, var(--gold));
+      transition: width 0.3s ease;
+    }
+    .stage-progress-fill--complete {
+      background: var(--gold, #c9a24d) !important;
+      box-shadow: 0 0 6px rgba(201, 162, 77, 0.4);
+    }
+    .stage-progress-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .stage-complete-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--gold, #c9a24d);
+    }
+    .stage-complete-badge svg {
+      width: 12px;
+      height: 12px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
     }
     .stage-progress-count {
       font-size: 0.68rem;
       font-weight: 700;
       color: var(--ink-muted);
       white-space: nowrap;
+      margin-right: auto;
     }
     .stage-card-actions {
       display: flex;
@@ -2460,10 +2602,46 @@
     }
     .tower-btn-action {
       flex: 1;
-      min-height: 34px;
-      font-size: 0.78rem;
+      min-height: 36px;
+      font-size: 0.8rem;
       padding: 4px 10px;
       border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .tower-btn-study-primary {
+      background: var(--gold, #c9a24d);
+      color: #0d0b0a;
+      border: none;
+      font-weight: 800;
+    }
+    .tower-btn-study-primary:hover {
+      background: #dbb562;
+    }
+    .tower-btn-battle-ready {
+      background: var(--gold, #c9a24d);
+      color: #0d0b0a;
+      border: none;
+      font-weight: 800;
+    }
+    .tower-btn-battle-ready:hover {
+      background: #dbb562;
+    }
+    .tower-btn-battle-locked {
+      opacity: 0.55;
+      color: var(--text-muted, #8c836f) !important;
+      border: 1px solid rgba(201, 162, 77, 0.2) !important;
+      cursor: pointer;
+    }
+    .tower-btn-battle-locked:hover,
+    .tower-btn-battle-locked:active {
+      opacity: 0.85;
+      color: var(--text, #f1e8d4) !important;
+      border-color: var(--gold, #c9a24d) !important;
+    }
     }
 
     /* Empty Space Hint Card */
@@ -4991,9 +5169,16 @@
       border-radius: 999px;
       border: 1px solid var(--gold-dim, rgba(201, 162, 77, 0.25));
     }
+    .study-sheet-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+      margin-top: 6px;
+    }
+    .study-sheet-btn-primary,
     .study-sheet-btn-close {
       width: 100%;
-      margin-top: 4px;
       padding: 12px;
       font-size: 0.95rem;
       font-weight: 800;
@@ -5003,9 +5188,34 @@
       border: none;
       cursor: pointer;
       min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.18s ease;
     }
+    .study-sheet-btn-primary:hover,
     .study-sheet-btn-close:hover {
       background: #dbb562;
+    }
+    .study-sheet-btn-secondary {
+      width: 100%;
+      padding: 10px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--text-muted, #8c836f);
+      border: 1px solid var(--gold-dim, rgba(201, 162, 77, 0.25));
+      cursor: pointer;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.18s ease, border-color 0.18s ease;
+    }
+    .study-sheet-btn-secondary:hover {
+      color: var(--text, #f1e8d4);
+      border-color: var(--gold, #c9a24d);
     }
     @keyframes sheetSlideUp {
       from { transform: translateY(100%); }
@@ -5252,24 +5462,30 @@
   </div>
 
 
-  <!-- TOP HUD BAR (Active when logged in) -->
+  <!-- TOP HUD BAR (Active when logged in - Task 1: Single compact row, 56-64px) -->
   <div id="topBar" class="top-hud hidden">
     <div class="top-hud-right">
-      <span id="userGreeting" class="user-greeting" title="مشاهده شناسنامه و نشان‌ها"></span>
+      <span id="userGreeting" class="user-greeting" title="مشاهده شناسنامه و نشان‌ها">شوالیه آزمایشی</span>
       <span class="xp-readout chip chip--ready">
         <svg class="g-icon" style="width:13px;height:13px;" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         <span id="userXP">0</span> XP
       </span>
     </div>
     <div class="top-hud-left">
-      <button id="btnAudio" class="btn-ghost" style="padding:4px 8px; min-height:30px;" title="تغییر صدا">
-        <svg id="svgSoundIcon" class="g-icon" style="width:14px;height:14px;" viewBox="0 0 24 24">
+      <button id="btnAudio" class="top-hud-round-btn" aria-label="تنظیمات صدا" title="تغییر وضعیت صدا">
+        <svg id="svgSoundIcon" class="g-icon" style="width:18px;height:18px;" viewBox="0 0 24 24">
           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
           <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
           <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
         </svg>
       </button>
-      <button id="btnLogout" class="btn-ghost" style="padding:4px 10px; min-height:30px; font-size:0.75rem;">خروج</button>
+      <button id="btnLogout" class="top-hud-round-btn" aria-label="خروج از حساب" title="خروج از حساب">
+        <svg class="g-icon" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" y1="12" x2="9" y2="12" />
+        </svg>
+      </button>
     </div>
   </div>
 
@@ -5344,48 +5560,61 @@
 
   <!-- VIEW 2: MAP & STAGES (WORLD HUBS) -->
   <div id="viewMap" class="hidden">
-    <!-- Subtle Gothic Arch Motif Watermark -->
-    <svg class="gothic-arch-bg" viewBox="0 0 200 260" fill="none" stroke="var(--gold)" stroke-width="1.2">
-      <path d="M20 260 V 100 Q 20 20 100 0 Q 180 20 180 100 V 260" />
-      <path d="M40 260 V 110 Q 40 40 100 20 Q 160 40 160 110 V 260" />
-      <circle cx="100" cy="80" r="28" />
-      <path d="M100 52 V 108 M72 80 H 128" />
-    </svg>
-
     <div class="map-header-bar" style="display:none;">
       <div>رشته: <strong id="mapMajor"></strong></div>
       <button id="btnOpenLeaderboard" class="btn-ghost">جدول رتبه‌ها</button>
     </div>
 
-    <!-- 4-WORLD PORTAL GATE SWITCHER (Gold underline + accent icons) -->
+    <!-- 4-WORLD PORTAL GATE SWITCHER (Task 2 & 3: Equal grid, 24px line icons, gold underline) -->
     <div class="world-portal-grid" id="worldPortalTabs">
-      <button class="portal-tab portal-tab--w1 active" data-world="1" onclick="switchWorld(1)">
-        <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      <button class="portal-tab portal-tab--w1 active" data-world="1" onclick="switchWorld(1)" aria-label="جهان واژگان">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+        </svg>
         <span class="portal-name">واژگان</span>
-        <span class="portal-counter font-pixel" id="portalCount1">0/8</span>
+        <span class="portal-counter font-pixel" id="portalCount1">۰/۸</span>
       </button>
 
-      <button class="portal-tab portal-tab--w2" data-world="2" onclick="switchWorld(2)">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <button class="portal-tab portal-tab--w2" data-world="2" onclick="switchWorld(2)" aria-label="جهان کنایه">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
         <span class="portal-name">کنایه</span>
-        <span class="portal-counter font-pixel" id="portalCount2">0/4</span>
+        <span class="portal-counter font-pixel" id="portalCount2">۰/۴</span>
       </button>
 
-      <button class="portal-tab portal-tab--w3" data-world="3" onclick="switchWorld(3)">
-        <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <button class="portal-tab portal-tab--w3" data-world="3" onclick="switchWorld(3)" aria-label="جهان ایهام">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 12a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V7h-3a8 8 0 0 0-5 2 8 8 0 0 0-5-2H2Z"/>
+          <path d="M6 11c1.5 0 3 .5 3 2-2 0-3 0-3-2Z"/>
+          <path d="M18 11c-1.5 0-3 .5-3 2 2 0 3 0 3-2Z"/>
+        </svg>
         <span class="portal-name">ایهام</span>
-        <span class="portal-counter font-pixel" id="portalCount3">0/2</span>
+        <span class="portal-counter font-pixel" id="portalCount3">۰/۲</span>
       </button>
 
-      <button class="portal-tab portal-tab--w4" data-world="4" onclick="switchWorld(4)">
-        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <button class="portal-tab portal-tab--w4" data-world="4" onclick="switchWorld(4)" aria-label="دژ جهنمی">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 21h14"/>
+          <path d="M7 21V10h10v11"/>
+          <path d="M10 21v-3a2 2 0 0 1 4 0v3"/>
+          <path d="M7 10V7h2v2h2V7h2v2h2V7h2v3"/>
+          <path d="M12 1.5c1 1.2 1.8 2.2 1.8 3.5a1.8 1.8 0 1 1-3.6 0c0-1.3.8-2.3 1.8-3.5z"/>
+        </svg>
         <span class="portal-name">دژ جهنمی</span>
-        <span class="portal-counter font-pixel" id="portalCount4">2x XP</span>
+        <span class="portal-counter font-pixel" id="portalCount4"><span class="portal-xp-chip">۲× XP</span></span>
       </button>
     </div>
 
     <!-- SECTION SUMMARY (Progress bar with marker pip & focal percentage) -->
     <div id="worldBanner" class="section-summary">
+      <!-- Subtle Gothic Arch Motif Watermark ONLY behind world summary title area -->
+      <svg class="gothic-arch-bg" viewBox="0 0 200 260" fill="none" stroke="var(--gold)" stroke-width="1.2" aria-hidden="true">
+        <path d="M20 260 V 100 Q 20 20 100 0 Q 180 20 180 100 V 260" />
+        <path d="M40 260 V 110 Q 40 40 100 20 Q 160 40 160 110 V 260" />
+        <circle cx="100" cy="80" r="28" />
+        <path d="M100 52 V 108 M72 80 H 128" />
+      </svg>
       <div id="worldBannerTitle" style="display:none;"></div>
       <div class="summary-text-row">
         <span id="worldBannerSub" class="summary-title">جهان واژگان</span>
@@ -5536,22 +5765,28 @@
       </div>
     </div>
 
-    <!-- 5. Bottom Sheet: Locked Notice Modal -->
-    <div id="studyLockedSheet" class="study-bottom-sheet hidden" aria-modal="true" role="dialog" aria-labelledby="studySheetTitle" tabindex="-1">
-      <div id="studySheetBackdrop" class="study-sheet-backdrop"></div>
-      <div class="study-sheet-panel">
-        <div class="study-sheet-handle"></div>
-        <div class="study-sheet-icon">
-          <svg viewBox="0 0 24 24" class="g-icon" style="width:24px;height:24px;" aria-hidden="true">
-            <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-          </svg>
-        </div>
-        <div class="study-sheet-title" id="studySheetTitle">نبرد قفل است</div>
-        <div class="study-sheet-msg">برای ورود به نبرد، همه کارت‌ها و معنی‌هاشون رو حداقل یک‌بار ببین</div>
-        <div id="studySheetProgressSegs" class="study-sheet-progress-segs"></div>
-        <div id="studySheetCount" class="study-sheet-count">۰ از ۰ کارت دیده شد</div>
-        <button id="btnCloseStudySheet" type="button" class="btn-primary study-sheet-btn-close" aria-label="باشه، متوجه شدم">
+  </div>
+
+  <!-- 5. Bottom Sheet: Locked Notice Modal (Global Component for Map and Study - Task 4) -->
+  <div id="studyLockedSheet" class="study-bottom-sheet hidden" aria-modal="true" role="dialog" aria-labelledby="studySheetTitle" tabindex="-1">
+    <div id="studySheetBackdrop" class="study-sheet-backdrop"></div>
+    <div class="study-sheet-panel">
+      <div class="study-sheet-handle"></div>
+      <div class="study-sheet-icon">
+        <svg viewBox="0 0 24 24" class="g-icon" style="width:24px;height:24px;" aria-hidden="true">
+          <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+      <div class="study-sheet-title" id="studySheetTitle">نبرد قفل است</div>
+      <div class="study-sheet-msg" id="studySheetMsg">اول مرور این مرحله رو تموم کن تا بتونی وارد نبرد بشی</div>
+      <div id="studySheetProgressSegs" class="study-sheet-progress-segs"></div>
+      <div id="studySheetCount" class="study-sheet-count">۰ از ۰ کارت دیده شد</div>
+      <div class="study-sheet-actions">
+        <button id="btnStudySheetGoStudy" type="button" class="btn-primary study-sheet-btn-primary" aria-label="برو به مرور">
+          برو به مرور
+        </button>
+        <button id="btnCloseStudySheet" type="button" class="btn-ghost study-sheet-btn-secondary" aria-label="باشه">
           باشه
         </button>
       </div>
@@ -9351,6 +9586,10 @@ function showView(viewId) {
   const target = document.getElementById(viewId);
   if (target) target.classList.remove("hidden");
 
+  if (viewId === "viewMap") {
+    renderTowerMap();
+  }
+
   // Manage Native Bottom Navigation Bar
   const bottomNav = document.getElementById("bottomNav");
   if (bottomNav) {
@@ -9492,10 +9731,12 @@ function renderTowerMap() {
   const p2 = document.getElementById("portalCount2");
   const p3 = document.getElementById("portalCount3");
   const p4 = document.getElementById("portalCount4");
-  if (p1) p1.textContent = `${w1Completed}/${w1Stages.length}`;
-  if (p2) p2.textContent = `${w2Completed}/${w2Stages.length}`;
-  if (p3) p3.textContent = `${w3Completed}/${w3Stages.length}`;
-  if (p4) p4.textContent = w4Completed > 0 ? "فتح شد" : "2x XP";
+  if (p1) p1.textContent = `${toFaDigits(w1Completed)}/${toFaDigits(w1Stages.length)}`;
+  if (p2) p2.textContent = `${toFaDigits(w2Completed)}/${toFaDigits(w2Stages.length)}`;
+  if (p3) p3.textContent = `${toFaDigits(w3Completed)}/${toFaDigits(w3Stages.length)}`;
+  if (p4) {
+    p4.innerHTML = w4Completed > 0 ? `<span class="portal-xp-chip">فتح شد</span>` : `<span class="portal-xp-chip">۲× XP</span>`;
+  }
 
   // 2. Highlight active portal tab
   document.querySelectorAll(".portal-tab").forEach(tab => {
@@ -9671,67 +9912,93 @@ function renderTowerMap() {
     `;
     card.appendChild(cardMain);
 
-    // Progress bar with count
-    const totalWords = st.words.length;
+    // Real review seen count from loadSeenIds(st) (Task 4)
     const isStudied = user?.stats?.studiedStageIds?.includes(st.id) || completed.includes(st.id);
-    const progressCount = isCompleted ? totalWords : (isStudied ? Math.round(totalWords * 0.5) : 0);
-    const progressPct = isCompleted ? 100 : (isStudied ? 50 : 0);
+    const totalWords = (st.words && Array.isArray(st.words)) ? st.words.length : 0;
+    const seenSet = loadSeenIds(st);
+    const seenCount = seenSet.size;
+    const isReviewComplete = canBattleForStage(st);
+    const progressPct = totalWords > 0 ? Math.min(100, Math.round((seenCount / totalWords) * 100)) : 100;
 
     const progressRow = document.createElement("div");
     progressRow.className = "stage-progress-row";
     progressRow.innerHTML = `
       <div class="stage-progress-track">
-        <div class="stage-progress-fill" style="width: ${progressPct}%; background: ${currentCfg.accent};"></div>
+        <div class="stage-progress-fill ${isReviewComplete ? "stage-progress-fill--complete" : ""}" style="width: ${progressPct}%; background: ${isReviewComplete ? "var(--gold)" : currentCfg.accent};"></div>
       </div>
-      <span class="stage-progress-count">${progressCount}/${totalWords}</span>
+      <div class="stage-progress-meta">
+        ${isReviewComplete ? `
+          <span class="stage-complete-badge">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>مرور کامل شد</span>
+          </span>
+        ` : '<span></span>'}
+        <span class="stage-progress-count">${toFaDigits(seenCount)}/${toFaDigits(totalWords)}</span>
+      </div>
     `;
     card.appendChild(progressRow);
 
-    // Actions when unlocked
+    // Actions when unlocked (Task 4: Button Emphasis & Gating)
     if (isUnlocked) {
       const actionsDiv = document.createElement("div");
       actionsDiv.className = "stage-card-actions";
 
-      const studyBtn = document.createElement("button");
-      studyBtn.className = "btn-ghost tower-btn-action";
-      studyBtn.textContent = isStudied ? "مرور" : "یادگیری";
-      studyBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        playSelectSound();
-        openStudyMode(st);
-      });
-      actionsDiv.appendChild(studyBtn);
+      if (!isReviewComplete) {
+        // While review is incomplete:
+        // "مرور" is PRIMARY filled
+        const studyBtn = document.createElement("button");
+        studyBtn.className = "btn-primary tower-btn-action tower-btn-study-primary";
+        studyBtn.textContent = "مرور";
+        studyBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          playSelectSound();
+          openStudyMode(st);
+        });
+        actionsDiv.appendChild(studyBtn);
 
-      const battleBtn = document.createElement("button");
-      battleBtn.className = "btn-primary tower-btn-action";
-      if (isStudied) {
+        // "نبرد" is SECONDARY in locked look (muted, lock icon, dimmed text) that is still tappable
+        const battleBtn = document.createElement("button");
+        battleBtn.className = "btn-ghost tower-btn-action tower-btn-battle-locked";
+        battleBtn.setAttribute("aria-label", "نبرد (قفل - نیاز به مرور)");
+        battleBtn.textContent = "🔒 نبرد";
+        battleBtn.innerHTML = `
+          <svg viewBox="0 0 24 24" class="g-icon" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-left:4px;stroke:currentColor;fill:none;stroke-width:2;">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <span>نبرد</span>
+        `;
+        battleBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          playTone(140, 'square', 0.1);
+          openStudyLockedSheet(st);
+        });
+        actionsDiv.appendChild(battleBtn);
+      } else {
+        // When review is complete:
+        // "مرور" is OUTLINED (ghost)
+        const studyBtn = document.createElement("button");
+        studyBtn.className = "btn-ghost tower-btn-action";
+        studyBtn.textContent = "مرور";
+        studyBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          playSelectSound();
+          openStudyMode(st);
+        });
+        actionsDiv.appendChild(studyBtn);
+
+        // "نبرد" is PRIMARY filled
+        const battleBtn = document.createElement("button");
+        battleBtn.className = "btn-primary tower-btn-action tower-btn-battle-ready";
         battleBtn.textContent = "نبرد";
         battleBtn.addEventListener("click", (e) => {
           e.stopPropagation();
           playSelectSound();
           promptStartBattle(st);
         });
-      } else {
-        battleBtn.classList.add("tower-btn-battle--locked");
-        battleBtn.textContent = "🔒 نبرد";
-        battleBtn.style.opacity = "0.45";
-        battleBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          playTone(140, 'square', 0.1);
-          studyBtn.classList.remove("nudge-shake");
-          void studyBtn.offsetWidth;
-          studyBtn.classList.add("nudge-shake");
-          studyBtn.style.transition = "transform 0.15s ease, border-color 0.15s ease";
-          studyBtn.style.transform = "scale(1.08)";
-          studyBtn.style.borderColor = "var(--accent-gold)";
-          setTimeout(() => {
-            studyBtn.style.transform = "none";
-            studyBtn.style.borderColor = "";
-            studyBtn.classList.remove("nudge-shake");
-          }, 350);
-        });
+        actionsDiv.appendChild(battleBtn);
       }
-      actionsDiv.appendChild(battleBtn);
+
       card.appendChild(actionsDiv);
     }
 
@@ -9826,13 +10093,28 @@ function persistSeenIds() {
 
 function canBattleForStage(stage) {
   if (!stage) return false;
-  if (stage.isHellMix) return true;
+  // دژ جهنمی (Inferno Fortress) is excluded: has no review requirement
+  if (stage.isHellMix || stage.world === 4) return true;
   const words = stage.words || [];
+  // If a stage has no flashcards at all (total = 0), do not lock it
   if (words.length === 0) return true;
   const seen = loadSeenIds(stage);
-  return seen.size === words.length;
+  return seen.size >= words.length;
 }
+
+function useCanBattle(worldIdOrStage, stageId) {
+  let stage = null;
+  if (typeof worldIdOrStage === "object" && worldIdOrStage !== null) {
+    stage = worldIdOrStage;
+  } else if (typeof appState !== "undefined" && appState.stages) {
+    const sId = Number(stageId || worldIdOrStage);
+    stage = appState.stages.find(s => s.id === sId);
+  }
+  return canBattleForStage(stage);
+}
+
 window.canBattleForStage = canBattleForStage;
+window.useCanBattle = useCanBattle;
 
 let seenIds = new Set();
 let isTutorialActive = false;
@@ -10591,26 +10873,38 @@ function openPublicProfile(code) {
 }
 window.openPublicProfile = openPublicProfile;
 
-function openStudyLockedSheet() {
+let currentLockedSheetStage = null;
+
+function openStudyLockedSheet(targetStage) {
+  const stage = targetStage || studyStage;
+  currentLockedSheetStage = stage;
   const sheet = document.getElementById("studyLockedSheet");
   const countEl = document.getElementById("studySheetCount");
+  const msgEl = document.getElementById("studySheetMsg");
   const segsContainer = document.getElementById("studySheetProgressSegs");
   if (!sheet) return;
-  const total = studyDeck ? studyDeck.length : 0;
-  const seenCount = seenIds ? seenIds.size : 0;
+
+  const deck = (stage && stage.words) ? stage.words : (studyDeck || []);
+  const total = deck.length;
+  const seenSet = stage ? loadSeenIds(stage) : (seenIds || new Set());
+  const seenCount = seenSet.size;
+
+  if (msgEl) {
+    msgEl.textContent = "اول مرور این مرحله رو تموم کن تا بتونی وارد نبرد بشی";
+  }
   if (countEl) {
     countEl.textContent = `${toFaDigits(seenCount)} از ${toFaDigits(total)} کارت دیده شد`;
   }
-  if (segsContainer && studyDeck && studyStage) {
-    segsContainer.innerHTML = studyDeck.map(card => {
-      const isSeen = seenIds.has(getCardId(card, studyStage.id));
+  if (segsContainer && stage) {
+    segsContainer.innerHTML = deck.map(card => {
+      const isSeen = seenSet.has(getCardId(card, stage.id));
       return `<div class="study-sheet-seg ${isSeen ? "seen" : ""}"></div>`;
     }).join("");
   }
   window.studySheetPrevFocus = document.activeElement;
   sheet.classList.remove("hidden");
   setTimeout(() => {
-    document.getElementById("btnCloseStudySheet")?.focus();
+    document.getElementById("btnStudySheetGoStudy")?.focus();
   }, 40);
 }
 window.openStudyLockedSheet = openStudyLockedSheet;
@@ -10623,6 +10917,15 @@ function closeStudyLockedSheet() {
   }
 }
 window.closeStudyLockedSheet = closeStudyLockedSheet;
+
+document.getElementById("btnStudySheetGoStudy")?.addEventListener("click", () => {
+  playSelectSound();
+  const st = currentLockedSheetStage || studyStage;
+  closeStudyLockedSheet();
+  if (st) {
+    openStudyMode(st);
+  }
+});
 
 document.getElementById("btnCloseStudySheet")?.addEventListener("click", () => {
   playSelectSound();
