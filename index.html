@@ -638,9 +638,7 @@
       height: 60px;
       min-height: 56px;
       max-height: 64px;
-      background: rgba(24, 20, 16, 0.95);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(20, 17, 14, 0.96);
       border: 1px solid var(--gold-dim, rgba(201, 162, 77, 0.25));
       box-shadow: inset 0 0 0 1px rgba(143, 114, 71, 0.15), 0 4px 16px rgba(0, 0, 0, 0.4);
       border-radius: 14px;
@@ -731,9 +729,7 @@
       height: auto;
       min-height: auto;
       max-height: none;
-      background: rgba(24, 20, 16, 0.95);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(20, 17, 14, 0.96);
       border: 1px solid var(--gold-dim, rgba(201, 162, 77, 0.25));
       box-shadow: inset 0 0 0 1px rgba(143, 114, 71, 0.15), 0 4px 16px rgba(0, 0, 0, 0.4);
       border-radius: 14px;
@@ -1623,7 +1619,6 @@
       font-size: 1.08em;
       padding: 0 4px;
       animation: quizWordGradientShimmer 3s ease infinite, quizWordGlow 2s ease-in-out infinite alternate;
-      filter: drop-shadow(0 0 6px rgba(255, 180, 0, 0.45));
     }
 
     @keyframes quizWordGradientShimmer {
@@ -1633,8 +1628,8 @@
     }
 
     @keyframes quizWordGlow {
-      0% { filter: drop-shadow(0 0 4px rgba(255, 180, 0, 0.3)); }
-      100% { filter: drop-shadow(0 0 10px rgba(255, 140, 0, 0.7)); }
+      0% { opacity: 0.90; }
+      100% { opacity: 1; }
     }
 
     /* 1v1 Battle Actors on Ground line at 28% */
@@ -4843,6 +4838,9 @@
       transform-style: preserve-3d;
       cursor: grab;
     }
+    .study-card-box.is-dragging {
+      will-change: transform;
+    }
     .study-card-box:active {
       cursor: grabbing;
     }
@@ -5217,9 +5215,7 @@
     .study-sheet-backdrop {
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
+      background: rgba(10, 8, 7, 0.88);
     }
     .study-sheet-panel {
       position: relative;
@@ -7255,10 +7251,71 @@ let appState = {
 function saveLocal() {
   const grade = getCurrentUserGrade();
   const stages = STAGES_BY_GRADE[grade] || STAGES_BY_GRADE["10"];
-  localStorage.setItem(`gv_stages_g${grade}_v4`, JSON.stringify(stages));
-  localStorage.setItem("gv_stages_v351", JSON.stringify(stages));
+  const serializedStages = JSON.stringify(stages);
+  localStorage.setItem(`gv_stages_g${grade}_v4`, serializedStages);
+  localStorage.setItem("gv_stages_v351", serializedStages);
   localStorage.setItem("gv_students", JSON.stringify(appState.students));
   localStorage.setItem("gv_classLock", appState.classLock);
+}
+
+let saveLocalTimer = null;
+function scheduleSaveLocal(delayMs = 450) {
+  if (saveLocalTimer) clearTimeout(saveLocalTimer);
+  saveLocalTimer = setTimeout(() => {
+    saveLocalTimer = null;
+    saveLocal();
+  }, delayMs);
+}
+
+function flushSaveLocal() {
+  if (saveLocalTimer) {
+    clearTimeout(saveLocalTimer);
+    saveLocalTimer = null;
+    saveLocal();
+  }
+}
+
+let cloudSyncTimer = null;
+let pendingCloudStudent = null;
+function scheduleCloudSync(user, delayMs = 1500) {
+  if (!user) return;
+  pendingCloudStudent = user;
+  if (cloudSyncTimer) clearTimeout(cloudSyncTimer);
+  cloudSyncTimer = setTimeout(() => {
+    cloudSyncTimer = null;
+    const u = pendingCloudStudent;
+    pendingCloudStudent = null;
+    if (u && typeof syncStudentToCloud === "function") {
+      syncStudentToCloud(u);
+    }
+  }, delayMs);
+}
+
+function flushCloudSync() {
+  if (cloudSyncTimer) {
+    clearTimeout(cloudSyncTimer);
+    cloudSyncTimer = null;
+    const u = pendingCloudStudent;
+    pendingCloudStudent = null;
+    if (u && typeof syncStudentToCloud === "function") {
+      syncStudentToCloud(u);
+    }
+  }
+}
+
+if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+  window.addEventListener("pagehide", () => {
+    flushSaveLocal();
+    flushCloudSync();
+  });
+}
+if (typeof document !== "undefined" && typeof document.addEventListener === "function") {
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      flushSaveLocal();
+      flushCloudSync();
+    }
+  });
 }
 
 function mapStudentRow(row) {
@@ -8522,10 +8579,8 @@ function persistSeenIds() {
   if (user) {
     if (!user.seenCards) user.seenCards = {};
     user.seenCards[key] = arr;
-    saveLocal();
-    if (typeof syncStudentToCloud === "function") {
-      syncStudentToCloud(user);
-    }
+    scheduleSaveLocal(450);
+    scheduleCloudSync(user, 1500);
   }
 }
 
@@ -8874,8 +8929,8 @@ function applyCardFlipState() {
           if (!user.stats.studiedStageIds.includes(studyStage.id)) {
             user.stats.studiedStageIds.push(studyStage.id);
             user.stats.studiedStagesCount = user.stats.studiedStageIds.length;
-            saveLocal();
-            syncStudentToCloud(user);
+            scheduleSaveLocal(450);
+            scheduleCloudSync(user, 1500);
             checkAndAwardAchievements(user);
           }
         }
@@ -8890,24 +8945,17 @@ let pointerStartX = 0;
 let pointerStartY = 0;
 let currentDx = 0;
 let isAnimatingSwipe = false;
+let dragRafId = null;
+let pendingPointerX = 0;
+let pendingPointerY = 0;
 
 const studyCardEl = document.getElementById("studyCard");
 
-studyCardEl.addEventListener("pointerdown", (e) => {
-  if (isAnimatingSwipe) return;
-  isPointerDown = true;
-  pointerStartX = e.clientX;
-  pointerStartY = e.clientY;
-  currentDx = 0;
-  studyCardEl.style.transition = "none";
-  studyCardEl.style.cursor = "grabbing";
-  try { studyCardEl.setPointerCapture(e.pointerId); } catch (_) {}
-});
-
-studyCardEl.addEventListener("pointermove", (e) => {
+function updateDragTransform() {
+  dragRafId = null;
   if (!isPointerDown || isAnimatingSwipe) return;
-  const dx = e.clientX - pointerStartX;
-  const dy = e.clientY - pointerStartY;
+  const dx = pendingPointerX - pointerStartX;
+  const dy = pendingPointerY - pointerStartY;
 
   if (Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(dy)) {
     currentDx = dx;
@@ -8930,11 +8978,39 @@ studyCardEl.addEventListener("pointermove", (e) => {
       deck1.style.opacity = `${(0.85 + 0.15 * p).toFixed(2)}`;
     }
   }
+}
+
+studyCardEl.addEventListener("pointerdown", (e) => {
+  if (isAnimatingSwipe) return;
+  isPointerDown = true;
+  pointerStartX = e.clientX;
+  pointerStartY = e.clientY;
+  pendingPointerX = e.clientX;
+  pendingPointerY = e.clientY;
+  currentDx = 0;
+  studyCardEl.classList.add("is-dragging");
+  studyCardEl.style.transition = "none";
+  studyCardEl.style.cursor = "grabbing";
+  try { studyCardEl.setPointerCapture(e.pointerId); } catch (_) {}
+});
+
+studyCardEl.addEventListener("pointermove", (e) => {
+  if (!isPointerDown || isAnimatingSwipe) return;
+  pendingPointerX = e.clientX;
+  pendingPointerY = e.clientY;
+  if (!dragRafId) {
+    dragRafId = requestAnimationFrame(updateDragTransform);
+  }
 });
 
 const finishPointer = (e) => {
   if (!isPointerDown || isAnimatingSwipe) return;
   isPointerDown = false;
+  if (dragRafId) {
+    cancelAnimationFrame(dragRafId);
+    dragRafId = null;
+  }
+  studyCardEl.classList.remove("is-dragging");
   studyCardEl.style.cursor = "grab";
   try { studyCardEl.releasePointerCapture(e.pointerId); } catch (_) {}
 
@@ -9075,8 +9151,9 @@ function flyCardAndAdvance(dir) {
     studyCardEl.style.transition = "none";
     studyCardEl.style.transform = "rotateY(0deg)";
     studyCardEl.style.opacity = "1";
-    void studyCardEl.offsetWidth; // Reflow
-    isAnimatingSwipe = false;
+    requestAnimationFrame(() => {
+      isAnimatingSwipe = false;
+    });
   }, 250);
 }
 
@@ -9254,7 +9331,9 @@ function togglePinAchievement(id) {
     user.pinnedAchievements.push(id);
   }
 
+  flushSaveLocal();
   saveLocal();
+  flushCloudSync();
   syncStudentToCloud(user);
   renderProfileAchievementsGrid(user);
 }
@@ -10413,8 +10492,9 @@ function updateEnemyHP() {
     fill.style.width = `${pct}%`;
     if (pct < prevWidth) {
       fill.classList.remove("hp-flash");
-      void fill.offsetWidth;
-      fill.classList.add("hp-flash");
+      requestAnimationFrame(() => {
+        fill.classList.add("hp-flash");
+      });
       setTimeout(() => fill.classList.remove("hp-flash"), 320);
     }
   }
@@ -10700,8 +10780,9 @@ function renderNextQuizQuestion() {
   const phaseQuizEl = document.getElementById("phaseQuiz");
   if (phaseQuizEl) {
     phaseQuizEl.classList.remove("phase-quiz-enter");
-    void phaseQuizEl.offsetWidth;
-    phaseQuizEl.classList.add("phase-quiz-enter");
+    requestAnimationFrame(() => {
+      phaseQuizEl.classList.add("phase-quiz-enter");
+    });
   }
   document.getElementById("phaseQuiz").classList.remove("hidden");
   document.getElementById("phaseVictory").classList.add("hidden");
@@ -10945,7 +11026,7 @@ function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
       updateEnemyHP();
       updateLocksRow(masteredCount, totalInitialWords);
       document.getElementById("arenaCounter").textContent = `${masteredCount}/${totalInitialWords}`;
-      saveLocal();
+      scheduleSaveLocal(450);
 
       // Check if last word conquered
       if (quizQueue.length === 0) {
@@ -11026,8 +11107,8 @@ function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
       setKnightState("damage");
 
       user.mistakes[item.word] = (user.mistakes[item.word] || 0) + 1;
-      saveLocal();
-      syncStudentToCloud(user);
+      scheduleSaveLocal(450);
+      scheduleCloudSync(user, 1500);
 
       // Check Defeat Condition (all 3 candles extinguished)
       if (mistakesThisStage >= 3) {
@@ -11063,6 +11144,8 @@ function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
 }
 
 function completeStageDefeat() {
+  flushSaveLocal();
+  flushCloudSync();
   clearInterval(arenaTimerInterval);
   setKnightState("kneel");
   if (typeof AudioEngine !== "undefined" && typeof AudioEngine.handleBattleDefeat === "function") {
@@ -11122,7 +11205,9 @@ function completeStageVictory() {
     };
   }
 
+  flushSaveLocal();
   saveLocal();
+  flushCloudSync();
   syncStudentToCloud(user);
 
   // Check achievements

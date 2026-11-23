@@ -298,21 +298,8 @@
       }
     }
 
-    // 6. ENEMY SPRITE GLOW & DOWNBEAT FLICKER
-    if (enemySprite) {
-      if (targetCfg.enemyGlow) {
-        if (isDownbeatActive && targetCfg.downbeatFlicker && !reduced) {
-          enemySprite.style.filter = 'drop-shadow(0 0 12px rgba(255, 60, 60, 0.95)) brightness(1.35)';
-        } else if (!reduced) {
-          const glowAlpha = (0.35 + 0.35 * beatPulseFactor).toFixed(3);
-          enemySprite.style.filter = `drop-shadow(0 0 8px rgba(220, 40, 40, ${glowAlpha}))`;
-        } else {
-          enemySprite.style.filter = 'drop-shadow(0 0 6px rgba(220, 40, 40, 0.45))';
-        }
-      } else {
-        enemySprite.style.filter = '';
-      }
-    }
+    // 6. ENEMY SPRITE GLOW & DOWNBEAT FLICKER (Optimized: per-frame filter mutation removed for 60fps mobile GPU compositing)
+    // Avoid re-applying drop-shadow per 16ms frame; static glow filter is set on level transitions in start() and intensity listener.
 
     // 7. SCENE SHAKE (Downbeat shake or Kill Moment shake)
     let hasShake = false;
@@ -417,6 +404,9 @@
     if (typeof window !== 'undefined') {
       window.arenaAmbientSpeedMult = initCfg.ambientSpeedMult || 1.0;
     }
+    if (enemySprite) {
+      enemySprite.style.filter = initCfg.enemyGlow ? 'drop-shadow(0 0 8px rgba(220, 40, 40, 0.5))' : '';
+    }
 
     // Subscribe to BattleIntensity changes
     if (typeof root.BattleIntensity !== 'undefined' && typeof root.BattleIntensity.subscribe === 'function') {
@@ -426,6 +416,9 @@
         const cfg = LEVEL_CONFIG[targetLevel] || LEVEL_CONFIG[0];
         if (typeof window !== 'undefined') {
           window.arenaAmbientSpeedMult = cfg.ambientSpeedMult || 1.0;
+        }
+        if (enemySprite) {
+          enemySprite.style.filter = cfg.enemyGlow ? 'drop-shadow(0 0 8px rgba(220, 40, 40, 0.5))' : '';
         }
       });
     }
