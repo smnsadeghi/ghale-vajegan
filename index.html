@@ -441,6 +441,20 @@
       animation: viewFadeIn 180ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
+    /* Battle Screen Full Viewport Flex Layout */
+    #viewArena:not(.hidden) {
+      flex: 1 1 auto;
+      min-height: 100vh;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+      box-sizing: border-box;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       #viewAuth:not(.hidden),
       #viewMap:not(.hidden),
@@ -724,7 +738,7 @@
       clip-path: none !important;
     }
 
-    /* Battle Header Row 1: Exit button on right, Centered lesson title, Stopwatch on left */
+    /* Battle Header Row 1: Exit button on right (chevron 44px), Centered lesson title, Stopwatch on left */
     .arena-row-1 {
       display: flex;
       align-items: center;
@@ -738,10 +752,11 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 4px;
       min-width: 44px;
       min-height: 44px;
-      padding: 0 8px;
+      width: 44px;
+      height: 44px;
+      padding: 0;
       background: transparent;
       border: none;
       color: var(--text-muted, #8c836f);
@@ -751,6 +766,7 @@
       border-radius: 8px;
       transition: color 0.18s ease, background 0.18s ease;
       touch-action: manipulation;
+      flex-shrink: 0;
     }
     .arena-exit-btn:hover,
     .arena-exit-btn:active,
@@ -761,20 +777,24 @@
     }
     .arena-exit-btn .g-icon,
     .top-hud-btn .g-icon {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
     }
     .arena-title,
     .arena-stage-title {
       flex: 1;
       text-align: center;
-      font-size: 0.94rem;
+      font-size: clamp(13px, 3.8vw, 15px);
       font-weight: 800;
+      line-height: 1.25;
       color: var(--text, #f1e8d4);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
       padding: 0 4px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow:ellipsis;
+      word-break: break-word;
     }
     .arena-timer-wrap {
       display: inline-flex;
@@ -783,6 +803,7 @@
       gap: 5px;
       min-width: 72px;
       color: var(--gold, #c9a24d);
+      flex-shrink: 0;
     }
     .arena-clock-icon {
       width: 15px;
@@ -805,7 +826,7 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      min-height: 28px;
+      min-height: 30px;
       gap: 8px;
       padding: 0 2px 2px;
       box-sizing: border-box;
@@ -952,19 +973,22 @@
     .arena-counter-wrap {
       display: inline-flex;
       align-items: center;
-      justify-content: flex-end;
+      justify-content: center;
       min-width: 48px;
       flex-shrink: 0;
+      padding: 3px 8px;
+      border: 1px solid var(--border-subtle, rgba(201, 162, 77, 0.28));
+      border-radius: 9999px;
+      background: rgba(14, 12, 10, 0.6);
+      box-sizing: border-box;
     }
     .arena-counter {
       font-family: 'Press Start 2P', monospace, sans-serif;
-      font-size: 0.76rem;
-      color: var(--text-muted, #8c836f);
+      font-size: 0.66rem;
+      color: var(--gold, #c9a24d);
+      direction: ltr;
+      unicode-bidi: isolate;
       letter-spacing: 0.5px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 6px;
-      padding: 3px 7px;
       white-space: nowrap;
     }
 
@@ -1469,6 +1493,8 @@
       color: #e898a0;
       font-weight: 800;
       letter-spacing: 0.4px;
+      direction: ltr;
+      unicode-bidi: isolate;
     }
 
     .enemy-hp-track {
@@ -1649,9 +1675,8 @@
 
     /* RPG Dialog Glass Card */
     .rpg-dialog {
-      flex: 0 0 auto;
-      min-height: auto;
-      flex-shrink: 0;
+      flex: 1;
+      min-height: 0;
       display: flex;
       flex-direction: column;
       background-color: var(--surface);
@@ -1659,20 +1684,21 @@
       border: 2px solid var(--line-black);
       box-shadow: inset 0 0 0 1px var(--line-gold), 0 8px 24px rgba(5, 4, 3, 0.6);
       border-radius: 16px;
-      padding: 10px 12px;
+      padding: 12px 14px;
       margin-bottom: 0;
       box-sizing: border-box;
-      overflow: hidden;
+      overflow: visible;
       clip-path: none !important;
+      position: relative;
     }
 
     .rpg-dialog-inner {
       display: flex;
       flex-direction: column;
-      flex: 0 0 auto;
+      flex: 1;
       min-height: 0;
-      justify-content: flex-start;
-      gap: 8px;
+      justify-content: space-between;
+      gap: 10px;
     }
 
     .rpg-header {
@@ -1690,14 +1716,46 @@
     }
 
     .combo-badge {
+      position: absolute;
+      top: 0;
+      left: 14px;
+      transform: translateY(-50%);
+      z-index: 10;
       background: color-mix(in srgb, var(--gold) 16%, var(--surface));
       border: 1px solid var(--gold);
-      box-shadow: 0 0 8px rgba(201, 162, 94, 0.3);
+      box-shadow: 0 0 10px rgba(201, 162, 94, 0.35);
       color: var(--gold);
       border-radius: 9999px;
-      padding: 2px 8px;
+      padding: 3px 10px;
       font-size: 0.68rem;
       font-weight: 900;
+      white-space: nowrap;
+      pointer-events: none;
+      direction: ltr;
+      unicode-bidi: isolate;
+    }
+
+    @keyframes comboPop {
+      0% {
+        transform: translateY(-50%) scale(0.8);
+      }
+      70% {
+        transform: translateY(-50%) scale(1.08);
+      }
+      100% {
+        transform: translateY(-50%) scale(1);
+      }
+    }
+
+    .combo-badge.pop-anim {
+      animation: comboPop 200ms ease-out forwards;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .combo-badge.pop-anim {
+        animation: none !important;
+        transform: translateY(-50%) !important;
+      }
     }
 
     .hell-badge {
@@ -1715,6 +1773,8 @@
       flex-direction: column;
       flex: 1;
       min-height: 0;
+      justify-content: space-between;
+      gap: 10px;
     }
 
     .smart-retry-tag {
@@ -1725,18 +1785,22 @@
     }
 
     .rpg-question {
+      position: relative;
       background: rgba(14, 12, 10, 0.6);
       border: 1px solid var(--border-subtle, rgba(201, 162, 77, 0.18));
       border-radius: 12px;
-      padding: 7px 12px 9px;
-      margin-bottom: 8px;
-      flex-shrink: 0;
+      padding: 16px 14px;
+      margin-bottom: 0;
+      flex: 1 0 auto;
+      min-height: 96px;
+      max-height: 190px;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
+      gap: 4px;
+      box-sizing: border-box;
     }
 
     .qz-prompt-text {
@@ -1746,7 +1810,7 @@
       justify-content: center;
       width: 100%;
       text-align: center;
-      gap: 3px;
+      gap: 4px;
     }
 
     .quiz-prompt-lead {
@@ -1761,7 +1825,7 @@
     .quiz-word-highlight {
       display: block;
       width: 100%;
-      font-size: 1.45rem; /* 22-24px */
+      font-size: clamp(22px, 3.4dvh, 30px);
       font-weight: 900;
       color: var(--ember, #d9703a) !important;
       -webkit-text-fill-color: var(--ember, #d9703a) !important;
@@ -1770,7 +1834,7 @@
       word-break: break-word;
       overflow-wrap: break-word;
       letter-spacing: 0.4px;
-      text-shadow: 0 0 10px rgba(217, 112, 58, 0.4);
+      text-shadow: 0 0 12px rgba(217, 112, 58, 0.4);
       filter: drop-shadow(0 0 6px rgba(217, 112, 58, 0.3));
     }
 
@@ -1842,63 +1906,26 @@
       }
     }
 
-    /* Tiny Screen / Short Viewport Edge Cases (360x640) */
-    @media (max-height: 700px), (max-width: 370px) {
-      .stage-wrapper {
-        max-height: 180px;
-        min-height: 140px;
-        margin-bottom: 4px;
-      }
-      .top-hud.hud-arena {
-        padding: 4px 8px;
-        gap: 4px;
-        margin-bottom: 4px;
-      }
-      .arena-row-1 {
-        min-height: 38px;
-      }
-      .rpg-dialog {
-        padding: 6px 10px;
-      }
-      .rpg-question {
-        padding: 5px 8px 6px;
-        margin-bottom: 5px;
-      }
-      .quiz-prompt-lead {
-        font-size: 0.78rem;
-      }
-      .quiz-target-word,
-      .quiz-word-highlight {
-        font-size: 1.25rem;
-      }
-      .rpg-options-list {
-        gap: 5px;
-      }
-      .rpg-option-btn {
-        min-height: 42px;
-        padding: 5px 8px;
-        font-size: 0.8rem;
-      }
-    }
-
     .rpg-options-list {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      flex: 1;
-      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      margin-top: auto;
+      flex-shrink: 0;
     }
 
     .rpg-option-btn {
       position: relative;
-      min-height: 48px;
+      width: 100%;
+      min-height: clamp(60px, 8.5dvh, 88px);
       height: auto;
-      padding: 7px 10px;
+      padding: 10px 14px;
       font-family: inherit;
-      font-size: 0.85rem;
+      font-size: 16px;
       font-weight: 700;
-      line-height: 1.28;
-      border-radius: 10px;
+      line-height: 1.35;
+      border-radius: 12px;
       border: 1px solid var(--gold-dim, rgba(201, 162, 77, 0.22));
       box-shadow: inset 0 0 0 1px rgba(143, 114, 71, 0.12), 0 2px 6px rgba(0, 0, 0, 0.35);
       background: var(--surface-elevated, #201a14);
@@ -1906,7 +1933,7 @@
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      gap: 6px;
+      gap: 12px;
       cursor: pointer;
       text-align: right;
       transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease, opacity 0.2s ease, box-shadow 0.15s ease;
@@ -1933,17 +1960,17 @@
     }
 
     .rpg-option-btn .opt-box {
-      width: 18px;
-      height: 18px;
+      width: 24px;
+      height: 24px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border-radius: 4px;
+      border-radius: 6px;
       background: rgba(14, 12, 10, 0.6);
-      border: 1px solid rgba(201, 162, 77, 0.2);
-      color: var(--text-muted, #8c836f);
+      border: 1px solid rgba(201, 162, 77, 0.25);
+      color: var(--gold, #c9a24d);
       font-family: 'Press Start 2P', monospace;
-      font-size: 0.58rem;
+      font-size: 0.7rem;
       flex-shrink: 0;
       transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
     }
@@ -1951,12 +1978,66 @@
     .rpg-option-btn .opt-text {
       flex: 1;
       text-align: right;
+      font-size: 16px;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-overflow: ellipsis;
       word-break: break-word;
+    }
+
+    /* Short Viewport Breakpoint: 2-column (2x2) grid when viewport height < 700px */
+    @media (max-height: 699px) {
+      .stage-wrapper {
+        max-height: 180px;
+        min-height: 140px;
+        margin-bottom: 4px;
+      }
+      .top-hud.hud-arena {
+        padding: 4px 8px;
+        gap: 4px;
+        margin-bottom: 4px;
+      }
+      .arena-row-1 {
+        min-height: 38px;
+      }
+      .rpg-dialog {
+        padding: 8px 10px;
+      }
+      .rpg-question {
+        padding: 8px 10px;
+        min-height: 80px;
+        max-height: 140px;
+      }
+      .quiz-prompt-lead {
+        font-size: 0.78rem;
+      }
+      .quiz-target-word,
+      .quiz-word-highlight {
+        font-size: 1.25rem;
+      }
+      .rpg-options-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        margin-top: auto;
+      }
+      .rpg-option-btn {
+        min-height: 46px;
+        padding: 6px 8px;
+        font-size: 0.85rem;
+        gap: 6px;
+      }
+      .rpg-option-btn .opt-box {
+        width: 18px;
+        height: 18px;
+        font-size: 0.58rem;
+        border-radius: 4px;
+      }
+      .rpg-option-btn .opt-text {
+        font-size: 0.85rem;
+      }
     }
 
     .rpg-option-btn .opt-status-icon {
@@ -5801,9 +5882,8 @@
       <div class="arena-row-1">
         <button id="btnBackToMap" class="arena-exit-btn top-hud-btn" title="بازگشت به نقشه" aria-label="بازگشت به نقشه">
           <svg class="g-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-          <span>نقشه</span>
         </button>
-        <div id="arenaStageTitle" class="arena-title arena-stage-title" style="text-overflow:ellipsis;">دوئل واژگان</div>
+        <div id="arenaStageTitle" class="arena-title arena-stage-title" title="دوئل واژگان">دوئل واژگان</div>
         <div class="arena-timer-wrap" title="زمان نبرد" aria-label="زمان نبرد" aria-live="off">
           <svg class="arena-clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="9"/>
@@ -5858,7 +5938,7 @@
         </div>
 
         <div class="arena-counter-wrap">
-          <span id="arenaCounter" class="arena-counter font-pixel">0/10</span>
+          <span id="arenaCounter" class="arena-counter font-pixel" dir="ltr">0/10</span>
         </div>
       </div>
     </div>
@@ -5905,9 +5985,8 @@
             <span id="enemyNameLabel" class="enemy-name-label">غول گورستان</span>
           </div>
           <div class="enemy-hud-status enemy-hp-status-group">
-            <span id="comboBadge" class="combo-badge font-pixel hidden">x3 COMBO</span>
             <span id="hellBonusBadge" class="hell-badge font-pixel hidden">2x XP</span>
-            <span id="enemyHpNum" class="enemy-hp-num font-pixel">10 / 10</span>
+            <span id="enemyHpNum" class="enemy-hp-num font-pixel" dir="ltr">10 / 10</span>
           </div>
         </div>
         <div class="enemy-hp-track">
@@ -5933,6 +6012,7 @@
             [تکرار هوشمند • واژه دارای چالش]
           </div>
           <div class="rpg-question" role="heading" aria-level="2">
+            <span id="comboBadge" class="combo-badge font-pixel hidden" dir="ltr">x3 COMBO</span>
             <div id="qzPrompt" class="qz-prompt-text">معنای صحیح واژه چیست؟</div>
           </div>
 
@@ -11188,10 +11268,15 @@ function updateLocksRow(mastered, total) {
 
 function updateComboBadge() {
   const badge = document.getElementById("comboBadge");
+  if (!badge) return;
   if (comboCount >= 3) {
     badge.textContent = `x3 COMBO (${comboCount})`;
     badge.classList.remove("hidden");
+    badge.classList.remove("pop-anim");
+    void badge.offsetWidth;
+    badge.classList.add("pop-anim");
   } else {
+    badge.classList.remove("pop-anim");
     badge.classList.add("hidden");
   }
 }
@@ -11973,7 +12058,10 @@ function updateEnemyHP() {
       setTimeout(() => fill.classList.remove("hp-flash"), 320);
     }
   }
-  if (num) num.textContent = `${remaining} / ${total}`;
+  if (num) {
+    num.setAttribute("dir", "ltr");
+    num.textContent = `${remaining} / ${total}`;
+  }
 }
 
 function startBattleMode(stage, isRanked = false) {
@@ -12095,7 +12183,12 @@ function startBattleMode(stage, isRanked = false) {
     hellBadge.classList.add("hidden");
   }
 
-  document.getElementById("arenaStageTitle").textContent = stage.title.split(":")[0];
+  const stageTitleEl = document.getElementById("arenaStageTitle");
+  if (stageTitleEl) {
+    const fullStageTitle = stage.title ? stage.title.split(":")[0].trim() : "دوئل واژگان";
+    stageTitleEl.textContent = fullStageTitle;
+    stageTitleEl.setAttribute("title", fullStageTitle);
+  }
   document.getElementById("arenaCounter").textContent = `0/${totalInitialWords}`;
   document.getElementById("gateGlow")?.classList.remove("gate-open");
 
