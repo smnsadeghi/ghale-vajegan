@@ -1,0 +1,18 @@
+{
+ "x2": {
+  "cell_w": 320,
+  "cell_h": 252,
+  "floor_y": 248,
+  "cols": 4,
+  "rows": 4
+ },
+ "x1": {
+  "cell_w": 160,
+  "cell_h": 126,
+  "floor_y": 124,
+  "cols": 4,
+  "rows": 4
+ },
+ "residual_magenta_px": 2,
+ "opaque_px": 313450
+}

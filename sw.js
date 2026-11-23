@@ -1,4 +1,7 @@
-const CACHE_NAME = 'shovalie-vajeha-v5.1.0';
+// const CACHE_NAME = 'shovalie-vajeha-v5.1.0';
+// const CACHE_NAME = 'shovalie-vajeha-v5.2.0';
+// const CACHE_NAME = 'shovalie-vajeha-v5.3.0';
+const CACHE_NAME = 'shovalie-vajeha-v6.0.0';
 const ASSETS = [
   './',
   './index.html',
@@ -6,6 +9,23 @@ const ASSETS = [
   './icon.svg',
   './icon-192.png',
   './icon-512.png',
+  './icon-maskable-512.png',
+  './apple-touch-icon.png',
+  './favicon-32.png',
+  './assets/redesign/bg_w1.webp',
+  './assets/redesign/bg_w2.webp',
+  './assets/redesign/bg_w3.webp',
+  './assets/redesign/bg_w4.webp',
+  './assets/redesign/sprites/knight_x2.webp',
+  './assets/redesign/sprites/knight_meta.json',
+  './assets/redesign/sprites/enemy_w1_x2.webp',
+  './assets/redesign/sprites/enemy_w1_meta.json',
+  './assets/redesign/sprites/enemy_w2_x2.webp',
+  './assets/redesign/sprites/enemy_w2_meta.json',
+  './assets/redesign/sprites/enemy_w3_x2.webp',
+  './assets/redesign/sprites/enemy_w3_meta.json',
+  './assets/redesign/sprites/enemy_w4_x2.webp',
+  './assets/redesign/sprites/enemy_w4_meta.json',
   './assets/world1_bg.webp',
   './assets/world2_bg.webp',
   './assets/world3_bg.webp',

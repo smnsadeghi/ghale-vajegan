@@ -1,0 +1,12 @@
+{
+  "name": "enemy_w4",
+  "cellSize": 240,
+  "rows": 4,
+  "cols": 4,
+  "baseline": 224,
+  "sourceFile": "enemy_w4.png",
+  "edgeFringePixels": 0,
+  "bodyTonePixels": 17446,
+  "totalFringePixels": 17446,
+  "suspiciousFrames": []
+}

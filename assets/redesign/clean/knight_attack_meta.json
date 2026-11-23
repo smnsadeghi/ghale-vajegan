@@ -1,0 +1,12 @@
+{
+  "name": "knight_attack",
+  "cellSize": 128,
+  "rows": 5,
+  "cols": 1,
+  "baseline": 112,
+  "sourceFile": "knight_attack.webp",
+  "edgeFringePixels": 0,
+  "bodyTonePixels": 0,
+  "totalFringePixels": 0,
+  "suspiciousFrames": []
+}

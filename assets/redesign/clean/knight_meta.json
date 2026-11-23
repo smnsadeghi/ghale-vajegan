@@ -1,0 +1,12 @@
+{
+  "name": "knight",
+  "cellSize": 144,
+  "rows": 4,
+  "cols": 4,
+  "baseline": 128,
+  "sourceFile": "knight.png",
+  "edgeFringePixels": 0,
+  "bodyTonePixels": 11698,
+  "totalFringePixels": 11698,
+  "suspiciousFrames": []
+}

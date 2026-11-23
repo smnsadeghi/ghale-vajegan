@@ -1,0 +1,12 @@
+{
+  "name": "knight_run",
+  "cellSize": 208,
+  "rows": 1,
+  "cols": 1,
+  "baseline": 192,
+  "sourceFile": "knight_run.webp",
+  "edgeFringePixels": 0,
+  "bodyTonePixels": 0,
+  "totalFringePixels": 0,
+  "suspiciousFrames": []
+}

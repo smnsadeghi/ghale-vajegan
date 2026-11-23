@@ -1,0 +1,12 @@
+{
+  "name": "knight_idle",
+  "cellSize": 208,
+  "rows": 1,
+  "cols": 1,
+  "baseline": 192,
+  "sourceFile": "knight_idle.webp",
+  "edgeFringePixels": 0,
+  "bodyTonePixels": 0,
+  "totalFringePixels": 0,
+  "suspiciousFrames": []
+}

@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>پیش‌نمایش و بررسی هم‌خطی اسپریت‌ها | شوالیه واژه‌ها</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #09090b;
+      --card-bg: #141316;
+      --card-border: #2c2830;
+      --accent: #d4a359;
+      --accent-hover: #e5b974;
+      --text: #ede8f0;
+      --text-muted: #958f9e;
+      --danger: #cf4d4d;
+      --success: #43a047;
+      --guide-line: rgba(220, 50, 50, 0.7);
+      --center-line: rgba(212, 163, 89, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 24px 16px 80px;
+      direction: rtl;
+      line-height: 1.5;
+    }
+
+    .header {
+      max-width: 1100px;
+      margin: 0 auto 24px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--accent);
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .header p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* Global Toolbar */
+    .toolbar {
+      max-width: 1100px;
+      margin: 0 auto 24px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toolbar-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .btn {
+      background: #201d24;
+      border: 1px solid #36303d;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      background: #2b2732;
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+
+    select, input[type="range"] {
+      accent-color: var(--accent);
+    }
+
+    select {
+      background: #201d24;
+      border: 1px solid #36303d;
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.82rem;
+    }
+
+    /* Tabs */
+    .tabs-container {
+      max-width: 1100px;
+      margin: 0 auto 20px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+
+    .tab-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+      border-color: #4b4455;
+    }
+
+    .tab-btn.active {
+      background: #221f28;
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 12px rgba(212, 163, 89, 0.15);
+    }
+
+    /* Main Container */
+    .main-view {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .sheet-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .sheet-card.hidden {
+      display: none;
+    }
+
+    .sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #231f28;
+    }
+
+    .sheet-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sheet-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: #1a1820;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid #302b38;
+    }
+
+    /* Animation Row Row */
+    .anim-row {
+      background: #100f13;
+      border: 1px solid #232029;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .anim-row-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .anim-row-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .anim-row-title span.badge {
+      font-size: 0.72rem;
+      background: #27232e;
+      color: var(--accent);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: normal;
+    }
+
+    .anim-row-body {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 20px;
+    }
+
+    /* The Animated Frame Viewport */
+    .sprite-animated-box {
+      position: relative;
+      background-repeat: no-repeat;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      image-rendering: -moz-crisp-edges;
+      border: 1px solid #36303d;
+      border-radius: 6px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    /* Background Modes */
+    .bg-dark {
+      background-color: #0a0a0d !important;
+    }
+    .bg-checker {
+      background-image: 
+        linear-gradient(45deg, #1b1b22 25%, transparent 25%), 
+        linear-gradient(-45deg, #1b1b22 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #1b1b22 75%), 
+        linear-gradient(-45deg, transparent 75%, #1b1b22 75%) !important;
+      background-size: 16px 16px !important;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0px !important;
+      background-color: #111116 !important;
+    }
+    .bg-magenta {
+      background-color: #ff00ff !important;
+    }
+    .bg-arena {
+      background-color: #171513 !important;
+      background-image: radial-gradient(circle at 50% 70%, #2e261f 0%, #100e0d 100%) !important;
+    }
+
+    /* Visual Guides */
+    .guide-ground {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 70%;
+      height: 1px;
+      background: var(--guide-line);
+      z-index: 5;
+      pointer-events: none;
+      box-shadow: 0 0 4px rgba(220, 50, 50, 0.8);
+    }
+
+    .guide-center {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 1px;
+      background: var(--center-line);
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .guide-label {
+      position: absolute;
+      left: 4px;
+      top: calc(70% - 14px);
+      font-size: 0.6rem;
+      color: #ff6b6b;
+      z-index: 6;
+      pointer-events: none;
+      font-weight: 700;
+      text-shadow: 0 1px 2px #000;
+    }
+
+    /* Static Frame Strip */
+    .frame-strip-container {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .strip-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .frame-strip {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .frame-item {
+      position: relative;
+      border: 1px solid #2d2836;
+      border-radius: 6px;
+      overflow: hidden;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      image-rendering: -moz-crisp-edges;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .frame-item:hover {
+      border-color: var(--accent);
+    }
+
+    .frame-item-number {
+      position: absolute;
+      top: 3px;
+      right: 4px;
+      font-size: 0.65rem;
+      color: #ede8f0;
+      background: rgba(0, 0, 0, 0.75);
+      padding: 1px 5px;
+      border-radius: 3px;
+      z-index: 6;
+      font-weight: 700;
+    }
+
+    /* CSS Animations with steps(4) */
+    @keyframes anim-steps-512 {
+      from { background-position-x: 0px; }
+      to { background-position-x: -512px; }
+    }
+
+    @keyframes anim-steps-768 {
+      from { background-position-x: 0px; }
+      to { background-position-x: -768px; }
+    }
+
+    .anim-512-playing {
+      animation: anim-steps-512 var(--anim-duration, 0.8s) steps(4) infinite;
+    }
+
+    .anim-768-playing {
+      animation: anim-steps-768 var(--anim-duration, 0.8s) steps(4) infinite;
+    }
+
+    .paused {
+      animation-play-state: paused !important;
+    }
+
+    /* Missing file fallback banner */
+    .status-banner {
+      background: #1c1514;
+      border: 1px solid #4a2820;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.85rem;
+    }
+    .status-banner.ok {
+      background: #121c15;
+      border-color: #1e4a28;
+      color: #9fe6ab;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>⚔️ بررسی چشمی اسپریت‌ها و انیمیشن‌ها | شوالیه واژه‌ها</h1>
+    <p>بررسی هم‌خطی فریم‌ها (steps(4))، تراز خط پای کاراکتر (~۷۰٪)، و تست ترانسپرنسی ماژنتا</p>
+  </div>
+
+  <!-- Global Toolbar -->
+  <div class="toolbar">
+    <!-- Background Mode -->
+    <div class="toolbar-group">
+      <span class="toolbar-label">پس‌زمینه:</span>
+      <button class="btn active" onclick="setBg('checker', this)">شطرنجی</button>
+      <button class="btn" onclick="setBg('dark', this)">تیره (بازی)</button>
+      <button class="btn" onclick="setBg('arena', this)">صحنه نبرد</button>
+      <button class="btn" onclick="setBg('magenta', this)">تست ماژنتا</button>
+    </div>
+
+    <!-- Guides -->
+    <div class="toolbar-group">
+      <span class="toolbar-label">راهنما:</span>
+      <button class="btn active" id="btnGuideGround" onclick="toggleGuide('ground', this)">خط کف (۷۰٪)</button>
+      <button class="btn active" id="btnGuideCenter" onclick="toggleGuide('center', this)">خط وسط</button>
+    </div>
+
+    <!-- Playback -->
+    <div class="toolbar-group">
+      <span class="toolbar-label">پخش:</span>
+      <button class="btn" id="btnTogglePlay" onclick="toggleGlobalPlay(this)">توقف ⏸</button>
+      <span class="toolbar-label">سرعت:</span>
+      <select id="speedSelect" onchange="changeSpeed(this.value)">
+        <option value="1.2s">آهسته (1.2s)</option>
+        <option value="0.8s" selected>عادی (0.8s)</option>
+        <option value="0.5s">سریع (0.5s)</option>
+        <option value="0.3s">بسیار سریع (0.3s)</option>
+      </select>
+    </div>
+
+    <!-- Zoom -->
+    <div class="toolbar-group">
+      <span class="toolbar-label">بزرگنمایی:</span>
+      <button class="btn" onclick="setZoom(1, this)">1x</button>
+      <button class="btn active" onclick="setZoom(1.5, this)">1.5x</button>
+      <button class="btn" onclick="setZoom(2, this)">2x</button>
+    </div>
+
+    <!-- Format Toggle -->
+    <div class="toolbar-group">
+      <span class="toolbar-label">فرمت:</span>
+      <select id="formatSelect" onchange="changeFormat(this.value)">
+        <option value="png" selected>PNG شفاف</option>
+        <option value="webp">WebP Lossless</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-container">
+    <button class="tab-btn active" onclick="selectTab('knight', this)">🛡️ شوالیه (knight)</button>
+    <button class="tab-btn" onclick="selectTab('enemy_w1', this)">🧟 غول گورستان (enemy_w1)</button>
+    <button class="tab-btn" onclick="selectTab('enemy_w2', this)">🤖 ربات ساعت‌دار (enemy_w2)</button>
+    <button class="tab-btn" onclick="selectTab('enemy_w3', this)">⚔️ شوالیه محراب (enemy_w3)</button>
+    <button class="tab-btn" onclick="selectTab('enemy_w4', this)">🌲 درخت جهنمی (enemy_w4)</button>
+    <button class="tab-btn" onclick="selectTab('all', this)">👁️ نمایش همه شیت‌ها</button>
+  </div>
+
+  <div class="main-view" id="mainContainer">
+    <!-- Rendered dynamically by script -->
+  </div>
+
+  <script>
+    const SHEETS = [
+      {
+        id: 'knight',
+        title: 'شوالیه واژه‌ها (Knight Player)',
+        fileBase: 'knight',
+        sheetW: 512,
+        sheetH: 512,
+        frameW: 128,
+        frameH: 128,
+        rows: [
+          { name: 'ایستاده / حالت آماده (Idle)', rowIdx: 0 },
+          { name: 'حمله / شمشیرزنی (Attack)', rowIdx: 1 },
+          { name: 'دریافت ضربه / آسیب (Hurt)', rowIdx: 2 },
+          { name: 'حرکت / آماده‌باش رو به جلو (Walk / Advance)', rowIdx: 3 }
+        ]
+      },
+      {
+        id: 'enemy_w1',
+        title: 'دشمن جهان ۱ - غول گورستان (Graveyard Ghoul)',
+        fileBase: 'enemy_w1',
+        sheetW: 512,
+        sheetH: 512,
+        frameW: 128,
+        frameH: 128,
+        rows: [
+          { name: 'ایستاده (Idle)', rowIdx: 0 },
+          { name: 'حمله با چنگال (Attack)', rowIdx: 1 },
+          { name: 'آسیب دیدن (Hurt)', rowIdx: 2 },
+          { name: 'مرگ و سقوط (Death)', rowIdx: 3 }
+        ]
+      },
+      {
+        id: 'enemy_w2',
+        title: 'دشمن جهان ۲ - ربات ساعت‌دار (Clockwork Golem)',
+        fileBase: 'enemy_w2',
+        sheetW: 512,
+        sheetH: 512,
+        frameW: 128,
+        frameH: 128,
+        rows: [
+          { name: 'ایستاده (Idle)', rowIdx: 0 },
+          { name: 'ضربه با آچار غول‌پیکر (Attack)', rowIdx: 1 },
+          { name: 'جرقه‌زدن و آسیب (Hurt)', rowIdx: 2 },
+          { name: 'از کار افتادن و از هم پاشیدن چرخ‌دنده‌ها (Death)', rowIdx: 3 }
+        ]
+      },
+      {
+        id: 'enemy_w3',
+        title: 'دشمن جهان ۳ - شوالیه محراب (Altar Rune Knight)',
+        fileBase: 'enemy_w3',
+        sheetW: 512,
+        sheetH: 512,
+        frameW: 128,
+        frameH: 128,
+        rows: [
+          { name: 'ایستاده با شمشیر سنگین (Idle)', rowIdx: 0 },
+          { name: 'فرود شمشیر بر زمین با جرقه (Attack)', rowIdx: 1 },
+          { name: 'ترک خوردن سنگ زره (Hurt)', rowIdx: 2 },
+          { name: 'فروریختن به توده سنگ (Death)', rowIdx: 3 }
+        ]
+      },
+      {
+        id: 'enemy_w4',
+        title: 'دشمن جهان ۴ - درخت جهنمی (Hell Treant)',
+        fileBase: 'enemy_w4',
+        sheetW: 768,
+        sheetH: 768,
+        frameW: 192,
+        frameH: 192,
+        rows: [
+          { name: 'ایستاده با نشان گدازه (Idle)', rowIdx: 0 },
+          { name: 'کوبش ریشه‌ها بر زمین (Attack)', rowIdx: 1 },
+          { name: 'فوران آتش از درون (Hurt)', rowIdx: 2 },
+          { name: 'سوختن و خاکستر شدن به هیزم (Death)', rowIdx: 3 }
+        ]
+      }
+    ];
+
+    let currentBg = 'checker';
+    let currentZoom = 1.5;
+    let currentFormat = 'png';
+    let showGroundGuide = true;
+    let showCenterGuide = true;
+    let isPlaying = true;
+    let animDuration = '0.8s';
+
+    function getImageUrl(fileBase) {
+      return `../assets/redesign/${fileBase}.${currentFormat}`;
+    }
+
+    function renderSheetCard(sheet) {
+      const imgUrl = getImageUrl(sheet.fileBase);
+      const is768 = sheet.sheetW === 768;
+      const animClass = is768 ? 'anim-768-playing' : 'anim-512-playing';
+      const playStateClass = isPlaying ? '' : 'paused';
+
+      const dispFrameW = Math.round(sheet.frameW * currentZoom);
+      const dispFrameH = Math.round(sheet.frameH * currentZoom);
+      const dispSheetW = Math.round(sheet.sheetW * currentZoom);
+      const dispSheetH = Math.round(sheet.sheetH * currentZoom);
+
+      let rowsHtml = '';
+      sheet.rows.forEach(row => {
+        const bgPosY = -(row.rowIdx * dispFrameH);
+
+        // Individual static frames
+        let framesHtml = '';
+        for (let col = 0; col < 4; col++) {
+          const bgPosX = -(col * dispFrameW);
+          framesHtml += `
+            <div class="frame-item bg-element bg-${currentBg}" style="width: ${dispFrameW}px; height: ${dispFrameH}px;">
+              <div class="frame-item-number">فریم ${col + 1}</div>
+              <div style="
+                width: 100%;
+                height: 100%;
+                background-image: url('${imgUrl}');
+                background-size: ${dispSheetW}px ${dispSheetH}px;
+                background-position: ${bgPosX}px ${bgPosY}px;
+                image-rendering: pixelated;
+              "></div>
+              ${showGroundGuide ? '<div class="guide-ground"></div>' : ''}
+              ${showCenterGuide ? '<div class="guide-center"></div>' : ''}
+            </div>
+          `;
+        }
+
+        rowsHtml += `
+          <div class="anim-row">
+            <div class="anim-row-header">
+              <div class="anim-row-title">
+                ${row.name}
+                <span class="badge">ردیف ${row.rowIdx + 1} (۴ فریم)</span>
+              </div>
+              <div style="font-size: 0.78rem; color: var(--text-muted);">
+                ابعاد فریم: ${sheet.frameW}x${sheet.frameH}px
+              </div>
+            </div>
+            <div class="anim-row-body">
+              <!-- Animated Box -->
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                <div class="sprite-animated-box bg-element bg-${currentBg} ${animClass} ${playStateClass}" 
+                     style="
+                       width: ${dispFrameW}px; 
+                       height: ${dispFrameH}px; 
+                       background-image: url('${imgUrl}');
+                       background-size: ${dispSheetW}px ${dispSheetH}px;
+                       background-position-y: ${bgPosY}px;
+                       --anim-duration: ${animDuration};
+                     ">
+                  ${showGroundGuide ? '<div class="guide-ground"></div><div class="guide-label">کف (۷۰٪)</div>' : ''}
+                  ${showCenterGuide ? '<div class="guide-center"></div>' : ''}
+                </div>
+                <span style="font-size: 0.72rem; color: var(--accent); font-weight: 600;">انیمیشن زنده</span>
+              </div>
+
+              <!-- Static Strip -->
+              <div class="frame-strip-container">
+                <span class="strip-label">تک‌فریم‌های متوالی (جهت بررسی تراز افقی و پرش):</span>
+                <div class="frame-strip">
+                  ${framesHtml}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      return `
+        <div class="sheet-card" id="card-${sheet.id}">
+          <div class="sheet-header">
+            <div class="sheet-title">
+              ${sheet.title}
+            </div>
+            <div class="sheet-meta">
+              اندازه شیت: ${sheet.sheetW}x${sheet.sheetH}px | فریم: ${sheet.frameW}x${sheet.frameH}px
+            </div>
+          </div>
+          ${rowsHtml}
+        </div>
+      `;
+    }
+
+    function renderAll() {
+      const container = document.getElementById('mainContainer');
+      container.innerHTML = SHEETS.map(renderSheetCard).join('');
+    }
+
+    function selectTab(id, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      document.querySelectorAll('.sheet-card').forEach(card => {
+        if (id === 'all') {
+          card.classList.remove('hidden');
+        } else {
+          if (card.id === `card-${id}`) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        }
+      });
+    }
+
+    function setBg(bg, btn) {
+      currentBg = bg;
+      document.querySelectorAll('.toolbar .btn').forEach(b => {
+        if (['checker', 'dark', 'arena', 'magenta'].some(x => b.innerText.includes(x))) {
+          b.classList.remove('active');
+        }
+      });
+      btn.classList.add('active');
+
+      document.querySelectorAll('.bg-element').forEach(el => {
+        el.className = el.className.replace(/bg-\w+/g, '');
+        el.classList.add(`bg-${bg}`);
+      });
+    }
+
+    function toggleGuide(type, btn) {
+      if (type === 'ground') {
+        showGroundGuide = !showGroundGuide;
+        btn.classList.toggle('active', showGroundGuide);
+      } else if (type === 'center') {
+        showCenterGuide = !showCenterGuide;
+        btn.classList.toggle('active', showCenterGuide);
+      }
+      renderAll();
+    }
+
+    function toggleGlobalPlay(btn) {
+      isPlaying = !isPlaying;
+      btn.innerText = isPlaying ? 'توقف ⏸' : 'پخش ▶';
+      btn.classList.toggle('active', !isPlaying);
+      document.querySelectorAll('.sprite-animated-box').forEach(el => {
+        el.classList.toggle('paused', !isPlaying);
+      });
+    }
+
+    function changeSpeed(val) {
+      animDuration = val;
+      document.querySelectorAll('.sprite-animated-box').forEach(el => {
+        el.style.setProperty('--anim-duration', val);
+      });
+    }
+
+    function setZoom(val, btn) {
+      currentZoom = val;
+      btn.parentElement.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderAll();
+    }
+
+    function changeFormat(fmt) {
+      currentFormat = fmt;
+      renderAll();
+    }
+
+    // Initial render
+    renderAll();
+  </script>
+</body>
+</html>

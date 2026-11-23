@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>راهنمای استایل و دیزاین سیستم گوتیک | شوالیه واژه‌ها</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Gothic Stained Glass Foundations */
+      --bg: #0e0c0b;
+      --surface: #16130f;
+      --ink: #eadfc8;
+      --ink-muted: #a39682;
+      --line-black: #050403;
+      --line-gold: #8f7247;
+      --gold: #c9a25e;
+
+      /* World Stained Glass Tones */
+      --w1: #d98a85; /* رز (Rose) */
+      --w2: #7fae9f; /* زنگاری (Verdigris) */
+      --w3: #e6d3a8; /* کرم/کهربایی (Amber Cream) */
+      --w4: #c9663a; /* نارنجی سوخته (Burnt Orange) */
+
+      /* Dark High-Contrast Inks on World Backgrounds (Contrast >= 4.5:1) */
+      --w1-ink: #2a1210; /* Contrast 6.65:1 on #d98a85 */
+      --w2-ink: #0f241e; /* Contrast 6.55:1 on #7fae9f */
+      --w3-ink: #2b210e; /* Contrast 10.74:1 on #e6d3a8 */
+      --w4-ink: #180702; /* Contrast 5.25:1 on #c9663a */
+
+      /* Dynamic World Variable (Default: World 1) */
+      --world: var(--w1);
+      --world-ink: var(--w1-ink);
+      --world-tint: rgba(217, 138, 133, 0.08);
+
+      /* Elevated Surfaces & Glass */
+      --surface-elevated: #1e1a14;
+      --surface-glass: rgba(22, 19, 15, 0.94);
+      --border-subtle: #29231c;
+      --border-accent: #3d3328;
+    }
+
+    body[data-world="1"] {
+      --world: var(--w1);
+      --world-ink: var(--w1-ink);
+      --world-tint: rgba(217, 138, 133, 0.08);
+    }
+    body[data-world="2"] {
+      --world: var(--w2);
+      --world-ink: var(--w2-ink);
+      --world-tint: rgba(127, 174, 159, 0.08);
+    }
+    body[data-world="3"] {
+      --world: var(--w3);
+      --world-ink: var(--w3-ink);
+      --world-tint: rgba(230, 211, 168, 0.08);
+    }
+    body[data-world="4"] {
+      --world: var(--w4);
+      --world-ink: var(--w4-ink);
+      --world-tint: rgba(201, 102, 58, 0.08);
+    }
+
+    /* Base Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Vazirmatn', -apple-system, sans-serif;
+      direction: rtl;
+      padding: 24px 16px 80px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .guide-header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .guide-header h1 {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--gold);
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .guide-header p {
+      font-size: 0.95rem;
+      color: var(--ink-muted);
+    }
+
+    /* World Control Bar */
+    .world-switcher-bar {
+      background: var(--surface);
+      border: 2px solid var(--line-black);
+      box-shadow: inset 0 0 0 1px var(--line-gold);
+      border-radius: 16px;
+      padding: 14px 18px;
+      margin-bottom: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      position: sticky;
+      top: 12px;
+      z-index: 50;
+      backdrop-filter: blur(8px);
+    }
+
+    .switcher-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .world-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .world-btn {
+      background: #110e0c;
+      border: 1px solid var(--line-gold);
+      color: var(--ink);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+
+    .world-btn .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid var(--line-black);
+    }
+
+    .world-btn.active {
+      background: var(--world);
+      color: var(--world-ink);
+      border-color: var(--line-black);
+      font-weight: 800;
+      box-shadow: 0 0 12px var(--world);
+    }
+
+    /* Section Headers */
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--gold);
+      margin: 32px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-right: 4px solid var(--world);
+      padding-right: 12px;
+      transition: border-color 0.2s;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    /* ==========================================================================
+       Gothic Stained Glass Base Components
+       ========================================================================== */
+
+    /* 1. Glass Card & Hero */
+    .glass-card {
+      background-color: var(--surface);
+      background-image: linear-gradient(180deg, var(--world-tint) 0%, transparent 100%);
+      border: 2px solid var(--line-black);
+      box-shadow: inset 0 0 0 1px var(--line-gold), 0 8px 24px rgba(5, 4, 3, 0.6);
+      border-radius: 16px;
+      padding: 20px;
+      position: relative;
+      box-sizing: border-box;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .glass-card--hero {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-card--hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      pointer-events: none;
+      opacity: 0.05; /* Max 6% Gothic leaded glass mesh */
+      background-image: 
+        repeating-linear-gradient(45deg, var(--ink) 0, var(--ink) 1px, transparent 0, transparent 24px),
+        repeating-linear-gradient(-45deg, var(--ink) 0, var(--ink) 1px, transparent 0, transparent 24px);
+      background-size: 34px 34px;
+      mix-blend-mode: overlay;
+    }
+
+    /* 2. Stat Tile */
+    .stat-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: rgba(5, 4, 3, 0.45);
+      border: 1px solid rgba(143, 114, 71, 0.28);
+    }
+
+    .stat-tile__value {
+      font-size: 36px;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--world);
+      letter-spacing: -0.5px;
+      transition: color 0.2s;
+    }
+
+    .stat-tile__label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ink-muted);
+      margin-top: 6px;
+      line-height: 1.2;
+    }
+
+    /* 3. Gothic Buttons */
+    .btn-primary {
+      background: var(--world);
+      color: var(--world-ink);
+      font-weight: 700;
+      font-family: inherit;
+      font-size: 0.9rem;
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: 2px solid var(--line-black);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25), 0 4px 14px rgba(5, 4, 3, 0.5);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.12s ease, filter 0.15s ease, background 0.2s ease, color 0.2s ease;
+      user-select: none;
+      text-decoration: none;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.08);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--gold);
+      font-weight: 600;
+      font-family: inherit;
+      font-size: 0.88rem;
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: 1px solid var(--line-gold);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+      user-select: none;
+      text-decoration: none;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(201, 162, 94, 0.08);
+      border-color: var(--gold);
+      color: #fff;
+    }
+
+    .btn-ghost:active {
+      transform: scale(0.98);
+    }
+
+    /* 4. Capsule Status Chips */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border: 1px solid var(--line-black);
+      box-shadow: inset 0 0 0 1px rgba(143, 114, 71, 0.3);
+      background: rgba(22, 19, 15, 0.9);
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .chip--ready {
+      background: color-mix(in srgb, var(--world) 16%, var(--surface));
+      border-color: var(--line-black);
+      box-shadow: inset 0 0 0 1px var(--world);
+      color: var(--world);
+      transition: all 0.2s;
+    }
+
+    .chip--conquered {
+      background: rgba(67, 160, 71, 0.15);
+      border-color: var(--line-black);
+      box-shadow: inset 0 0 0 1px #43a047;
+      color: #72cf78;
+    }
+
+    .chip--locked {
+      background: #110e0c;
+      border-color: var(--line-black);
+      box-shadow: inset 0 0 0 1px rgba(163, 150, 130, 0.2);
+      color: var(--ink-muted);
+      opacity: 0.75;
+    }
+
+    /* 5. Leaded Glass Progress Bar */
+    .progress {
+      width: 100%;
+      height: 10px;
+      background: var(--line-black);
+      border: 1px solid rgba(143, 114, 71, 0.35);
+      border-radius: 9999px;
+      overflow: visible;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    .progress__bar {
+      height: 100%;
+      background: var(--world);
+      border-radius: 9999px;
+      position: relative;
+      transition: width 0.3s ease, background 0.2s ease;
+      min-width: 8px;
+      max-width: 100%;
+    }
+
+    .progress__pip {
+      position: absolute;
+      left: -3px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      background: #fff;
+      border: 2px solid var(--line-black);
+      box-shadow: 0 0 6px var(--world);
+      border-radius: 50%;
+    }
+
+    /* 6. Form Input with Gold Focus */
+    .pixel-input {
+      width: 100%;
+      background: #100e0c;
+      border: 2px solid var(--line-black);
+      box-shadow: inset 0 0 0 1px rgba(143, 114, 71, 0.3);
+      border-radius: 12px;
+      color: var(--ink);
+      padding: 10px 14px;
+      font-family: 'Vazirmatn', -apple-system, sans-serif;
+      font-size: 0.9rem;
+      box-sizing: border-box;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .pixel-input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: inset 0 0 0 1px var(--gold), 0 0 12px rgba(201, 162, 94, 0.25);
+    }
+
+    .pixel-input::placeholder {
+      color: var(--ink-muted);
+      opacity: 0.65;
+    }
+
+    /* 7. Gothic Linear 2px Icons (No Emojis) */
+    .g-icon {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 2px;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      vertical-align: middle;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    /* Swatches */
+    .swatch-card {
+      background: var(--surface);
+      border: 2px solid var(--line-black);
+      box-shadow: inset 0 0 0 1px var(--border-subtle);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .swatch-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      border: 1px solid var(--line-black);
+      flex-shrink: 0;
+    }
+
+    .swatch-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .swatch-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .swatch-val {
+      font-size: 0.72rem;
+      font-family: monospace;
+      color: var(--ink-muted);
+    }
+
+    .contrast-badge {
+      font-size: 0.68rem;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: rgba(5, 4, 3, 0.6);
+      border: 1px solid rgba(143, 114, 71, 0.3);
+      color: var(--gold);
+      width: fit-content;
+      margin-top: 2px;
+    }
+
+    /* Mobile Container Frame Simulation */
+    .mobile-frame-container {
+      max-width: 480px;
+      margin: 0 auto;
+      border: 2px solid var(--line-black);
+      box-shadow: inset 0 0 0 1px var(--line-gold), 0 12px 36px rgba(0,0,0,0.8);
+      border-radius: 24px;
+      padding: 16px;
+      background: var(--bg);
+    }
+  </style>
+</head>
+<body data-world="1">
+
+  <div class="container">
+    <div class="guide-header">
+      <h1>دیزاین سیستم «شیشه رنگی گوتیک» | شوالیه واژه‌ها</h1>
+      <p>نمایش کامل توکن‌ها، کامپوننت‌های پایه و رفتار داینامیک ۴ جهان بر اساس متغیر <code>--world</code></p>
+    </div>
+
+    <!-- Active World Controller -->
+    <div class="world-switcher-bar">
+      <div class="switcher-title">
+        <svg class="g-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+        انتخاب جهان فعال (تغییر data-world روی body):
+      </div>
+      <div class="world-pills">
+        <button class="world-btn active" onclick="setWorld(1, this)">
+          <span class="dot" style="background: #d98a85;"></span>
+          جهان ۱: رز (Rose)
+        </button>
+        <button class="world-btn" onclick="setWorld(2, this)">
+          <span class="dot" style="background: #7fae9f;"></span>
+          جهان ۲: زنگاری (Verdigris)
+        </button>
+        <button class="world-btn" onclick="setWorld(3, this)">
+          <span class="dot" style="background: #e6d3a8;"></span>
+          جهان ۳: کرم کهربایی (Amber)
+        </button>
+        <button class="world-btn" onclick="setWorld(4, this)">
+          <span class="dot" style="background: #c9663a;"></span>
+          جهان ۴: نارنجی سوخته (Burnt)
+        </button>
+      </div>
+    </div>
+
+    <!-- Section 1: Color Tokens & Contrast -->
+    <h2 class="section-title">
+      <svg class="g-icon" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.563-2.512 5.563-5.563C21.996 6.5 17.5 2 12 2z"/></svg>
+      ۱. توکن‌های رنگ و اعتبارسنجی کنتراست متن (Contrast >= 4.5:1)
+    </h2>
+
+    <div class="grid-4">
+      <div class="swatch-card">
+        <div class="swatch-box" style="background: var(--w1); display: flex; align-items: center; justify-content: center; color: var(--w1-ink); font-weight: 800; font-size: 0.8rem;">Aa</div>
+        <div class="swatch-info">
+          <div class="swatch-name">جهان ۱: رز (--w1)</div>
+          <div class="swatch-val">#d98a85 / #2a1210</div>
+          <div class="contrast-badge">کنتراست: 6.65:1 ✓</div>
+        </div>
+      </div>
+
+      <div class="swatch-card">
+        <div class="swatch-box" style="background: var(--w2); display: flex; align-items: center; justify-content: center; color: var(--w2-ink); font-weight: 800; font-size: 0.8rem;">Aa</div>
+        <div class="swatch-info">
+          <div class="swatch-name">جهان ۲: زنگاری (--w2)</div>
+          <div class="swatch-val">#7fae9f / #0f241e</div>
+          <div class="contrast-badge">کنتراست: 6.55:1 ✓</div>
+        </div>
+      </div>
+
+      <div class="swatch-card">
+        <div class="swatch-box" style="background: var(--w3); display: flex; align-items: center; justify-content: center; color: var(--w3-ink); font-weight: 800; font-size: 0.8rem;">Aa</div>
+        <div class="swatch-info">
+          <div class="swatch-name">جهان ۳: کهربایی (--w3)</div>
+          <div class="swatch-val">#e6d3a8 / #2b210e</div>
+          <div class="contrast-badge">کنتراست: 10.74:1 ✓</div>
+        </div>
+      </div>
+
+      <div class="swatch-card">
+        <div class="swatch-box" style="background: var(--w4); display: flex; align-items: center; justify-content: center; color: var(--w4-ink); font-weight: 800; font-size: 0.8rem;">Aa</div>
+        <div class="swatch-info">
+          <div class="swatch-name">جهان ۴: نارنجی (--w4)</div>
+          <div class="swatch-val">#c9663a / #180702</div>
+          <div class="contrast-badge">کنتراست: 5.25:1 ✓</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Glass Cards & Hero -->
+    <h2 class="section-title">
+      <svg class="g-icon" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+      ۲. کارت‌های شیشه‌ای گوتیک (.glass-card و .glass-card--hero)
+    </h2>
+
+    <div class="grid-2">
+      <!-- Standard Glass Card -->
+      <div class="glass-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h3 style="font-size: 1.05rem; font-weight: 800; color: var(--ink);">کارت شیشه‌ای استاندارد (.glass-card)</h3>
+          <span class="chip chip--ready">آماده نبرد</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--ink-muted); margin-bottom: 16px;">
+          دارای خط بیرونی مشکی ۲ پیکسل، خط طلایی ۱ پیکسل داخل (inset)، گوشه ۱۶ پیکسل و گرادیان پس‌زمینه لطیف تک‌رنگ جهان بدون ژیگول گوشه.
+        </p>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-primary">
+            <svg class="g-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            شروع مبارزه
+          </button>
+          <button class="btn-ghost">
+            <svg class="g-icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            مرور واژه‌ها
+          </button>
+        </div>
+      </div>
+
+      <!-- Hero Glass Card with Stained Glass Mesh -->
+      <div class="glass-card glass-card--hero">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h3 style="font-size: 1.05rem; font-weight: 800; color: var(--gold);">کارت ویژه (.glass-card--hero)</h3>
+          <span class="chip chip--conquered">فتح شده</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--ink-muted); margin-bottom: 16px;">
+          نسخه Hero با بافت نامحسوس تور شیشه‌ای سربی (توری مشبک گوتیک با شفافیت حداکثر ۵٪).
+        </p>
+        <div class="progress" style="margin-bottom: 16px;">
+          <div class="progress__bar" style="width: 75%;">
+            <div class="progress__pip"></div>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--ink-muted);">
+          <span>پیشرفت قلمرو:</span>
+          <span style="color: var(--world); font-weight: 700;">۷۵٪ تکمیل</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Stat Tiles -->
+    <h2 class="section-title">
+      <svg class="g-icon" viewBox="0 0 24 24"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
+      ۳. کاشی‌های آمار (.stat-tile: عدد درشت ۳۶px با وزن ۹۰۰)
+    </h2>
+
+    <div class="grid-4">
+      <div class="stat-tile">
+        <div class="stat-tile__value">۴۲</div>
+        <div class="stat-tile__label">امتیاز نبرد رسمی</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-tile__value">۸</div>
+        <div class="stat-tile__label">مرحله فتح‌شده</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-tile__value">۹۶٪</div>
+        <div class="stat-tile__label">دقت پاسخگویی</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-tile__value">۳</div>
+        <div class="stat-tile__label">مدال شوالیه</div>
+      </div>
+    </div>
+
+    <!-- Section 4: Buttons, Chips & Progress -->
+    <h2 class="section-title">
+      <svg class="g-icon" viewBox="0 0 24 24"><path d="m14 7 3 3-8.5 8.5H5.5v-3L14 7z"/><path d="m17 4 3 3"/></svg>
+      ۴. دکمه‌ها، کپسول‌های وضعیت (.chip) و نوار پیشرفت (.progress)
+    </h2>
+
+    <div class="glass-card" style="margin-bottom: 24px;">
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+        
+        <!-- Buttons Group -->
+        <div>
+          <div style="font-size: 0.85rem; color: var(--ink-muted); margin-bottom: 10px; font-weight: 700;">دکمه‌های گوتیک (.btn-primary با رنگ جهان و .btn-ghost با خط طلایی - هر دو با فشردن scale(.98)):</div>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+            <button class="btn-primary">
+              <svg class="g-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              دکمه اصلی (.btn-primary)
+            </button>
+            <button class="btn-ghost">
+              <svg class="g-icon" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              دکمه حاشیه‌ای (.btn-ghost)
+            </button>
+            <button class="btn-primary" style="padding: 6px 12px; font-size: 0.78rem;">
+              اندازه کوچک
+            </button>
+            <button class="btn-ghost" style="padding: 6px 12px; font-size: 0.78rem;">
+              اندازه کوچک
+            </button>
+          </div>
+        </div>
+
+        <!-- Chips Group -->
+        <div>
+          <div style="font-size: 0.85rem; color: var(--ink-muted); margin-bottom: 10px; font-weight: 700;">کپسول‌های وضعیت (.chip):</div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <span class="chip chip--ready">
+              <svg class="g-icon" style="width: 14px; height: 14px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              آماده نبرد (.chip--ready)
+            </span>
+            <span class="chip chip--conquered">
+              <svg class="g-icon" style="width: 14px; height: 14px;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              فتح شد (.chip--conquered)
+            </span>
+            <span class="chip chip--locked">
+              <svg class="g-icon" style="width: 14px; height: 14px;" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              قفل شده (.chip--locked)
+            </span>
+          </div>
+        </div>
+
+        <!-- Progress Bar Interactive -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 0.85rem; color: var(--ink-muted); font-weight: 700;">نوار پیشرفت گوتیک (.progress با مسیر مشکی و پرشدن با رنگ جهان):</span>
+            <span id="progressPercent" style="font-size: 0.82rem; font-weight: 800; color: var(--world);">۶۰٪</span>
+          </div>
+          <div class="progress" style="margin-bottom: 12px;">
+            <div class="progress__bar" id="liveProgressBar" style="width: 60%;">
+              <div class="progress__pip"></div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 0.75rem; color: var(--ink-muted);">تست اسلایدر:</span>
+            <input type="range" min="0" max="100" value="60" style="flex: 1; accent-color: var(--world);" oninput="updateLiveProgress(this.value)">
+          </div>
+        </div>
+
+        <!-- Input Field -->
+        <div>
+          <div style="font-size: 0.85rem; color: var(--ink-muted); margin-bottom: 8px; font-weight: 700;">فیلد ورودی (.pixel-input با فوکوس طلایی):</div>
+          <input type="text" class="pixel-input" placeholder="نام کاربری یا پاسخ خود را وارد کنید..." style="max-width: 400px;">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Section 5: Linear SVG Icons -->
+    <h2 class="section-title">
+      <svg class="g-icon" viewBox="0 0 24 24"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
+      ۵. آیکون‌های خطی ۲ پیکسلی یکدست (بدون ایموجی)
+    </h2>
+
+    <div class="glass-card" style="margin-bottom: 30px;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px; text-align: center;">
+        <div style="padding: 10px; background: rgba(5,4,3,0.3); border-radius: 8px;">
+          <svg class="g-icon" style="color: var(--gold);" viewBox="0 0 24 24"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/></svg>
+          <div style="font-size: 0.72rem; color: var(--ink-muted); margin-top: 4px;">شمشیر نبرد</div>
+        </div>
+        <div style="padding: 10px; background: rgba(5,4,3,0.3); border-radius: 8px;">
+          <svg class="g-icon" style="color: var(--gold);" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <div style="font-size: 0.72rem; color: var(--ink-muted); margin-top: 4px;">سپر دفاع</div>
+        </div>
+        <div style="padding: 10px; background: rgba(5,4,3,0.3); border-radius: 8px;">
+          <svg class="g-icon" style="color: var(--gold);" viewBox="0 0 24 24"><path d="M2 20h20"/><path d="M5 20V8l4-4 4 4v12"/><path d="M15 20V4l4 4v12"/></svg>
+          <div style="font-size: 0.72rem; color: var(--ink-muted); margin-top: 4px;">دژ و قلعه</div>
+        </div>
+        <div style="padding: 10px; background: rgba(5,4,3,0.3); border-radius: 8px;">
+          <svg class="g-icon" style="color: var(--gold);" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          <div style="font-size: 0.72rem; color: var(--ink-muted); margin-top: 4px;">کتاب واژگان</div>
+        </div>
+        <div style="padding: 10px; background: rgba(5,4,3,0.3); border-radius: 8px;">
+          <svg class="g-icon" style="color: var(--gold);" viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+          <div style="font-size: 0.72rem; color: var(--ink-muted); margin-top: 4px;">زمان‌سنج نبرد</div>
+        </div>
+        <div style="padding: 10px; background: rgba(5,4,3,0.3); border-radius: 8px;">
+          <svg class="g-icon" style="color: var(--gold);" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+          <div style="font-size: 0.72rem; color: var(--ink-muted); margin-top: 4px;">شمع جان</div>
+        </div>
+        <div style="padding: 10px; background: rgba(5,4,3,0.3); border-radius: 8px;">
+          <svg class="g-icon" style="color: var(--gold);" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+          <div style="font-size: 0.72rem; color: var(--ink-muted); margin-top: 4px;">پروفایل شوالیه</div>
+        </div>
+        <div style="padding: 10px; background: rgba(5,4,3,0.3); border-radius: 8px;">
+          <svg class="g-icon" style="color: var(--gold);" viewBox="0 0 24 24"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>
+          <div style="font-size: 0.72rem; color: var(--ink-muted); margin-top: 4px;">تاج رتبه‌بندی</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 6: 4-World Side-by-Side Comparison -->
+    <h2 class="section-title">
+      <svg class="g-icon" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+      ۶. پیش‌نمایش موازی ۴ جهان در شل موبایل (عرض ۴۸۰px)
+    </h2>
+
+    <div class="grid-2">
+      <!-- World 1 Mock -->
+      <div style="--world: var(--w1); --world-ink: var(--w1-ink); --world-tint: rgba(217, 138, 133, 0.08);">
+        <div class="glass-card glass-card--hero">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-weight: 800; color: var(--world);">جهان ۱: گورستان مه‌آلود (واژگان)</span>
+            <span class="chip chip--ready">رز سربی</span>
+          </div>
+          <div class="progress" style="margin-bottom: 12px;">
+            <div class="progress__bar" style="width: 40%;"><div class="progress__pip"></div></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.8rem; color: var(--ink-muted);">کنتراست متن روی رنگ: 6.65:1</span>
+            <button class="btn-primary" style="padding: 6px 14px; font-size: 0.8rem;">ورود به نبرد</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- World 2 Mock -->
+      <div style="--world: var(--w2); --world-ink: var(--w2-ink); --world-tint: rgba(127, 174, 159, 0.08);">
+        <div class="glass-card glass-card--hero">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-weight: 800; color: var(--world);">جهان ۲: شهر ساعت‌دار (کنایه)</span>
+            <span class="chip chip--ready">زنگاری سربی</span>
+          </div>
+          <div class="progress" style="margin-bottom: 12px;">
+            <div class="progress__bar" style="width: 65%;"><div class="progress__pip"></div></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.8rem; color: var(--ink-muted);">کنتراست متن روی رنگ: 6.55:1</span>
+            <button class="btn-primary" style="padding: 6px 14px; font-size: 0.8rem;">ورود به نبرد</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- World 3 Mock -->
+      <div style="--world: var(--w3); --world-ink: var(--w3-ink); --world-tint: rgba(230, 211, 168, 0.08);">
+        <div class="glass-card glass-card--hero">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-weight: 800; color: var(--world);">جهان ۳: محراب شیشه‌های رنگی (ایهام)</span>
+            <span class="chip chip--ready">کرم کهربایی</span>
+          </div>
+          <div class="progress" style="margin-bottom: 12px;">
+            <div class="progress__bar" style="width: 85%;"><div class="progress__pip"></div></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.8rem; color: var(--ink-muted);">کنتراست متن روی رنگ: 10.74:1</span>
+            <button class="btn-primary" style="padding: 6px 14px; font-size: 0.8rem;">ورود به نبرد</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- World 4 Mock -->
+      <div style="--world: var(--w4); --world-ink: var(--w4-ink); --world-tint: rgba(201, 102, 58, 0.08);">
+        <div class="glass-card glass-card--hero">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-weight: 800; color: var(--world);">جهان ۴: دژ جهنمی (درخت مرده)</span>
+            <span class="chip chip--ready">نارنجی سوخته</span>
+          </div>
+          <div class="progress" style="margin-bottom: 12px;">
+            <div class="progress__bar" style="width: 25%;"><div class="progress__pip"></div></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.8rem; color: var(--ink-muted);">کنتراست متن روی رنگ: 5.25:1</span>
+            <button class="btn-primary" style="padding: 6px 14px; font-size: 0.8rem;">ورود به نبرد</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function setWorld(worldId, btn) {
+      document.body.setAttribute('data-world', worldId);
+      document.querySelectorAll('.world-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function updateLiveProgress(val) {
+      document.getElementById('liveProgressBar').style.width = val + '%';
+      document.getElementById('progressPercent').innerText = val + '٪';
+    }
+  </script>
+</body>
+</html>
