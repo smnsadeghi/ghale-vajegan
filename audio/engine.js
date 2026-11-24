@@ -77,6 +77,7 @@
   let currentTrackId = null;
   let currentTrackGain = null;
   let currentLayerGains = null; // Array of 4 gain nodes for layers 0..3
+  let currentChannelBuses = null; // Persistent per-channel bus nodes
   let isPlaying = false;
   let schedulerTimer = null;
   let currentStep = 0;
@@ -211,7 +212,11 @@
       if (!audioCtx) {
         const AudioContextClass = (typeof window !== 'undefined' && (window.AudioContext || window.webkitAudioContext));
         if (AudioContextClass) {
-          audioCtx = new AudioContextClass();
+          try {
+            audioCtx = new AudioContextClass({ latencyHint: 'playback' });
+          } catch (_) {
+            audioCtx = new AudioContextClass();
+          }
         }
       }
 
@@ -251,7 +256,19 @@
 
         reverbNode = spaceDelay;
 
-        masterGainNode.connect(audioCtx.destination);
+        // Master Limiter / DynamicsCompressor to guarantee zero digital clipping
+        if (audioCtx.createDynamicsCompressor) {
+          const limiter = audioCtx.createDynamicsCompressor();
+          limiter.threshold.setValueAtTime(-1.0, audioCtx.currentTime);
+          limiter.knee.setValueAtTime(6.0, audioCtx.currentTime);
+          limiter.ratio.setValueAtTime(16.0, audioCtx.currentTime);
+          limiter.attack.setValueAtTime(0.003, audioCtx.currentTime);
+          limiter.release.setValueAtTime(0.12, audioCtx.currentTime);
+          masterGainNode.connect(limiter);
+          limiter.connect(audioCtx.destination);
+        } else {
+          masterGainNode.connect(audioCtx.destination);
+        }
       }
 
       if (audioCtx && audioCtx.state === 'suspended') {
@@ -306,33 +323,46 @@
     try {
       const startTime = Math.max(time, audioCtx.currentTime);
       const env = instrument.envelope || { attack: 0.02, decay: 0.1, sustain: 0.5, release: 0.1 };
-      const totalDur = Math.max(duration, 0.05);
-      const stopTime = startTime + totalDur + (env.release || 0.1);
+      const gateDur = Math.max(duration, 0.03);
+      const attackSec = Math.max(0.002, env.attack || 0.01);
+      const decaySec = Math.max(0.005, env.decay || 0.1);
+      const releaseSec = Math.max(0.02, env.release || 0.1);
+
+      // Bound attack within gate duration so attackEnd is strictly <= gateEnd
+      const effectiveAttack = Math.min(attackSec, gateDur * 0.5);
+      const attackEndTime = startTime + effectiveAttack;
+      const gateEndTime = startTime + gateDur;
+      const stopTime = gateEndTime + releaseSec;
 
       // Voice Gain & Envelope
       const voiceGain = audioCtx.createGain();
-      const peakGain = (instrument.gain || 0.3) * velocity;
-      const sustainGain = peakGain * (env.sustain !== undefined ? env.sustain : 0.6);
+      const peakGain = Math.max(0.0001, (instrument.gain || 0.3) * velocity);
+      const sustainRatio = (env.sustain !== undefined) ? env.sustain : 0.6;
+      const targetSustainGain = Math.max(0.0001, peakGain * sustainRatio);
 
+      // Monotonically ordered, strictly continuous envelope:
+      // 1. Initial zero anchor
       voiceGain.gain.setValueAtTime(0.0001, startTime);
-      voiceGain.gain.linearRampToValueAtTime(peakGain, startTime + (env.attack || 0.01));
-      voiceGain.gain.exponentialRampToValueAtTime(Math.max(sustainGain, 0.0001), startTime + (env.attack || 0.01) + (env.decay || 0.1));
-      voiceGain.gain.setValueAtTime(Math.max(sustainGain, 0.0001), startTime + totalDur);
+      // 2. Attack ramp to peak
+      voiceGain.gain.linearRampToValueAtTime(peakGain, attackEndTime);
+
+      // 3. Decay ramp towards sustain
+      if (attackEndTime + decaySec < gateEndTime) {
+        const decayEndTime = attackEndTime + decaySec;
+        voiceGain.gain.exponentialRampToValueAtTime(targetSustainGain, decayEndTime);
+      } else if (gateEndTime > attackEndTime) {
+        voiceGain.gain.exponentialRampToValueAtTime(targetSustainGain, gateEndTime);
+      }
+
+      // 4. Release ramp strictly down to zero
       voiceGain.gain.exponentialRampToValueAtTime(0.0001, stopTime);
+      voiceGain.gain.linearRampToValueAtTime(0.0, stopTime + 0.005);
 
       let targetNode = voiceGain;
 
-      // Optional Waveshaper Distortion
-      if (instrument.distortion && audioCtx.createWaveShaper) {
-        const shaper = audioCtx.createWaveShaper();
-        shaper.curve = getDistortionCurve(instrument.distortion);
-        shaper.oversample = 'none';
-        shaper.connect(targetNode);
-        targetNode = shaper;
-      }
-
-      // Optional Filter (with Filter Envelope swell support for brass & synth leads)
-      if (instrument.filter && instrument.filter.cutoff) {
+      // Dynamic Filter Envelope (brass-like swell) only if envAmount is configured
+      // (Static filters & waveshapers are handled on persistent channel buses)
+      if (instrument.filter && instrument.filter.cutoff && instrument.filter.envAmount) {
         const filter = audioCtx.createBiquadFilter();
         filter.type = instrument.filter.type || 'lowpass';
         const baseCutoff = instrument.filter.cutoff;
@@ -342,14 +372,14 @@
           filter.Q.setValueAtTime(instrument.filter.resonance, startTime);
         }
 
-        // Filter envelope (brass-like swell)
-        if (instrument.filter.envAmount) {
-          const peakCutoff = Math.max(100, Math.min(18000, baseCutoff + instrument.filter.envAmount));
-          const fAttack = instrument.filter.attack || env.attack || 0.04;
-          const fDecay = instrument.filter.decay || env.decay || 0.25;
-          filter.frequency.linearRampToValueAtTime(peakCutoff, startTime + fAttack);
-          filter.frequency.exponentialRampToValueAtTime(Math.max(100, baseCutoff), startTime + fAttack + fDecay);
-        }
+        const peakCutoff = Math.max(100, Math.min(18000, baseCutoff + instrument.filter.envAmount));
+        const fAttack = instrument.filter.attack || env.attack || 0.04;
+        const fDecay = instrument.filter.decay || env.decay || 0.25;
+        const effFAttack = Math.min(fAttack, gateDur * 0.5);
+        const fAttackEndTime = startTime + effFAttack;
+        filter.frequency.linearRampToValueAtTime(peakCutoff, fAttackEndTime);
+        const effFDecay = Math.max(0.01, Math.min(fDecay, stopTime - fAttackEndTime));
+        filter.frequency.exponentialRampToValueAtTime(Math.max(100, baseCutoff), fAttackEndTime + effFDecay);
 
         filter.connect(targetNode);
         targetNode = filter;
@@ -387,12 +417,13 @@
           lfo.connect(lfoGain);
           lfoGain.connect(osc.frequency);
           lfo.start(startTime);
-          lfo.stop(stopTime);
+          lfo.stop(stopTime + 0.01);
         }
 
         osc.connect(targetNode);
         osc.start(startTime);
-        osc.stop(stopTime);
+        // Stop oscillator slightly after voice gain reaches 0.0 so waveform is never cut mid-cycle
+        osc.stop(stopTime + 0.01);
 
         activeVoiceNodes.add(osc);
         osc.onended = () => {
@@ -437,8 +468,10 @@
         osc.frequency.exponentialRampToValueAtTime(Math.max(20, endF), startTime + dec);
 
         const tGain = ((drumCfg && drumCfg.timpani && drumCfg.timpani.gain) || 0.75) * vel;
-        gain.gain.setValueAtTime(tGain, startTime);
+        gain.gain.setValueAtTime(0.0001, startTime);
+        gain.gain.linearRampToValueAtTime(tGain, startTime + 0.002);
         gain.gain.exponentialRampToValueAtTime(0.0001, startTime + dec);
+        gain.gain.linearRampToValueAtTime(0.0, startTime + dec + 0.004);
 
         osc.connect(gain);
         gain.connect(destination);
@@ -455,14 +488,16 @@
         clickFilter.type = 'bandpass';
         clickFilter.frequency.setValueAtTime(1800, startTime);
         const clickGain = audioCtx.createGain();
-        clickGain.gain.setValueAtTime(0.2 * vel, startTime);
+        clickGain.gain.setValueAtTime(0.0001, startTime);
+        clickGain.gain.linearRampToValueAtTime(0.2 * vel, startTime + 0.001);
         clickGain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.015);
+        clickGain.gain.linearRampToValueAtTime(0.0, startTime + 0.018);
 
         clickSrc.connect(clickFilter);
         clickFilter.connect(clickGain);
         clickGain.connect(destination);
         clickSrc.start(startTime);
-        clickSrc.stop(startTime + 0.02);
+        clickSrc.stop(startTime + 0.025);
         clickSrc.onended = () => { try { clickSrc.disconnect(); clickFilter.disconnect(); clickGain.disconnect(); } catch (_) {} };
         return;
       }
@@ -482,8 +517,10 @@
         osc.frequency.exponentialRampToValueAtTime(Math.max(20, eF), startTime + dec);
 
         const kickGain = (kcfg.gain || 0.7) * vel;
-        gain.gain.setValueAtTime(kickGain, startTime);
+        gain.gain.setValueAtTime(0.0001, startTime);
+        gain.gain.linearRampToValueAtTime(kickGain, startTime + 0.002);
         gain.gain.exponentialRampToValueAtTime(0.0001, startTime + dec);
+        gain.gain.linearRampToValueAtTime(0.0, startTime + dec + 0.004);
 
         osc.connect(gain);
         gain.connect(destination);
@@ -506,8 +543,10 @@
         filter.type = 'lowpass';
         filter.frequency.setValueAtTime(sCutoff, startTime);
         const gain = audioCtx.createGain();
-        gain.gain.setValueAtTime(sGainVal, startTime);
+        gain.gain.setValueAtTime(0.0001, startTime);
+        gain.gain.linearRampToValueAtTime(sGainVal, startTime + 0.002);
         gain.gain.exponentialRampToValueAtTime(0.0001, startTime + sDur);
+        gain.gain.linearRampToValueAtTime(0.0, startTime + sDur + 0.004);
 
         noiseSrc.connect(filter);
         filter.connect(gain);
@@ -523,8 +562,10 @@
         bodyOsc.type = 'triangle';
         bodyOsc.frequency.setValueAtTime(185, startTime);
         bodyOsc.frequency.exponentialRampToValueAtTime(85, startTime + 0.08);
-        bodyGain.gain.setValueAtTime(0.35 * vel, startTime);
+        bodyGain.gain.setValueAtTime(0.0001, startTime);
+        bodyGain.gain.linearRampToValueAtTime(0.35 * vel, startTime + 0.002);
         bodyGain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.09);
+        bodyGain.gain.linearRampToValueAtTime(0.0, startTime + 0.094);
 
         bodyOsc.connect(bodyGain);
         bodyGain.connect(destination);
@@ -547,8 +588,10 @@
         filter.type = 'highpass';
         filter.frequency.setValueAtTime(cCutoff, startTime);
         const gain = audioCtx.createGain();
-        gain.gain.setValueAtTime(cGainVal, startTime);
+        gain.gain.setValueAtTime(0.0001, startTime);
+        gain.gain.linearRampToValueAtTime(cGainVal, startTime + 0.002);
         gain.gain.exponentialRampToValueAtTime(0.0001, startTime + cDur);
+        gain.gain.linearRampToValueAtTime(0.0, startTime + cDur + 0.005);
 
         noiseSrc.connect(filter);
         filter.connect(gain);
@@ -572,8 +615,10 @@
         osc.frequency.setValueAtTime(startF, startTime);
         osc.frequency.exponentialRampToValueAtTime(endF, startTime + 0.16);
 
-        gain.gain.setValueAtTime(0.55 * vel, startTime);
+        gain.gain.setValueAtTime(0.0001, startTime);
+        gain.gain.linearRampToValueAtTime(0.55 * vel, startTime + 0.002);
         gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.18);
+        gain.gain.linearRampToValueAtTime(0.0, startTime + 0.184);
         osc.connect(gain);
         gain.connect(destination);
         if (reverbSendNode) gain.connect(reverbSendNode);
@@ -592,8 +637,10 @@
         filter.type = 'highpass';
         filter.frequency.setValueAtTime(7500, startTime);
         const gain = audioCtx.createGain();
-        gain.gain.setValueAtTime(0.22 * vel, startTime);
+        gain.gain.setValueAtTime(0.0001, startTime);
+        gain.gain.linearRampToValueAtTime(0.22 * vel, startTime + 0.001);
         gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.04);
+        gain.gain.linearRampToValueAtTime(0.0, startTime + 0.044);
 
         noiseSrc.connect(filter);
         filter.connect(gain);
@@ -609,12 +656,15 @@
         const gain = audioCtx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(2200 + Math.random() * 3000, startTime);
-        gain.gain.setValueAtTime(0.015 * vel, startTime);
+        gain.gain.setValueAtTime(0.0001, startTime);
+        gain.gain.linearRampToValueAtTime(0.015 * vel, startTime + 0.001);
         gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.015);
+        gain.gain.linearRampToValueAtTime(0.0, startTime + 0.018);
         osc.connect(gain);
         gain.connect(destination);
         osc.start(startTime);
-        osc.stop(startTime + 0.02);
+        osc.stop(startTime + 0.025);
+        osc.onended = () => { try { osc.disconnect(); gain.disconnect(); } catch (_) {} };
       }
     } catch (e) {}
   }
@@ -647,10 +697,11 @@
         ? track.layers[channelName]
         : 0;
 
-      // Click-free layer routing: send to current layer gain node
-      const channelDest = (currentLayerGains && currentLayerGains[requiredLayer])
+      // Click-free layer and channel-bus routing
+      const bus = currentChannelBuses && currentChannelBuses[channelName];
+      const channelDest = bus ? bus.head : ((currentLayerGains && currentLayerGains[requiredLayer])
         ? currentLayerGains[requiredLayer]
-        : trackGainNode;
+        : trackGainNode);
 
       const event = pattern[stepIndex % pattern.length];
       if (!event) continue;
@@ -835,18 +886,70 @@
         return lg;
       });
 
+      // Create persistent Channel Buses (one per channel in track)
+      // Eliminates thousands of dynamic WaveShaper & Filter allocations per minute!
+      const newChannelBuses = {};
+      const chNames = track.patterns ? Object.keys(track.patterns) : [];
+      chNames.forEach(chName => {
+        const reqLayer = (track.layers && track.layers[chName] !== undefined) ? track.layers[chName] : 0;
+        const layerDest = newLayerGains[reqLayer] || newTrackGain;
+        const inst = (track.instruments && track.instruments[chName]) || {};
+
+        let headNode = audioCtx.createGain();
+        let tailNode = headNode;
+
+        // Static Channel Filter (if not dynamic envAmount)
+        if (inst.filter && inst.filter.cutoff && !inst.filter.envAmount) {
+          const filter = audioCtx.createBiquadFilter();
+          filter.type = inst.filter.type || 'lowpass';
+          filter.frequency.setValueAtTime(inst.filter.cutoff, now);
+          if (inst.filter.resonance) {
+            filter.Q.setValueAtTime(inst.filter.resonance, now);
+          }
+          tailNode.connect(filter);
+          tailNode = filter;
+        }
+
+        // Channel WaveShaper Distortion (reusable memoryless waveshaper)
+        if (inst.distortion && audioCtx.createWaveShaper) {
+          const shaper = audioCtx.createWaveShaper();
+          shaper.curve = getDistortionCurve(inst.distortion);
+          shaper.oversample = '2x';
+          tailNode.connect(shaper);
+          tailNode = shaper;
+        }
+
+        tailNode.connect(layerDest);
+        newChannelBuses[chName] = { head: headNode, tail: tailNode };
+      });
+
       // Fade out previous track gain if active
       if (currentTrackGain && isPlaying) {
         const oldGain = currentTrackGain;
         const oldLayerGains = currentLayerGains;
-        oldGain.gain.setValueAtTime(oldGain.gain.value, now);
-        oldGain.gain.linearRampToValueAtTime(0.0001, now + crossfadeSec);
+        const oldBuses = currentChannelBuses;
+        try {
+          if (typeof oldGain.gain.cancelAndHoldAtTime === 'function') {
+            oldGain.gain.cancelAndHoldAtTime(now);
+          } else {
+            oldGain.gain.cancelScheduledValues(now);
+            oldGain.gain.setValueAtTime(oldGain.gain.value, now);
+          }
+          oldGain.gain.linearRampToValueAtTime(0.0001, now + crossfadeSec);
+          oldGain.gain.linearRampToValueAtTime(0.0, now + crossfadeSec + 0.01);
+        } catch (_) {}
         setTimeout(() => {
           try {
             oldGain.disconnect();
             if (oldLayerGains) oldLayerGains.forEach(g => g.disconnect());
+            if (oldBuses) {
+              Object.values(oldBuses).forEach(b => {
+                b.head.disconnect();
+                if (b.tail !== b.head) b.tail.disconnect();
+              });
+            }
           } catch (e) {}
-        }, crossfadeMs + 100);
+        }, crossfadeMs + 50);
       }
 
       // Switch to new track
@@ -854,6 +957,7 @@
       currentTrackId = id;
       currentTrackGain = newTrackGain;
       currentLayerGains = newLayerGains;
+      currentChannelBuses = newChannelBuses;
       currentStep = 0;
       nextNoteTime = audioCtx.currentTime + 0.05;
       lastBeatQuarterTime = audioCtx.currentTime;
@@ -896,16 +1000,30 @@
       try {
         const gainNode = currentTrackGain;
         const layerGains = currentLayerGains;
+        const buses = currentChannelBuses;
         currentTrackGain = null;
         currentLayerGains = null;
+        currentChannelBuses = null;
         const now = audioCtx.currentTime;
-        gainNode.gain.setValueAtTime(gainNode.gain.value, now);
+        if (typeof gainNode.gain.cancelAndHoldAtTime === 'function') {
+          gainNode.gain.cancelAndHoldAtTime(now);
+        } else {
+          gainNode.gain.cancelScheduledValues(now);
+          gainNode.gain.setValueAtTime(gainNode.gain.value, now);
+        }
         gainNode.gain.linearRampToValueAtTime(0.0001, now + fadeSec);
+        gainNode.gain.linearRampToValueAtTime(0.0, now + fadeSec + 0.01);
 
         setTimeout(() => {
           try {
             gainNode.disconnect();
             if (layerGains) layerGains.forEach(g => g.disconnect());
+            if (buses) {
+              Object.values(buses).forEach(b => {
+                b.head.disconnect();
+                if (b.tail !== b.head) b.tail.disconnect();
+              });
+            }
           } catch (e) {}
         }, fadeMs + 50);
       } catch (e) {}
@@ -925,8 +1043,12 @@
     if (audioCtx && masterGainNode) {
       try {
         const now = audioCtx.currentTime;
-        masterGainNode.gain.cancelScheduledValues(now);
-        masterGainNode.gain.setValueAtTime(masterGainNode.gain.value, now);
+        if (typeof masterGainNode.gain.cancelAndHoldAtTime === 'function') {
+          masterGainNode.gain.cancelAndHoldAtTime(now);
+        } else {
+          masterGainNode.gain.cancelScheduledValues(now);
+          masterGainNode.gain.setValueAtTime(masterGainNode.gain.value, now);
+        }
         masterGainNode.gain.linearRampToValueAtTime(isMutedState ? 0.0001 : 1.0, now + 0.05);
       } catch (e) {}
     }
@@ -983,8 +1105,12 @@
       currentLayerGains.forEach((g, idx) => {
         const targetVal = (idx <= layerLevel) ? 1.0 : 0.0001;
         try {
-          g.gain.cancelScheduledValues(now);
-          g.gain.setValueAtTime(g.gain.value, now);
+          if (typeof g.gain.cancelAndHoldAtTime === 'function') {
+            g.gain.cancelAndHoldAtTime(now);
+          } else {
+            g.gain.cancelScheduledValues(now);
+            g.gain.setValueAtTime(g.gain.value, now);
+          }
           g.gain.linearRampToValueAtTime(targetVal, now + rampSec);
         } catch (_) {}
       });
@@ -1246,16 +1372,20 @@
     try {
       initAudio();
       if (!audioCtx) return;
+      const now = audioCtx.currentTime;
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = type;
-      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+      osc.frequency.setValueAtTime(freq, now);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.12, now + 0.003);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+      gain.gain.linearRampToValueAtTime(0.0, now + dur + 0.003);
       osc.connect(gain);
       gain.connect(sfxGainNode || masterGainNode || audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + dur);
+      osc.start(now);
+      osc.stop(now + dur + 0.01);
+      osc.onended = () => { try { osc.disconnect(); gain.disconnect(); } catch (_) {} };
     } catch (e) {}
   }
 
@@ -1277,13 +1407,17 @@
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.type = 'square';
-            osc.frequency.setValueAtTime(f, now + idx * 0.06);
-            gain.gain.setValueAtTime(0.12, now + idx * 0.06);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.12);
+            const t0 = now + idx * 0.06;
+            const tDur = 0.12;
+            osc.frequency.setValueAtTime(f, t0);
+            gain.gain.setValueAtTime(0.0001, t0);
+            gain.gain.linearRampToValueAtTime(0.12, t0 + 0.003);
+            gain.gain.exponentialRampToValueAtTime(0.0001, t0 + tDur);
+            gain.gain.linearRampToValueAtTime(0.0, t0 + tDur + 0.003);
             osc.connect(gain);
             gain.connect(dest);
-            osc.start(now + idx * 0.06);
-            osc.stop(now + idx * 0.06 + 0.12);
+            osc.start(t0);
+            osc.stop(t0 + tDur + 0.01);
             osc.onended = () => { try { osc.disconnect(); gain.disconnect(); } catch (_) {} };
           });
           break;
@@ -1294,12 +1428,14 @@
           osc.type = 'sawtooth';
           osc.frequency.setValueAtTime(160, now);
           osc.frequency.exponentialRampToValueAtTime(95, now + 0.25);
-          gain.gain.setValueAtTime(0.2, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+          gain.gain.setValueAtTime(0.0001, now);
+          gain.gain.linearRampToValueAtTime(0.2, now + 0.003);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+          gain.gain.linearRampToValueAtTime(0.0, now + 0.254);
           osc.connect(gain);
           gain.connect(dest);
           osc.start(now);
-          osc.stop(now + 0.25);
+          osc.stop(now + 0.26);
           osc.onended = () => { try { osc.disconnect(); gain.disconnect(); } catch (_) {} };
           break;
         }
@@ -1309,13 +1445,18 @@
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.type = 'square';
-            osc.frequency.setValueAtTime(f, now + idx * 0.1);
-            gain.gain.setValueAtTime(0.15, now + idx * 0.1);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.2);
+            const t0 = now + idx * 0.1;
+            const tDur = 0.2;
+            osc.frequency.setValueAtTime(f, t0);
+            gain.gain.setValueAtTime(0.0001, t0);
+            gain.gain.linearRampToValueAtTime(0.15, t0 + 0.003);
+            gain.gain.exponentialRampToValueAtTime(0.0001, t0 + tDur);
+            gain.gain.linearRampToValueAtTime(0.0, t0 + tDur + 0.003);
             osc.connect(gain);
             gain.connect(dest);
-            osc.start(now + idx * 0.1);
-            osc.stop(now + idx * 0.1 + 0.2);
+            osc.start(t0);
+            osc.stop(t0 + tDur + 0.01);
+            osc.onended = () => { try { osc.disconnect(); gain.disconnect(); } catch (_) {} };
           });
           break;
 
@@ -1327,13 +1468,16 @@
             const gain = audioCtx.createGain();
             osc.type = 'triangle';
             const noteStart = now + idx * 0.22;
+            const noteDur = 0.35;
             osc.frequency.setValueAtTime(freq, noteStart);
-            gain.gain.setValueAtTime(0.18, noteStart);
-            gain.gain.exponentialRampToValueAtTime(0.0001, noteStart + 0.35);
+            gain.gain.setValueAtTime(0.0001, noteStart);
+            gain.gain.linearRampToValueAtTime(0.18, noteStart + 0.004);
+            gain.gain.exponentialRampToValueAtTime(0.0001, noteStart + noteDur);
+            gain.gain.linearRampToValueAtTime(0.0, noteStart + noteDur + 0.004);
             osc.connect(gain);
             gain.connect(dest);
             osc.start(noteStart);
-            osc.stop(noteStart + 0.38);
+            osc.stop(noteStart + noteDur + 0.01);
             osc.onended = () => { try { osc.disconnect(); gain.disconnect(); } catch (_) {} };
           });
           break;
@@ -1355,13 +1499,18 @@
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.type = 'triangle';
-            osc.frequency.setValueAtTime(f, now + idx * 0.05);
-            gain.gain.setValueAtTime(0.12, now + idx * 0.05);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.05 + 0.18);
+            const t0 = now + idx * 0.05;
+            const tDur = 0.18;
+            osc.frequency.setValueAtTime(f, t0);
+            gain.gain.setValueAtTime(0.0001, t0);
+            gain.gain.linearRampToValueAtTime(0.12, t0 + 0.003);
+            gain.gain.exponentialRampToValueAtTime(0.0001, t0 + tDur);
+            gain.gain.linearRampToValueAtTime(0.0, t0 + tDur + 0.003);
             osc.connect(gain);
             gain.connect(dest);
-            osc.start(now + idx * 0.05);
-            osc.stop(now + idx * 0.05 + 0.2);
+            osc.start(t0);
+            osc.stop(t0 + tDur + 0.01);
+            osc.onended = () => { try { osc.disconnect(); gain.disconnect(); } catch (_) {} };
           });
           break;
 
@@ -1371,12 +1520,15 @@
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(420, now);
           osc.frequency.exponentialRampToValueAtTime(840, now + 0.07);
-          gain.gain.setValueAtTime(0.08, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+          gain.gain.setValueAtTime(0.0001, now);
+          gain.gain.linearRampToValueAtTime(0.08, now + 0.003);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.07);
+          gain.gain.linearRampToValueAtTime(0.0, now + 0.074);
           osc.connect(gain);
           gain.connect(dest);
           osc.start(now);
-          osc.stop(now + 0.07);
+          osc.stop(now + 0.08);
+          osc.onended = () => { try { osc.disconnect(); gain.disconnect(); } catch (_) {} };
           break;
         }
 
@@ -1675,6 +1827,8 @@
     playSfx,
     getCurrentTrackId,
     isAudioContextRunning,
+    getMasterGainNode: () => masterGainNode,
+    getAudioContext: () => audioCtx,
     mountDevAuditionPanel,
     // Battle audio APIs
     startBattleMusic,

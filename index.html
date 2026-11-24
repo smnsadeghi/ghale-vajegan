@@ -1797,14 +1797,6 @@
       gap: 7px;
     }
 
-    .smart-retry-tag {
-      color: var(--bad);
-      font-size: 0.72rem;
-      font-weight: 800;
-      margin-bottom: 2px;
-      text-align: center;
-    }
-
     .rpg-question {
       position: relative;
       background: #161311;
@@ -3766,6 +3758,139 @@
     .btn-ghost.btn-xs {
       padding: 3px 8px;
       font-size: 0.74rem;
+    }
+
+    /* Leaderboard Mode Tabs & Controls */
+    .leaderboard-mode-tabs {
+      display: flex;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 9999px;
+      padding: 3px;
+      gap: 4px;
+      flex-shrink: 0;
+      margin-bottom: 8px;
+    }
+    .leaderboard-mode-tabs button,
+    .leaderboard-mode-tabs .capsule-tab {
+      flex: 1;
+      padding: 7px 12px;
+      font-size: 0.82rem;
+      border-radius: 9999px;
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+      background: transparent;
+      color: var(--ink-muted);
+      text-align: center;
+      white-space: nowrap;
+    }
+    .leaderboard-mode-tabs button.active,
+    .leaderboard-mode-tabs .capsule-tab.active {
+      background: var(--gold) !important;
+      color: #050403 !important;
+      font-weight: 800;
+      box-shadow: 0 2px 8px rgba(201, 162, 94, 0.35);
+    }
+    .leaderboard-mode-tabs button:not(.active):hover,
+    .leaderboard-mode-tabs .capsule-tab:not(.active):hover {
+      color: var(--ink);
+    }
+    .lb-stage-select-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      padding: 6px 10px;
+      background: rgba(26, 22, 20, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+    }
+    .lb-stage-select-wrap.hidden {
+      display: none !important;
+    }
+    .lb-stage-select-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--ink-muted);
+      white-space: nowrap;
+    }
+    .lb-stage-select {
+      flex: 1;
+      min-width: 0;
+      background: rgba(14, 11, 10, 0.85);
+      border: 1px solid rgba(201, 162, 94, 0.3);
+      color: var(--ink);
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+    .lb-stage-select:focus {
+      border-color: var(--gold);
+    }
+    .lb-performance-badges {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .lb-badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      line-height: 1.3;
+    }
+    .lb-badge-tag--flawless {
+      background: rgba(16, 185, 129, 0.16);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+    .lb-badge-tag--retry {
+      background: rgba(245, 158, 11, 0.16);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+    .lb-time-sub {
+      font-size: 0.68rem;
+      color: var(--ink-muted);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+    .victory-flawless-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+    .victory-retry-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.5);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 0.8rem;
+      font-weight: 800;
     }
 
     /* Public Profile Modal */
@@ -5963,7 +6088,7 @@
         </div>
       </form>
 
-      <div class="auth-version font-pixel footer-ver" id="versionTrigger" data-baseline="v5.1.0">v7.2.0</div>
+      <div class="auth-version font-pixel footer-ver" id="versionTrigger" data-baseline="v5.1.0">v1.0.0</div>
     </div>
   </div>
 
@@ -6380,9 +6505,6 @@
       <div class="rpg-dialog-inner">
         <!-- BATTLE QUIZ -->
         <div id="phaseQuiz">
-          <div id="qzRetryTag" class="hidden smart-retry-tag">
-            [تکرار هوشمند • واژه دارای چالش]
-          </div>
           <div class="rpg-question" role="heading" aria-level="2">
             <span id="comboBadge" class="combo-badge font-pixel hidden" dir="ltr">x3 COMBO</span>
             <div id="qzPrompt" class="qz-prompt-text">معنای صحیح واژه چیست؟</div>
@@ -6443,6 +6565,10 @@
             <span>امتیاز کل نبرد:</span>
             <strong id="victoryTotalScore" class="font-pixel" style="color:var(--world); font-size:1.05rem;">-</strong>
           </div>
+          <div id="victoryFlawlessRow" class="victory-stat-row hidden">
+            <span>وضعیت پاکیزگی:</span>
+            <div id="victoryFlawlessVal">-</div>
+          </div>
         </div>
 
         <p id="victoryStats" class="arena-modal-desc"></p>
@@ -6468,22 +6594,34 @@
         <div class="my-rank-tiles">
           <div class="stat-tile">
             <div id="myMajorRank" class="stat-tile__value">-</div>
-            <div class="stat-tile__label">رتبه در رشته</div>
+            <div id="myMajorRankLabel" class="stat-tile__label">رتبه در رشته</div>
             <div id="myMajorTotal" class="stat-tile__sub"></div>
           </div>
           <div class="stat-tile-divider"></div>
           <div class="stat-tile">
             <div id="myGlobalRank" class="stat-tile__value">-</div>
-            <div class="stat-tile__label">رتبه کل هنرستان</div>
+            <div id="myGlobalRankLabel" class="stat-tile__label">رتبه کل هنرستان</div>
             <div id="myGlobalTotal" class="stat-tile__sub"></div>
           </div>
         </div>
       </div>
 
-      <!-- TOGGLE: رشته من vs کل هنرستان -->
-      <div class="capsule-tabs leaderboard-tabs" role="tablist">
+      <!-- LEADERBOARD MODE SWITCHER (Overall vs By Stage) -->
+      <div class="capsule-tabs leaderboard-mode-tabs" role="tablist">
+        <button id="btnTabLbOverall" type="button" class="capsule-tab active">📊 رده‌بندی کلی</button>
+        <button id="btnTabLbByStage" type="button" class="capsule-tab">🎯 به تفکیک مراحل</button>
+      </div>
+
+      <!-- TOGGLE: رشته من vs کل هنرستان (Overall Mode) -->
+      <div id="lbOverallScopeTabs" class="capsule-tabs leaderboard-tabs" role="tablist">
         <button id="btnTabMajorLeaderboard" type="button" class="capsule-tab active">رشته من</button>
         <button id="btnTabGlobalLeaderboard" type="button" class="capsule-tab">کل هنرستان</button>
+      </div>
+
+      <!-- STAGE SELECTOR (By Stage Mode) -->
+      <div id="lbStageSelectWrap" class="lb-stage-select-wrap hidden">
+        <label for="lbStageSelect" class="lb-stage-select-label">مرحله هدف:</label>
+        <select id="lbStageSelect" class="lb-stage-select"></select>
       </div>
 
       <!-- PLAYER LIST (Internal Scroll Only Here) -->
@@ -7470,6 +7608,10 @@ function mapStudentRow(row) {
     rankedAttempts: (row.ranked_attempts && typeof row.ranked_attempts === "object") ? row.ranked_attempts : {},
     achievements: Array.isArray(row.achievements) ? row.achievements : [],
     pinnedAchievements: Array.isArray(row.pinned_achievements) ? row.pinned_achievements : [],
+    stagePerformance: (stats.stagePerformance && typeof stats.stagePerformance === "object") ? stats.stagePerformance : {},
+    totalLosses: Number(stats.totalLosses) || 0,
+    totalAttempts: Number(stats.totalAttempts) || 0,
+    flawlessClears: Number(stats.flawlessClears) || 0,
     stats: { ...stats, grade }
   };
 }
@@ -7743,6 +7885,10 @@ async function syncStudentToCloud(student) {
   if (!appState.sbUrl || !appState.sbKey || !student || !student.code) return;
   const grade = student.grade || (student.stats && student.stats.grade) || "10";
   const stats = (student.stats && typeof student.stats === "object") ? { ...student.stats, grade } : { grade };
+  stats.stagePerformance = student.stagePerformance || stats.stagePerformance || {};
+  stats.totalLosses = (typeof student.totalLosses === "number") ? student.totalLosses : (stats.totalLosses || 0);
+  stats.totalAttempts = (typeof student.totalAttempts === "number") ? student.totalAttempts : (stats.totalAttempts || 0);
+  stats.flawlessClears = (typeof student.flawlessClears === "number") ? student.flawlessClears : (stats.flawlessClears || 0);
   const payload = {
     code: String(student.code),
     name: student.name || "",
@@ -11357,14 +11503,6 @@ function renderNextQuizQuestion() {
     promptEl.innerHTML = formatQuizPrompt(currentQuizItem.word, w, isHellRound, currentQuizItem.prompt, currentQuizItem.tag);
   }
 
-  // Smart Repetition Badge
-  const retryTag = document.getElementById("qzRetryTag");
-  if (currentQuizItem.isRetry) {
-    retryTag.classList.remove("hidden");
-  } else {
-    retryTag.classList.add("hidden");
-  }
-
   // Render 4 Options
   const grid = document.getElementById("qzOptions");
   if (!grid) return;
@@ -11698,6 +11836,27 @@ function completeStageDefeat() {
   if (typeof AudioEngine !== "undefined" && typeof AudioEngine.handleBattleDefeat === "function") {
     AudioEngine.handleBattleDefeat({ fadeMs: 1500 });
   }
+
+  // Record defeat/loss on stage performance
+  const user = appState.students[appState.currentUserCode];
+  if (user && currentStage) {
+    if (!user.stagePerformance) user.stagePerformance = {};
+    if (!user.stagePerformance[currentStage.id]) {
+      user.stagePerformance[currentStage.id] = { attempts: 0, losses: 0, flawless: false, bestStageScore: 0, bestTimeSec: 9999 };
+    }
+    const perf = user.stagePerformance[currentStage.id];
+    perf.attempts = (perf.attempts || 0) + 1;
+    perf.losses = (perf.losses || 0) + 1;
+    perf.flawless = false;
+    user.totalLosses = (user.totalLosses || 0) + 1;
+    user.totalAttempts = (user.totalAttempts || 0) + 1;
+    if (!user.stats) user.stats = {};
+    user.stats.totalLosses = user.totalLosses;
+    user.stats.totalAttempts = user.totalAttempts;
+    user.stats.stagePerformance = user.stagePerformance;
+    scheduleSaveLocal();
+  }
+
   document.getElementById("phaseQuiz").classList.add("hidden");
   document.getElementById("phaseVictory").classList.add("hidden");
   const defEl = document.getElementById("phaseDefeat");
@@ -11707,10 +11866,22 @@ function completeStageDefeat() {
 
 function completeStageVictory() {
   clearInterval(arenaTimerInterval);
-  const user = appState.students[appState.currentUserCode];
+  const user = appState.students[appState.currentUserCode] || {};
   const durationSec = Math.max(1, Math.round((Date.now() - battleStartTime) / 1000));
   const totalAnswers = stageCorrectCount + stageMistakesCount;
   const accuracyPct = totalAnswers > 0 ? Math.round((stageCorrectCount / totalAnswers) * 100) : 100;
+
+  // Retrieve or initialize stage performance
+  if (!user.stagePerformance) user.stagePerformance = {};
+  if (!user.stagePerformance[currentStage.id]) {
+    user.stagePerformance[currentStage.id] = { attempts: 0, losses: 0, flawless: false, bestStageScore: 0, bestTimeSec: 9999 };
+  }
+  const stagePerf = user.stagePerformance[currentStage.id];
+  stagePerf.attempts = (stagePerf.attempts || 0) + 1;
+  const stageLosses = stagePerf.losses || 0;
+
+  // Flawless status: 0 prior losses on this stage and 0 mistakes in this run
+  const isFlawlessRun = (stageLosses === 0 && stageMistakesCount === 0);
 
   // Speed Bonus calculation (up to +30%, scaled smoothly from <=35s down to >=120s, only if accuracy >= 60%)
   let speedBonusPct = 0;
@@ -11726,9 +11897,38 @@ function completeStageVictory() {
 
   const speedBonusXP = Math.round(stageBaseEarnedXP * (speedBonusPct / 100));
   const conquestBonus = isHellRound ? 50 : 25;
-  const stageRunScore = stageBaseEarnedXP + speedBonusXP + conquestBonus;
+  const baseRunScore = stageBaseEarnedXP + speedBonusXP + conquestBonus;
 
-  user.xp = (user.xp || 0) + speedBonusXP + conquestBonus;
+  // Flawless Clear Bonus (+25%) vs Multi-Attempt / Retry Penalty (capped at 35%)
+  let flawlessBonusXP = 0;
+  let retryPenaltyXP = 0;
+  let stageRunScore = baseRunScore;
+
+  if (isFlawlessRun) {
+    flawlessBonusXP = Math.round(baseRunScore * 0.25);
+    stageRunScore = baseRunScore + flawlessBonusXP;
+    stagePerf.flawless = true;
+  } else {
+    const penaltyPct = Math.min(35, (stageLosses * 10) + (stageMistakesCount * 5));
+    retryPenaltyXP = Math.round(baseRunScore * (penaltyPct / 100));
+    stageRunScore = Math.max(20, baseRunScore - retryPenaltyXP);
+    if (!stagePerf.flawless) stagePerf.flawless = false;
+  }
+
+  stagePerf.bestStageScore = Math.max(stagePerf.bestStageScore || 0, stageRunScore);
+  stagePerf.bestTimeSec = (stagePerf.bestTimeSec && stagePerf.bestTimeSec < 9999)
+    ? Math.min(stagePerf.bestTimeSec, durationSec)
+    : durationSec;
+  stagePerf.score = stageRunScore;
+  stagePerf.accuracy = accuracyPct;
+  stagePerf.timeSec = durationSec;
+  stagePerf.completedAt = new Date().toISOString();
+
+  // Net XP added
+  const netBonusXP = speedBonusXP + conquestBonus + (isFlawlessRun ? flawlessBonusXP : -retryPenaltyXP);
+  user.xp = Math.max(0, (user.xp || 0) + netBonusXP);
+
+  if (!user.completedStages) user.completedStages = [];
   if (!user.completedStages.includes(currentStage.id)) {
     user.completedStages.push(currentStage.id);
   }
@@ -11739,6 +11939,11 @@ function completeStageVictory() {
   user.stats.totalAnswered = (user.stats.totalAnswered || 0) + totalAnswers;
   user.stats.bestTimeSec = user.stats.bestTimeSec ? Math.min(user.stats.bestTimeSec, durationSec) : durationSec;
   user.stats.stagesConquered = user.completedStages.length;
+  user.totalAttempts = (user.totalAttempts || 0) + 1;
+  user.flawlessClears = Object.values(user.stagePerformance).filter(p => p && p.flawless).length;
+  user.stats.totalAttempts = user.totalAttempts;
+  user.stats.flawlessClears = user.flawlessClears;
+  user.stats.stagePerformance = user.stagePerformance;
 
   // If Ranked Run: strictly save ONCE in rankedAttempts!
   if (!user.rankedAttempts) user.rankedAttempts = {};
@@ -11747,7 +11952,7 @@ function completeStageVictory() {
       score: stageRunScore,
       accuracy: accuracyPct,
       timeSec: durationSec,
-      flawless: (stageMistakesCount === 0),
+      flawless: isFlawlessRun,
       completedAt: new Date().toISOString()
     };
   }
@@ -11798,6 +12003,19 @@ function completeStageVictory() {
   document.getElementById("victorySpeedBonus").textContent = speedBonusXP > 0 ? `+${speedBonusXP} XP (${speedBonusPct}%)` : "بدون پاداش";
   document.getElementById("victoryTotalScore").textContent = `${stageRunScore} XP`;
 
+  const flawlessRowEl = document.getElementById("victoryFlawlessRow");
+  const flawlessValEl = document.getElementById("victoryFlawlessVal");
+  if (flawlessRowEl && flawlessValEl) {
+    flawlessRowEl.classList.remove("hidden");
+    if (isFlawlessRun) {
+      flawlessValEl.innerHTML = `<span class="victory-flawless-tag">⚡ بدون باخت (+${flawlessBonusXP} XP)</span>`;
+    } else {
+      const penaltyText = retryPenaltyXP > 0 ? ` (-${retryPenaltyXP} XP)` : "";
+      const retryDesc = stageLosses > 0 ? `${stageLosses} بار باخت قبلی` : `${stageMistakesCount} خطا`;
+      flawlessValEl.innerHTML = `<span class="victory-retry-tag">⚠️ تلاش مجدد (${retryDesc}${penaltyText})</span>`;
+    }
+  }
+
   const modeBadgeEl = document.getElementById("victoryModeBadge");
   if (modeBadgeEl) {
     if (isCurrentBattleRanked) {
@@ -11837,8 +12055,127 @@ if (defBackBtn) {
 }
 
 // ==========================================
-// 8. LEADERBOARD VIEW
+// 8. LEADERBOARD VIEW (Overall + By Stage + Flawless Weighting)
 // ==========================================
+let currentLeaderboardMode = "overall"; // "overall" or "stage"
+let currentLeaderboardStageId = null;
+
+function getStudentFlawlessCount(student) {
+  if (!student) return 0;
+  if (typeof student.flawlessClears === "number") return student.flawlessClears;
+  if (student.stats && typeof student.stats.flawlessClears === "number") return student.stats.flawlessClears;
+  let count = 0;
+  if (student.stagePerformance && typeof student.stagePerformance === "object") {
+    Object.values(student.stagePerformance).forEach(p => {
+      if (p && p.flawless) count++;
+    });
+    if (count > 0) return count;
+  }
+  if (student.rankedAttempts && typeof student.rankedAttempts === "object") {
+    Object.values(student.rankedAttempts).forEach(a => {
+      if (a && a.flawless) count++;
+    });
+  }
+  return count;
+}
+
+function getStudentTotalLosses(student) {
+  if (!student) return 0;
+  if (typeof student.totalLosses === "number") return student.totalLosses;
+  if (student.stats && typeof student.stats.totalLosses === "number") return student.stats.totalLosses;
+  let losses = 0;
+  if (student.stagePerformance && typeof student.stagePerformance === "object") {
+    Object.values(student.stagePerformance).forEach(p => {
+      if (p && typeof p.losses === "number") losses += p.losses;
+    });
+  }
+  return losses;
+}
+
+function compareStudentsOverall(a, b) {
+  // 1. Effective score descending
+  const sa = getStudentTotalScore(a);
+  const sb = getStudentTotalScore(b);
+  if (sb !== sa) return sb - sa;
+
+  // 2. Flawless clears descending
+  const fa = getStudentFlawlessCount(a);
+  const fb = getStudentFlawlessCount(b);
+  if (fb !== fa) return fb - fa;
+
+  // 3. Total losses / retries ascending (fewer is better)
+  const la = getStudentTotalLosses(a);
+  const lb = getStudentTotalLosses(b);
+  if (la !== lb) return la - lb;
+
+  // 4. Fastest best time ascending
+  return getStudentBestTime(a) - getStudentBestTime(b);
+}
+
+function getStudentStageData(student, stageId) {
+  if (!student || !stageId) return null;
+  const p = (student.stagePerformance && (student.stagePerformance[stageId] || student.stagePerformance[Number(stageId)])) || null;
+  const r = (student.rankedAttempts && (student.rankedAttempts[stageId] || student.rankedAttempts[Number(stageId)])) || null;
+  if (!p && !r) return null;
+  return {
+    score: (p && typeof p.bestStageScore === "number" && p.bestStageScore > 0) ? p.bestStageScore : (r ? (Number(r.score) || 0) : 0),
+    timeSec: (p && typeof p.bestTimeSec === "number" && p.bestTimeSec > 0 && p.bestTimeSec < 9999) ? p.bestTimeSec : (r ? (Number(r.timeSec) || 9999) : 9999),
+    losses: (p && typeof p.losses === "number") ? p.losses : 0,
+    attempts: (p && typeof p.attempts === "number") ? p.attempts : (r ? 1 : 0),
+    flawless: (p && typeof p.flawless === "boolean") ? p.flawless : (r ? Boolean(r.flawless) : false)
+  };
+}
+
+function compareStudentsByStage(a, b, stageId) {
+  const da = getStudentStageData(a, stageId);
+  const db = getStudentStageData(b, stageId);
+  if (!da && !db) return 0;
+  if (!da) return 1;
+  if (!db) return -1;
+
+  // 1. Stage score descending
+  if (db.score !== da.score) return db.score - da.score;
+
+  // 2. Flawless first
+  if (da.flawless !== db.flawless) return da.flawless ? -1 : 1;
+
+  // 3. Fewer losses / attempts ascending
+  if (da.losses !== db.losses) return da.losses - db.losses;
+  if (da.attempts !== db.attempts) return da.attempts - db.attempts;
+
+  // 4. Fastest time ascending
+  return da.timeSec - db.timeSec;
+}
+
+function formatStageTime(sec) {
+  if (!sec || sec >= 9999) return "--:--";
+  const m = String(Math.floor(sec / 60)).padStart(2, "0");
+  const s = String(sec % 60).padStart(2, "0");
+  return `${m}:${s}`;
+}
+
+function populateLbStageSelect() {
+  const sel = document.getElementById("lbStageSelect");
+  if (!sel) return;
+  const stages = (typeof getActiveStages === "function" ? getActiveStages() : null) || (typeof STAGES_BY_GRADE !== "undefined" ? STAGES_BY_GRADE["10"] : []) || [];
+  if (stages.length === 0) return;
+
+  const currentVal = currentLeaderboardStageId || sel.value;
+  sel.innerHTML = stages.map(st => {
+    const wTitle = st.worldTitle || `جهان ${st.world || 1}`;
+    const sTitle = st.title || `مرحله ${st.id}`;
+    return `<option value="${st.id}">${wTitle} • ${sTitle}</option>`;
+  }).join("");
+
+  if (currentVal && stages.some(st => String(st.id) === String(currentVal))) {
+    sel.value = currentVal;
+    currentLeaderboardStageId = currentVal;
+  } else {
+    sel.value = stages[0].id;
+    currentLeaderboardStageId = stages[0].id;
+  }
+}
+
 function updateLeaderboardTabUI() {
   const isMajor = currentLeaderboardTab === "major";
   const bMajor = document.getElementById("btnTabMajorLeaderboard");
@@ -11851,99 +12188,239 @@ function updateLeaderboardTabUI() {
   }
 }
 
+function updateLeaderboardModeUI() {
+  const isOverall = currentLeaderboardMode === "overall";
+  const bOverall = document.getElementById("btnTabLbOverall");
+  const bStage = document.getElementById("btnTabLbByStage");
+  const overallScopeTabs = document.getElementById("lbOverallScopeTabs");
+  const stageSelectWrap = document.getElementById("lbStageSelectWrap");
+
+  if (bOverall) bOverall.className = `capsule-tab ${isOverall ? "active" : ""}`;
+  if (bStage) bStage.className = `capsule-tab ${!isOverall ? "active" : ""}`;
+
+  if (overallScopeTabs) {
+    if (isOverall) overallScopeTabs.classList.remove("hidden");
+    else overallScopeTabs.classList.add("hidden");
+  }
+  if (stageSelectWrap) {
+    if (!isOverall) stageSelectWrap.classList.remove("hidden");
+    else stageSelectWrap.classList.add("hidden");
+  }
+}
+
 function renderLeaderboardTable() {
+  updateLeaderboardModeUI();
+  updateLeaderboardTabUI();
+
   const allStudents = Object.values(appState.students)
-    .filter(s => s.accountStatus === "approved" || !s.accountStatus)
-    .sort((a, b) => {
-      const sa = getStudentTotalScore(a);
-      const sb = getStudentTotalScore(b);
-      if (sb !== sa) return sb - sa;
-      return getStudentBestTime(a) - getStudentBestTime(b);
-    });
+    .filter(s => s.accountStatus === "approved" || !s.accountStatus);
   const currentUser = appState.students[appState.currentUserCode] || {};
   const currentMajor = currentUser.major || "";
 
-  // 1. Calculate Dual Ranks (Prominent Large Numbers)
-  const globalRankIdx = allStudents.findIndex(s => s.code === appState.currentUserCode);
-  const globalRankVal = globalRankIdx >= 0 ? `${globalRankIdx + 1}` : "-";
-
-  const majorStudents = allStudents.filter(s => s.major === currentMajor);
-  const majorRankIdx = majorStudents.findIndex(s => s.code === appState.currentUserCode);
-  const majorRankVal = majorRankIdx >= 0 ? `${majorRankIdx + 1}` : "-";
-
-  if (majorRankIdx === 0 && currentUser && currentUser.code) {
-    checkAndAwardAchievements(currentUser, { isRank1InMajor: true });
-  }
-
   const mRankEl = document.getElementById("myMajorRank");
   const gRankEl = document.getElementById("myGlobalRank");
-  if (mRankEl) mRankEl.textContent = majorRankVal;
-  if (gRankEl) gRankEl.textContent = globalRankVal;
   const mTotEl = document.getElementById("myMajorTotal");
   const gTotEl = document.getElementById("myGlobalTotal");
-  if (mTotEl) mTotEl.textContent = majorRankIdx >= 0 ? `از ${majorStudents.length} نفر` : "";
-  if (gTotEl) gTotEl.textContent = globalRankIdx >= 0 ? `از ${allStudents.length} نفر` : "";
-
-  // 2. Filter Table based on active tab with true internal scroll
-  const displayList = currentLeaderboardTab === "major" ? majorStudents : allStudents;
-
+  const mLabelEl = document.getElementById("myMajorRankLabel");
+  const gLabelEl = document.getElementById("myGlobalRankLabel");
   const tbody = document.getElementById("studentLeaderboardBody");
-  if (tbody) {
-    tbody.innerHTML = displayList.map((s, idx) => {
-      const actualRank = idx + 1;
-      let rankHtml = `<span class="lb-rank-num">${actualRank}</span>`;
-      if (actualRank === 1) {
-        rankHtml = `<svg class="lb-medal lb-medal--gold" viewBox="0 0 24 24" width="22" height="22" aria-label="مدال طلا">
-          <circle cx="12" cy="13" r="8" fill="#d4af37" stroke="#ffd54f" stroke-width="1.5"/>
-          <path d="M8 2L12 8L16 2" stroke="#c9a25e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <text x="12" y="16.5" text-anchor="middle" font-size="10" font-weight="900" fill="#1a1409" font-family="'Vazirmatn', sans-serif">1</text>
-        </svg>`;
-      } else if (actualRank === 2) {
-        rankHtml = `<svg class="lb-medal lb-medal--silver" viewBox="0 0 24 24" width="22" height="22" aria-label="مدال نقره">
-          <circle cx="12" cy="13" r="8" fill="#b0bec5" stroke="#eceff1" stroke-width="1.5"/>
-          <path d="M8 2L12 8L16 2" stroke="#90a4ae" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <text x="12" y="16.5" text-anchor="middle" font-size="10" font-weight="900" fill="#10171d" font-family="'Vazirmatn', sans-serif">2</text>
-        </svg>`;
-      } else if (actualRank === 3) {
-        rankHtml = `<svg class="lb-medal lb-medal--bronze" viewBox="0 0 24 24" width="22" height="22" aria-label="مدال برنز">
-          <circle cx="12" cy="13" r="8" fill="#b07d58" stroke="#d7ccc8" stroke-width="1.5"/>
-          <path d="M8 2L12 8L16 2" stroke="#8d5a36" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <text x="12" y="16.5" text-anchor="middle" font-size="10" font-weight="900" fill="#20120b" font-family="'Vazirmatn', sans-serif">3</text>
-        </svg>`;
-      }
 
-      const isMe = s.code === appState.currentUserCode;
-      const officialScore = getStudentTotalScore(s);
-      const pinnedBadges = (s.pinnedAchievements || []).map(id => {
-        const def = ACHIEVEMENTS_DEF.find(a => a.id === id);
-        return def ? `<span class="lb-badge-mini" title="${def.title}">${def.icon}</span>` : "";
-      }).join("");
+  if (currentLeaderboardMode === "overall") {
+    // ------------------------------------
+    // MODE: OVERALL LEADERBOARD
+    // ------------------------------------
+    if (mLabelEl) mLabelEl.textContent = "رتبه در رشته";
+    if (gLabelEl) gLabelEl.textContent = "رتبه کل هنرستان";
 
-      return `
-        <div class="leaderboard-row ${isMe ? "is-me" : ""}" onclick="openPublicProfile('${s.code}')" role="button" tabindex="0">
-          <div class="lb-col-rank">${rankHtml}</div>
-          <div class="lb-col-info">
-            <div class="lb-row-top">
-              <span class="lb-player-name">${s.name}</span>
-              <div class="lb-pinned-badges">${pinnedBadges}</div>
+    const sortedOverall = [...allStudents].sort(compareStudentsOverall);
+
+    const globalRankIdx = sortedOverall.findIndex(s => s.code === appState.currentUserCode);
+    const globalRankVal = globalRankIdx >= 0 ? `${globalRankIdx + 1}` : "-";
+
+    const majorStudents = sortedOverall.filter(s => s.major === currentMajor);
+    const majorRankIdx = majorStudents.findIndex(s => s.code === appState.currentUserCode);
+    const majorRankVal = majorRankIdx >= 0 ? `${majorRankIdx + 1}` : "-";
+
+    if (majorRankIdx === 0 && currentUser && currentUser.code) {
+      checkAndAwardAchievements(currentUser, { isRank1InMajor: true });
+    }
+
+    if (mRankEl) mRankEl.textContent = majorRankVal;
+    if (gRankEl) gRankEl.textContent = globalRankVal;
+    if (mTotEl) mTotEl.textContent = majorRankIdx >= 0 ? `از ${majorStudents.length} نفر` : "";
+    if (gTotEl) gTotEl.textContent = globalRankIdx >= 0 ? `از ${sortedOverall.length} نفر` : "";
+
+    const displayList = currentLeaderboardTab === "major" ? majorStudents : sortedOverall;
+
+    if (tbody) {
+      tbody.innerHTML = displayList.map((s, idx) => {
+        const actualRank = idx + 1;
+        let rankHtml = `<span class="lb-rank-num">${actualRank}</span>`;
+        if (actualRank === 1) {
+          rankHtml = `<svg class="lb-medal lb-medal--gold" viewBox="0 0 24 24" width="22" height="22" aria-label="مدال طلا">
+            <circle cx="12" cy="13" r="8" fill="#d4af37" stroke="#ffd54f" stroke-width="1.5"/>
+            <path d="M8 2L12 8L16 2" stroke="#c9a25e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="12" y="16.5" text-anchor="middle" font-size="10" font-weight="900" fill="#1a1409" font-family="'Vazirmatn', sans-serif">1</text>
+          </svg>`;
+        } else if (actualRank === 2) {
+          rankHtml = `<svg class="lb-medal lb-medal--silver" viewBox="0 0 24 24" width="22" height="22" aria-label="مدال نقره">
+            <circle cx="12" cy="13" r="8" fill="#b0bec5" stroke="#eceff1" stroke-width="1.5"/>
+            <path d="M8 2L12 8L16 2" stroke="#90a4ae" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="12" y="16.5" text-anchor="middle" font-size="10" font-weight="900" fill="#10171d" font-family="'Vazirmatn', sans-serif">2</text>
+          </svg>`;
+        } else if (actualRank === 3) {
+          rankHtml = `<svg class="lb-medal lb-medal--bronze" viewBox="0 0 24 24" width="22" height="22" aria-label="مدال برنز">
+            <circle cx="12" cy="13" r="8" fill="#b07d58" stroke="#d7ccc8" stroke-width="1.5"/>
+            <path d="M8 2L12 8L16 2" stroke="#8d5a36" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="12" y="16.5" text-anchor="middle" font-size="10" font-weight="900" fill="#20120b" font-family="'Vazirmatn', sans-serif">3</text>
+          </svg>`;
+        }
+
+        const isMe = s.code === appState.currentUserCode;
+        const officialScore = getStudentTotalScore(s);
+        const pinnedBadges = (s.pinnedAchievements || []).map(id => {
+          const def = ACHIEVEMENTS_DEF.find(a => a.id === id);
+          return def ? `<span class="lb-badge-mini" title="${def.title}">${def.icon}</span>` : "";
+        }).join("");
+
+        const flawlessCount = getStudentFlawlessCount(s);
+        const totalLosses = getStudentTotalLosses(s);
+        const perfBadges = `
+          <div class="lb-performance-badges">
+            ${flawlessCount > 0 ? `<span class="lb-badge-tag lb-badge-tag--flawless" title="${flawlessCount} مرحله بدون باخت">⚡ ${flawlessCount} بدون باخت</span>` : ""}
+            ${totalLosses > 0 ? `<span class="lb-badge-tag lb-badge-tag--retry" title="${totalLosses} بار باخت و تلاش مجدد">⚠️ ${totalLosses} باخت</span>` : ""}
+          </div>
+        `;
+
+        return `
+          <div class="leaderboard-row ${isMe ? "is-me" : ""}" onclick="openPublicProfile('${s.code}')" role="button" tabindex="0">
+            <div class="lb-col-rank">${rankHtml}</div>
+            <div class="lb-col-info">
+              <div class="lb-row-top">
+                <span class="lb-player-name">${s.name}</span>
+                <div class="lb-pinned-badges">${pinnedBadges}</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <span class="lb-player-major">${s.major || "-"}</span>
+                ${perfBadges}
+              </div>
             </div>
-            <span class="lb-player-major">${s.major || "-"}</span>
+            <div class="lb-col-xp">
+              <span class="lb-xp-val">${officialScore}</span>
+              <span class="lb-xp-unit">XP</span>
+            </div>
           </div>
-          <div class="lb-col-xp">
-            <span class="lb-xp-val">${officialScore}</span>
-            <span class="lb-xp-unit">XP</span>
+        `;
+      }).join("") || '<div class="leaderboard-empty">هنوز بازیکنی ثبت نشده است.</div>';
+    }
+  } else {
+    // ------------------------------------
+    // MODE: PER-STAGE LEADERBOARD
+    // ------------------------------------
+    populateLbStageSelect();
+    const stages = (typeof getActiveStages === "function" ? getActiveStages() : null) || (typeof STAGES_BY_GRADE !== "undefined" ? STAGES_BY_GRADE["10"] : []) || [];
+    if (!currentLeaderboardStageId && stages.length > 0) {
+      currentLeaderboardStageId = stages[0].id;
+    }
+    const stageId = currentLeaderboardStageId;
+
+    if (mLabelEl) mLabelEl.textContent = "رتبه من در مرحله";
+    if (gLabelEl) gLabelEl.textContent = "وضعیت نبرد مرحله";
+
+    const stageStudents = allStudents
+      .filter(s => getStudentStageData(s, stageId) !== null)
+      .sort((a, b) => compareStudentsByStage(a, b, stageId));
+
+    const myStageData = getStudentStageData(currentUser, stageId);
+    const myStageRankIdx = stageStudents.findIndex(s => s.code === appState.currentUserCode);
+
+    if (myStageRankIdx >= 0 && myStageData) {
+      if (mRankEl) mRankEl.textContent = `${myStageRankIdx + 1}`;
+      if (mTotEl) mTotEl.textContent = `از ${stageStudents.length} بازیکن`;
+      if (gRankEl) gRankEl.textContent = `${myStageData.score} XP`;
+      if (gTotEl) gTotEl.textContent = myStageData.flawless ? "بدون باخت ⚡" : (myStageData.attempts > 1 ? `${myStageData.attempts} تلاش` : "تلاش مجدد");
+    } else {
+      if (mRankEl) mRankEl.textContent = "-";
+      if (mTotEl) mTotEl.textContent = "هنوز فتح نشده";
+      if (gRankEl) gRankEl.textContent = "-";
+      if (gTotEl) gTotEl.textContent = "بدون رکورد";
+    }
+
+    if (tbody) {
+      tbody.innerHTML = stageStudents.map((s, idx) => {
+        const actualRank = idx + 1;
+        let rankHtml = `<span class="lb-rank-num">${actualRank}</span>`;
+        if (actualRank === 1) {
+          rankHtml = `<svg class="lb-medal lb-medal--gold" viewBox="0 0 24 24" width="22" height="22" aria-label="مدال طلا">
+            <circle cx="12" cy="13" r="8" fill="#d4af37" stroke="#ffd54f" stroke-width="1.5"/>
+            <path d="M8 2L12 8L16 2" stroke="#c9a25e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="12" y="16.5" text-anchor="middle" font-size="10" font-weight="900" fill="#1a1409" font-family="'Vazirmatn', sans-serif">1</text>
+          </svg>`;
+        } else if (actualRank === 2) {
+          rankHtml = `<svg class="lb-medal lb-medal--silver" viewBox="0 0 24 24" width="22" height="22" aria-label="مدال نقره">
+            <circle cx="12" cy="13" r="8" fill="#b0bec5" stroke="#eceff1" stroke-width="1.5"/>
+            <path d="M8 2L12 8L16 2" stroke="#90a4ae" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="12" y="16.5" text-anchor="middle" font-size="10" font-weight="900" fill="#10171d" font-family="'Vazirmatn', sans-serif">2</text>
+          </svg>`;
+        } else if (actualRank === 3) {
+          rankHtml = `<svg class="lb-medal lb-medal--bronze" viewBox="0 0 24 24" width="22" height="22" aria-label="مدال برنز">
+            <circle cx="12" cy="13" r="8" fill="#b07d58" stroke="#d7ccc8" stroke-width="1.5"/>
+            <path d="M8 2L12 8L16 2" stroke="#8d5a36" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="12" y="16.5" text-anchor="middle" font-size="10" font-weight="900" fill="#20120b" font-family="'Vazirmatn', sans-serif">3</text>
+          </svg>`;
+        }
+
+        const isMe = s.code === appState.currentUserCode;
+        const sData = getStudentStageData(s, stageId);
+        const pinnedBadges = (s.pinnedAchievements || []).map(id => {
+          const def = ACHIEVEMENTS_DEF.find(a => a.id === id);
+          return def ? `<span class="lb-badge-mini" title="${def.title}">${def.icon}</span>` : "";
+        }).join("");
+
+        const stageBadge = sData.flawless
+          ? `<span class="lb-badge-tag lb-badge-tag--flawless">⚡ بدون باخت</span>`
+          : `<span class="lb-badge-tag lb-badge-tag--retry">⚠️ تلاش مجدد (${sData.attempts || (sData.losses + 1)} بار)</span>`;
+
+        return `
+          <div class="leaderboard-row ${isMe ? "is-me" : ""}" onclick="openPublicProfile('${s.code}')" role="button" tabindex="0">
+            <div class="lb-col-rank">${rankHtml}</div>
+            <div class="lb-col-info">
+              <div class="lb-row-top">
+                <span class="lb-player-name">${s.name}</span>
+                <div class="lb-pinned-badges">${pinnedBadges}</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <span class="lb-player-major">${s.major || "-"}</span>
+                ${stageBadge}
+              </div>
+            </div>
+            <div class="lb-col-xp" style="flex-direction:column; align-items:flex-end; gap:0;">
+              <div style="display:flex; align-items:baseline; gap:2px;">
+                <span class="lb-xp-val">${sData.score}</span>
+                <span class="lb-xp-unit">XP</span>
+              </div>
+              <span class="lb-time-sub">${formatStageTime(sData.timeSec)}</span>
+            </div>
           </div>
-        </div>
-      `;
-    }).join("") || '<div class="leaderboard-empty">هنوز بازیکنی ثبت نشده است.</div>';
+        `;
+      }).join("") || '<div class="leaderboard-empty">هنوز هیچ بازیکنی این مرحله را تکمیل نکرده است.</div>';
+    }
   }
 }
 window.renderLeaderboard = renderLeaderboardTable;
+window.getStudentFlawlessCount = getStudentFlawlessCount;
+window.getStudentTotalLosses = getStudentTotalLosses;
+window.compareStudentsOverall = compareStudentsOverall;
+window.compareStudentsByStage = compareStudentsByStage;
+window.getStudentStageData = getStudentStageData;
+window.populateLbStageSelect = populateLbStageSelect;
 
 document.getElementById("btnOpenLeaderboard").addEventListener("click", async () => {
   await fetchAllStudentsFromCloud();
   currentLeaderboardTab = "major";
+  currentLeaderboardMode = "overall";
   updateLeaderboardTabUI();
+  updateLeaderboardModeUI();
   renderLeaderboardTable();
   showView("viewLeaderboard");
 });
@@ -11957,6 +12434,24 @@ document.getElementById("btnTabMajorLeaderboard")?.addEventListener("click", () 
 document.getElementById("btnTabGlobalLeaderboard")?.addEventListener("click", () => {
   currentLeaderboardTab = "global";
   updateLeaderboardTabUI();
+  renderLeaderboardTable();
+});
+
+document.getElementById("btnTabLbOverall")?.addEventListener("click", () => {
+  currentLeaderboardMode = "overall";
+  updateLeaderboardModeUI();
+  renderLeaderboardTable();
+});
+
+document.getElementById("btnTabLbByStage")?.addEventListener("click", () => {
+  currentLeaderboardMode = "stage";
+  populateLbStageSelect();
+  updateLeaderboardModeUI();
+  renderLeaderboardTable();
+});
+
+document.getElementById("lbStageSelect")?.addEventListener("change", (e) => {
+  currentLeaderboardStageId = e.target.value;
   renderLeaderboardTable();
 });
 
