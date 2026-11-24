@@ -5705,6 +5705,31 @@
       outline-offset: 4px;
     }
 
+    /* Tactile one-time swipe nudge demonstrating card advance */
+    @keyframes studyCardSwipeNudge {
+      0% {
+        transform: translateX(0) rotate(0deg);
+      }
+      20% {
+        transform: translateX(-30px) rotate(-2.2deg);
+      }
+      40% {
+        transform: translateX(0) rotate(0deg);
+      }
+      60% {
+        transform: translateX(-15px) rotate(-1.1deg);
+      }
+      80% {
+        transform: translateX(0) rotate(0deg);
+      }
+      100% {
+        transform: translateX(0) rotate(0deg);
+      }
+    }
+    .study-card-swipe-nudge {
+      animation: studyCardSwipeNudge 1.1s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
     /* Empty State for Study Mode (Edge Case) */
     .study-empty-state {
       position: absolute;
@@ -5746,6 +5771,7 @@
     /* Prefers-reduced-motion overrides for Study Mode */
     @media (prefers-reduced-motion: reduce) {
       .study-tutorial-overlay,
+      .study-card-swipe-nudge,
       .study-card-scene.tutorial-demo-active #studyCard,
       .study-tutorial-pointer,
       .study-tutorial-spark,
@@ -8287,6 +8313,10 @@ function showView(viewId) {
     if (typeof AudioEngine !== "undefined" && AudioEngine.getCurrentTrackId() === "flashcards-chill") {
       AudioEngine.stopMusic({ fadeMs: 800 });
     }
+    if (window.__studySwipeNudgeTimer) {
+      clearTimeout(window.__studySwipeNudgeTimer);
+      window.__studySwipeNudgeTimer = null;
+    }
   }
   document.body.classList.toggle("in-battle", viewId === "viewArena");
   document.body.classList.toggle("in-study", viewId === "viewStudy");
@@ -8949,16 +8979,25 @@ function openStudyMode(stage) {
 
   const studyCard = document.getElementById("studyCard");
   if (studyCard) {
-    studyCard.classList.remove("is-flipped");
-    studyCard.style.transform = "none";
-    // Show-Don't-Tell visual nudge on first entry
-    if (!sessionStorage.getItem("gv_study_nudge_seen")) {
-      studyCard.classList.add("study-card-nudge");
-      setTimeout(() => {
-        studyCard.classList.remove("study-card-nudge");
-        sessionStorage.setItem("gv_study_nudge_seen", "true");
-      }, 1400);
-    }
+    studyCard.classList.remove("is-flipped", "study-card-swipe-nudge");
+    studyCard.style.transform = "rotateY(0deg)";
+    studyCard.style.opacity = "1";
+  }
+
+  // Schedule subtle one-time swipe nudge if player doesn't swipe on the first card
+  clearTimeout(window.__studySwipeNudgeTimer);
+  const swipeNudgeDone = localStorage.getItem("gv_study_swipe_nudge_done") === "true";
+  if (!swipeNudgeDone && studyDeck.length > 1) {
+    window.__studySwipeNudgeTimer = setTimeout(() => {
+      const card = document.getElementById("studyCard");
+      if (card && document.body.classList.contains("in-study") && studyIndex === 0 && !isCardFlipped) {
+        card.classList.add("study-card-swipe-nudge");
+        setTimeout(() => {
+          if (card) card.classList.remove("study-card-swipe-nudge");
+        }, 1150);
+      }
+      try { localStorage.setItem("gv_study_swipe_nudge_done", "true"); } catch (_) {}
+    }, 2200);
   }
 
   renderStudyCard();
@@ -8995,13 +9034,8 @@ function openStudyMode(stage) {
     }
   }
 
-  // First-time tutorial: show only once per user, dismissed on tap anywhere
-  const tutorialSeen = localStorage.getItem("flashcard_tutorial_seen") === "true";
-  if (!tutorialSeen && studyDeck.length > 0) {
-    showStudyTutorial();
-  } else {
-    dismissStudyTutorial();
-  }
+  // Dismiss any legacy tutorial overlay cleanly
+  dismissStudyTutorial();
 }
 
 function renderStudyProgressDots() {
@@ -9242,11 +9276,14 @@ function renderStudyCard() {
     btnNext.classList.toggle("is-disabled", isNextDisabled);
   }
 
-  // Flip Hint visibility (permanently hidden if user has flipped any card)
+  // Flip Hint visibility: ONLY show on the first card (studyIndex === 0)
   const flipHint = document.getElementById("studyFlipHint");
   if (flipHint) {
-    const hasFlipped = localStorage.getItem("gv_study_hint_hidden");
-    flipHint.classList.toggle("hidden", !!hasFlipped);
+    if (studyIndex === 0 && !isCardFlipped) {
+      flipHint.classList.remove("hidden");
+    } else {
+      flipHint.classList.add("hidden");
+    }
   }
 
   const item = studyDeck[studyIndex] || { word: "", meanings: [] };
@@ -9298,205 +9335,17 @@ function renderStudyCard() {
 }
 
 function rotateDeckPoolForward() {
-  const scene = document.getElementById("studyCardScene");
-  let active = document.getElementById("studyCard");
-  let deck1 = document.getElementById("studyDeckBack1");
-  let deck2 = document.getElementById("studyDeckBack2");
-  if (!scene || !active || !deck1 || !deck2) return;
-
-  // 1. Recycle old active to bottom first and update its IDs to studyDeckBack2
-  scene.insertBefore(active, scene.firstChild);
-  active.id = "studyDeckBack2";
-  active.className = "study-card-deck-stack study-card-deck-2";
-  active.setAttribute("aria-hidden", "true");
-  active.removeAttribute("role");
-  active.removeAttribute("tabindex");
-  active.classList.remove("is-flipped");
-  active.style.transition = "none";
-  active.style.transform = "";
-  active.style.opacity = "";
-  const d2Tag = active.querySelector(".study-card-front .study-card-tag");
-  const d2Word = active.querySelector(".study-card-front .study-card-word");
-  if (d2Tag) d2Tag.id = "studyDeckBack2Tag";
-  if (d2Word) d2Word.id = "studyDeckBack2Word";
-
-  // 2. Promote deck2 to deck1
-  deck2.id = "studyDeckBack1";
-  deck2.className = "study-card-deck-stack study-card-deck-1";
-  deck2.setAttribute("aria-hidden", "true");
-  deck2.removeAttribute("role");
-  deck2.removeAttribute("tabindex");
-  deck2.style.transition = "none";
-  deck2.style.transform = "";
-  deck2.style.opacity = "";
-  const d1Tag = deck2.querySelector(".study-card-front .study-card-tag");
-  const d1Word = deck2.querySelector(".study-card-front .study-card-word");
-  if (d1Tag) d1Tag.id = "studyDeckBack1Tag";
-  if (d1Word) d1Word.id = "studyDeckBack1Word";
-
-  // 3. Promote deck1 to active studyCard (already showing next word)
-  scene.appendChild(deck1);
-  deck1.id = "studyCard";
-  deck1.className = "study-card-box";
-  deck1.removeAttribute("aria-hidden");
-  deck1.setAttribute("role", "button");
-  deck1.setAttribute("tabindex", "0");
-  deck1.style.transition = "none";
-  deck1.style.transform = "rotateY(0deg)";
-  deck1.style.opacity = "1";
-
-  const fTag1 = deck1.querySelector(".study-card-front .study-card-tag");
-  const fWord1 = deck1.querySelector(".study-card-front .study-card-word");
-  const bWord1 = deck1.querySelector(".study-card-back-word");
-  const bTag1 = deck1.querySelector(".study-card-back .study-card-tag");
-  const mList1 = deck1.querySelector(".study-meanings-list");
-  const hBlock1 = deck1.querySelector(".study-hint-block");
-  const hText1 = deck1.querySelector(".study-hint-text");
-  if (fTag1) fTag1.id = "studyCardTag";
-  if (fWord1) fWord1.id = "studyCardWord";
-  if (bWord1) bWord1.id = "studyCardBackWord";
-  if (bTag1) bTag1.id = "studyCardTagBack";
-  if (mList1) mList1.id = "studyMeanings";
-  if (hBlock1) hBlock1.id = "studyHintBlock";
-  if (hText1) hText1.id = "studyHint";
-
-  // Lazy fill back of newly active card
-  const curItem = studyDeck[studyIndex] || { word: "", meanings: [] };
-  const curTag = curItem.tag || (studyStage && studyStage.world === 2 ? "کنایه" : (studyStage && studyStage.world === 3 ? "تاریخ ادبیات" : "واژه"));
-  updateCardBackContent(deck1, curItem);
-
-  // Fill recycled card with next+1 while hidden
-  if (studyDeck[studyIndex + 2]) {
-    const n2 = studyDeck[studyIndex + 2];
-    if (d2Word) d2Word.textContent = n2.word;
-    if (d2Tag) d2Tag.textContent = n2.tag || curTag;
+  if (studyIndex < studyDeck.length - 1) {
+    studyIndex++;
   }
-
-  studyCardEl = deck1;
-
-  const remaining = studyDeck ? (studyDeck.length - 1 - studyIndex) : 0;
-  deck2.style.display = remaining >= 1 ? "block" : "none";
-  active.style.display = remaining >= 2 ? "block" : "none";
-
-  document.getElementById("studyCounter").textContent = `${toFaDigits(studyIndex + 1)}/${toFaDigits(studyDeck.length)}`;
-  const btnPrev = document.getElementById("btnStudyPrev");
-  const btnNext = document.getElementById("btnStudyNext");
-  if (btnPrev) {
-    const isPrevDisabled = studyDeck.length <= 1 || studyIndex <= 0;
-    btnPrev.disabled = isPrevDisabled;
-    btnPrev.classList.toggle("is-disabled", isPrevDisabled);
-  }
-  if (btnNext) {
-    const isNextDisabled = studyDeck.length <= 1 || studyIndex >= studyDeck.length - 1;
-    btnNext.disabled = isNextDisabled;
-    btnNext.classList.toggle("is-disabled", isNextDisabled);
-  }
-
-  renderStudyProgressDots();
-  updateStudyBattleButton();
+  renderStudyCard();
 }
 
 function rotateDeckPoolBackward() {
-  const scene = document.getElementById("studyCardScene");
-  let active = document.getElementById("studyCard");
-  let deck1 = document.getElementById("studyDeckBack1");
-  let deck2 = document.getElementById("studyDeckBack2");
-  if (!scene || !active || !deck1 || !deck2) return;
-
-  // 1. Recycle active to deck1
-  active.id = "studyDeckBack1";
-  active.className = "study-card-deck-stack study-card-deck-1";
-  active.setAttribute("aria-hidden", "true");
-  active.removeAttribute("role");
-  active.removeAttribute("tabindex");
-  active.classList.remove("is-flipped");
-  active.style.transition = "none";
-  active.style.transform = "";
-  active.style.opacity = "";
-  const d1Tag = active.querySelector(".study-card-front .study-card-tag");
-  const d1Word = active.querySelector(".study-card-front .study-card-word");
-  if (d1Tag) d1Tag.id = "studyDeckBack1Tag";
-  if (d1Word) d1Word.id = "studyDeckBack1Word";
-
-  // 2. Move deck1 to deck2
-  deck1.id = "studyDeckBack2";
-  deck1.className = "study-card-deck-stack study-card-deck-2";
-  deck1.setAttribute("aria-hidden", "true");
-  deck1.removeAttribute("role");
-  deck1.removeAttribute("tabindex");
-  deck1.style.transition = "none";
-  deck1.style.transform = "";
-  deck1.style.opacity = "";
-  const d2Tag = deck1.querySelector(".study-card-front .study-card-tag");
-  const d2Word = deck1.querySelector(".study-card-front .study-card-word");
-  if (d2Tag) d2Tag.id = "studyDeckBack2Tag";
-  if (d2Word) d2Word.id = "studyDeckBack2Word";
-
-  // 3. Promote deck2 to active studyCard
-  scene.appendChild(deck2);
-  deck2.id = "studyCard";
-  deck2.className = "study-card-box";
-  deck2.removeAttribute("aria-hidden");
-  deck2.setAttribute("role", "button");
-  deck2.setAttribute("tabindex", "0");
-  deck2.style.transition = "none";
-  deck2.style.transform = "rotateY(0deg)";
-  deck2.style.opacity = "1";
-
-  const fTag2 = deck2.querySelector(".study-card-front .study-card-tag");
-  const fWord2 = deck2.querySelector(".study-card-front .study-card-word");
-  const bWord2 = deck2.querySelector(".study-card-back-word");
-  const bTag2 = deck2.querySelector(".study-card-back .study-card-tag");
-  const mList2 = deck2.querySelector(".study-meanings-list");
-  const hBlock2 = deck2.querySelector(".study-hint-block");
-  const hText2 = deck2.querySelector(".study-hint-text");
-  if (fTag2) fTag2.id = "studyCardTag";
-  if (fWord2) fWord2.id = "studyCardWord";
-  if (bWord2) bWord2.id = "studyCardBackWord";
-  if (bTag2) bTag2.id = "studyCardTagBack";
-  if (mList2) mList2.id = "studyMeanings";
-  if (hBlock2) hBlock2.id = "studyHintBlock";
-  if (hText2) hText2.id = "studyHint";
-
-  const curItem = studyDeck[studyIndex] || { word: "", meanings: [] };
-  const curTag = curItem.tag || (studyStage && studyStage.world === 2 ? "کنایه" : (studyStage && studyStage.world === 3 ? "تاریخ ادبیات" : "واژه"));
-  if (fWord2) fWord2.textContent = curItem.word;
-  if (fTag2) fTag2.textContent = curTag;
-  updateCardBackContent(deck2, curItem);
-
-  if (studyDeck[studyIndex + 1]) {
-    const n1 = studyDeck[studyIndex + 1];
-    if (d1Word) d1Word.textContent = n1.word;
-    if (d1Tag) d1Tag.textContent = n1.tag || curTag;
+  if (studyIndex > 0) {
+    studyIndex--;
   }
-  if (studyDeck[studyIndex + 2]) {
-    const n2 = studyDeck[studyIndex + 2];
-    if (d2Word) d2Word.textContent = n2.word;
-    if (d2Tag) d2Tag.textContent = n2.tag || curTag;
-  }
-
-  studyCardEl = deck2;
-
-  const remaining = studyDeck ? (studyDeck.length - 1 - studyIndex) : 0;
-  active.style.display = remaining >= 1 ? "block" : "none";
-  deck1.style.display = remaining >= 2 ? "block" : "none";
-
-  document.getElementById("studyCounter").textContent = `${toFaDigits(studyIndex + 1)}/${toFaDigits(studyDeck.length)}`;
-  const btnPrev = document.getElementById("btnStudyPrev");
-  const btnNext = document.getElementById("btnStudyNext");
-  if (btnPrev) {
-    const isPrevDisabled = studyDeck.length <= 1 || studyIndex <= 0;
-    btnPrev.disabled = isPrevDisabled;
-    btnPrev.classList.toggle("is-disabled", isPrevDisabled);
-  }
-  if (btnNext) {
-    const isNextDisabled = studyDeck.length <= 1 || studyIndex >= studyDeck.length - 1;
-    btnNext.disabled = isNextDisabled;
-    btnNext.classList.toggle("is-disabled", isNextDisabled);
-  }
-
-  renderStudyProgressDots();
-  updateStudyBattleButton();
+  renderStudyCard();
 }
 
 function applyCardFlipState() {
@@ -9514,13 +9363,22 @@ function applyCardFlipState() {
   card.classList.toggle("is-flipped", isCardFlipped);
   card.style.transform = isCardFlipped ? "rotateY(180deg)" : "rotateY(0deg)";
 
+  const hint = document.getElementById("studyFlipHint");
+  if (hint) {
+    if (studyIndex === 0 && !isCardFlipped) {
+      hint.classList.remove("hidden");
+    } else {
+      hint.classList.add("hidden");
+    }
+  }
+
   if (isCardFlipped) {
-    const hint = document.getElementById("studyFlipHint");
-    if (hint) hint.classList.add("hidden");
-    const deferTask = typeof requestIdleCallback === "function" ? requestIdleCallback : (cb => setTimeout(cb, 60));
-    deferTask(() => {
-      try { localStorage.setItem("gv_study_hint_hidden", "true"); } catch (_) {}
-    });
+    if (window.__studySwipeNudgeTimer) {
+      clearTimeout(window.__studySwipeNudgeTimer);
+      window.__studySwipeNudgeTimer = null;
+    }
+    try { localStorage.setItem("gv_study_swipe_nudge_done", "true"); } catch (_) {}
+    card.classList.remove("study-card-swipe-nudge");
     markCardAsSeen(studyIndex);
   }
 }
@@ -9576,6 +9434,14 @@ function onCardPointerDown(e) {
   const card = document.getElementById("studyCard");
   if (!card) return;
   if (e.target && !card.contains(e.target)) return;
+
+  // Clear idle swipe nudge timer since player is interacting
+  if (window.__studySwipeNudgeTimer) {
+    clearTimeout(window.__studySwipeNudgeTimer);
+    window.__studySwipeNudgeTimer = null;
+  }
+  try { localStorage.setItem("gv_study_swipe_nudge_done", "true"); } catch (_) {}
+  card.classList.remove("study-card-swipe-nudge");
 
   isPointerDown = true;
   pointerStartX = e.clientX;
@@ -9715,7 +9581,16 @@ function flyCardAndAdvance(dir) {
   isAnimatingSwipe = true;
   markCardAsSeen(studyIndex);
 
+  // Clear idle swipe nudge timer
+  if (window.__studySwipeNudgeTimer) {
+    clearTimeout(window.__studySwipeNudgeTimer);
+    window.__studySwipeNudgeTimer = null;
+  }
+  try { localStorage.setItem("gv_study_swipe_nudge_done", "true"); } catch (_) {}
+
   const curCard = document.getElementById("studyCard") || studyCardEl;
+  if (curCard) curCard.classList.remove("study-card-swipe-nudge");
+
   const isReducedMotion = typeof window !== "undefined" && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (isReducedMotion) {
     if (curCard) {
@@ -9732,7 +9607,10 @@ function flyCardAndAdvance(dir) {
       if (curCard) curCard.classList.remove("is-flipped");
       playSelectSound();
       renderStudyCard();
-      if (curCard) curCard.style.opacity = "1";
+      if (curCard) {
+        curCard.style.opacity = "1";
+        curCard.style.transform = "rotateY(0deg)";
+      }
       isAnimatingSwipe = false;
     }, 90);
     return;
@@ -9767,20 +9645,15 @@ function flyCardAndAdvance(dir) {
 
   setTimeout(() => {
     if (dir === 1) {
-      if (studyIndex < studyDeck.length - 1) {
-        studyIndex++;
-        rotateDeckPoolForward();
-      }
+      if (studyIndex < studyDeck.length - 1) studyIndex++;
     } else {
-      if (studyIndex > 0) {
-        studyIndex--;
-        rotateDeckPoolBackward();
-      }
+      if (studyIndex > 0) studyIndex--;
     }
     isCardFlipped = false;
-    const active = document.getElementById("studyCard");
+    const active = document.getElementById("studyCard") || curCard;
     if (active) active.classList.remove("is-flipped");
     playSelectSound();
+    renderStudyCard();
 
     // Reset deck cards transition styles
     if (deck1) {
@@ -9795,10 +9668,10 @@ function flyCardAndAdvance(dir) {
     }
 
     // Reset top card cleanly
-    if (studyCardEl) {
-      studyCardEl.style.transition = "none";
-      studyCardEl.style.transform = "rotateY(0deg)";
-      studyCardEl.style.opacity = "1";
+    if (active) {
+      active.style.transition = "none";
+      active.style.transform = "rotateY(0deg)";
+      active.style.opacity = "1";
     }
     requestAnimationFrame(() => {
       isAnimatingSwipe = false;
