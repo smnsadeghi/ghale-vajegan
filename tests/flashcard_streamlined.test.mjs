@@ -49,4 +49,16 @@ describe('Streamlined Silky-Smooth Flashcard Suite', () => {
     assert.ok(html.includes('card.style.transform = isCardFlipped ? "rotateY(180deg)" : "rotateY(0deg)";'), '3D transforms card between 0 and 180 deg');
     assert.ok(html.includes('markCardAsSeen(studyIndex);'), 'Marks card seen on flip');
   });
+
+  it('7. Swipe right pulls previous card incoming from the left into the center', () => {
+    // HTML has dedicated incoming card element
+    assert.ok(html.includes('id="studyCardIncoming"'), 'Must have #studyCardIncoming element');
+    assert.ok(html.includes('study-card-incoming'), 'Must apply .study-card-incoming class');
+    // CSS places incoming card offscreen left by default
+    assert.ok(html.includes('translateX(-120%) rotate(-6deg)'), 'Incoming card starts offscreen left');
+    // Swipe right (dir === -1) animates incoming card from left into center (translateX(0px))
+    assert.ok(html.includes('incoming.style.transform = "translateX(0px) rotate(0deg)";'), 'Incoming card slides to center on swipe right');
+    // Current card stays at center with subtle dimming instead of flying off right
+    assert.ok(html.includes('curCard.style.opacity = "0.7";'), 'Current card dims at center during incoming slide');
+  });
 });

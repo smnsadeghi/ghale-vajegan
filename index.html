@@ -5041,6 +5041,21 @@
       transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.25s ease;
     }
 
+    /* Incoming Previous Card (slides in from left when swiping right) */
+    .study-card-incoming {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      pointer-events: none;
+      user-select: none;
+      z-index: 10;
+      display: none;
+      transform: translateX(-120%) rotate(-6deg);
+      opacity: 0;
+      contain: paint;
+      transition: transform 0.25s cubic-bezier(0.22, 0.8, 0.36, 1), opacity 0.2s ease;
+    }
+
     /* Flip hint is only shown on the active interactive card, not on cards in the deck stack */
     .study-card-deck-stack .study-flip-hint {
       display: none !important;
@@ -5772,6 +5787,7 @@
     @media (prefers-reduced-motion: reduce) {
       .study-tutorial-overlay,
       .study-card-swipe-nudge,
+      .study-card-incoming,
       .study-card-scene.tutorial-demo-active #studyCard,
       .study-tutorial-pointer,
       .study-tutorial-spark,
@@ -6287,6 +6303,15 @@
                 </div>
                 <div id="studyHint" class="study-hint-text"></div>
               </div>
+            </div>
+          </div>
+
+          <!-- Incoming Previous Card (slides in from left when swiping right) -->
+          <div id="studyCardIncoming" class="study-card-box study-card-incoming" aria-hidden="true">
+            <div class="study-card-face study-card-front">
+              <div class="study-card-pat"></div>
+              <span id="studyCardIncomingTag" class="study-card-tag">واژه</span>
+              <div id="studyCardIncomingWord" class="study-card-word">واژه</div>
             </div>
           </div>
 
@@ -9202,6 +9227,17 @@ function springBackCard(smallBounce = false) {
   const curCard = document.getElementById("studyCard") || studyCardEl;
   const deck1 = document.getElementById("studyDeckBack1");
   const deck2 = document.getElementById("studyDeckBack2");
+  const incoming = document.getElementById("studyCardIncoming");
+
+  if (incoming && incoming.style.display !== "none") {
+    incoming.style.transition = "transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.2s ease";
+    incoming.style.transform = "translateX(-120%) rotate(-6deg)";
+    incoming.style.opacity = "0";
+    setTimeout(() => {
+      if (incoming) incoming.style.display = "none";
+    }, 230);
+  }
+
   if (curCard) {
     if (smallBounce) {
       curCard.style.transition = "transform 0.12s ease-out";
@@ -9406,25 +9442,80 @@ function updateDragTransform() {
   if (Math.abs(dx) > 3) {
     currentDx = dx;
     const isReduced = typeof window !== "undefined" && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    // Rotation capped at 8 degrees (dx / 220 * 8 clamped to [-8, 8])
-    const rotate = isReduced ? 0 : Math.max(-8, Math.min(8, (dx / 220) * 8));
-    const flipRot = isCardFlipped ? 180 : 0;
     const card = document.getElementById("studyCard") || studyCardEl;
-    if (card) {
-      card.style.transform = `translateX(${dx}px) rotate(${rotate}deg) rotateY(${flipRot}deg)`;
-      card.style.opacity = `${Math.max(0.65, 1 - Math.abs(dx) / 480)}`;
-    }
+    const incoming = document.getElementById("studyCardIncoming");
+    const flipRot = isCardFlipped ? 180 : 0;
 
-    // Stack Card 1 subtly scales up as user drags sideways
-    const deck1 = document.getElementById("studyDeckBack1");
-    const remaining = studyDeck ? (studyDeck.length - 1 - studyIndex) : 0;
-    if (deck1 && !isReduced && remaining >= 1) {
-      const p = Math.min(1, Math.abs(dx) / 100);
-      const y = 6 - (6 * p);
-      const s = 0.97 + (0.03 * p);
-      const r = -1.5 + (1.5 * p);
-      deck1.style.transform = `translateY(${y.toFixed(1)}px) scale(${s.toFixed(3)}) rotate(${r.toFixed(2)}deg)`;
-      deck1.style.opacity = `${(0.85 + 0.15 * p).toFixed(2)}`;
+    if (dx < 0) {
+      // Dragging Left -> Advancing to Next Card (RTL)
+      if (incoming && incoming.style.display !== "none") {
+        incoming.style.display = "none";
+      }
+      // Rotation capped at 8 degrees (dx / 220 * 8 clamped to [-8, 8])
+      const rotate = isReduced ? 0 : Math.max(-8, Math.min(8, (dx / 220) * 8));
+      if (card) {
+        card.style.transform = `translateX(${dx}px) rotate(${rotate}deg) rotateY(${flipRot}deg)`;
+        card.style.opacity = `${Math.max(0.65, 1 - Math.abs(dx) / 480)}`;
+      }
+
+      // Stack Card 1 subtly scales up as user drags left
+      const deck1 = document.getElementById("studyDeckBack1");
+      const remaining = studyDeck ? (studyDeck.length - 1 - studyIndex) : 0;
+      if (deck1 && !isReduced && remaining >= 1) {
+        const p = Math.min(1, Math.abs(dx) / 100);
+        const y = 6 - (6 * p);
+        const s = 0.97 + (0.03 * p);
+        const r = -1.5 + (1.5 * p);
+        deck1.style.transform = `translateY(${y.toFixed(1)}px) scale(${s.toFixed(3)}) rotate(${r.toFixed(2)}deg)`;
+        deck1.style.opacity = `${(0.85 + 0.15 * p).toFixed(2)}`;
+      }
+    } else {
+      // Dragging Right -> Returning to Previous Card (RTL)
+      // Reset Stack Card 1 if touched
+      const deck1 = document.getElementById("studyDeckBack1");
+      if (deck1) {
+        deck1.style.transform = "";
+        deck1.style.opacity = "";
+      }
+
+      if (studyIndex > 0) {
+        // Current card stays centered, subtle dimming as incoming card slides in from left
+        if (card) {
+          const dim = Math.max(0.7, 1 - (dx / 300) * 0.3);
+          card.style.transform = `translateX(0px) rotateY(${flipRot}deg)`;
+          card.style.opacity = `${dim.toFixed(2)}`;
+        }
+
+        // Previous card enters from outside left towards center
+        if (incoming) {
+          const prevItem = studyDeck[studyIndex - 1];
+          if (prevItem) {
+            const tagText = prevItem.tag || (studyStage && studyStage.world === 2 ? "کنایه" : (studyStage && studyStage.world === 3 ? "تاریخ ادبیات" : "واژه"));
+            const inTag = document.getElementById("studyCardIncomingTag");
+            const inWord = document.getElementById("studyCardIncomingWord");
+            if (inTag) inTag.textContent = tagText;
+            if (inWord) inWord.textContent = prevItem.word;
+          }
+          incoming.style.display = "block";
+          incoming.style.transition = "none";
+          const cardW = (card && card.offsetWidth) || 280;
+          const progress = Math.min(1, dx / Math.max(160, cardW * 0.75));
+          const inX = Math.min(0, -cardW + (dx * 1.15));
+          const inRot = isReduced ? 0 : Math.max(-6, -6 + (6 * progress));
+          incoming.style.transform = `translateX(${inX.toFixed(1)}px) rotate(${inRot.toFixed(1)}deg)`;
+          incoming.style.opacity = `${Math.min(1, 0.75 + progress * 0.25).toFixed(2)}`;
+        }
+      } else {
+        // Boundary: Already on first card -> resistive rubber-band
+        if (incoming && incoming.style.display !== "none") {
+          incoming.style.display = "none";
+        }
+        if (card) {
+          const resistDx = Math.min(24, dx * 0.2);
+          card.style.transform = `translateX(${resistDx.toFixed(1)}px) rotateY(${flipRot}deg)`;
+          card.style.opacity = "1";
+        }
+      }
     }
   }
 }
@@ -9495,6 +9586,12 @@ const finishPointer = (e) => {
   // Preserves totalDx < 18 && totalDy < 18 assertion for unit test suite
   const isTap = (totalDx < 18 && totalDy < 18) || (totalDx < 22 && totalDy < 22 && dragDuration < 280);
   if (isTap) {
+    const incoming = document.getElementById("studyCardIncoming");
+    if (incoming && incoming.style.display !== "none") {
+      incoming.style.display = "none";
+      incoming.style.transform = "translateX(-120%) rotate(-6deg)";
+      incoming.style.opacity = "0";
+    }
     if (isTutorialActive) {
       dismissStudyTutorial(e);
       return;
@@ -9616,67 +9713,123 @@ function flyCardAndAdvance(dir) {
     return;
   }
 
-  // In RTL: Next (dir === 1) slides left; Prev (dir === -1) slides right (~250ms fly out)
-  const flyOutX = dir === 1 ? -window.innerWidth * 0.85 : window.innerWidth * 0.85;
-  const flyRot = dir === 1 ? -10 : 10;
-  const flipRot = isCardFlipped ? 180 : 0;
-
-  if (curCard) {
-    curCard.style.transition = "transform 0.25s cubic-bezier(0.22, 0.8, 0.36, 1), opacity 0.22s ease-in";
-    curCard.style.transform = `translateX(${flyOutX}px) rotate(${flyRot}deg) rotateY(${flipRot}deg)`;
-    curCard.style.opacity = "0";
-  }
-
-  // Stack Card 1 smoothly scales and moves up to take its place (TASK 3)
   const deck1 = document.getElementById("studyDeckBack1");
   const deck2 = document.getElementById("studyDeckBack2");
-  const remaining = studyDeck ? (studyDeck.length - 1 - studyIndex) : 0;
+  const incoming = document.getElementById("studyCardIncoming");
+  const flipRot = isCardFlipped ? 180 : 0;
 
-  if (deck1 && remaining >= 1) {
-    deck1.style.transition = "transform 0.25s cubic-bezier(0.22, 0.8, 0.36, 1), opacity 0.25s ease";
-    deck1.style.transform = "translateY(0px) scale(1) rotate(0deg)";
-    deck1.style.opacity = "1";
-  }
-  if (deck2 && remaining >= 2) {
-    deck2.style.transition = "transform 0.25s cubic-bezier(0.22, 0.8, 0.36, 1), opacity 0.25s ease";
-    deck2.style.transform = "translateY(6px) scale(0.97) rotate(-1.5deg)";
-    deck2.style.opacity = "0.85";
-  }
+  if (dir === 1) {
+    // In RTL: Next (dir === 1) slides left (~250ms fly out)
+    const flyOutX = -window.innerWidth * 0.85;
+    const flyRot = -10;
 
-  setTimeout(() => {
-    if (dir === 1) {
+    if (curCard) {
+      curCard.style.transition = "transform 0.25s cubic-bezier(0.22, 0.8, 0.36, 1), opacity 0.22s ease-in";
+      curCard.style.transform = `translateX(${flyOutX}px) rotate(${flyRot}deg) rotateY(${flipRot}deg)`;
+      curCard.style.opacity = "0";
+    }
+
+    // Stack Card 1 smoothly scales and moves up to take its place (TASK 3)
+    const remaining = studyDeck ? (studyDeck.length - 1 - studyIndex) : 0;
+
+    if (deck1 && remaining >= 1) {
+      deck1.style.transition = "transform 0.25s cubic-bezier(0.22, 0.8, 0.36, 1), opacity 0.25s ease";
+      deck1.style.transform = "translateY(0px) scale(1) rotate(0deg)";
+      deck1.style.opacity = "1";
+    }
+    if (deck2 && remaining >= 2) {
+      deck2.style.transition = "transform 0.25s cubic-bezier(0.22, 0.8, 0.36, 1), opacity 0.25s ease";
+      deck2.style.transform = "translateY(6px) scale(0.97) rotate(-1.5deg)";
+      deck2.style.opacity = "0.85";
+    }
+
+    setTimeout(() => {
       if (studyIndex < studyDeck.length - 1) studyIndex++;
-    } else {
+      isCardFlipped = false;
+      const active = document.getElementById("studyCard") || curCard;
+      if (active) active.classList.remove("is-flipped");
+      playSelectSound();
+      renderStudyCard();
+
+      // Reset deck cards transition styles
+      if (deck1) {
+        deck1.style.transition = "none";
+        deck1.style.transform = "";
+        deck1.style.opacity = "";
+      }
+      if (deck2) {
+        deck2.style.transition = "none";
+        deck2.style.transform = "";
+        deck2.style.opacity = "";
+      }
+
+      // Reset top card cleanly
+      if (active) {
+        active.style.transition = "none";
+        active.style.transform = "rotateY(0deg)";
+        active.style.opacity = "1";
+      }
+      requestAnimationFrame(() => {
+        isAnimatingSwipe = false;
+      });
+    }, 250);
+  } else {
+    // In RTL: Prev (dir === -1)
+    // Previous card enters from outside left and slides to center over current card
+    const prevItem = studyDeck[studyIndex - 1];
+    if (incoming && prevItem) {
+      const tagText = prevItem.tag || (studyStage && studyStage.world === 2 ? "کنایه" : (studyStage && studyStage.world === 3 ? "تاریخ ادبیات" : "واژه"));
+      const inTag = document.getElementById("studyCardIncomingTag");
+      const inWord = document.getElementById("studyCardIncomingWord");
+      if (inTag) inTag.textContent = tagText;
+      if (inWord) inWord.textContent = prevItem.word;
+
+      incoming.style.display = "block";
+      // If triggered by button or flick without prior drag position, set starting left offset
+      if (!incoming.style.transform || incoming.style.transform.includes('-120%')) {
+        incoming.style.transform = "translateX(-115%) rotate(-6deg)";
+        incoming.style.opacity = "0.8";
+      }
+      void incoming.offsetWidth; // flush styles
+
+      incoming.style.transition = "transform 0.25s cubic-bezier(0.22, 0.8, 0.36, 1), opacity 0.2s ease";
+      incoming.style.transform = "translateX(0px) rotate(0deg)";
+      incoming.style.opacity = "1";
+    }
+
+    // Current card stays at center with subtle dimming
+    if (curCard) {
+      curCard.style.transition = "opacity 0.22s ease";
+      curCard.style.opacity = "0.7";
+    }
+
+    setTimeout(() => {
       if (studyIndex > 0) studyIndex--;
-    }
-    isCardFlipped = false;
-    const active = document.getElementById("studyCard") || curCard;
-    if (active) active.classList.remove("is-flipped");
-    playSelectSound();
-    renderStudyCard();
+      isCardFlipped = false;
+      const active = document.getElementById("studyCard") || curCard;
+      if (active) active.classList.remove("is-flipped");
+      playSelectSound();
+      renderStudyCard();
 
-    // Reset deck cards transition styles
-    if (deck1) {
-      deck1.style.transition = "none";
-      deck1.style.transform = "";
-      deck1.style.opacity = "";
-    }
-    if (deck2) {
-      deck2.style.transition = "none";
-      deck2.style.transform = "";
-      deck2.style.opacity = "";
-    }
+      // Instantly hide incoming card
+      if (incoming) {
+        incoming.style.transition = "none";
+        incoming.style.transform = "translateX(-120%) rotate(-6deg)";
+        incoming.style.opacity = "0";
+        incoming.style.display = "none";
+      }
 
-    // Reset top card cleanly
-    if (active) {
-      active.style.transition = "none";
-      active.style.transform = "rotateY(0deg)";
-      active.style.opacity = "1";
-    }
-    requestAnimationFrame(() => {
-      isAnimatingSwipe = false;
-    });
-  }, 250);
+      // Reset top card cleanly
+      if (active) {
+        active.style.transition = "none";
+        active.style.transform = "rotateY(0deg)";
+        active.style.opacity = "1";
+      }
+      requestAnimationFrame(() => {
+        isAnimatingSwipe = false;
+      });
+    }, 250);
+  }
 }
 
 
