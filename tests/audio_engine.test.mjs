@@ -347,25 +347,25 @@ describe('Data-Driven Procedural Audio Engine & Tracks Suite', () => {
     // p = 0.5 (5 remaining of 10 -> p = 0.5)
     res = AudioEngine.updateBattleMusicProgress(5, 10, false);
     assert.equal(res.p, 0.5);
-    assert.equal(res.tempo, 1.08);
+    assert.equal(res.tempo, 1.18);
     assert.equal(res.layer, 1);
 
     // p = 0.7 (3 remaining of 10 -> p = 0.7)
     res = AudioEngine.updateBattleMusicProgress(3, 10, false);
     assert.equal(res.p, 0.7);
-    assert.equal(res.tempo, 1.18);
+    assert.equal(res.tempo, 1.38);
     assert.equal(res.layer, 2);
 
     // p = 0.9 (1 remaining of 10 -> p = 0.9, climax)
     res = AudioEngine.updateBattleMusicProgress(1, 10, false);
     assert.equal(res.p, 0.9);
-    assert.equal(res.tempo, 1.30);
+    assert.equal(res.tempo, 1.62);
     assert.equal(res.layer, 3);
 
     // Final hit (0 remaining -> p = 1.0)
     res = AudioEngine.updateBattleMusicProgress(0, 10, false);
     assert.equal(res.p, 1.0);
-    assert.equal(res.tempo, 1.30);
+    assert.equal(res.tempo, 1.62);
     assert.equal(res.layer, 3);
   });
 
@@ -377,26 +377,26 @@ describe('Data-Driven Procedural Audio Engine & Tracks Suite', () => {
     assert.equal(res.tempo, 1.10);
     assert.equal(res.layer, 1);
 
-    // p >= 0.5 -> tempo 1.18, layer 2
+    // p >= 0.5 -> tempo 1.30, layer 2
     res = AudioEngine.updateBattleMusicProgress(5, 10, true);
-    assert.equal(res.tempo, 1.18);
+    assert.equal(res.tempo, 1.30);
     assert.equal(res.layer, 2);
 
-    // p >= 0.7 -> tempo 1.28, layer 3
+    // p >= 0.7 -> tempo 1.50, layer 3
     res = AudioEngine.updateBattleMusicProgress(3, 10, true);
-    assert.equal(res.tempo, 1.28);
+    assert.equal(res.tempo, 1.50);
     assert.equal(res.layer, 3);
 
-    // p >= 0.9 -> tempo 1.40, layer 3
+    // p >= 0.9 -> tempo 1.75, layer 3
     res = AudioEngine.updateBattleMusicProgress(1, 10, true);
-    assert.equal(res.tempo, 1.40);
+    assert.equal(res.tempo, 1.75);
     assert.equal(res.layer, 3);
   });
 
   test('15. Wrong answers do not lower level; battle reset restores baseline (TASK 2)', () => {
     AudioEngine.startBattleMusic({ world: 1 });
 
-    // Progress up to p = 0.7 (layer 2, tempo 1.18)
+    // Progress up to p = 0.7 (layer 2, tempo 1.38)
     AudioEngine.updateBattleMusicProgress(3, 10, false);
     assert.equal(AudioEngine.getLayerLevel(), 2);
 
@@ -405,7 +405,7 @@ describe('Data-Driven Procedural Audio Engine & Tracks Suite', () => {
     const res = AudioEngine.updateBattleMusicProgress(4, 10, false);
     assert.equal(res.p, 0.7, 'Progress must remain at maximum reached');
     assert.equal(res.layer, 2, 'Layer must not drop on wrong answer');
-    assert.equal(res.tempo, 1.18, 'Tempo must not drop on wrong answer');
+    assert.equal(res.tempo, 1.38, 'Tempo must not drop on wrong answer');
 
     // Starting a new battle must reset to baseline
     AudioEngine.startBattleMusic({ world: 1 });

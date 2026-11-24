@@ -57,8 +57,8 @@
   'use strict';
 
   // Constants & Scheduling Limits
-  const LOOKAHEAD_INTERVAL_MS = 30;       // Scheduler tick frequency (~30ms)
-  const SCHEDULE_AHEAD_TIME_SEC = 0.220;   // Scheduling lookahead window (~220ms safe buffer against mobile UI lag)
+  const LOOKAHEAD_INTERVAL_MS = 25;       // Scheduler tick frequency (~25ms)
+  const SCHEDULE_AHEAD_TIME_SEC = 0.450;   // Scheduling lookahead window (~450ms rock-solid buffer against mobile UI lag & GC)
   const STORAGE_KEY_MUTED = 'gv_sound_muted';
 
   // Audio Context & Global Nodes
@@ -229,15 +229,27 @@
         sfxGainNode.gain.setValueAtTime(0.85, audioCtx.currentTime);
         sfxGainNode.connect(masterGainNode);
 
-        // Shared Convolution Reverb
-        reverbNode = audioCtx.createConvolver();
-        reverbNode.buffer = createImpulseResponse(audioCtx, 0.6, 1.8);
+        // Shared Space / Reverb Network (Optimized zero-FFT feedback delay network)
+        // Eliminates CPU spikes, audio buffer underruns, and crackling on mobile devices
+        const spaceDelay = audioCtx.createDelay(0.3);
+        spaceDelay.delayTime.setValueAtTime(0.085, audioCtx.currentTime);
+        const spaceFilter = audioCtx.createBiquadFilter();
+        spaceFilter.type = 'lowpass';
+        spaceFilter.frequency.setValueAtTime(2600, audioCtx.currentTime);
+        const spaceFeedback = audioCtx.createGain();
+        spaceFeedback.gain.setValueAtTime(0.22, audioCtx.currentTime);
+
+        spaceDelay.connect(spaceFilter);
+        spaceFilter.connect(spaceFeedback);
+        spaceFeedback.connect(spaceDelay);
 
         reverbReturnGain = audioCtx.createGain();
-        reverbReturnGain.gain.setValueAtTime(0.35, audioCtx.currentTime);
+        reverbReturnGain.gain.setValueAtTime(0.28, audioCtx.currentTime);
 
-        reverbNode.connect(reverbReturnGain);
+        spaceFilter.connect(reverbReturnGain);
         reverbReturnGain.connect(masterGainNode);
+
+        reverbNode = spaceDelay;
 
         masterGainNode.connect(audioCtx.destination);
       }
@@ -353,6 +365,7 @@
       const oscTypes = Array.isArray(instrument.oscillator) ? instrument.oscillator : [instrument.oscillator || 'triangle'];
       const detunes = Array.isArray(instrument.detune) ? instrument.detune : [instrument.detune || 0];
 
+      let oscCount = oscTypes.length;
       oscTypes.forEach((type, idx) => {
         const osc = audioCtx.createOscillator();
         osc.type = type;
@@ -363,10 +376,12 @@
           osc.detune.setValueAtTime(det, startTime);
         }
 
+        let lfo = null;
+        let lfoGain = null;
         // Subtle Vibrato LFO if configured
         if (instrument.vibrato && instrument.vibrato.rate && instrument.vibrato.depth) {
-          const lfo = audioCtx.createOscillator();
-          const lfoGain = audioCtx.createGain();
+          lfo = audioCtx.createOscillator();
+          lfoGain = audioCtx.createGain();
           lfo.frequency.setValueAtTime(instrument.vibrato.rate, startTime);
           lfoGain.gain.setValueAtTime(instrument.vibrato.depth, startTime);
           lfo.connect(lfoGain);
@@ -384,16 +399,15 @@
           try {
             osc.disconnect();
             activeVoiceNodes.delete(osc);
+            if (lfo) { lfo.disconnect(); lfoGain.disconnect(); }
+            oscCount--;
+            if (oscCount <= 0) {
+              voiceGain.disconnect();
+              if (targetNode !== voiceGain) targetNode.disconnect();
+            }
           } catch (e) {}
         };
       });
-
-      // Cleanup gain node on end
-      setTimeout(() => {
-        try {
-          voiceGain.disconnect();
-        } catch (e) {}
-      }, Math.max(0, (stopTime - audioCtx.currentTime + 0.1) * 1000));
 
     } catch (e) {
       console.warn('Error scheduling voice:', e);
@@ -584,7 +598,6 @@
         noiseSrc.connect(filter);
         filter.connect(gain);
         gain.connect(destination);
-        if (reverbSendNode) gain.connect(reverbSendNode);
         noiseSrc.start(startTime);
         noiseSrc.stop(startTime + 0.05);
         noiseSrc.onended = () => { try { noiseSrc.disconnect(); filter.disconnect(); gain.disconnect(); } catch (_) {} };
@@ -654,22 +667,24 @@
       const durBeats = event.duration || 0.25;
       const durSec = durBeats * secondsPerBeat;
       const velocity = event.velocity !== undefined ? event.velocity : 0.8;
+      const isBass = (channelName === 'bass');
+      const voiceReverbDest = isBass ? null : reverbNode;
 
       if (Array.isArray(event.degrees)) {
         // Polyphonic chord (e.g. pad voicing)
         event.degrees.forEach(deg => {
           const freq = degreeToFreq(rootMidi, scale, deg, event.octave || 0);
-          scheduleVoice(instrument, freq, noteTime, durSec, velocity, channelDest, reverbNode);
+          scheduleVoice(instrument, freq, noteTime, durSec, velocity, channelDest, voiceReverbDest);
         });
       } else if (event.degree !== undefined) {
         // Single scale degree note
         const freq = degreeToFreq(rootMidi, scale, event.degree, event.octave || 0);
-        scheduleVoice(instrument, freq, noteTime, durSec, velocity, channelDest, reverbNode);
+        scheduleVoice(instrument, freq, noteTime, durSec, velocity, channelDest, voiceReverbDest);
       } else if (event.note !== undefined) {
         // Direct note name or MIDI
         const midi = noteToMidi(event.note);
         const freq = midiToFreq(midi);
-        scheduleVoice(instrument, freq, noteTime, durSec, velocity, channelDest, reverbNode);
+        scheduleVoice(instrument, freq, noteTime, durSec, velocity, channelDest, voiceReverbDest);
       }
     }
   }
@@ -697,9 +712,14 @@
       checkScheduledBeats();
       const totalSteps = (currentTrack.loopLengthBars || 8) * 16;
 
-      // Resync if main thread was blocked/paused to prevent note bursts and crackling
-      if (nextNoteTime < audioCtx.currentTime - 0.08) {
-        nextNoteTime = audioCtx.currentTime + 0.02;
+      // Resync ONLY if page was suspended/frozen (e.g. tab switched or phone locked > 400ms)
+      if (nextNoteTime < audioCtx.currentTime - 0.40) {
+        const curBpm = (currentTrack.bpm || 100) * getCurrentTempoMultiplier();
+        const secPer16th = (60.0 / curBpm) / 4.0;
+        const missedSec = audioCtx.currentTime - nextNoteTime;
+        const missedSteps = Math.max(1, Math.floor(missedSec / secPer16th));
+        currentStep = (currentStep + missedSteps) % totalSteps;
+        nextNoteTime = audioCtx.currentTime + 0.03;
       }
 
       while (nextNoteTime < audioCtx.currentTime + SCHEDULE_AHEAD_TIME_SEC) {
@@ -1008,15 +1028,15 @@
           targetLayer = 1;
         } else if (clampedP < 0.7) {
           targetLevel = 2;
-          targetTempo = 1.18;
+          targetTempo = 1.30;
           targetLayer = 2;
         } else if (clampedP < 0.9) {
           targetLevel = 3;
-          targetTempo = 1.28;
+          targetTempo = 1.50;
           targetLayer = 3;
         } else {
           targetLevel = 3;
-          targetTempo = 1.40;
+          targetTempo = 1.75;
           targetLayer = 3;
         }
       } else {
@@ -1026,15 +1046,15 @@
           targetLayer = 0;
         } else if (clampedP < 0.7) {
           targetLevel = 1;
-          targetTempo = 1.08;
+          targetTempo = 1.18;
           targetLayer = 1;
         } else if (clampedP < 0.9) {
           targetLevel = 2;
-          targetTempo = 1.18;
+          targetTempo = 1.38;
           targetLayer = 2;
         } else {
           targetLevel = 3;
-          targetTempo = 1.30;
+          targetTempo = 1.62;
           targetLayer = 3;
         }
       }
@@ -1045,8 +1065,8 @@
       }
 
       // Update audio engine tempo & layer smoothly
-      setTempoMultiplier(targetTempo, { rampMs: 1500 });
-      setLayerLevel(targetLayer, { rampMs: 1500 });
+      setTempoMultiplier(targetTempo, { rampMs: 800 });
+      setLayerLevel(targetLayer, { rampMs: 800 });
 
       // Final hit climax trigger (p >= 0.9)
       if (clampedP >= 0.9 && !climaxTriggered) {
@@ -1264,6 +1284,7 @@
             gain.connect(dest);
             osc.start(now + idx * 0.06);
             osc.stop(now + idx * 0.06 + 0.12);
+            osc.onended = () => { try { osc.disconnect(); gain.disconnect(); } catch (_) {} };
           });
           break;
 
@@ -1279,6 +1300,7 @@
           gain.connect(dest);
           osc.start(now);
           osc.stop(now + 0.25);
+          osc.onended = () => { try { osc.disconnect(); gain.disconnect(); } catch (_) {} };
           break;
         }
 

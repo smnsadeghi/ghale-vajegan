@@ -4899,8 +4899,10 @@
       transform-style: preserve-3d;
       cursor: grab;
     }
-    .study-card-box.is-dragging {
-      will-change: transform;
+    .study-card-box.is-dragging,
+    .study-card-deck-stack.is-dragging {
+      will-change: transform, opacity;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
     }
     .study-card-box:active {
       cursor: grabbing;
@@ -4913,11 +4915,15 @@
       margin: auto;
       pointer-events: none;
       user-select: none;
-      background: var(--surface, #181410);
-      border: 1.5px solid var(--world, var(--gold));
-      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+      border-radius: 18px;
       overflow: hidden;
+      contain: paint;
       transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.25s ease;
+    }
+
+    /* Flip hint is only shown on the active interactive card, not on cards in the deck stack */
+    .study-card-deck-stack .study-flip-hint {
+      display: none !important;
     }
 
     /* Thin gold-dim inner border inset by 8px to resemble printed card frame */
@@ -4970,7 +4976,7 @@
       overflow: hidden;
       background: var(--surface, #181410);
       border: 1.5px solid var(--world, var(--gold));
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45), 0 0 16px var(--world-tint, rgba(201, 162, 77, 0.1));
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
     }
 
     /* Prevent hidden face from intercepting pointer events */
@@ -4997,6 +5003,7 @@
       opacity: 0.05;
       background-image: radial-gradient(circle at 50% 0%, var(--world) 0%, transparent 65%),
         repeating-linear-gradient(45deg, rgba(201,162,77,0.35) 0, rgba(201,162,77,0.35) 1px, transparent 0, transparent 18px);
+      transform: translateZ(0);
     }
 
     /* Lesson Tag chip positioned at top inside inner frame */
@@ -5148,6 +5155,28 @@
       flex: 1;
     }
 
+    /* Single meaning card back (when no literary hint exists): vertically centered with fluid clamp typography */
+    .study-card-back.is-single-meaning .study-meanings-list {
+      justify-content: center;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .study-card-back.is-single-meaning .study-meaning-item {
+      font-size: clamp(1.05rem, 2.5dvh, 1.25rem);
+      line-height: 1.7;
+      padding: 10px 4px;
+      border-bottom: none;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .study-card-back.is-single-meaning .study-meaning-num {
+      display: none;
+    }
+    .study-card-back.is-single-meaning .study-meaning-val {
+      text-align: center;
+    }
+
     /* Bottom Hint Block (Literary Note) */
     .study-hint-block {
       width: 100%;
@@ -5188,23 +5217,13 @@
       line-height: 1.5;
       text-align: right;
     }
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.78rem;
-      font-weight: 800;
-      color: var(--gold, #c9a24d);
+
+    #studyTutorialOverlay.hidden,
+    #studyTutorialOverlay.hidden * {
+      animation: none !important;
     }
-    .study-hint-icon {
-      width: 14px;
-      height: 14px;
-      stroke: var(--gold, #c9a24d);
-    }
-    .study-hint-text {
-      font-size: 0.88rem;
-      color: var(--text-muted, #8c836f);
-      line-height: 1.6;
-      text-align: right;
+    .study-card-box.is-dragging .study-rotate-icon {
+      animation-play-state: paused !important;
     }
 
     /* 4. Bottom Action CTA */
@@ -5944,7 +5963,7 @@
         </div>
       </form>
 
-      <div class="auth-version font-pixel footer-ver" id="versionTrigger" data-baseline="v5.1.0">v7.1.0</div>
+      <div class="auth-version font-pixel footer-ver" id="versionTrigger" data-baseline="v5.1.0">v7.2.0</div>
     </div>
   </div>
 
@@ -6043,10 +6062,58 @@
         <div class="study-card-scene" id="studyCardScene">
           <!-- Decorative Deck Stack (Next 1-2 cards behind active card - TASK 3) -->
           <div id="studyDeckBack2" class="study-card-deck-stack study-card-deck-2" aria-hidden="true">
-            <div class="study-card-pat"></div>
+            <div class="study-card-face study-card-front">
+              <div class="study-card-pat"></div>
+              <span id="studyDeckBack2Tag" class="study-card-tag">واژه</span>
+              <div id="studyDeckBack2Word" class="study-card-word">واژه</div>
+              <div class="study-flip-hint">
+                <svg class="g-icon study-rotate-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+                <span>بزن تا معنی رو ببینی</span>
+              </div>
+            </div>
+            <div class="study-card-face study-card-back">
+              <div class="study-card-pat"></div>
+              <div class="study-card-back-header">
+                <div class="study-card-back-word">واژه</div>
+                <span class="study-card-tag">واژه</span>
+              </div>
+              <div class="study-card-divider"></div>
+              <div class="study-meanings-list"></div>
+              <div class="study-hint-block">
+                <div class="study-hint-header">
+                  <svg class="g-icon study-hint-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5zM16 8 2 22M17.5 15H9"/></svg>
+                  <span>نکته ادبی</span>
+                </div>
+                <div class="study-hint-text"></div>
+              </div>
+            </div>
           </div>
           <div id="studyDeckBack1" class="study-card-deck-stack study-card-deck-1" aria-hidden="true">
-            <div class="study-card-pat"></div>
+            <div class="study-card-face study-card-front">
+              <div class="study-card-pat"></div>
+              <span id="studyDeckBack1Tag" class="study-card-tag">واژه</span>
+              <div id="studyDeckBack1Word" class="study-card-word">واژه</div>
+              <div class="study-flip-hint">
+                <svg class="g-icon study-rotate-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+                <span>بزن تا معنی رو ببینی</span>
+              </div>
+            </div>
+            <div class="study-card-face study-card-back">
+              <div class="study-card-pat"></div>
+              <div class="study-card-back-header">
+                <div class="study-card-back-word">واژه</div>
+                <span class="study-card-tag">واژه</span>
+              </div>
+              <div class="study-card-divider"></div>
+              <div class="study-meanings-list"></div>
+              <div class="study-hint-block">
+                <div class="study-hint-header">
+                  <svg class="g-icon study-hint-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5zM16 8 2 22M17.5 15H9"/></svg>
+                  <span>نکته ادبی</span>
+                </div>
+                <div class="study-hint-text"></div>
+              </div>
+            </div>
           </div>
 
           <div class="study-card-box" id="studyCard" role="button" tabindex="0" aria-label="کارت واژه. برای دیدن یا بازگشت معنا، کلید اینتر یا فاصله را بزنید" aria-pressed="false">
@@ -8807,6 +8874,18 @@ function renderStudyProgressDots() {
     return;
   }
 
+  const existingDots = container.querySelectorAll(".study-dot");
+  if (existingDots.length === studyDeck.length) {
+    // Fast path: update existing nodes without rebuild to eliminate layout thrashing
+    existingDots.forEach((dot, idx) => {
+      const card = studyDeck[idx];
+      const cardId = getCardId(card, studyStage.id);
+      dot.classList.toggle("seen", seenIds.has(cardId));
+      dot.classList.toggle("current", idx === studyIndex);
+    });
+    return;
+  }
+
   container.innerHTML = studyDeck.map((card, idx) => {
     const cardId = getCardId(card, studyStage.id);
     const isSeen = seenIds.has(cardId);
@@ -8843,6 +8922,143 @@ function updateStudyBattleButton() {
   }
 }
 
+function updateDeckStackContent() {
+  const remaining = studyDeck ? (studyDeck.length - 1 - studyIndex) : 0;
+  const deck1 = document.getElementById("studyDeckBack1");
+  const deck2 = document.getElementById("studyDeckBack2");
+
+  if (deck1) {
+    if (remaining >= 1 && studyDeck[studyIndex + 1]) {
+      const nextItem = studyDeck[studyIndex + 1];
+      const nextTag = nextItem.tag || (studyStage && studyStage.world === 2 ? "کنایه" : (studyStage && studyStage.world === 3 ? "تاریخ ادبیات" : "واژه"));
+      const wEl = deck1.querySelector(".study-card-front .study-card-word") || document.getElementById("studyDeckBack1Word");
+      const tEl = deck1.querySelector(".study-card-front .study-card-tag") || document.getElementById("studyDeckBack1Tag");
+      if (wEl) wEl.textContent = nextItem.word;
+      if (tEl) tEl.textContent = nextTag;
+    }
+    deck1.style.display = remaining >= 1 ? "block" : "none";
+  }
+
+  if (deck2) {
+    if (remaining >= 2 && studyDeck[studyIndex + 2]) {
+      const next2Item = studyDeck[studyIndex + 2];
+      const next2Tag = next2Item.tag || (studyStage && studyStage.world === 2 ? "کنایه" : (studyStage && studyStage.world === 3 ? "تاریخ ادبیات" : "واژه"));
+      const wEl = deck2.querySelector(".study-card-front .study-card-word") || document.getElementById("studyDeckBack2Word");
+      const tEl = deck2.querySelector(".study-card-front .study-card-tag") || document.getElementById("studyDeckBack2Tag");
+      if (wEl) wEl.textContent = next2Item.word;
+      if (tEl) tEl.textContent = next2Tag;
+    }
+    deck2.style.display = remaining >= 2 ? "block" : "none";
+  }
+}
+
+function updateCardBackContent(cardNode, item) {
+  if (!cardNode || !item) return;
+  const backFace = cardNode.querySelector(".study-card-back");
+  const bWord = cardNode.querySelector(".study-card-back-word");
+  const bTag = cardNode.querySelector(".study-card-back .study-card-tag");
+  const mContainer = cardNode.querySelector(".study-meanings-list");
+  const hintBlock = cardNode.querySelector(".study-hint-block");
+  const hintEl = cardNode.querySelector(".study-hint-text");
+
+  const curTag = item.tag || (studyStage && studyStage.world === 2 ? "کنایه" : (studyStage && studyStage.world === 3 ? "تاریخ ادبیات" : "واژه"));
+  if (bWord) bWord.textContent = item.word;
+  if (bTag) bTag.textContent = curTag;
+
+  const meaningsList = (item.meanings && item.meanings.length > 0) ? item.meanings : [item.correct || ""];
+  const isSingleWithoutHint = meaningsList.length === 1 && !item.hint;
+
+  if (backFace) {
+    backFace.classList.toggle("is-single-meaning", isSingleWithoutHint);
+  }
+
+  if (mContainer) {
+    mContainer.innerHTML = meaningsList.map((m, mIdx) => `
+      <div class="study-meaning-item">
+        <span class="study-meaning-num">${toFaDigits(mIdx + 1)}.</span>
+        <span class="study-meaning-val">${m}</span>
+      </div>
+    `).join("");
+  }
+
+  if (hintBlock && hintEl) {
+    if (item.hint) {
+      hintBlock.classList.remove("hidden");
+      hintEl.textContent = item.hint;
+    } else {
+      hintBlock.classList.add("hidden");
+      hintEl.textContent = "";
+    }
+  }
+}
+
+function markCardAsSeen(idx = studyIndex) {
+  if (idx === undefined || idx === null) idx = studyIndex;
+  if (!studyDeck || !studyDeck[idx] || !studyStage) return;
+  const currentCard = studyDeck[idx];
+  const cardId = getCardId(currentCard, studyStage.id);
+  if (!seenIds.has(cardId)) {
+    seenIds.add(cardId);
+    const deferTask = typeof requestIdleCallback === "function" ? requestIdleCallback : (cb => setTimeout(cb, 60));
+    deferTask(() => {
+      persistSeenIds();
+    });
+    renderStudyProgressDots();
+    updateStudyBattleButton();
+
+    // Check 100% viewed cards for gating & achievement
+    if (seenIds.size >= studyDeck.length) {
+      const user = appState.students[appState.currentUserCode];
+      if (user && studyStage) {
+        if (!user.stats) user.stats = {};
+        if (!user.stats.studiedStageIds) user.stats.studiedStageIds = [];
+        if (!user.stats.studiedStageIds.includes(studyStage.id)) {
+          user.stats.studiedStageIds.push(studyStage.id);
+          user.stats.studiedStagesCount = user.stats.studiedStageIds.length;
+          deferTask(() => {
+            scheduleSaveLocal(450);
+            scheduleCloudSync(user, 1500);
+            checkAndAwardAchievements(user);
+          });
+        }
+      }
+    }
+  }
+}
+
+function springBackCard(smallBounce = false) {
+  const curCard = document.getElementById("studyCard") || studyCardEl;
+  const deck1 = document.getElementById("studyDeckBack1");
+  const deck2 = document.getElementById("studyDeckBack2");
+  if (curCard) {
+    if (smallBounce) {
+      curCard.style.transition = "transform 0.12s ease-out";
+      curCard.style.transform = isCardFlipped ? "translateX(-12px) rotate(-1.5deg) rotateY(180deg)" : "translateX(-12px) rotate(-1.5deg) rotateY(0deg)";
+      setTimeout(() => {
+        if (curCard) {
+          curCard.style.transition = "transform 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s ease";
+          curCard.style.opacity = "1";
+          curCard.style.transform = isCardFlipped ? "rotateY(180deg)" : "rotateY(0deg)";
+        }
+      }, 120);
+    } else {
+      curCard.style.transition = "transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.2s ease";
+      curCard.style.opacity = "1";
+      curCard.style.transform = isCardFlipped ? "rotateY(180deg)" : "rotateY(0deg)";
+    }
+  }
+  if (deck1) {
+    deck1.style.transition = "transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.2s ease";
+    deck1.style.transform = "";
+    deck1.style.opacity = "";
+  }
+  if (deck2) {
+    deck2.style.transition = "transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.2s ease";
+    deck2.style.transform = "";
+    deck2.style.opacity = "";
+  }
+}
+
 function renderStudyCard() {
   const emptyEl = document.getElementById("studyEmptyState");
   const cardBox = document.getElementById("studyCard");
@@ -8873,6 +9089,7 @@ function renderStudyCard() {
   isCardFlipped = false;
   if (cardBox) {
     cardBox.classList.remove("is-flipped");
+    cardBox.style.transform = "rotateY(0deg)";
   }
 
   // Update navigation button states (Handles single-card deck & boundaries)
@@ -8901,14 +9118,15 @@ function renderStudyCard() {
   document.getElementById("studyCounter").textContent = `${toFaDigits(studyIndex + 1)}/${toFaDigits(studyDeck.length)}`;
 
   const tagText = item.tag || (studyStage && studyStage.world === 2 ? "کنایه" : (studyStage && studyStage.world === 3 ? "تاریخ ادبیات" : "واژه"));
-  const tagFront = document.getElementById("studyCardTag");
+  const tagFront = (cardBox && cardBox.querySelector(".study-card-front .study-card-tag")) || document.getElementById("studyCardTag");
   if (tagFront) tagFront.textContent = tagText;
-  const tagBack = document.getElementById("studyCardTagBack");
+  const tagBack = (cardBox && cardBox.querySelector(".study-card-back .study-card-tag")) || document.getElementById("studyCardTagBack");
   if (tagBack) tagBack.textContent = tagText;
 
-  document.getElementById("studyCardWord").textContent = item.word;
+  const cardWord = (cardBox && cardBox.querySelector(".study-card-front .study-card-word")) || document.getElementById("studyCardWord");
+  if (cardWord) cardWord.textContent = item.word;
 
-  const backWord = document.getElementById("studyCardBackWord");
+  const backWord = (cardBox && cardBox.querySelector(".study-card-back-word")) || document.getElementById("studyCardBackWord");
   if (backWord) backWord.textContent = item.word;
 
   // Accessible labels on card
@@ -8917,26 +9135,7 @@ function renderStudyCard() {
     cardBox.setAttribute("aria-pressed", isCardFlipped ? "true" : "false");
   }
 
-  const mContainer = document.getElementById("studyMeanings");
-  const meaningsList = (item.meanings && item.meanings.length > 0) ? item.meanings : [item.correct || ""];
-  mContainer.innerHTML = meaningsList.map((m, mIdx) => `
-    <div class="study-meaning-item">
-      <span class="study-meaning-num">${toFaDigits(mIdx + 1)}.</span>
-      <span class="study-meaning-val">${m}</span>
-    </div>
-  `).join("");
-
-  const hintBlock = document.getElementById("studyHintBlock");
-  const hintEl = document.getElementById("studyHint");
-  if (hintBlock && hintEl) {
-    if (item.hint) {
-      hintBlock.classList.remove("hidden");
-      hintEl.textContent = item.hint;
-    } else {
-      hintBlock.classList.add("hidden");
-      hintEl.textContent = "";
-    }
-  }
+  updateCardBackContent(cardBox, item);
 
   renderStudyProgressDots();
   updateStudyBattleButton();
@@ -8947,6 +9146,219 @@ function renderStudyCard() {
   const deck2 = document.getElementById("studyDeckBack2");
   if (deck1) deck1.style.display = remaining >= 1 ? "block" : "none";
   if (deck2) deck2.style.display = remaining >= 2 ? "block" : "none";
+  updateDeckStackContent();
+
+  // When reaching the last card in the deck, viewing it for a brief duration also marks it seen
+  if (studyDeck && studyDeck.length > 0 && studyIndex === studyDeck.length - 1) {
+    clearTimeout(window.__lastCardViewTimer);
+    window.__lastCardViewTimer = setTimeout(() => {
+      if (studyIndex === studyDeck.length - 1) {
+        markCardAsSeen(studyIndex);
+      }
+    }, 700);
+  }
+}
+
+function rotateDeckPoolForward() {
+  const scene = document.getElementById("studyCardScene");
+  let active = document.getElementById("studyCard");
+  let deck1 = document.getElementById("studyDeckBack1");
+  let deck2 = document.getElementById("studyDeckBack2");
+  if (!scene || !active || !deck1 || !deck2) return;
+
+  // 1. Recycle old active to bottom first and update its IDs to studyDeckBack2
+  scene.insertBefore(active, scene.firstChild);
+  active.id = "studyDeckBack2";
+  active.className = "study-card-deck-stack study-card-deck-2";
+  active.setAttribute("aria-hidden", "true");
+  active.removeAttribute("role");
+  active.removeAttribute("tabindex");
+  active.classList.remove("is-flipped");
+  active.style.transition = "none";
+  active.style.transform = "";
+  active.style.opacity = "";
+  const d2Tag = active.querySelector(".study-card-front .study-card-tag");
+  const d2Word = active.querySelector(".study-card-front .study-card-word");
+  if (d2Tag) d2Tag.id = "studyDeckBack2Tag";
+  if (d2Word) d2Word.id = "studyDeckBack2Word";
+
+  // 2. Promote deck2 to deck1
+  deck2.id = "studyDeckBack1";
+  deck2.className = "study-card-deck-stack study-card-deck-1";
+  deck2.setAttribute("aria-hidden", "true");
+  deck2.removeAttribute("role");
+  deck2.removeAttribute("tabindex");
+  deck2.style.transition = "none";
+  deck2.style.transform = "";
+  deck2.style.opacity = "";
+  const d1Tag = deck2.querySelector(".study-card-front .study-card-tag");
+  const d1Word = deck2.querySelector(".study-card-front .study-card-word");
+  if (d1Tag) d1Tag.id = "studyDeckBack1Tag";
+  if (d1Word) d1Word.id = "studyDeckBack1Word";
+
+  // 3. Promote deck1 to active studyCard (already showing next word)
+  scene.appendChild(deck1);
+  deck1.id = "studyCard";
+  deck1.className = "study-card-box";
+  deck1.removeAttribute("aria-hidden");
+  deck1.setAttribute("role", "button");
+  deck1.setAttribute("tabindex", "0");
+  deck1.style.transition = "none";
+  deck1.style.transform = "rotateY(0deg)";
+  deck1.style.opacity = "1";
+
+  const fTag1 = deck1.querySelector(".study-card-front .study-card-tag");
+  const fWord1 = deck1.querySelector(".study-card-front .study-card-word");
+  const bWord1 = deck1.querySelector(".study-card-back-word");
+  const bTag1 = deck1.querySelector(".study-card-back .study-card-tag");
+  const mList1 = deck1.querySelector(".study-meanings-list");
+  const hBlock1 = deck1.querySelector(".study-hint-block");
+  const hText1 = deck1.querySelector(".study-hint-text");
+  if (fTag1) fTag1.id = "studyCardTag";
+  if (fWord1) fWord1.id = "studyCardWord";
+  if (bWord1) bWord1.id = "studyCardBackWord";
+  if (bTag1) bTag1.id = "studyCardTagBack";
+  if (mList1) mList1.id = "studyMeanings";
+  if (hBlock1) hBlock1.id = "studyHintBlock";
+  if (hText1) hText1.id = "studyHint";
+
+  // Lazy fill back of newly active card
+  const curItem = studyDeck[studyIndex] || { word: "", meanings: [] };
+  const curTag = curItem.tag || (studyStage && studyStage.world === 2 ? "کنایه" : (studyStage && studyStage.world === 3 ? "تاریخ ادبیات" : "واژه"));
+  updateCardBackContent(deck1, curItem);
+
+  // Fill recycled card with next+1 while hidden
+  if (studyDeck[studyIndex + 2]) {
+    const n2 = studyDeck[studyIndex + 2];
+    if (d2Word) d2Word.textContent = n2.word;
+    if (d2Tag) d2Tag.textContent = n2.tag || curTag;
+  }
+
+  studyCardEl = deck1;
+
+  const remaining = studyDeck ? (studyDeck.length - 1 - studyIndex) : 0;
+  deck2.style.display = remaining >= 1 ? "block" : "none";
+  active.style.display = remaining >= 2 ? "block" : "none";
+
+  document.getElementById("studyCounter").textContent = `${toFaDigits(studyIndex + 1)}/${toFaDigits(studyDeck.length)}`;
+  const btnPrev = document.getElementById("btnStudyPrev");
+  const btnNext = document.getElementById("btnStudyNext");
+  if (btnPrev) {
+    const isPrevDisabled = studyDeck.length <= 1 || studyIndex <= 0;
+    btnPrev.disabled = isPrevDisabled;
+    btnPrev.classList.toggle("is-disabled", isPrevDisabled);
+  }
+  if (btnNext) {
+    const isNextDisabled = studyDeck.length <= 1 || studyIndex >= studyDeck.length - 1;
+    btnNext.disabled = isNextDisabled;
+    btnNext.classList.toggle("is-disabled", isNextDisabled);
+  }
+
+  renderStudyProgressDots();
+  updateStudyBattleButton();
+}
+
+function rotateDeckPoolBackward() {
+  const scene = document.getElementById("studyCardScene");
+  let active = document.getElementById("studyCard");
+  let deck1 = document.getElementById("studyDeckBack1");
+  let deck2 = document.getElementById("studyDeckBack2");
+  if (!scene || !active || !deck1 || !deck2) return;
+
+  // 1. Recycle active to deck1
+  active.id = "studyDeckBack1";
+  active.className = "study-card-deck-stack study-card-deck-1";
+  active.setAttribute("aria-hidden", "true");
+  active.removeAttribute("role");
+  active.removeAttribute("tabindex");
+  active.classList.remove("is-flipped");
+  active.style.transition = "none";
+  active.style.transform = "";
+  active.style.opacity = "";
+  const d1Tag = active.querySelector(".study-card-front .study-card-tag");
+  const d1Word = active.querySelector(".study-card-front .study-card-word");
+  if (d1Tag) d1Tag.id = "studyDeckBack1Tag";
+  if (d1Word) d1Word.id = "studyDeckBack1Word";
+
+  // 2. Move deck1 to deck2
+  deck1.id = "studyDeckBack2";
+  deck1.className = "study-card-deck-stack study-card-deck-2";
+  deck1.setAttribute("aria-hidden", "true");
+  deck1.removeAttribute("role");
+  deck1.removeAttribute("tabindex");
+  deck1.style.transition = "none";
+  deck1.style.transform = "";
+  deck1.style.opacity = "";
+  const d2Tag = deck1.querySelector(".study-card-front .study-card-tag");
+  const d2Word = deck1.querySelector(".study-card-front .study-card-word");
+  if (d2Tag) d2Tag.id = "studyDeckBack2Tag";
+  if (d2Word) d2Word.id = "studyDeckBack2Word";
+
+  // 3. Promote deck2 to active studyCard
+  scene.appendChild(deck2);
+  deck2.id = "studyCard";
+  deck2.className = "study-card-box";
+  deck2.removeAttribute("aria-hidden");
+  deck2.setAttribute("role", "button");
+  deck2.setAttribute("tabindex", "0");
+  deck2.style.transition = "none";
+  deck2.style.transform = "rotateY(0deg)";
+  deck2.style.opacity = "1";
+
+  const fTag2 = deck2.querySelector(".study-card-front .study-card-tag");
+  const fWord2 = deck2.querySelector(".study-card-front .study-card-word");
+  const bWord2 = deck2.querySelector(".study-card-back-word");
+  const bTag2 = deck2.querySelector(".study-card-back .study-card-tag");
+  const mList2 = deck2.querySelector(".study-meanings-list");
+  const hBlock2 = deck2.querySelector(".study-hint-block");
+  const hText2 = deck2.querySelector(".study-hint-text");
+  if (fTag2) fTag2.id = "studyCardTag";
+  if (fWord2) fWord2.id = "studyCardWord";
+  if (bWord2) bWord2.id = "studyCardBackWord";
+  if (bTag2) bTag2.id = "studyCardTagBack";
+  if (mList2) mList2.id = "studyMeanings";
+  if (hBlock2) hBlock2.id = "studyHintBlock";
+  if (hText2) hText2.id = "studyHint";
+
+  const curItem = studyDeck[studyIndex] || { word: "", meanings: [] };
+  const curTag = curItem.tag || (studyStage && studyStage.world === 2 ? "کنایه" : (studyStage && studyStage.world === 3 ? "تاریخ ادبیات" : "واژه"));
+  if (fWord2) fWord2.textContent = curItem.word;
+  if (fTag2) fTag2.textContent = curTag;
+  updateCardBackContent(deck2, curItem);
+
+  if (studyDeck[studyIndex + 1]) {
+    const n1 = studyDeck[studyIndex + 1];
+    if (d1Word) d1Word.textContent = n1.word;
+    if (d1Tag) d1Tag.textContent = n1.tag || curTag;
+  }
+  if (studyDeck[studyIndex + 2]) {
+    const n2 = studyDeck[studyIndex + 2];
+    if (d2Word) d2Word.textContent = n2.word;
+    if (d2Tag) d2Tag.textContent = n2.tag || curTag;
+  }
+
+  studyCardEl = deck2;
+
+  const remaining = studyDeck ? (studyDeck.length - 1 - studyIndex) : 0;
+  active.style.display = remaining >= 1 ? "block" : "none";
+  deck1.style.display = remaining >= 2 ? "block" : "none";
+
+  document.getElementById("studyCounter").textContent = `${toFaDigits(studyIndex + 1)}/${toFaDigits(studyDeck.length)}`;
+  const btnPrev = document.getElementById("btnStudyPrev");
+  const btnNext = document.getElementById("btnStudyNext");
+  if (btnPrev) {
+    const isPrevDisabled = studyDeck.length <= 1 || studyIndex <= 0;
+    btnPrev.disabled = isPrevDisabled;
+    btnPrev.classList.toggle("is-disabled", isPrevDisabled);
+  }
+  if (btnNext) {
+    const isNextDisabled = studyDeck.length <= 1 || studyIndex >= studyDeck.length - 1;
+    btnNext.disabled = isNextDisabled;
+    btnNext.classList.toggle("is-disabled", isNextDisabled);
+  }
+
+  renderStudyProgressDots();
+  updateStudyBattleButton();
 }
 
 function applyCardFlipState() {
@@ -8965,36 +9377,13 @@ function applyCardFlipState() {
   card.style.transform = isCardFlipped ? "rotateY(180deg)" : "rotateY(0deg)";
 
   if (isCardFlipped) {
-    localStorage.setItem("gv_study_hint_hidden", "true");
     const hint = document.getElementById("studyFlipHint");
     if (hint) hint.classList.add("hidden");
-  }
-
-  if (isCardFlipped && studyDeck && studyDeck[studyIndex] && studyStage) {
-    const currentCard = studyDeck[studyIndex];
-    const cardId = getCardId(currentCard, studyStage.id);
-    if (!seenIds.has(cardId)) {
-      seenIds.add(cardId);
-      persistSeenIds();
-      renderStudyProgressDots();
-      updateStudyBattleButton();
-
-      // Check 100% viewed cards for gating & achievement
-      if (seenIds.size >= studyDeck.length) {
-        const user = appState.students[appState.currentUserCode];
-        if (user && studyStage) {
-          if (!user.stats) user.stats = {};
-          if (!user.stats.studiedStageIds) user.stats.studiedStageIds = [];
-          if (!user.stats.studiedStageIds.includes(studyStage.id)) {
-            user.stats.studiedStageIds.push(studyStage.id);
-            user.stats.studiedStagesCount = user.stats.studiedStageIds.length;
-            scheduleSaveLocal(450);
-            scheduleCloudSync(user, 1500);
-            checkAndAwardAchievements(user);
-          }
-        }
-      }
-    }
+    const deferTask = typeof requestIdleCallback === "function" ? requestIdleCallback : (cb => setTimeout(cb, 60));
+    deferTask(() => {
+      try { localStorage.setItem("gv_study_hint_hidden", "true"); } catch (_) {}
+    });
+    markCardAsSeen(studyIndex);
   }
 }
 
@@ -9009,7 +9398,7 @@ let dragRafId = null;
 let pendingPointerX = 0;
 let pendingPointerY = 0;
 
-const studyCardEl = document.getElementById("studyCard");
+let studyCardEl = document.getElementById("studyCard");
 
 function updateDragTransform() {
   dragRafId = null;
@@ -9024,8 +9413,11 @@ function updateDragTransform() {
     // Rotation capped at 8 degrees (dx / 220 * 8 clamped to [-8, 8])
     const rotate = isReduced ? 0 : Math.max(-8, Math.min(8, (dx / 220) * 8));
     const flipRot = isCardFlipped ? 180 : 0;
-    studyCardEl.style.transform = `translateX(${dx}px) rotate(${rotate}deg) rotateY(${flipRot}deg)`;
-    studyCardEl.style.opacity = `${Math.max(0.65, 1 - Math.abs(dx) / 480)}`;
+    const card = document.getElementById("studyCard") || studyCardEl;
+    if (card) {
+      card.style.transform = `translateX(${dx}px) rotate(${rotate}deg) rotateY(${flipRot}deg)`;
+      card.style.opacity = `${Math.max(0.65, 1 - Math.abs(dx) / 480)}`;
+    }
 
     // Stack Card 1 subtly scales up as user drags sideways
     const deck1 = document.getElementById("studyDeckBack1");
@@ -9041,8 +9433,12 @@ function updateDragTransform() {
   }
 }
 
-studyCardEl.addEventListener("pointerdown", (e) => {
+function onCardPointerDown(e) {
   if (isAnimatingSwipe) return;
+  const card = document.getElementById("studyCard");
+  if (!card) return;
+  if (e.target && !card.contains(e.target)) return;
+
   isPointerDown = true;
   pointerStartX = e.clientX;
   pointerStartY = e.clientY;
@@ -9050,20 +9446,24 @@ studyCardEl.addEventListener("pointerdown", (e) => {
   pendingPointerX = e.clientX;
   pendingPointerY = e.clientY;
   currentDx = 0;
-  studyCardEl.classList.add("is-dragging");
-  studyCardEl.style.transition = "none";
-  studyCardEl.style.cursor = "grabbing";
-  try { studyCardEl.setPointerCapture(e.pointerId); } catch (_) {}
-});
 
-studyCardEl.addEventListener("pointermove", (e) => {
+  card.classList.add("is-dragging");
+  const deck1 = document.getElementById("studyDeckBack1");
+  if (deck1) deck1.classList.add("is-dragging");
+
+  card.style.transition = "none";
+  card.style.cursor = "grabbing";
+  try { card.setPointerCapture(e.pointerId); } catch (_) {}
+}
+
+function onCardPointerMove(e) {
   if (!isPointerDown || isAnimatingSwipe) return;
   pendingPointerX = e.clientX;
   pendingPointerY = e.clientY;
   if (!dragRafId) {
     dragRafId = requestAnimationFrame(updateDragTransform);
   }
-});
+}
 
 const finishPointer = (e) => {
   if (!isPointerDown || isAnimatingSwipe) return;
@@ -9072,9 +9472,16 @@ const finishPointer = (e) => {
     cancelAnimationFrame(dragRafId);
     dragRafId = null;
   }
-  studyCardEl.classList.remove("is-dragging");
-  studyCardEl.style.cursor = "grab";
-  try { studyCardEl.releasePointerCapture(e.pointerId); } catch (_) {}
+  const curCard = document.getElementById("studyCard") || studyCardEl;
+  const deck1 = document.getElementById("studyDeckBack1");
+  if (curCard) {
+    curCard.classList.remove("is-dragging");
+    curCard.style.cursor = "grab";
+    try { curCard.releasePointerCapture(e.pointerId); } catch (_) {}
+  }
+  if (deck1) {
+    deck1.classList.remove("is-dragging");
+  }
 
   const totalDx = Math.abs(e.clientX - pointerStartX);
   const totalDy = Math.abs(e.clientY - pointerStartY);
@@ -9110,53 +9517,84 @@ const finishPointer = (e) => {
   if (studyDeck && studyDeck.length > 1) {
     if (isSwipeLeft) {
       // Dragged Left -> Next Card (RTL)
-      flyCardAndAdvance(1);
-      return;
+      if (studyIndex < studyDeck.length - 1) {
+        markCardAsSeen(studyIndex);
+        flyCardAndAdvance(1);
+        return;
+      } else {
+        // Clamping on last card: subtle spring-back, mark as seen
+        markCardAsSeen(studyIndex);
+        springBackCard(true);
+        return;
+      }
     } else if (isSwipeRight) {
       // Dragged Right -> Prev Card (RTL)
-      flyCardAndAdvance(-1);
-      return;
+      if (studyIndex > 0) {
+        markCardAsSeen(studyIndex);
+        flyCardAndAdvance(-1);
+        return;
+      } else {
+        // Clamping on first card: subtle spring-back
+        springBackCard(true);
+        return;
+      }
     }
   }
 
   // Snap back to center without flipping
-  studyCardEl.style.transition = "transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.2s ease";
-  studyCardEl.style.opacity = "1";
-  studyCardEl.style.transform = isCardFlipped ? "rotateY(180deg)" : "rotateY(0deg)";
-
-  const deck1 = document.getElementById("studyDeckBack1");
-  if (deck1) {
-    deck1.style.transition = "transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.2s ease";
-    deck1.style.transform = "";
-    deck1.style.opacity = "";
-  }
+  springBackCard(false);
 };
 
-studyCardEl.addEventListener("pointerup", finishPointer);
-studyCardEl.addEventListener("pointercancel", finishPointer);
+const cardSceneEl = document.getElementById("studyCardScene");
+if (cardSceneEl) {
+  cardSceneEl.addEventListener("pointerdown", onCardPointerDown);
+}
+if (studyCardEl) {
+  studyCardEl.addEventListener("pointerdown", onCardPointerDown);
+  studyCardEl.addEventListener("pointermove", onCardPointerMove, { passive: true });
+  studyCardEl.addEventListener("pointerup", finishPointer);
+  studyCardEl.addEventListener("pointercancel", finishPointer);
+}
+window.addEventListener("pointermove", onCardPointerMove, { passive: true });
+window.addEventListener("pointerup", finishPointer, { passive: true });
+window.addEventListener("pointercancel", finishPointer, { passive: true });
 
 function flyCardAndAdvance(dir) {
   if (!studyDeck || studyDeck.length <= 1) return;
   if (isAnimatingSwipe) return;
-  isAnimatingSwipe = true;
 
+  // Clamping at boundaries (no loop)
+  if (dir === 1 && studyIndex >= studyDeck.length - 1) {
+    markCardAsSeen(studyIndex);
+    springBackCard(true);
+    return;
+  }
+  if (dir === -1 && studyIndex <= 0) {
+    springBackCard(true);
+    return;
+  }
+
+  isAnimatingSwipe = true;
+  markCardAsSeen(studyIndex);
+
+  const curCard = document.getElementById("studyCard") || studyCardEl;
   const isReducedMotion = typeof window !== "undefined" && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (isReducedMotion) {
-    studyCardEl.style.transition = "opacity 0.08s ease";
-    studyCardEl.style.opacity = "0";
+    if (curCard) {
+      curCard.style.transition = "opacity 0.08s ease";
+      curCard.style.opacity = "0";
+    }
     setTimeout(() => {
       if (dir === 1) {
         if (studyIndex < studyDeck.length - 1) studyIndex++;
-        else studyIndex = 0;
       } else {
         if (studyIndex > 0) studyIndex--;
-        else studyIndex = studyDeck.length - 1;
       }
       isCardFlipped = false;
-      studyCardEl.classList.remove("is-flipped");
+      if (curCard) curCard.classList.remove("is-flipped");
       playSelectSound();
       renderStudyCard();
-      studyCardEl.style.opacity = "1";
+      if (curCard) curCard.style.opacity = "1";
       isAnimatingSwipe = false;
     }, 90);
     return;
@@ -9167,9 +9605,11 @@ function flyCardAndAdvance(dir) {
   const flyRot = dir === 1 ? -10 : 10;
   const flipRot = isCardFlipped ? 180 : 0;
 
-  studyCardEl.style.transition = "transform 0.25s cubic-bezier(0.22, 0.8, 0.36, 1), opacity 0.22s ease-in";
-  studyCardEl.style.transform = `translateX(${flyOutX}px) rotate(${flyRot}deg) rotateY(${flipRot}deg)`;
-  studyCardEl.style.opacity = "0";
+  if (curCard) {
+    curCard.style.transition = "transform 0.25s cubic-bezier(0.22, 0.8, 0.36, 1), opacity 0.22s ease-in";
+    curCard.style.transform = `translateX(${flyOutX}px) rotate(${flyRot}deg) rotateY(${flipRot}deg)`;
+    curCard.style.opacity = "0";
+  }
 
   // Stack Card 1 smoothly scales and moves up to take its place (TASK 3)
   const deck1 = document.getElementById("studyDeckBack1");
@@ -9189,16 +9629,20 @@ function flyCardAndAdvance(dir) {
 
   setTimeout(() => {
     if (dir === 1) {
-      if (studyIndex < studyDeck.length - 1) studyIndex++;
-      else studyIndex = 0;
+      if (studyIndex < studyDeck.length - 1) {
+        studyIndex++;
+        rotateDeckPoolForward();
+      }
     } else {
-      if (studyIndex > 0) studyIndex--;
-      else studyIndex = studyDeck.length - 1;
+      if (studyIndex > 0) {
+        studyIndex--;
+        rotateDeckPoolBackward();
+      }
     }
     isCardFlipped = false;
-    studyCardEl.classList.remove("is-flipped");
+    const active = document.getElementById("studyCard");
+    if (active) active.classList.remove("is-flipped");
     playSelectSound();
-    renderStudyCard();
 
     // Reset deck cards transition styles
     if (deck1) {
@@ -9213,9 +9657,11 @@ function flyCardAndAdvance(dir) {
     }
 
     // Reset top card cleanly
-    studyCardEl.style.transition = "none";
-    studyCardEl.style.transform = "rotateY(0deg)";
-    studyCardEl.style.opacity = "1";
+    if (studyCardEl) {
+      studyCardEl.style.transition = "none";
+      studyCardEl.style.transform = "rotateY(0deg)";
+      studyCardEl.style.opacity = "1";
+    }
     requestAnimationFrame(() => {
       isAnimatingSwipe = false;
     });
@@ -9518,17 +9964,37 @@ document.getElementById("studySheetBackdrop")?.addEventListener("click", () => {
   closeStudyLockedSheet();
 });
 
+document.getElementById("studyProgressDots")?.addEventListener("click", (e) => {
+  const dot = e.target.closest(".study-dot");
+  if (!dot || isAnimatingSwipe) return;
+  const idx = parseInt(dot.dataset.idx, 10);
+  if (!isNaN(idx) && idx >= 0 && idx < (studyDeck ? studyDeck.length : 0) && idx !== studyIndex) {
+    markCardAsSeen(studyIndex);
+    studyIndex = idx;
+    isCardFlipped = false;
+    playSelectSound();
+    renderStudyCard();
+  }
+});
+
 document.getElementById("btnStudyPrev")?.addEventListener("click", () => {
   if (isAnimatingSwipe) return;
   if (studyIndex > 0) {
+    markCardAsSeen(studyIndex);
     flyCardAndAdvance(-1);
+  } else {
+    springBackCard(true);
   }
 });
 
 document.getElementById("btnStudyNext")?.addEventListener("click", () => {
   if (isAnimatingSwipe) return;
   if (studyIndex < studyDeck.length - 1) {
+    markCardAsSeen(studyIndex);
     flyCardAndAdvance(1);
+  } else {
+    markCardAsSeen(studyIndex);
+    springBackCard(true);
   }
 });
 
@@ -9597,16 +10063,27 @@ document.addEventListener("keydown", (e) => {
     dismissStudyTutorial();
   }
 
-  // Navigation: ArrowRight advances to next card, ArrowLeft moves to previous card
-  if (e.key === "ArrowRight") {
+  // Navigation: In RTL, ArrowLeft advances to next card (matching swipe-left), ArrowRight moves to previous card (matching swipe-right)
+  if (e.key === "ArrowLeft") {
     e.preventDefault();
-    if (!isAnimatingSwipe && studyDeck && studyDeck.length > 1 && studyIndex < studyDeck.length - 1) {
-      flyCardAndAdvance(1);
+    if (!isAnimatingSwipe && studyDeck && studyDeck.length > 1) {
+      if (studyIndex < studyDeck.length - 1) {
+        markCardAsSeen(studyIndex);
+        flyCardAndAdvance(1);
+      } else {
+        markCardAsSeen(studyIndex);
+        springBackCard(true);
+      }
     }
-  } else if (e.key === "ArrowLeft") {
+  } else if (e.key === "ArrowRight") {
     e.preventDefault();
-    if (!isAnimatingSwipe && studyDeck && studyDeck.length > 1 && studyIndex > 0) {
-      flyCardAndAdvance(-1);
+    if (!isAnimatingSwipe && studyDeck && studyDeck.length > 1) {
+      if (studyIndex > 0) {
+        markCardAsSeen(studyIndex);
+        flyCardAndAdvance(-1);
+      } else {
+        springBackCard(true);
+      }
     }
   }
 });
