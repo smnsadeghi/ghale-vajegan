@@ -382,6 +382,7 @@ describe('Leaderboard Upgrade: DOM Structure, Persian Badges & Hooks Integrity i
   it('contains victory clean/retry feedback elements and CSS badge styles', () => {
     assert.ok(htmlContent.includes('id="victoryFlawlessRow"'), 'victoryFlawlessRow must exist in victory overlay');
     assert.ok(htmlContent.includes('id="victoryFlawlessVal"'), 'victoryFlawlessVal must exist in victory overlay');
+    assert.ok(htmlContent.includes('امتیاز دقت پاسخ:'), 'Must label accuracy row as "امتیاز دقت پاسخ:"');
 
     assert.ok(htmlContent.includes('.lb-badge-tag--flawless'), 'CSS class for flawless badge must exist');
     assert.ok(htmlContent.includes('.lb-badge-tag--retry'), 'CSS class for retry badge must exist');
