@@ -3757,7 +3757,8 @@
 
     /* Leaderboard Mode Tabs & Controls */
     .leaderboard-mode-tabs {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       background: var(--surface-elevated);
       border: 1px solid var(--border-subtle);
       border-radius: 9999px;
@@ -3765,12 +3766,14 @@
       gap: 4px;
       flex-shrink: 0;
       margin-bottom: 8px;
+      width: 100%;
+      box-sizing: border-box;
     }
     .leaderboard-mode-tabs button,
     .leaderboard-mode-tabs .capsule-tab {
-      flex: 1;
-      padding: 7px 12px;
-      font-size: 0.82rem;
+      min-width: 0;
+      padding: 7px 6px;
+      font-size: 0.73rem;
       border-radius: 9999px;
       font-family: inherit;
       font-weight: 700;
@@ -3781,6 +3784,8 @@
       color: var(--ink-muted);
       text-align: center;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .leaderboard-mode-tabs button.active,
     .leaderboard-mode-tabs .capsule-tab.active {
@@ -5992,6 +5997,799 @@
       }
     }
 
+    /* ==========================================
+       SCORCHED CITY (شهر سوخته) STANDALONE MODE (STEP 1)
+       ========================================== */
+    .stage-wrapper.mode-scorched-city {
+      border-color: rgba(176, 182, 190, 0.42);
+      background: #0a0a0c;
+      box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.78), 0 8px 24px rgba(0, 0, 0, 0.6);
+    }
+
+    .stage-wrapper.mode-scorched-city::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(10, 10, 12, 0.14) 0%, rgba(10, 10, 12, 0) 35%, rgba(10, 10, 12, 0.32) 100%);
+      z-index: 2;
+    }
+
+    .sc-hub-card {
+      background: rgba(18, 17, 17, 0.94);
+      border: 1px solid rgba(176, 182, 190, 0.25);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .sc-hub-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .sc-hub-title {
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: var(--text, #f1e8d4);
+      margin: 0;
+    }
+
+    .sc-hub-subtitle {
+      font-size: 0.78rem;
+      color: var(--ink-muted, #a39682);
+      margin: 2px 0 0;
+    }
+
+    .sc-daily-seed-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      background: rgba(111, 184, 168, 0.14);
+      border: 1px solid rgba(111, 184, 168, 0.4);
+      color: var(--teal, #6fb8a8);
+      direction: ltr;
+    }
+
+    .sc-mode-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .sc-mode-btn {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--ink-muted);
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+
+    .sc-mode-btn.active {
+      background: rgba(217, 112, 58, 0.16);
+      border-color: var(--ember, #d9703a);
+      color: #f4ebe1;
+    }
+
+    .sc-room-stepper {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+
+    .sc-room-step {
+      padding: 8px 4px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(12, 12, 14, 0.7);
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .sc-room-step.is-current {
+      border-color: var(--gold, #c9a24d);
+      background: rgba(201, 162, 77, 0.14);
+      color: var(--text, #f1e8d4);
+      font-weight: 800;
+    }
+
+    .sc-room-step.is-cleared {
+      border-color: rgba(111, 184, 168, 0.45);
+      color: var(--teal, #6fb8a8);
+    }
+
+    .sc-room-step.is-boss {
+      border-color: rgba(217, 112, 58, 0.4);
+    }
+
+    .sc-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .sc-metric-box {
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .sc-metric-label {
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+    }
+
+    .sc-metric-val {
+      font-size: 0.92rem;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .sc-telegraph-box {
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(217, 112, 58, 0.1);
+      border: 1px solid rgba(217, 112, 58, 0.35);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    .sc-telegraph-title {
+      font-weight: 900;
+      color: var(--ember, #d9703a);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sc-telegraph-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .sc-chip {
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      background: rgba(20, 19, 19, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: var(--text);
+    }
+
+    .sc-chip--key {
+      border-color: rgba(201, 162, 77, 0.5);
+      color: var(--gold, #c9a24d);
+    }
+
+    .sc-chip--universal {
+      border-color: rgba(111, 184, 168, 0.5);
+      color: var(--teal, #6fb8a8);
+    }
+
+    .sc-battle-hud {
+      margin-bottom: 6px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      background: rgba(18, 18, 20, 0.92);
+      border: 1px solid rgba(176, 182, 190, 0.28);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sc-battle-hud-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    .sc-battle-score-pill {
+      color: var(--gold, #c9a24d);
+      direction: ltr;
+    }
+
+    .sc-battle-runxp-pill {
+      color: var(--teal, #6fb8a8);
+      font-size: 0.7rem;
+    }
+
+    .sc-battle-banner {
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 0.69rem;
+      line-height: 1.38;
+      background: rgba(217, 112, 58, 0.14);
+      border: 1px solid rgba(217, 112, 58, 0.4);
+      color: #f4ebe1;
+    }
+
+    .sc-practice-reveal-banner {
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 0.69rem;
+      line-height: 1.38;
+      background: rgba(111, 184, 168, 0.14);
+      border: 1px solid rgba(111, 184, 168, 0.4);
+      color: var(--teal, #6fb8a8);
+    }
+
+    /* Step 2: Active Pacts Bar & Draft / Boss Prep Modal */
+    .sc-active-pacts-strip {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 2px;
+    }
+
+    .sc-pact-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 7px 3px 5px;
+      border-radius: 8px;
+      background: rgba(14, 12, 11, 0.92);
+      border: 1px solid rgba(201, 162, 77, 0.35);
+      font-size: 0.68rem;
+      color: #f4ebe1;
+    }
+
+    .sc-pact-chip img {
+      width: 22px;
+      height: 28px;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .sc-pact-lvl {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.56rem;
+      padding: 1px 4px;
+      border-radius: 4px;
+      background: rgba(201, 162, 77, 0.2);
+      color: var(--gold, #c9a24d);
+    }
+
+    .sc-pact-chip.is-sealed {
+      opacity: 0.48;
+      filter: grayscale(0.8);
+      border-style: dashed;
+    }
+
+    .sc-arena-quick-tools {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+
+    .sc-passage-btn {
+      padding: 3px 9px;
+      border-radius: 7px;
+      border: 1px solid rgba(168, 85, 247, 0.55);
+      background: rgba(168, 85, 247, 0.16);
+      color: #e9d5ff;
+      font-size: 0.69rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .sc-passage-btn:hover {
+      background: rgba(168, 85, 247, 0.28);
+    }
+
+    .rpg-option-btn.sc-opt-eliminated {
+      opacity: 0.28 !important;
+      filter: grayscale(1);
+      text-decoration: line-through;
+      pointer-events: none;
+    }
+
+    .sc-draft-modal {
+      width: 100%;
+      max-width: 440px;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 14px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(20, 18, 16, 0.98) 0%, rgba(12, 11, 10, 0.99) 100%);
+      border: 1px solid rgba(201, 162, 77, 0.35);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-align: right;
+    }
+
+    .sc-draft-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .sc-draft-title {
+      font-size: 0.98rem;
+      font-weight: 900;
+      color: var(--gold, #c9a24d);
+      margin: 0;
+    }
+
+    .sc-draft-sub {
+      font-size: 0.74rem;
+      color: var(--ink-muted, #b8afa6);
+      margin: 2px 0 0;
+    }
+
+    .sc-early-clue-banner {
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(168, 85, 247, 0.12);
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      font-size: 0.74rem;
+      color: #ede9fe;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .sc-boss-prep-panel {
+      padding: 9px 10px;
+      border-radius: 10px;
+      background: rgba(217, 112, 58, 0.12);
+      border: 1px solid rgba(217, 112, 58, 0.45);
+      font-size: 0.74rem;
+      color: #fdece2;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .sc-draft-cards-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      width: 100%;
+      margin: 4px 0 2px;
+    }
+
+    .sc-draft-card-box,
+    .sc-draft-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 6px;
+      border-radius: 12px;
+      background: rgba(22, 18, 16, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.12);
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1), border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      user-select: none;
+      touch-action: manipulation;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      min-width: 0;
+    }
+
+    .sc-draft-card-box:hover {
+      border-color: rgba(201, 162, 77, 0.45);
+      transform: translateY(-2px);
+    }
+
+    .sc-draft-card-box.is-selected {
+      border-color: var(--card-family-color, #c9a24d);
+      background: linear-gradient(180deg, rgba(38, 28, 22, 0.98) 0%, rgba(20, 16, 14, 0.98) 100%);
+      box-shadow: 0 0 16px var(--card-family-glow, rgba(201, 162, 77, 0.4)), 0 6px 18px rgba(0, 0, 0, 0.7);
+      transform: translateY(-4px) scale(1.03);
+    }
+
+    .sc-draft-card-box.is-key-family {
+      border-color: rgba(201, 162, 77, 0.65);
+      box-shadow: 0 0 10px rgba(201, 162, 77, 0.22);
+    }
+
+    @keyframes scCardFloat0 {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+    @keyframes scCardFloat1 {
+      0%, 100% { transform: translateY(-2px); }
+      50% { transform: translateY(1.5px); }
+    }
+    @keyframes scCardFloat2 {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    .sc-draft-card-box:nth-child(1):not(.is-selected) {
+      animation: scCardFloat0 4.0s ease-in-out infinite;
+    }
+    .sc-draft-card-box:nth-child(2):not(.is-selected) {
+      animation: scCardFloat1 4.6s ease-in-out infinite;
+    }
+    .sc-draft-card-box:nth-child(3):not(.is-selected) {
+      animation: scCardFloat2 4.2s ease-in-out infinite;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sc-draft-card-box:nth-child(1),
+      .sc-draft-card-box:nth-child(2),
+      .sc-draft-card-box:nth-child(3) {
+        animation: none !important;
+      }
+    }
+
+    .sc-card-art-cropper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 2 / 2.75;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #0d0b0a;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
+    }
+
+    .sc-draft-card-box.is-selected .sc-card-art-cropper {
+      border-color: var(--card-family-color, #c9a24d);
+    }
+
+    img.sc-draft-card-art {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.44);
+      transform-origin: center center;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      display: block;
+    }
+
+    .sc-card-vignette {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      box-shadow: inset 0 0 12px 3px rgba(10, 8, 8, 0.95);
+      border-radius: 8px;
+    }
+
+    .sc-card-family-halo {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: 8px;
+      box-shadow: inset 0 0 14px var(--card-family-glow, rgba(201, 162, 77, 0.25));
+      opacity: 0.8;
+    }
+
+    .sc-key-family-pill-mini {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      font-size: 0.60rem;
+      padding: 1px 4px;
+      border-radius: 4px;
+      background: rgba(20, 16, 12, 0.88);
+      border: 1px solid var(--gold, #c9a24d);
+      color: var(--gold, #c9a24d);
+      font-weight: 800;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      line-height: 1.2;
+    }
+
+    .sc-draft-card-meta {
+      width: 100%;
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      text-align: center;
+    }
+
+    .sc-draft-card-title {
+      font-size: 0.78rem;
+      font-weight: 900;
+      color: #f7f1e8;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .sc-draft-card-box.is-selected .sc-draft-card-title {
+      color: #fff;
+      text-shadow: 0 0 8px var(--card-family-glow, rgba(201, 162, 77, 0.5));
+    }
+
+    .sc-draft-card-badges {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .sc-pact-desc-panel {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(18, 15, 14, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      text-align: right;
+    }
+
+    .sc-pact-desc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 6px;
+    }
+
+    .sc-pact-desc-title-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sc-pact-desc-name {
+      font-size: 0.88rem;
+      font-weight: 900;
+      color: #f7f1e8;
+    }
+
+    .sc-pact-desc-effect {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #ffd88a;
+      line-height: 1.45;
+    }
+
+    .sc-pact-desc-lore {
+      font-size: 0.70rem;
+      color: #d6cdc3;
+      line-height: 1.45;
+    }
+
+    .sc-pact-desc-tradeoff {
+      font-size: 0.68rem;
+      color: #fca5a5;
+      line-height: 1.4;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: 6px;
+      padding: 4px 8px;
+    }
+
+    .sc-pact-desc-synergy {
+      font-size: 0.68rem;
+      color: var(--gold, #c9a24d);
+      line-height: 1.4;
+      background: rgba(201, 162, 77, 0.12);
+      border: 1px solid rgba(201, 162, 77, 0.35);
+      border-radius: 6px;
+      padding: 4px 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-seal-pact {
+      position: relative;
+      width: 100%;
+      min-height: 44px;
+      padding: 8px 16px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+      background: linear-gradient(135deg, #4a080d 0%, #991b1b 50%, #3b0609 100%);
+      border: 1px solid #ef4444;
+      clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+      box-shadow: 0 0 16px rgba(185, 28, 28, 0.45), inset 0 1px 1px rgba(255, 180, 180, 0.35);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.12s ease, filter 0.15s ease, box-shadow 0.15s ease;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    .btn-seal-pact:hover:not(:disabled) {
+      filter: brightness(1.15);
+      box-shadow: 0 0 22px rgba(220, 38, 38, 0.65), inset 0 1px 2px rgba(255, 200, 200, 0.5);
+    }
+
+    .btn-seal-pact:active:not(:disabled) {
+      transform: scale(0.98);
+      filter: brightness(0.95);
+    }
+
+    .btn-seal-pact:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      filter: grayscale(0.5);
+    }
+
+    .sc-blood-seal-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+
+    .sc-slash-blade {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.95) 48%, rgba(255, 215, 215, 0.98) 50%, rgba(239, 68, 68, 0.9) 52%, transparent 60%);
+      animation: scBladeFlash 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      mix-blend-mode: screen;
+    }
+
+    .sc-blood-splat {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: scBloodSpread 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .sc-blood-splat svg {
+      width: 85%;
+      height: 85%;
+      filter: drop-shadow(0 0 6px rgba(136, 19, 55, 0.9));
+    }
+
+    @keyframes scBladeFlash {
+      0% {
+        opacity: 0;
+        transform: translate(-100%, -100%) rotate(25deg);
+      }
+      30% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(100%, 100%) rotate(25deg);
+      }
+    }
+
+    @keyframes scBloodSpread {
+      0% {
+        opacity: 0;
+        transform: scale(0.2) rotate(-15deg);
+      }
+      40% {
+        opacity: 1;
+        transform: scale(1.15) rotate(5deg);
+      }
+      70% {
+        opacity: 0.95;
+        transform: scale(1.0) rotate(0deg);
+      }
+      100% {
+        opacity: 0.9;
+        transform: scale(1.0) rotate(0deg);
+      }
+    }
+
+    .sc-draft-card-box.is-sealing {
+      animation: scCardSealPulse 0.40s ease-out forwards !important;
+    }
+
+    @keyframes scCardSealPulse {
+      0% { transform: translateY(-4px) scale(1.03); }
+      35% { transform: translateY(-2px) scale(1.08); filter: brightness(1.25) contrast(1.15); }
+      100% { transform: translateY(-4px) scale(1.03); }
+    }
+
+    .sc-family-pill {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #e7dfd6;
+    }
+
+    .sc-replace-box {
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.73rem;
+    }
+
+    .sc-swap-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    /* Step 3: Lazy-Loaded 512x512 Pixel-Art Scorched City Boss Sprites */
+    .stage-wrapper.mode-scorched-city.has-sc-boss {
+      height: clamp(220px, 60vw, 312px);
+    }
+
+    .road-obstacle.arena-enemy.is-sc-boss {
+      left: 6px;
+      bottom: 19%;
+      width: clamp(166px, 56vw, 272px);
+      height: auto;
+      z-index: 11;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .sc-boss-canvas {
+      display: block;
+      height: clamp(166px, 46vw, 256px);
+      max-height: 100%;
+      width: auto;
+      aspect-ratio: 1 / 1;
+      image-rendering: crisp-edges;
+      image-rendering: pixelated;
+      transform-origin: bottom center;
+      pointer-events: none;
+    }
+
     .hidden { display: none !important; }
 </style>
 </head>
@@ -6498,6 +7296,7 @@
       <!-- 1v1 Duel Enemy Actor (Left Side, Ground Anchored at 28%) -->
       <div id="roadObstacle" class="road-obstacle arena-enemy">
         <div id="enemySprite" class="sprite enemy-sprite"></div>
+        <canvas id="scBossCanvas" class="sc-boss-canvas hidden" width="512" height="512" aria-label="Scorched City Boss"></canvas>
         <img id="obstacleSpriteImg" class="hidden" src="assets/redesign/sprites/enemy_w1_x2.webp" alt="Enemy">
       </div>
 
@@ -6546,6 +7345,19 @@
     <!-- RPG DIALOG WINDOW (Battle Direct Glass Card) -->
     <div class="rpg-dialog glass-card" id="rpgDialog">
       <div class="rpg-dialog-inner">
+        <!-- SCORCHED CITY HUD (Hidden in normal 3-world stages) -->
+        <div id="scorchedCityBattleHud" class="sc-battle-hud hidden">
+          <div class="sc-battle-hud-row">
+            <span id="scBattleRoomMeta">دور ۱ • اتاق ۱ از ۵</span>
+            <span id="scBattleScorePill" class="sc-battle-score-pill font-pixel" dir="ltr">0 / 300</span>
+            <span id="scBattleRunXpPill" class="sc-battle-runxp-pill">XP نبرد: ۰</span>
+          </div>
+          <div id="scArenaPactsStrip" class="sc-active-pacts-strip"></div>
+          <div id="scArenaQuickTools" class="sc-arena-quick-tools hidden"></div>
+          <div id="scBattleTelegraphBanner" class="sc-battle-banner hidden"></div>
+          <div id="scPracticeRevealBanner" class="sc-practice-reveal-banner hidden"></div>
+        </div>
+
         <!-- BATTLE QUIZ -->
         <div id="phaseQuiz">
           <div class="rpg-question" role="heading" aria-level="2">
@@ -6622,6 +7434,11 @@
         </div>
       </div>
     </div>
+
+    <!-- OVERLAY: SCORCHED CITY DRAFT & ROOM 4 BOSS PREP (Non-Timed) -->
+    <div id="scDraftOverlay" class="arena-overlay-screen hidden">
+      <div class="sc-draft-modal glass-card" id="scDraftModalBody"></div>
+    </div>
   </div>
 
   <!-- VIEW 5: STUDENT LEADERBOARD -->
@@ -6649,10 +7466,11 @@
         </div>
       </div>
 
-      <!-- LEADERBOARD MODE SWITCHER (Overall vs By Stage) -->
+      <!-- LEADERBOARD MODE SWITCHER (Overall vs By Stage vs Scorched City) -->
       <div class="capsule-tabs leaderboard-mode-tabs" role="tablist">
         <button id="btnTabLbOverall" type="button" class="capsule-tab active">📊 رده‌بندی کلی</button>
         <button id="btnTabLbByStage" type="button" class="capsule-tab">🎯 به تفکیک مراحل</button>
+        <button id="btnTabLbScorched" type="button" class="capsule-tab">🔥 شهر سوخته</button>
       </div>
 
       <!-- TOGGLE: رشته من vs کل هنرستان (Overall Mode) -->
@@ -6665,6 +7483,12 @@
       <div id="lbStageSelectWrap" class="lb-stage-select-wrap hidden">
         <label for="lbStageSelect" class="lb-stage-select-label">مرحله هدف:</label>
         <select id="lbStageSelect" class="lb-stage-select"></select>
+      </div>
+
+      <!-- SCORCHED CITY DEDICATED SCOPE TABS (Standard vs Daily YYYY-MM-DD) -->
+      <div id="lbScorchedScopeWrap" class="capsule-tabs leaderboard-tabs hidden" role="tablist">
+        <button id="btnTabLbScorchedStandard" type="button" class="capsule-tab active">⚔️ استاندارد</button>
+        <button id="btnTabLbScorchedDaily" type="button" class="capsule-tab">📅 روزانه <span id="lbScorchedDailyBadge" class="font-pixel" style="font-size:0.7rem; opacity:0.85;"></span></button>
       </div>
 
       <!-- PLAYER LIST (Internal Scroll Only Here) -->
@@ -7101,6 +7925,7 @@
 <script src="./audio/engine.js"></script>
 <script src="./audio/battle_effects.js"></script>
 <script src="data/curriculum_bank.js"></script>
+<script src="./js/scorched_city.js"></script>
 
 <script>
 // ==========================================
@@ -7559,6 +8384,10 @@ let appState = {
 if (typeof window !== "undefined") {
   window.appState = appState;
 }
+
+let currentStage = null;
+let studyStage = null;
+let activeGameMode = "worlds"; // "worlds" | "scorched_city"
 
 function saveLocal() {
   const grade = getCurrentUserGrade();
@@ -8506,6 +9335,238 @@ function switchWorld(wId) {
 }
 window.switchWorld = switchWorld;
 
+let selectedScorchedEntryMode = "standard"; // "standard" | "daily"
+let selectedScorchedNefrinTier = 0; // 0 (عادی) to 5 (نفرین ۵)
+
+function renderScorchedCityHub(container, user) {
+  if (!container) return;
+  const sc = (typeof ScorchedCity !== "undefined" && ScorchedCity) ? ScorchedCity : null;
+  const todayKey = sc ? sc.getCalendarDateKey() : new Date().toISOString().slice(0, 10);
+  const studentCode = (user && user.code) ? user.code : (appState.currentUserCode || "guest");
+  const stats = sc ? sc.getPersistentStats(studentCode) : { cyclesCompleted: 0, highestLoop: 0, bestStandardScore: 0, bestDailyByDate: {}, totalRuns: 0 };
+  const tuning = sc ? sc.getSimulationTuning() : { room5BaseTargetScore: 1500 };
+
+  // Try hydrating any saved unfinished Scorched City run matching this student
+  let activeRun = sc ? sc.getActiveRun() : null;
+  if (sc && !activeRun && typeof sc.loadSavedRun === "function") {
+    const loaded = sc.loadSavedRun(typeof CURRICULUM_BANK !== "undefined" ? CURRICULUM_BANK : null);
+    if (loaded && String(loaded.studentCode) === String(studentCode)) {
+      activeRun = loaded;
+    }
+  }
+
+  const hasResumableRun = Boolean(
+    activeRun &&
+    String(activeRun.studentCode) === String(studentCode) &&
+    activeRun.mode === selectedScorchedEntryMode &&
+    activeRun.status !== "game_over" &&
+    (activeRun.mode !== "daily" || activeRun.dateKey === todayKey)
+  );
+
+  const curRoom = hasResumableRun ? activeRun.room : 1;
+  const curCycle = hasResumableRun ? activeRun.cycle : 1;
+  const curRunXp = hasResumableRun ? activeRun.runXp : 0;
+  const curCandles = hasResumableRun ? activeRun.candles : 3;
+  const curScore = hasResumableRun ? activeRun.totalRunScore : 0;
+  const dailyBest = (stats.bestDailyByDate && stats.bestDailyByDate[todayKey]) ? stats.bestDailyByDate[todayKey] : 0;
+  const bestForMode = selectedScorchedEntryMode === "daily" ? dailyBest : (stats.bestStandardScore || 0);
+
+  const telegraph = (sc && hasResumableRun) ? sc.getRoom4BossTelegraph(activeRun) : null;
+  const previewBoss = telegraph || (sc ? sc.getRoom4BossTelegraph({
+    room: curRoom,
+    cycle: curCycle,
+    telegraphedBoss: sc.BASE_STEP1_BOSS_STUB
+  }) : null);
+
+  const stepsHtml = [1, 2, 3, 4, 5].map(r => {
+    const isBoss = r === 5;
+    const isCurrent = hasResumableRun ? (r === curRoom) : (r === 1);
+    const isCleared = hasResumableRun && r < curRoom;
+    const baseTarget = (sc && tuning.roomBaseTargetScores && tuning.roomBaseTargetScores[r]) || (r === 5 ? tuning.room5BaseTargetScore : r * 300);
+    const subLabel = isBoss ? `هدف ${toFaDigits(tuning.room5BaseTargetScore)}` : (r === 4 ? "پیش‌آگهی" : `هدف ${toFaDigits(baseTarget)}`);
+    return `
+      <div class="sc-room-step ${isCurrent ? "is-current" : ""} ${isCleared ? "is-cleared" : ""} ${isBoss ? "is-boss" : ""}">
+        <span>${isBoss ? "👑 باس" : `اتاق ${toFaDigits(r)}`}</span>
+        <span style="font-size:0.64rem; opacity:0.85;">${subLabel}</span>
+      </div>
+    `;
+  }).join("");
+
+  const hubCard = document.createElement("div");
+  hubCard.id = "scorchedCityHub";
+  hubCard.className = "sc-hub-card";
+  hubCard.innerHTML = `
+    <div class="sc-hub-header">
+      <div>
+        <h2 class="sc-hub-title">شهر سوخته — حالت مستقل</h2>
+        <p class="sc-hub-subtitle">۵ اتاق متوالی تا باس • کاملاً مجزا از ۳ جهان و لیدربورد اصلی</p>
+      </div>
+      <span class="sc-daily-seed-pill" id="scDailySeedPill">📅 <span dir="ltr">${todayKey}</span></span>
+    </div>
+
+    <div class="sc-mode-tabs" role="tablist">
+      <button type="button" id="btnScModeStandard" class="sc-mode-btn ${selectedScorchedEntryMode === "standard" ? "active" : ""}">⚔️ نبرد استاندارد</button>
+      <button type="button" id="btnScModeDaily" class="sc-mode-btn ${selectedScorchedEntryMode === "daily" ? "active" : ""}">📅 چالش روزانه <span dir="ltr" style="display:inline-block; font-size:0.72rem; opacity:0.85;">${todayKey}</span></button>
+    </div>
+
+    <div class="sc-room-stepper" aria-label="پیشرفت ۵ اتاق چرخه">${stepsHtml}</div>
+
+    <div class="sc-metrics-grid">
+      <div class="sc-metric-box">
+        <span class="sc-metric-label">چرخه / اتاق فعلی</span>
+        <span class="sc-metric-val">دور ${toFaDigits(curCycle)} • اتاق ${toFaDigits(curRoom)} از ۵</span>
+      </div>
+      <div class="sc-metric-box">
+        <span class="sc-metric-label">XP داخل ران (ایزوله)</span>
+        <span class="sc-metric-val" style="color:var(--teal);">${toFaDigits(curRunXp)} XP نبرد • 🕯️ ${toFaDigits(curCandles)}</span>
+      </div>
+      <div class="sc-metric-box">
+        <span class="sc-metric-label">${selectedScorchedEntryMode === "daily" ? "بهترین رکورد امروز" : "بهترین رکورد استاندارد"}</span>
+        <span class="sc-metric-val" style="color:var(--gold);">${toFaDigits(bestForMode)} امتیاز</span>
+      </div>
+      <div class="sc-metric-box">
+        <span class="sc-metric-label">چرخه‌های تکمیل‌شده</span>
+        <span class="sc-metric-val">${toFaDigits(stats.cyclesCompleted || 0)} دور (رکورد دور: ${toFaDigits(stats.highestLoop || 0)})</span>
+      </div>
+    </div>
+
+    ${(() => {
+      const hubSlots = (hasResumableRun && sc.getActivePactSlots) ? sc.getActivePactSlots(activeRun) : [];
+      if (hubSlots.length === 0) {
+        return `<div class="sc-active-pacts-strip" style="opacity:0.78; font-size:0.72rem; color:var(--ink-muted);">پیمان‌های فعال (۰ از ۳) — اتاق ۱ بدون کارت شروع می‌شود؛ پس از پاک‌سازی اتاق‌های ۱ تا ۴ پیمان برمی‌گزینید.</div>`;
+      }
+      return `<div class="sc-active-pacts-strip">${hubSlots.map(s => `
+        <span class="sc-pact-chip ${s.sealed ? "is-sealed" : ""}" title="${s.shortEffect}">
+          <img src="./${s.assetPath}" alt="${s.titleFa}">
+          <span>${s.titleFa}</span>
+          <span class="sc-pact-lvl">${s.levelRoman}</span>
+        </span>
+      `).join("")}</div>`;
+    })()}
+
+    ${(() => {
+      const isPoolUnlocked = sc ? sc.isFullBossPoolUnlocked(studentCode, stats.totalRuns || 0) : false;
+      const activeTier = hasResumableRun ? (activeRun.nefrinTier || 0) : selectedScorchedNefrinTier;
+      const tiers = (sc && sc.NEFRIN_TIERS) ? sc.NEFRIN_TIERS : {};
+      if (hasResumableRun && activeTier > 0) {
+        return `
+          <div class="sc-nefrin-tier-section" style="margin-top:10px; padding:8px 12px; background:rgba(217,112,58,0.12); border:1px solid rgba(217,112,58,0.3); border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.78rem; font-weight:800; color:var(--amber);">🔥 ${tiers[activeTier] ? tiers[activeTier].labelFa : `نفرین ${toFaDigits(activeTier)}`}</span>
+            <span style="font-size:0.7rem; color:var(--ink-muted);">${tiers[activeTier] ? tiers[activeTier].descriptionFa : ""}</span>
+          </div>
+        `;
+      }
+      if (isPoolUnlocked) {
+        return `
+          <div class="sc-nefrin-tier-section" style="margin-top:10px; padding:10px; background:rgba(20,20,28,0.7); border:1px solid rgba(255,255,255,0.08); border-radius:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-size:0.8rem; font-weight:700; color:var(--amber);">🔥 درجه‌های نفرین (۱ تا ۵)</span>
+              <span style="font-size:0.7rem; color:var(--ink-muted);">سختی تصاعدی ران</span>
+            </div>
+            <div class="sc-nefrin-chips" style="display:flex; gap:6px; flex-wrap:wrap;">
+              ${[0, 1, 2, 3, 4, 5].map(t => {
+                const info = tiers[t] || { nameFa: t === 0 ? "عادی" : `نفرین ${toFaDigits(t)}` };
+                const isActive = selectedScorchedNefrinTier === t;
+                return `
+                  <button type="button" class="btn-ghost sc-nefrin-btn ${isActive ? "active" : ""}" data-nefrin="${t}" style="flex:1; min-width:44px; padding:4px 6px; font-size:0.72rem; ${isActive ? "border-color:var(--amber); color:var(--amber); font-weight:900;" : "opacity:0.75;"}">
+                    ${info.nameFa || (t === 0 ? "عادی" : `نفرین ${toFaDigits(t)}`)}
+                  </button>
+                `;
+              }).join("")}
+            </div>
+            <div id="scNefrinDesc" style="font-size:0.68rem; color:var(--ink-muted); margin-top:6px;">
+              ${(tiers[selectedScorchedNefrinTier] && tiers[selectedScorchedNefrinTier].descriptionFa) || "قوانین استاندارد بدون چالش اضافه"}
+            </div>
+          </div>
+        `;
+      } else {
+        return `
+          <div class="sc-nefrin-locked-notice" style="margin-top:10px; padding:8px 10px; background:rgba(20,20,28,0.5); border:1px dashed rgba(255,255,255,0.1); border-radius:8px; font-size:0.7rem; color:var(--ink-muted);">
+            🔒 درجه‌های نفرین (۱ تا ۵) پس از ۳ ران و بازگشایی کامل تمامی ۱۰ باس فعال خواهند شد (ران‌های گذرانده: ${toFaDigits(stats.totalRuns || 0)} از ۳).
+          </div>
+        `;
+      }
+    })()}
+
+    ${previewBoss ? `
+      <div class="sc-telegraph-box" id="scHubBossTelegraph">
+        <div class="sc-telegraph-title">
+          <span>📜 ${hasResumableRun && curRoom === 4 ? "پیش‌آگهی رسمی باس اتاق ۵ (اتاق ۴)" : "ساختار باس اتاق ۵"}: ${previewBoss.bossName}</span>
+          <span class="font-pixel" style="font-size:0.72rem;" dir="ltr">Target: ${previewBoss.predictedRoom5TargetScore}</span>
+        </div>
+        <div>${previewBoss.lawDescription}</div>
+        ${previewBoss.secondaryMiniRule ? `
+          <div style="font-size:0.72rem; color:var(--amber); margin-top:6px; padding:4px 6px; background:rgba(217,112,58,0.12); border-radius:4px;">
+            ⚖️ <strong>قانون قرضی (نفرین ۳+):</strong> ${previewBoss.secondaryMiniRule.lawTitle} — ${previewBoss.secondaryMiniRule.lawDescriptionFa}
+          </div>
+        ` : ""}
+        ${previewBoss.nefrin5SealedPact ? `
+          <div style="font-size:0.72rem; color:var(--ember); margin-top:6px; padding:4px 6px; background:rgba(255,80,80,0.12); border-radius:4px;">
+            🔒 <strong>اخطار مهر سیاه (نفرین ۵):</strong> پیمان «${previewBoss.nefrin5SealedPact.titleFa}» در اتاق ۵ مهر خواهد شد.
+          </div>
+        ` : ""}
+        <div class="sc-telegraph-chips">
+          <span class="sc-chip sc-chip--key">🔑 خانواده کلیدی: ${previewBoss.keyFamilyLabel}</span>
+          <span class="sc-chip sc-chip--universal">🧠 ${previewBoss.universalAnswerPath.title}</span>
+        </div>
+      </div>
+    ` : ""}
+
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <button type="button" id="btnScStartOrContinue" class="btn-primary" style="width:100%; min-height:46px; font-size:0.92rem; font-weight:900;">
+        ${hasResumableRun
+          ? `ادامه ${selectedScorchedEntryMode === "daily" ? "چالش روزانه" : "نبرد"} (اتاق ${toFaDigits(curRoom)} از ۵ • امتیاز ${toFaDigits(curScore)})`
+          : (selectedScorchedEntryMode === "daily" ? `شروع چالش روزانه (${todayKey})` : "شروع نبرد جدید شهر سوخته")}
+      </button>
+      <div style="display:flex; gap:8px;">
+        <button type="button" id="btnScOpenLeaderboard" class="btn-ghost" style="flex:1; min-height:40px; font-size:0.8rem;">جدول رتبه‌های شهر سوخته</button>
+        ${hasResumableRun ? `<button type="button" id="btnScResetRun" class="btn-ghost" style="min-height:40px; font-size:0.8rem; color:var(--ember); border-color:rgba(217,112,58,0.4);">شروع از اول</button>` : ""}
+      </div>
+    </div>
+  `;
+
+  hubCard.querySelectorAll(".sc-nefrin-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      playSelectSound();
+      selectedScorchedNefrinTier = Number(btn.dataset.nefrin) || 0;
+      renderTowerMap();
+    });
+  });
+
+  hubCard.querySelector("#btnScModeStandard")?.addEventListener("click", () => {
+    playSelectSound();
+    selectedScorchedEntryMode = "standard";
+    renderTowerMap();
+  });
+  hubCard.querySelector("#btnScModeDaily")?.addEventListener("click", () => {
+    playSelectSound();
+    selectedScorchedEntryMode = "daily";
+    renderTowerMap();
+  });
+  hubCard.querySelector("#btnScStartOrContinue")?.addEventListener("click", () => {
+    playSelectSound();
+    if (typeof startScorchedCityBattle === "function") {
+      startScorchedCityBattle(selectedScorchedEntryMode, hasResumableRun);
+    }
+  });
+  hubCard.querySelector("#btnScOpenLeaderboard")?.addEventListener("click", () => {
+    playSelectSound();
+    if (typeof openScorchedCityLeaderboard === "function") {
+      openScorchedCityLeaderboard(selectedScorchedEntryMode);
+    }
+  });
+  hubCard.querySelector("#btnScResetRun")?.addEventListener("click", () => {
+    playSelectSound();
+    if (sc && typeof sc.endRun === "function") {
+      sc.endRun(false);
+    }
+    renderTowerMap();
+  });
+
+  container.appendChild(hubCard);
+}
+window.renderScorchedCityHub = renderScorchedCityHub;
+
 function renderTowerMap() {
   const user = appState.students[appState.currentUserCode] || {};
   const completed = user.completedStages || [];
@@ -8530,10 +9591,17 @@ function renderTowerMap() {
   const p2 = document.getElementById("portalCount2");
   const p3 = document.getElementById("portalCount3");
   const p4 = document.getElementById("portalCount4");
+  const scModule = (typeof ScorchedCity !== "undefined" && ScorchedCity) ? ScorchedCity : null;
+  const scActiveRun = scModule ? scModule.getActiveRun() : null;
+  const scStats = scModule ? scModule.getPersistentStats(user.code || appState.currentUserCode || "guest") : null;
   if (p1) p1.textContent = `${toFaDigits(w1Completed)}/${toFaDigits(w1Stages.length)}`;
   if (p2) p2.textContent = `${toFaDigits(w2Completed)}/${toFaDigits(w2Stages.length)}`;
   if (p3) p3.textContent = `${toFaDigits(w3Completed)}/${toFaDigits(w3Stages.length)}`;
-  if (p4) p4.textContent = `${toFaDigits(w4Completed)}/${toFaDigits(w4Stages.length)}`;
+  if (p4) {
+    p4.textContent = scActiveRun
+      ? `${toFaDigits(scActiveRun.room)}/۵`
+      : (scStats && scStats.cyclesCompleted > 0 ? `${toFaDigits(scStats.cyclesCompleted)} دور` : "حالت مستقل");
+  }
 
   // 2. Highlight active portal tab
   document.querySelectorAll(".portal-tab").forEach(tab => {
@@ -8578,20 +9646,23 @@ function renderTowerMap() {
 
   if (bannerTitle) bannerTitle.textContent = "";
   if (bannerSub) bannerSub.textContent = currentCfg.name;
+  const scRoomPct = (scActiveRun && scActiveRun.room) ? Math.round((scActiveRun.room / 5) * 100) : 20;
   if (progressRatio) {
     if (currentWorld === 4) {
-      progressRatio.textContent = "۱۰ از ۱۰ مراحل";
+      progressRatio.textContent = scActiveRun
+        ? `دور ${toFaDigits(scActiveRun.cycle)} • اتاق ${toFaDigits(scActiveRun.room)} از ۵`
+        : "۵ اتاق • حالت مستقل";
     } else {
       progressRatio.textContent = `${totalStages} مرحله • ${pct}٪ فتح شده`;
     }
     progressRatio.style.color = currentCfg.accent;
   }
   if (progressBar) {
-    progressBar.style.width = currentWorld === 4 ? (doneCount > 0 ? "100%" : "30%") : `${pct}%`;
+    progressBar.style.width = currentWorld === 4 ? `${scRoomPct}%` : `${pct}%`;
     progressBar.style.background = currentCfg.accent;
   }
   if (progressPip) {
-    progressPip.style.left = currentWorld === 4 ? (doneCount > 0 ? "100%" : "30%") : `${pct}%`;
+    progressPip.style.left = currentWorld === 4 ? `${scRoomPct}%` : `${pct}%`;
     progressPip.style.borderColor = currentCfg.accent;
   }
 
@@ -8601,60 +9672,7 @@ function renderTowerMap() {
   list.innerHTML = "";
 
   if (currentWorld === 4) {
-    const priorStages = allStages.filter(s => s.world < 4);
-    const priorCompletedCount = priorStages.filter(s => completed.includes(s.id)).length;
-    const priorTotalCount = priorStages.length;
-    const allPriorDone = priorCompletedCount >= priorTotalCount;
-
-    activeStages.forEach((st, idxInWorld) => {
-      const isCompleted = completed.includes(st.id);
-      const prevBossDone = idxInWorld === 0 ? allPriorDone : completed.includes(activeStages[idxInWorld - 1].id);
-      const isUnlocked = st.unlocked || prevBossDone;
-
-      const bossCard = document.createElement("div");
-      bossCard.className = "boss-hero-card";
-      bossCard.style.marginBottom = "16px";
-      bossCard.innerHTML = `
-        <div class="boss-card-glow-mesh"></div>
-        <div>
-          <div class="boss-top-group">
-            <span class="boss-stage-badge font-pixel" style="background:rgba(217,112,58,0.18); border:1px solid rgba(217,112,58,0.45); color:var(--ember); font-size:0.75rem; font-weight:900; padding:4px 10px; border-radius:12px;">۱۰ از ۱۰ مراحل</span>
-            <div class="boss-badge-icon">
-              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            </div>
-          </div>
-          <div class="boss-content-middle">
-            <h2 class="boss-title">درخت مرده جهنمی</h2>
-            <p class="boss-desc">
-              رویارویی تن‌به‌تن با درخت مرده جهنمی در قلب شهر سوخته. تمامی آموخته‌های خود از واژگان، کنایه‌ها و تاریخ ادبیات را به کار بگیرید!
-            </p>
-          </div>
-        </div>
-        ${isUnlocked ? `
-          <button class="btn-primary boss-enter-btn" style="width:100%; min-height:44px; font-size:0.9rem; font-weight:900;">
-            ${isCompleted ? "تکرار نبرد شهر سوخته" : "ورود به نبرد شهر سوخته"}
-          </button>
-        ` : `
-          <div class="boss-locked-condition">
-            <div class="boss-lock-label-wrap">
-              <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <span class="boss-lock-text">${idxInWorld === 0 ? `شرط بازگشایی: فتح تمام ${toFaDigits(priorTotalCount)} مرحله پیشین` : "شرط بازگشایی: پیروزی در دروازه شهر"}</span>
-            </div>
-            <span class="boss-lock-ratio">${idxInWorld === 0 ? `${toFaDigits(priorCompletedCount)} / ${toFaDigits(priorTotalCount)}` : (completed.includes(activeStages[0].id) ? "۱ / ۱" : "۰ / ۱")}</span>
-          </div>
-        `}
-      `;
-      if (isUnlocked) {
-        const btn = bossCard.querySelector(".boss-enter-btn");
-        if (btn) {
-          btn.addEventListener("click", () => {
-            playSelectSound();
-            promptStartBattle(st);
-          });
-        }
-      }
-      list.appendChild(bossCard);
-    });
+    renderScorchedCityHub(list, user);
     return;
   }
 
@@ -9656,9 +10674,11 @@ if (studyCardEl) {
   studyCardEl.addEventListener("pointerup", finishPointer);
   studyCardEl.addEventListener("pointercancel", finishPointer);
 }
-window.addEventListener("pointermove", onCardPointerMove, { passive: true });
-window.addEventListener("pointerup", finishPointer, { passive: true });
-window.addEventListener("pointercancel", finishPointer, { passive: true });
+if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+  window.addEventListener("pointermove", onCardPointerMove, { passive: true });
+  window.addEventListener("pointerup", finishPointer, { passive: true });
+  window.addEventListener("pointercancel", finishPointer, { passive: true });
+}
 
 function flyCardAndAdvance(dir) {
   if (!studyDeck || studyDeck.length <= 1) return;
@@ -10334,7 +11354,7 @@ document.getElementById("btnStudyBack").addEventListener("click", enterDashboard
 // ==========================================
 // 7. BATTLE ARENA ENGINE (نبرد دروازه)
 // ==========================================
-let currentStage = null;
+currentStage = null;
 let quizQueue = [];
 let masteredCount = 0;
 let totalInitialWords = 0;
@@ -10859,6 +11879,33 @@ function renderAmbientWorld3(ctx, w, h, t, dt) {
   });
 }
 
+// Scorched City (Standalone Dark Grayscale Arena): Gentle rising ash & silver-gray dust motes (high contrast for foreground sprites/cards)
+function renderAmbientScorchedCity(ctx, w, h, t, dt) {
+  const mistOffset = (t * 0.012) % h;
+  const mistGrad = ctx.createLinearGradient(0, -mistOffset, 0, -mistOffset + h);
+  mistGrad.addColorStop(0, "rgba(18, 19, 22, 0)");
+  mistGrad.addColorStop(0.5, "rgba(28, 30, 35, 0.14)");
+  mistGrad.addColorStop(1, "rgba(18, 19, 22, 0)");
+  ctx.fillStyle = mistGrad;
+  ctx.fillRect(0, 0, w, h);
+
+  ambientParticles.forEach((p, idx) => {
+    p.y += (p.vy * 0.65) * (dt / 16.6);
+    p.x += (p.vx * 0.5 + (Math.random() - 0.5) * 0.12) * (dt / 16.6);
+    p.alpha -= (p.fade * 0.7) * (dt / 16.6);
+
+    if (p.alpha <= 0 || p.y < 0) {
+      ambientParticles[idx] = createAmbientParticle(4, w, h, false);
+      ambientParticles[idx].color = idx % 3 === 0 ? "#cbd5e1" : "#94a3b8";
+      return;
+    }
+
+    const ashColor = idx % 4 === 0 ? "#d1d5db" : "#9ca3af";
+    ctx.fillStyle = hexToRgba(ashColor, Math.min(0.45, p.alpha));
+    ctx.fillRect(Math.round(p.x), Math.round(p.y), p.size, p.size);
+  });
+}
+
 // World 4: Fiery sparks rising + subtle pulsing sigil + faint dark smoke
 function renderAmbientWorld4(ctx, w, h, t, dt) {
   // Faint dark smoke wisp drifting upward
@@ -10944,7 +11991,9 @@ function startArenaAmbient(worldId = 1) {
 
     ctx.clearRect(0, 0, w, h);
 
-    if (currentAmbientWorld === 1) {
+    if (activeGameMode === "scorched_city") {
+      renderAmbientScorchedCity(ctx, w, h, ambientSimTime, dt);
+    } else if (currentAmbientWorld === 1) {
       renderAmbientWorld1(ctx, w, h, ambientSimTime, dt);
     } else if (currentAmbientWorld === 2) {
       renderAmbientWorld2(ctx, w, h, ambientSimTime, dt);
@@ -10992,6 +12041,7 @@ if (window.matchMedia) {
 }
 
 // Live Battle Variables
+activeGameMode = "worlds"; // "worlds" | "scorched_city"
 let arenaTimerInterval = null;
 let battleStartTime = 0;
 let isCurrentBattleRanked = false;
@@ -11126,14 +12176,236 @@ function applySpriteMetaToActor(actorEl, spriteEl, meta, spriteSheetUrl, isKnigh
   }
 }
 
+// ==========================================================================
+// SCORCHED CITY BOSS SPRITE PLAYER (Atlas-Driven, Lazy 1-Boss Cache)
+// ==========================================================================
+const ScorchedBossSpritePlayer = (() => {
+  let cachedSlug = null;
+  let cachedBundle = null; // { slug, cfg, atlas, sheetImg, quirks }
+  let pendingLoadPromise = null;
+  let pendingSlug = null;
+  let animTimer = null;
+  let activeCanvas = null;
+  let currentAnim = "idle";
+  let currentStep = 0;
+
+  function buildFallbackAtlas(sheetImg) {
+    const fw = Math.max(1, Math.floor((sheetImg.naturalWidth || 2048) / 4));
+    const fh = Math.max(1, Math.floor((sheetImg.naturalHeight || 2048) / 4));
+    const animNames = ["idle", "attack", "hit", "death"];
+    const frames = [];
+    for (let r = 0; r < 4; r++) {
+      for (let c = 0; c < 4; c++) {
+        frames.push({ index: r * 4 + c, x: c * fw, y: r * fh, w: fw, h: fh, anim: animNames[r] });
+      }
+    }
+    return {
+      frame_size: [fw, fh],
+      animations: { idle: [0, 1, 2, 3], attack: [4, 5, 6, 7], hit: [8, 9, 10, 11], death: [12, 13, 14, 15] },
+      frames
+    };
+  }
+
+  function resolveBossConfig(bossOrSlug) {
+    const sc = (typeof ScorchedCity !== "undefined" && ScorchedCity) ? ScorchedCity : null;
+    const rawSlug = typeof bossOrSlug === "string"
+      ? bossOrSlug
+      : (bossOrSlug && (bossOrSlug.bossSlug || bossOrSlug.slug || bossOrSlug.id)) || "01_rift_scribe";
+    if (sc && typeof sc.getBossSpriteConfig === "function") {
+      return sc.getBossSpriteConfig(rawSlug);
+    }
+    return {
+      slug: rawSlug,
+      sheetPath: `assets/boss_sprites/${rawSlug}_sheet.png`,
+      atlasPath: `assets/boss_sprites/${rawSlug}_atlas.json`,
+      quirks: rawSlug === "05_inverted_mirror_lord"
+        ? { attackFrameOverlay: { targetStep: 2, underlayStep: 1 } }
+        : {}
+    };
+  }
+
+  async function preloadForBoss(bossOrSlug) {
+    const cfg = resolveBossConfig(bossOrSlug);
+    if (cachedBundle && cachedSlug === cfg.slug) {
+      return cachedBundle;
+    }
+    if (pendingLoadPromise && pendingSlug === cfg.slug) {
+      return pendingLoadPromise;
+    }
+
+    // Evict previous boss decoded image so only ONE (~16MB) sheet is in memory
+    if (cachedBundle && cachedBundle.sheetImg && cachedSlug !== cfg.slug) {
+      try { cachedBundle.sheetImg.src = ""; } catch (_) {}
+      cachedBundle = null;
+      cachedSlug = null;
+    }
+
+    pendingSlug = cfg.slug;
+    pendingLoadPromise = (async () => {
+      const sheetImg = new Image();
+      const sheetLoaded = new Promise((resolve, reject) => {
+        sheetImg.onload = () => resolve(sheetImg);
+        sheetImg.onerror = () => reject(new Error(`Failed to load boss sheet: ${cfg.sheetPath}`));
+      });
+      sheetImg.src = cfg.sheetPath;
+
+      let atlasData = null;
+      try {
+        const res = await fetch(cfg.atlasPath);
+        if (res.ok) {
+          atlasData = await res.json();
+        }
+      } catch (_) {}
+
+      await sheetLoaded;
+      if (typeof sheetImg.decode === "function") {
+        try { await sheetImg.decode(); } catch (_) {}
+      }
+
+      const atlas = (atlasData && Array.isArray(atlasData.frames) && atlasData.animations)
+        ? atlasData
+        : buildFallbackAtlas(sheetImg);
+
+      // Evict stale before caching current
+      if (cachedBundle && cachedBundle.sheetImg && cachedBundle.slug !== cfg.slug) {
+        try { cachedBundle.sheetImg.src = ""; } catch (_) {}
+      }
+
+      const bundle = {
+        slug: cfg.slug,
+        cfg,
+        atlas,
+        sheetImg,
+        quirks: cfg.quirks || {}
+      };
+      cachedSlug = cfg.slug;
+      cachedBundle = bundle;
+      pendingLoadPromise = null;
+      pendingSlug = null;
+      return bundle;
+    })();
+
+    return pendingLoadPromise;
+  }
+
+  function drawFrame(animName, stepIdx) {
+    if (!activeCanvas || !cachedBundle) return;
+    const { atlas, sheetImg, quirks } = cachedBundle;
+    const animFrames = (atlas.animations && atlas.animations[animName]) || (atlas.animations && atlas.animations.idle) || [0, 1, 2, 3];
+    const safeStep = Math.max(0, Math.min(animFrames.length - 1, stepIdx));
+    const frameObj = atlas.frames[animFrames[safeStep]] || atlas.frames[0];
+    if (!frameObj) return;
+
+    const canvasW = (Array.isArray(atlas.frame_size) && atlas.frame_size[0]) ? atlas.frame_size[0] : (frameObj.w || 512);
+    const canvasH = (Array.isArray(atlas.frame_size) && atlas.frame_size[1]) ? atlas.frame_size[1] : (frameObj.h || 512);
+    if (activeCanvas.width !== canvasW) activeCanvas.width = canvasW;
+    if (activeCanvas.height !== canvasH) activeCanvas.height = canvasH;
+
+    const ctx = activeCanvas.getContext("2d");
+    if (!ctx) return;
+    ctx.imageSmoothingEnabled = false;
+    ctx.clearRect(0, 0, canvasW, canvasH);
+
+    // Fixed bottom-center canvas draw without per-frame re-centering/trimming (prevents baseline jitter).
+    // Quirk handling for 05_inverted_mirror_lord: attack frame 3 (step 2) is slash-only; hold previous frame underneath.
+    const overlayQuirk = quirks && quirks.attackFrameOverlay;
+    if (animName === "attack" && overlayQuirk && safeStep === overlayQuirk.targetStep) {
+      const underlayIdx = animFrames[overlayQuirk.underlayStep];
+      const underlayFrame = atlas.frames[underlayIdx];
+      if (underlayFrame) {
+        ctx.drawImage(sheetImg, underlayFrame.x, underlayFrame.y, underlayFrame.w, underlayFrame.h, 0, 0, canvasW, canvasH);
+      }
+    }
+
+    ctx.drawImage(sheetImg, frameObj.x, frameObj.y, frameObj.w, frameObj.h, 0, 0, canvasW, canvasH);
+  }
+
+  function stop() {
+    if (animTimer) {
+      clearInterval(animTimer);
+      animTimer = null;
+    }
+  }
+
+  function play(animName = "idle", options = {}) {
+    stop();
+    const sc = (typeof ScorchedCity !== "undefined" && ScorchedCity) ? ScorchedCity : null;
+    const fpsTable = (sc && sc.BOSS_ANIM_FPS) || { idle: 4, attack: 10, hit: 10, death: 6 };
+
+    const targetAnim = (animName === "attack" || animName === "hit" || animName === "death") ? animName : "idle";
+    const fps = options.fps || fpsTable[targetAnim] || 4;
+    const loop = options.loop !== undefined ? options.loop : (targetAnim === "idle");
+    const holdLast = options.holdLast !== undefined ? options.holdLast : (targetAnim === "death");
+
+    currentAnim = targetAnim;
+    currentStep = 0;
+    drawFrame(currentAnim, currentStep);
+
+    const frameCount = (cachedBundle && cachedBundle.atlas && cachedBundle.atlas.animations && cachedBundle.atlas.animations[targetAnim])
+      ? cachedBundle.atlas.animations[targetAnim].length
+      : 4;
+    const intervalMs = Math.max(40, Math.round(1000 / fps));
+
+    animTimer = setInterval(() => {
+      currentStep += 1;
+      if (currentStep < frameCount) {
+        drawFrame(currentAnim, currentStep);
+      } else if (loop) {
+        currentStep = 0;
+        drawFrame(currentAnim, 0);
+      } else {
+        stop();
+        if (holdLast) {
+          currentStep = frameCount - 1;
+          drawFrame(currentAnim, currentStep);
+        } else {
+          play("idle");
+        }
+        if (typeof options.onEnd === "function") options.onEnd();
+      }
+    }, intervalMs);
+  }
+
+  async function mountBoss(canvasEl, bossOrSlug) {
+    activeCanvas = canvasEl;
+    const cfg = resolveBossConfig(bossOrSlug);
+    await preloadForBoss(cfg.slug);
+    if (activeCanvas === canvasEl && cachedSlug === cfg.slug) {
+      play("idle");
+    }
+    return cachedBundle;
+  }
+
+  function unmount() {
+    stop();
+    activeCanvas = null;
+  }
+
+  function getDebugState() {
+    return {
+      cachedSlug,
+      hasCachedBundle: Boolean(cachedBundle),
+      frameSize: (cachedBundle && cachedBundle.atlas && cachedBundle.atlas.frame_size) || null,
+      quirks: (cachedBundle && cachedBundle.quirks) || {},
+      currentAnim,
+      currentStep
+    };
+  }
+
+  return { preloadForBoss, mountBoss, play, stop, unmount, getDebugState };
+})();
+window.ScorchedBossSpritePlayer = ScorchedBossSpritePlayer;
+
 function setupArenaEnemy(stage) {
   const w = stage ? (stage.world || 1) : 1;
   const enemyActor = document.getElementById("roadObstacle");
   const enemySprite = document.getElementById("enemySprite");
+  const bossCanvas = document.getElementById("scBossCanvas");
   const knightActor = document.getElementById("knightActor");
   const knightSprite = document.getElementById("knightSprite");
   const nameLabel = document.getElementById("enemyNameLabel");
   const bgImg = document.getElementById("stageBgLayer");
+  const stageScene = document.getElementById("stageScene");
 
   const enemyNames = {
     1: "غول گورستان",
@@ -11142,41 +12414,77 @@ function setupArenaEnemy(stage) {
     4: "درخت مرده جهنمی"
   };
 
-  if (nameLabel) nameLabel.textContent = enemyNames[w] || "غول گورستان";
+  if (nameLabel) nameLabel.textContent = (stage && stage.isScorchedCity && stage.enemyName) ? stage.enemyName : (enemyNames[w] || "غول گورستان");
   const speakerTag = document.getElementById("speakerTag");
-  if (speakerTag) speakerTag.textContent = "هماورد";
+  if (speakerTag) speakerTag.textContent = (stage && stage.isScorchedCity) ? "شهر سوخته" : "هماورد";
 
-  // Active World Background Sync (World 1-4)
+  // Active World Background Sync (World 1-4 or Standalone Scorched City 1024x576 Grayscale Arena)
   if (bgImg) {
-    bgImg.src = `assets/redesign/bg_w${w}.webp`;
-    bgImg.onerror = function() { this.src = `assets/world${w}_bg.webp`; };
+    if (stage && stage.isScorchedCity) {
+      const scBg = (typeof ScorchedCity !== "undefined" && ScorchedCity.ARENA_CONFIG)
+        ? ScorchedCity.ARENA_CONFIG.backgroundAsset
+        : "assets/redesign/bg_scorched_city.webp";
+      bgImg.src = scBg;
+      bgImg.onerror = function() { this.src = "assets/redesign/bg_scorched_city.webp"; };
+    } else {
+      bgImg.src = `assets/redesign/bg_w${w}.webp`;
+      bgImg.onerror = function() { this.src = `assets/world${w}_bg.webp`; };
+    }
   }
 
   // Synchronize data-world on body for theme styling
   document.body.setAttribute("data-world", w);
 
-  const isBoss = (w === 4);
+  const isBoss = (stage && stage.isScorchedCity) ? Boolean(stage.isScorchedBossRoom) : (w === 4);
+  const isScBoss = Boolean(stage && stage.isScorchedCity && stage.isScorchedBossRoom);
   const kMeta = SPRITE_METAS.knight || DEFAULT_SPRITE_METAS.knight;
-  const eMeta = SPRITE_METAS[`enemy_w${w}`] || DEFAULT_SPRITE_METAS[`enemy_w${w}`] || DEFAULT_SPRITE_METAS.enemy_w1;
 
   if (knightActor && knightSprite) {
     applySpriteMetaToActor(knightActor, knightSprite, kMeta, "assets/redesign/sprites/knight_x2.webp", true, false);
     playSprite(knightSprite, 0, { fps: 5, loop: true });
   }
 
-  if (enemyActor && enemySprite) {
-    enemyActor.className = "road-obstacle arena-enemy" + (isBoss ? " is-boss" : "");
-    enemyActor.style.display = "flex";
-    applySpriteMetaToActor(enemyActor, enemySprite, eMeta, `assets/redesign/sprites/enemy_w${w}_x2.webp`, false, isBoss, w);
-    playSprite(enemySprite, 0, { fps: 5, loop: true });
+  if (stageScene) {
+    if (isScBoss) stageScene.classList.add("has-sc-boss");
+    else stageScene.classList.remove("has-sc-boss");
   }
 
-  // Dynamically re-verify meta from file
-  loadSpriteMeta(`enemy_w${w}`).then(loadedMeta => {
-    if (loadedMeta && (loadedMeta.cell_w !== eMeta.cell_w || loadedMeta.cell_h !== eMeta.cell_h || loadedMeta.floor_y !== eMeta.floor_y)) {
-      applySpriteMetaToActor(enemyActor, enemySprite, loadedMeta, `assets/redesign/sprites/enemy_w${w}_x2.webp`, false, isBoss, w);
+  if (isScBoss && enemyActor && bossCanvas) {
+    ScorchedBossSpritePlayer.unmount();
+    if (enemySprite) enemySprite.classList.add("hidden");
+    bossCanvas.classList.remove("hidden");
+    enemyActor.className = "road-obstacle arena-enemy is-boss is-sc-boss";
+    enemyActor.style.display = "flex";
+    enemyActor.style.removeProperty("width");
+    enemyActor.style.removeProperty("height");
+    enemyActor.style.removeProperty("bottom");
+    const sc = (typeof ScorchedCity !== "undefined" && ScorchedCity) ? ScorchedCity : null;
+    const scRun = sc ? sc.getActiveRun() : null;
+    const bossRef = (stage && stage.scorchedBossSummary) || (scRun && scRun.activeBossSlot && scRun.activeBossSlot.boss) || (scRun && scRun.telegraphedBoss) || "01_rift_scribe";
+    ScorchedBossSpritePlayer.mountBoss(bossCanvas, bossRef);
+  } else {
+    ScorchedBossSpritePlayer.unmount();
+    if (bossCanvas) bossCanvas.classList.add("hidden");
+    if (enemySprite) enemySprite.classList.remove("hidden");
+    const enemySpriteKey = (stage && stage.isScorchedCity)
+      ? `enemy_w${((stage.roomNumber - 1) % 3) + 1}`
+      : `enemy_w${w}`;
+    const eMeta = SPRITE_METAS[enemySpriteKey] || DEFAULT_SPRITE_METAS[enemySpriteKey] || DEFAULT_SPRITE_METAS.enemy_w1;
+
+    if (enemyActor && enemySprite) {
+      enemyActor.className = "road-obstacle arena-enemy" + (isBoss ? " is-boss" : "");
+      enemyActor.style.display = "flex";
+      applySpriteMetaToActor(enemyActor, enemySprite, eMeta, `assets/redesign/sprites/${enemySpriteKey}_x2.webp`, false, isBoss, stage && stage.isScorchedCity ? ((stage.roomNumber - 1) % 3) + 1 : w);
+      playSprite(enemySprite, 0, { fps: 5, loop: true });
     }
-  });
+
+    // Dynamically re-verify meta from file
+    loadSpriteMeta(enemySpriteKey).then(loadedMeta => {
+      if (loadedMeta && (loadedMeta.cell_w !== eMeta.cell_w || loadedMeta.cell_h !== eMeta.cell_h || loadedMeta.floor_y !== eMeta.floor_y)) {
+        applySpriteMetaToActor(enemyActor, enemySprite, loadedMeta, `assets/redesign/sprites/${enemySpriteKey}_x2.webp`, false, isBoss, stage && stage.isScorchedCity ? ((stage.roomNumber - 1) % 3) + 1 : w);
+      }
+    });
+  }
 
   updateEnemyHP();
 }
@@ -11210,12 +12518,651 @@ function updateEnemyHP() {
   }
 }
 
+function updateScorchedCityCandlesHUD(candlesRemaining) {
+  const remaining = Math.max(0, Math.min(3, Number(candlesRemaining)));
+  const hud = document.getElementById("candlesHud");
+  if (hud) {
+    const label = `${toFaDigits(remaining)} از ۳ شمع باقی‌مانده`;
+    hud.setAttribute("aria-label", label);
+    hud.setAttribute("title", label);
+  }
+  for (let i = 1; i <= 3; i++) {
+    const el = document.getElementById("candle" + i);
+    const imgEl = document.getElementById("candleImg" + i);
+    const isLit = i <= remaining;
+    if (el) el.classList.toggle("extinguished", !isLit);
+    if (imgEl) imgEl.src = isLit ? "assets/hud_candle_lit.webp" : "assets/hud_candle_unlit.webp";
+  }
+}
+
+function renderScorchedCityPactStripHTML(sc, run) {
+  if (!sc || !run || typeof sc.getActivePactSlots !== "function") return "";
+  const slots = sc.getActivePactSlots(run);
+  if (!slots || slots.length === 0) {
+    return `<span style="font-size:0.65rem; opacity:0.72; color:var(--ink-muted);">پیمان‌های فعال: ۰ / ۳</span>`;
+  }
+  return slots.map(slot => `
+    <span class="sc-pact-chip ${slot.sealed ? "is-sealed" : ""}" title="${slot.shortEffect}">
+      <img src="./${slot.assetPath}" alt="${slot.titleFa}">
+      <span>${slot.titleFa}</span>
+      <span class="sc-pact-lvl">${slot.levelRoman}</span>
+    </span>
+  `).join("");
+}
+
+function updateScorchedCityBattleHud(revealedInfo = null) {
+  const hudEl = document.getElementById("scorchedCityBattleHud");
+  const sc = (typeof ScorchedCity !== "undefined" && ScorchedCity) ? ScorchedCity : null;
+  const run = sc ? sc.getActiveRun() : null;
+  if (!hudEl || !run || activeGameMode !== "scorched_city") {
+    if (hudEl) hudEl.classList.add("hidden");
+    return;
+  }
+
+  hudEl.classList.remove("hidden");
+  const metaEl = document.getElementById("scBattleRoomMeta");
+  const scoreEl = document.getElementById("scBattleScorePill");
+  const runXpEl = document.getElementById("scBattleRunXpPill");
+  const pactsStrip = document.getElementById("scArenaPactsStrip");
+  const telBanner = document.getElementById("scBattleTelegraphBanner");
+  const revBanner = document.getElementById("scPracticeRevealBanner");
+
+  const modeLabel = run.mode === "daily" ? `روزانه <span dir="ltr">${run.dateKey}</span>` : "استاندارد";
+  const multVal = run.roomScoreMultiplier || 1;
+  const multTag = multVal !== 1 ? ` • x${multVal}` : "";
+  if (metaEl) metaEl.innerHTML = `دور ${toFaDigits(run.cycle)} • اتاق ${toFaDigits(run.room)} از ۵ • ${modeLabel}${multTag}`;
+  if (scoreEl) scoreEl.textContent = `${run.roomScore} / ${run.roomTargetScore}`;
+  if (runXpEl) runXpEl.textContent = `XP نبرد (ایزوله): ${toFaDigits(run.runXp)}`;
+  if (pactsStrip) pactsStrip.innerHTML = renderScorchedCityPactStripHTML(sc, run);
+
+  if (telBanner) {
+    if (run.room === 4) {
+      const tel = sc.getRoom4BossTelegraph(run);
+      if (tel) {
+        telBanner.innerHTML = `<strong>📜 پیش‌آگهی باس اتاق ۵ (${tel.bossName}):</strong> ${tel.lawTitle} — هدف: <span class="font-pixel" dir="ltr">${tel.predictedRoom5TargetScore}</span> | 🔑 ${tel.keyFamilyLabel} | 🧠 ${tel.universalAnswerPath.title}`;
+        telBanner.classList.remove("hidden");
+      } else {
+        telBanner.classList.add("hidden");
+      }
+    } else if (run.room === 5 && run.activeBossSlot && run.activeBossSlot.boss) {
+      const boss = run.activeBossSlot.boss;
+      telBanner.innerHTML = `<strong>👑 باس اتاق ۵ (${boss.name}):</strong> ${boss.lawTitle} — ${boss.universalAnswerPath.title}`;
+      telBanner.classList.remove("hidden");
+    } else {
+      telBanner.classList.add("hidden");
+    }
+  }
+
+  if (revBanner) {
+    if (revealedInfo && revealedInfo.revealedAnswer) {
+      revBanner.innerHTML = `💡 پاسخ صحیح «${revealedInfo.word || ""}»: <strong>${revealedInfo.revealedAnswer}</strong> • کارت به صف تمرین بازگشت (بدون حذف خطا)`;
+      revBanner.classList.remove("hidden");
+    } else if (revealedInfo && revealedInfo.pactNotice) {
+      revBanner.innerHTML = revealedInfo.pactNotice;
+      revBanner.classList.remove("hidden");
+    } else {
+      revBanner.classList.add("hidden");
+    }
+  }
+}
+
+let pendingReplaceChoiceCardId = null;
+let isBossPrepSwapPanelOpen = false;
+let selectedBossSwapDiscardId = null;
+let selectedDraftCardId = null;
+
+function openScorchedCityDraftOverlay(onDone = null) {
+  const sc = (typeof ScorchedCity !== "undefined" && ScorchedCity) ? ScorchedCity : null;
+  const overlay = document.getElementById("scDraftOverlay");
+  const modal = document.getElementById("scDraftModalBody");
+  if (!sc || !overlay || !modal) return;
+
+  const run = sc.getActiveRun();
+  const draft = run && (sc.getPendingDraft ? sc.getPendingDraft(run) : run.pendingDraft);
+  if (!run || !draft) {
+    overlay.classList.add("hidden");
+    if (typeof onDone === "function") onDone();
+    return;
+  }
+
+  activeGameMode = "scorched_city";
+  if (!currentStage || currentStage.world !== 4) {
+    currentStage = {
+      id: `scorched_city_${run.mode}_c${run.cycle}_r${run.room}`,
+      world: 4,
+      worldTitle: "شهر سوخته",
+      title: `شهر سوخته • اتاق ${toFaDigits(run.room)} از ۵`,
+      theme: "scorched"
+    };
+  }
+  showView("viewArena");
+  overlay.classList.remove("hidden");
+  document.getElementById("phaseVictory")?.classList.add("hidden");
+  document.getElementById("phaseDefeat")?.classList.add("hidden");
+
+  const activeSlots = sc.getActivePactSlots(run);
+  const canDoSwap = Boolean(draft.isBossPrep && draft.freeSwapAvailable && !run.bossPrepSwapUsed && activeSlots.length > 0);
+  const titleText = draft.isBossPrep
+    ? "آماده‌سازی باس اتاق ۵ (اتاق ۴)"
+    : `انتخاب پیمان پس از اتاق ${toFaDigits(draft.afterRoom)}`;
+  const subText = draft.resolved
+    ? "پیمان انتخاب شد. می‌توانید پیش از ورود به اتاق ۵ یک تعویض رایگان انجام دهید یا نبرد را آغاز کنید."
+    : "۱ کارت از ۳ پیمان زیر را انتخاب کنید (بدون محدودیت زمان • حداکثر ۳ پیمان فعال)";
+
+  let earlyClueHtml = "";
+  if (draft.earlyKeyFamilyClue && !draft.isBossPrep) {
+    const clue = draft.earlyKeyFamilyClue;
+    earlyClueHtml = `
+      <div class="sc-early-clue-banner" id="scRoom3EarlyClue">
+        <span>🔮 نشانه اولیه باس (پایان اتاق ۳): <strong>خانواده ${clue.nameFa}</strong></span>
+        <span class="sc-family-pill" style="border:1px solid ${clue.accentHex}; color:${clue.accentHex};">🔑 ${clue.badgeGlyph}</span>
+      </div>
+    `;
+  }
+
+  let bossPrepHtml = "";
+  if (draft.isBossPrep && draft.bossTelegraph) {
+    const tel = draft.bossTelegraph;
+    if (typeof ScorchedBossSpritePlayer !== "undefined") {
+      ScorchedBossSpritePlayer.preloadForBoss(tel);
+    }
+    bossPrepHtml = `
+      <div class="sc-boss-prep-panel" id="scRoom4BossPrepBanner">
+        <div><strong>📜 قانون کامل باس اتاق ۵ (${tel.bossName}):</strong> ${tel.lawTitle}</div>
+        <div style="opacity:0.9;">${tel.lawDescription}</div>
+        <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-top:2px;">
+          <span>🔑 خانواده کلیدی باس: <strong>${tel.keyFamilyLabel}</strong> (تضمین‌شده در آفر)</span>
+          <span>🎯 هدف اتاق ۵: <strong class="font-pixel" dir="ltr">${tel.predictedRoom5TargetScore}</strong></span>
+        </div>
+        ${canDoSwap ? `
+          <button type="button" id="btnScToggleBossSwap" class="btn-ghost" style="margin-top:4px; min-height:36px; font-size:0.75rem; border-color:rgba(201,162,77,0.5); color:var(--gold);">
+            🔁 تعویض رایگان ۱ پیمان فعال پیش از باس
+          </button>
+        ` : (run.bossPrepSwapUsed ? `<div style="color:var(--teal); font-weight:800;">✓ تعویض رایگان اتاق ۴ انجام شد.</div>` : "")}
+      </div>
+    `;
+  }
+
+  let replaceBoxHtml = "";
+  if (pendingReplaceChoiceCardId) {
+    const newCard = sc.getPactCard(pendingReplaceChoiceCardId);
+    replaceBoxHtml = `
+      <div class="sc-replace-box" id="scReplacePickerBox">
+        <div>ظرفیت ۳ پیمان پر است. برای افزودن <strong>${newCard ? newCard.titleFa : pendingReplaceChoiceCardId}</strong> کدام پیمان جایگزین شود؟</div>
+        <div class="sc-swap-row">
+          ${activeSlots.map(s => `
+            <button type="button" class="btn-ghost sc-replace-slot-btn" data-replace-id="${s.cardId}" style="flex:1; min-height:36px; font-size:0.72rem;">
+              جایگزینی با ${s.titleFa} (${s.levelRoman})
+            </button>
+          `).join("")}
+          <button type="button" id="btnCancelReplace" class="btn-ghost" style="min-height:36px; font-size:0.72rem;">انصراف</button>
+        </div>
+      </div>
+    `;
+  }
+
+  let swapPanelHtml = "";
+  if (canDoSwap && isBossPrepSwapPanelOpen) {
+    const allCards = sc.getAllPactCards();
+    const ownedIds = new Set(activeSlots.map(s => s.cardId));
+    const swapCandidates = allCards.filter(c => !ownedIds.has(c.id));
+    swapPanelHtml = `
+      <div class="sc-replace-box" style="border-color:rgba(201,162,77,0.55); background:rgba(201,162,77,0.08);" id="scBossSwapPanel">
+        <div><strong>۱) پیمان فعلی برای خروج را انتخاب کنید:</strong></div>
+        <div class="sc-swap-row">
+          ${activeSlots.map(s => `
+            <button type="button" class="btn-ghost sc-swap-discard-btn" data-discard-id="${s.cardId}" style="flex:1; min-height:34px; font-size:0.71rem; ${selectedBossSwapDiscardId === s.cardId ? "border-color:var(--gold); color:var(--gold);" : ""}">
+              خروج: ${s.titleFa} (${s.levelRoman})
+            </button>
+          `).join("")}
+        </div>
+        ${selectedBossSwapDiscardId ? `
+          <div style="margin-top:4px;"><strong>۲) پیمان جایگزین جدید (سطح I) را برگزینید:</strong></div>
+          <div class="sc-swap-row" style="max-height:130px; overflow-y:auto;">
+            ${swapCandidates.map(c => `
+              <button type="button" class="btn-ghost sc-swap-acquire-btn" data-new-id="${c.id}" style="min-height:32px; font-size:0.7rem; ${c.family === (draft.guaranteedKeyFamily) ? "border-color:var(--gold);" : ""}">
+                ${c.family === draft.guaranteedKeyFamily ? "🔑 " : ""}${c.titleFa} (${c.familyInfo.nameFa})
+              </button>
+            `).join("")}
+          </div>
+        ` : ""}
+      </div>
+    `;
+  }
+
+  const choices = Array.isArray(draft.choices) ? draft.choices : [];
+  if (!selectedDraftCardId || !choices.some(c => c.cardId === selectedDraftCardId)) {
+    selectedDraftCardId = choices[0] ? choices[0].cardId : null;
+  }
+  const selectedChoice = choices.find(c => c.cardId === selectedDraftCardId) || choices[0] || null;
+
+  const cardsHtml = choices.map(ch => {
+    const isSelected = (selectedChoice && selectedChoice.cardId === ch.cardId);
+    const familyHex = (ch.familyInfo && ch.familyInfo.accentHex) ? ch.familyInfo.accentHex : '#c9a24d';
+    return `
+      <div class="sc-draft-card-box sc-draft-card ${ch.isBossKeyFamily ? "is-key-family" : ""} ${isSelected ? "is-selected" : ""}"
+           data-card-id="${ch.cardId}"
+           role="button"
+           tabindex="0"
+           aria-label="${ch.titleFa} سطح ${ch.nextLevelRoman}"
+           style="--card-family-color: ${familyHex}; --card-family-glow: ${familyHex}55;">
+        <div class="sc-card-art-cropper">
+          <img class="sc-draft-card-art" src="./${ch.assetPath}" alt="${ch.titleFa}">
+          <div class="sc-card-vignette"></div>
+          <div class="sc-card-family-halo"></div>
+          ${ch.isBossKeyFamily ? `<div class="sc-key-family-pill-mini">🔑 کلیدی</div>` : ""}
+          <div class="sc-blood-seal-overlay" id="bloodOverlay_${ch.cardId}"></div>
+        </div>
+        <div class="sc-draft-card-meta">
+          <div class="sc-draft-card-title">${ch.titleFa}</div>
+          <div class="sc-draft-card-badges">
+            <span class="sc-family-pill" style="color:${familyHex}; border:1px solid ${familyHex}55;">${ch.familyInfo ? ch.familyInfo.nameFa : ""}</span>
+            <span class="sc-pact-lvl">${ch.nextLevelRoman}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  function renderSelectedDescriptionHtml(choice) {
+    if (!choice) return "";
+    const actionLabel = draft.resolved
+      ? (draft.pickedCardId === choice.cardId ? "✓ انتخاب شد" : "پیمان ثبت‌شده")
+      : (choice.action === "upgrade" ? "ارتقای پیمان" : (choice.requiresReplacement ? "نیاز به جایگزینی" : "پیمان جدید"));
+    const tel = draft.bossTelegraph;
+    return `
+      <div class="sc-pact-desc-header">
+        <div class="sc-pact-desc-title-group">
+          <span>${choice.familyInfo ? (choice.familyInfo.badgeGlyph || "📜") : "📜"}</span>
+          <span class="sc-pact-desc-name">${choice.titleFa}</span>
+          <span class="sc-pact-lvl">${choice.nextLevelRoman}</span>
+        </div>
+        <div style="display:flex; gap:4px; align-items:center;">
+          <span class="sc-family-pill" style="color:${choice.familyInfo ? choice.familyInfo.accentHex : "var(--gold)"}; border:1px solid ${choice.familyInfo ? choice.familyInfo.accentHex : "var(--gold)"}66;">
+            ${choice.familyInfo ? choice.familyInfo.nameFa : ""}
+          </span>
+          <span class="sc-family-pill" style="color:#fde047; border:1px solid rgba(253,224,71,0.4);">${actionLabel}</span>
+        </div>
+      </div>
+      <div class="sc-pact-desc-effect">⚡ ${choice.shortEffect}</div>
+      ${choice.description ? `<div class="sc-pact-desc-lore">${choice.description}</div>` : ""}
+      ${choice.tradeOffs ? `<div class="sc-pact-desc-tradeoff">⚠️ ملاحظه رزمی: ${choice.tradeOffs}</div>` : ""}
+      ${choice.isBossKeyFamily ? `
+        <div class="sc-pact-desc-synergy">
+          🔑 هماهنگ با باس اتاق ۵ ${tel ? `(${tel.bossName})` : ""}: هم‌افزایی ویژه با قانون باس!
+        </div>
+      ` : ""}
+      ${choice.immuneToBossSeal ? `
+        <div class="sc-pact-desc-synergy" style="border-color:rgba(168,85,247,0.4); color:#d8b4fe; background:rgba(168,85,247,0.12);">
+          🛡️ مصونیت مطلق: این پیمان در برابر قانون مهر و موم باس اتاق ۵ گزندی نمی‌بیند.
+        </div>
+      ` : ""}
+    `;
+  }
+
+  function getConfirmButtonLabel(choice) {
+    if (draft.resolved) {
+      return `ورود به اتاق ${toFaDigits(draft.nextRoom)} از ۵`;
+    }
+    if (!choice) return "انتخاب پیمان";
+    if (choice.action === "upgrade") {
+      return `🩸 مُهر و امضای ارتقا به ${choice.nextLevelRoman} (${choice.titleFa})`;
+    }
+    if (choice.requiresReplacement) {
+      return `🩸 انتخاب و جایگزینی با (${choice.titleFa})`;
+    }
+    return `🩸 مُهر و امضای پیمان با خون (${choice.titleFa})`;
+  }
+
+  modal.innerHTML = `
+    <div class="sc-draft-header">
+      <div>
+        <h3 class="sc-draft-title">${titleText}</h3>
+        <p class="sc-draft-sub">${subText}</p>
+      </div>
+      <span class="sc-pact-lvl">${toFaDigits(activeSlots.length)}/3</span>
+    </div>
+    <div class="sc-active-pacts-strip">${renderScorchedCityPactStripHTML(sc, run)}</div>
+    ${earlyClueHtml}
+    ${bossPrepHtml}
+    ${replaceBoxHtml}
+    ${swapPanelHtml}
+    <div class="sc-draft-cards-row" id="scDraftCardsRow">${cardsHtml}</div>
+    <div class="sc-pact-desc-panel" id="scPactDescriptionPanel">
+      ${renderSelectedDescriptionHtml(selectedChoice)}
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
+      ${draft.resolved ? `
+        <button type="button" id="btnScProceedNextRoom" class="btn-seal-pact" style="background:linear-gradient(135deg, #1e3a1e 0%, #15803d 50%, #14532d 100%); border-color:#22c55e;">
+          ⚔️ ${getConfirmButtonLabel(selectedChoice)}
+        </button>
+      ` : `
+        <button type="button" id="btnConfirmSealPact" class="btn-seal-pact" ${!selectedChoice ? "disabled" : ""}>
+          ${getConfirmButtonLabel(selectedChoice)}
+        </button>
+        <button type="button" id="btnScSkipDraft" class="btn-ghost" style="width:100%; min-height:36px; font-size:0.75rem;">
+          ادامه بدون انتخاب پیمان (مسیر دانش خالص)
+        </button>
+      `}
+    </div>
+  `;
+
+  let isSealingPact = false;
+
+  function updateSelectedCardUI(cardId) {
+    selectedDraftCardId = cardId;
+    const currentChoice = choices.find(c => c.cardId === cardId);
+    if (!currentChoice) return;
+
+    modal.querySelectorAll(".sc-draft-card-box").forEach(el => {
+      if (el.dataset.cardId === cardId) {
+        el.classList.add("is-selected");
+      } else {
+        el.classList.remove("is-selected");
+      }
+    });
+
+    const descPanel = modal.querySelector("#scPactDescriptionPanel");
+    if (descPanel) {
+      descPanel.innerHTML = renderSelectedDescriptionHtml(currentChoice);
+    }
+
+    const confirmBtnEl = modal.querySelector("#btnConfirmSealPact");
+    if (confirmBtnEl && !draft.resolved) {
+      confirmBtnEl.innerHTML = getConfirmButtonLabel(currentChoice);
+      confirmBtnEl.disabled = false;
+    }
+  }
+
+  modal.querySelectorAll(".sc-draft-card-box").forEach(cardEl => {
+    cardEl.addEventListener("click", () => {
+      const cardId = cardEl.dataset.cardId;
+      if (!cardId || isSealingPact) return;
+      playSelectSound();
+      updateSelectedCardUI(cardId);
+    });
+  });
+
+  const confirmBtnEl = modal.querySelector("#btnConfirmSealPact");
+  if (confirmBtnEl) {
+    confirmBtnEl.addEventListener("click", () => {
+      if (isSealingPact || !selectedDraftCardId) return;
+      isSealingPact = true;
+      confirmBtnEl.disabled = true;
+      playSelectSound();
+
+      const cardEl = modal.querySelector(`.sc-draft-card-box[data-card-id="${selectedDraftCardId}"]`);
+      const overlayEl = document.getElementById(`bloodOverlay_${selectedDraftCardId}`);
+
+      if (cardEl && overlayEl) {
+        cardEl.classList.add("is-sealing");
+        overlayEl.innerHTML = `
+          <div class="sc-slash-blade"></div>
+          <div class="sc-blood-splat">
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 28 C 30 38, 48 48, 88 72" stroke="#ef4444" stroke-width="3" stroke-linecap="round" opacity="0.95"/>
+              <path d="M18 32 C 32 40, 52 50, 82 68" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" opacity="0.8"/>
+              <circle cx="50" cy="50" r="14" fill="#991b1b" opacity="0.9"/>
+              <circle cx="50" cy="50" r="10" fill="#dc2626" opacity="0.8"/>
+              <circle cx="50" cy="50" r="6" fill="#fca5a5" opacity="0.95"/>
+              <path d="M48 58 Q 50 78, 52 82 Q 53 84, 50 86 Q 47 84, 48 82 Z" fill="#991b1b" opacity="0.95"/>
+              <circle cx="49" cy="89" r="2.5" fill="#ef4444" opacity="0.9"/>
+              <circle cx="36" cy="42" r="3" fill="#7f1d1d" opacity="0.8"/>
+              <circle cx="64" cy="56" r="3.5" fill="#7f1d1d" opacity="0.8"/>
+            </svg>
+          </div>
+        `;
+      }
+
+      setTimeout(() => {
+        isSealingPact = false;
+        const res = sc.selectDraftCard(selectedDraftCardId);
+        if (res && res.needsReplacement) {
+          pendingReplaceChoiceCardId = selectedDraftCardId;
+          openScorchedCityDraftOverlay(onDone);
+          return;
+        }
+        pendingReplaceChoiceCardId = null;
+        const latestRun = sc.getActiveRun();
+        const stillBossPrepOpen = Boolean(latestRun && latestRun.pendingDraft && latestRun.pendingDraft.isBossPrep);
+        if (stillBossPrepOpen) {
+          openScorchedCityDraftOverlay(onDone);
+        } else {
+          overlay.classList.add("hidden");
+          if (typeof onDone === "function") onDone();
+          else startScorchedCityBattle(run.mode, true);
+        }
+      }, 400);
+    });
+  }
+
+  modal.querySelectorAll(".sc-replace-slot-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      playSelectSound();
+      const replaceId = btn.dataset.replaceId;
+      if (!pendingReplaceChoiceCardId) return;
+      sc.selectDraftCard(pendingReplaceChoiceCardId, replaceId);
+      pendingReplaceChoiceCardId = null;
+      const latestRun = sc.getActiveRun();
+      if (latestRun && latestRun.pendingDraft && latestRun.pendingDraft.isBossPrep) {
+        openScorchedCityDraftOverlay(onDone);
+      } else {
+        overlay.classList.add("hidden");
+        if (typeof onDone === "function") onDone();
+        else startScorchedCityBattle(run.mode, true);
+      }
+    });
+  });
+
+  modal.querySelector("#btnCancelReplace")?.addEventListener("click", () => {
+    pendingReplaceChoiceCardId = null;
+    openScorchedCityDraftOverlay(onDone);
+  });
+
+  modal.querySelector("#btnScToggleBossSwap")?.addEventListener("click", () => {
+    playSelectSound();
+    isBossPrepSwapPanelOpen = !isBossPrepSwapPanelOpen;
+    selectedBossSwapDiscardId = activeSlots[0] ? activeSlots[0].cardId : null;
+    openScorchedCityDraftOverlay(onDone);
+  });
+
+  modal.querySelectorAll(".sc-swap-discard-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedBossSwapDiscardId = btn.dataset.discardId;
+      openScorchedCityDraftOverlay(onDone);
+    });
+  });
+
+  modal.querySelectorAll(".sc-swap-acquire-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      playSelectSound();
+      const newId = btn.dataset.newId;
+      if (selectedBossSwapDiscardId && newId) {
+        sc.performBossPrepFreeSwap(selectedBossSwapDiscardId, newId);
+        isBossPrepSwapPanelOpen = false;
+        selectedBossSwapDiscardId = null;
+        openScorchedCityDraftOverlay(onDone);
+      }
+    });
+  });
+
+  modal.querySelector("#btnScProceedNextRoom")?.addEventListener("click", () => {
+    playSelectSound();
+    pendingReplaceChoiceCardId = null;
+    isBossPrepSwapPanelOpen = false;
+    sc.dismissPendingDraft();
+    overlay.classList.add("hidden");
+    if (typeof onDone === "function") onDone();
+    else startScorchedCityBattle(run.mode, true);
+  });
+
+  modal.querySelector("#btnScSkipDraft")?.addEventListener("click", () => {
+    playSelectSound();
+    pendingReplaceChoiceCardId = null;
+    isBossPrepSwapPanelOpen = false;
+    sc.dismissPendingDraft();
+    overlay.classList.add("hidden");
+    if (typeof onDone === "function") onDone();
+    else startScorchedCityBattle(run.mode, true);
+  });
+}
+
+function startScorchedCityBattle(entryMode = "standard", resumeExisting = true) {
+  const sc = (typeof ScorchedCity !== "undefined" && ScorchedCity) ? ScorchedCity : null;
+  if (!sc) return;
+
+  const user = appState.students[appState.currentUserCode] || {
+    code: appState.currentUserCode || "guest",
+    name: "شوالیه خاکستر",
+    major: "",
+    grade: getCurrentUserGrade(),
+    xp: 0
+  };
+  const grade = getCurrentUserGrade();
+  const bank = (typeof window !== "undefined" && window.CURRICULUM_BANK) || (typeof globalThis !== "undefined" && globalThis.CURRICULUM_BANK) || {};
+  const todayKey = sc.getCalendarDateKey();
+
+  let run = sc.getActiveRun();
+  if (!run && resumeExisting && typeof sc.loadSavedRun === "function") {
+    run = sc.loadSavedRun(bank);
+  }
+
+  const canResume = Boolean(
+    resumeExisting &&
+    run &&
+    String(run.studentCode) === String(user.code) &&
+    run.mode === entryMode &&
+    run.status !== "game_over" &&
+    (entryMode !== "daily" || run.dateKey === todayKey)
+  );
+
+  if (!canResume) {
+    run = sc.startNewRun({
+      studentCode: user.code,
+      studentName: user.name || "شوالیه",
+      studentMajor: user.major || "",
+      grade,
+      mode: entryMode,
+      dateKey: todayKey,
+      curriculumBank: bank,
+      nefrinTier: selectedScorchedNefrinTier || 0
+    });
+  }
+
+  activeGameMode = "scorched_city";
+  const isBossRoom = run.room === 5;
+  const activeBossObj = (isBossRoom && run.activeBossSlot && run.activeBossSlot.boss) ? run.activeBossSlot.boss : null;
+  const activeBossName = activeBossObj ? activeBossObj.name : `نگهبان اتاق ${toFaDigits(run.room)}`;
+
+  // Lazy preload ONLY the upcoming cycle boss sprite sheet when Room 4 telegraph is reached
+  if (run.room === 4 && run.telegraphedBoss && typeof ScorchedBossSpritePlayer !== "undefined") {
+    ScorchedBossSpritePlayer.preloadForBoss(run.telegraphedBoss);
+  }
+
+  currentStage = {
+    id: `scorched_city_${run.mode}_c${run.cycle}_r${run.room}`,
+    world: 4,
+    worldTitle: "شهر سوخته",
+    title: isBossRoom ? `شهر سوخته • اتاق ۵ (${activeBossName})` : `شهر سوخته • اتاق ${toFaDigits(run.room)} از ۵`,
+    theme: "scorched",
+    isHellMix: true,
+    isScorchedCity: true,
+    isScorchedBossRoom: isBossRoom,
+    scorchedBossSummary: activeBossObj,
+    roomNumber: run.room,
+    enemyName: activeBossName,
+    words: run.roomQueue || []
+  };
+
+  isHellRound = false;
+  quizQueue = (run.roomQueue || []).map(item => ({ ...item }));
+  masteredCount = run.correctInRoom || 0;
+  totalInitialWords = run.questionsInRoomTotal || quizQueue.length || 8;
+  mistakesThisStage = Math.max(0, 3 - (run.candles || 3));
+  comboCount = run.streakInRoom || 0;
+  selectedOptionIdx = -1;
+  isCurrentBattleRanked = false; // Scorched City never uses or leaks into main leaderboard rankedAttempts!
+  battleStartTime = Date.now();
+  quickDrawStreak = 0;
+  stageCorrectCount = run.correctInRoom || 0;
+  stageMistakesCount = run.wrongInRoom || 0;
+  stageBaseEarnedXP = 0;
+
+  clearInterval(arenaTimerInterval);
+  const timerEl = document.getElementById("arenaTimer");
+  if (timerEl) timerEl.textContent = "00:00";
+  arenaTimerInterval = setInterval(() => {
+    const elapsedSec = Math.floor((Date.now() - battleStartTime) / 1000);
+    const m = String(Math.floor(elapsedSec / 60)).padStart(2, "0");
+    const s = String(elapsedSec % 60).padStart(2, "0");
+    if (timerEl) timerEl.textContent = `${m}:${s}`;
+  }, 1000);
+
+  const modeBadge = document.getElementById("arenaModeBadge");
+  if (modeBadge) {
+    const nefrinLabel = (run.nefrinTier > 0) ? ` • نفرین ${toFaDigits(run.nefrinTier)}` : "";
+    modeBadge.textContent = run.mode === "daily" ? `چالش روزانه (${run.dateKey || todayKey})${nefrinLabel}` : `شهر سوخته${nefrinLabel}`;
+    modeBadge.className = "badge-status status-pending";
+    modeBadge.style.color = "var(--teal)";
+    modeBadge.style.borderColor = "rgba(111,184,168,0.45)";
+  }
+
+  const playerNameEl = document.getElementById("arenaPlayerName");
+  if (playerNameEl) playerNameEl.textContent = user.name || "شوالیه خاکستر";
+
+  const stageScene = document.getElementById("stageScene");
+  if (stageScene) {
+    stageScene.className = "stage-wrapper mode-scorched-city";
+  }
+
+  const hellBadge = document.getElementById("hellBonusBadge");
+  if (hellBadge) hellBadge.classList.add("hidden");
+
+  const stageTitleEl = document.getElementById("arenaStageTitle");
+  if (stageTitleEl) {
+    stageTitleEl.textContent = currentStage.title;
+    stageTitleEl.setAttribute("title", currentStage.title);
+  }
+  document.getElementById("arenaCounter").textContent = `${masteredCount}/${totalInitialWords}`;
+  document.getElementById("gateGlow")?.classList.remove("gate-open");
+  document.getElementById("gatePrincess")?.classList.add("hidden");
+
+  startArenaAmbient(4);
+  if (typeof AudioEngine !== "undefined") {
+    AudioEngine.startBattleMusic(currentStage, { crossfadeMs: 1000 });
+  }
+  if (typeof BattleEffects !== "undefined") {
+    BattleEffects.start(4);
+  }
+
+  setupArenaEnemy(currentStage);
+  setKnightState("idle");
+  updateEnemyHP();
+  updateScorchedCityCandlesHUD(run.candles);
+  updateComboBadge();
+  updateScorchedCityBattleHud(null);
+
+  const dXp1 = document.getElementById("dialogXP");
+  if (dXp1) dXp1.textContent = `${run.runXp} RunXP`;
+
+  showView("viewArena");
+  if (run.pendingDraft) {
+    openScorchedCityDraftOverlay(() => startScorchedCityBattle(run.mode, true));
+    return;
+  }
+  document.getElementById("scDraftOverlay")?.classList.add("hidden");
+  renderNextQuizQuestion();
+}
+window.startScorchedCityBattle = startScorchedCityBattle;
+
 function startBattleMode(stage, isRanked = false) {
   if (!stage) return;
   if (typeof canBattleForStage === "function" && !canBattleForStage(stage)) {
     openStudyMode(stage);
     return;
   }
+  activeGameMode = "worlds";
+  document.getElementById("scorchedCityBattleHud")?.classList.add("hidden");
   currentStage = stage;
   isHellRound = !!(stage && (stage.isHellMix || stage.world === 4));
   startArenaAmbient(stage ? (stage.world || 1) : 1);
@@ -11497,16 +13444,70 @@ function renderNextQuizQuestion() {
   const defEl = document.getElementById("phaseDefeat");
   if (defEl) defEl.classList.add("hidden");
 
-  const enemyName = document.getElementById("enemyNameLabel")?.textContent || (isHellRound ? "اژدهای دوزخ" : "هماورد");
+  const sc = (activeGameMode === "scorched_city" && typeof ScorchedCity !== "undefined") ? ScorchedCity : null;
   const speakerEl = document.getElementById("speakerTag");
-  if (speakerEl) speakerEl.textContent = isHellRound ? "دیو دوزخ" : ((currentStage && currentStage.world === 4) ? "باس نهایی" : "هماورد");
+  if (speakerEl) {
+    if (sc) {
+      const scRun = sc.getActiveRun();
+      speakerEl.textContent = (scRun && scRun.room === 5) ? "باس اتاق ۵" : "شهر سوخته";
+    } else {
+      speakerEl.textContent = isHellRound ? "دیو دوزخ" : ((currentStage && currentStage.world === 4) ? "باس نهایی" : "هماورد");
+    }
+  }
 
   if (quizQueue.length === 0) {
-    completeStageVictory();
+    if (activeGameMode === "scorched_city" && typeof completeScorchedCityRoom === "function") {
+      completeScorchedCityRoom();
+    } else {
+      completeStageVictory();
+    }
     return;
   }
 
   currentQuizItem = quizQueue[0];
+  let scPresentation = null;
+  if (sc) {
+    const presOut = sc.presentQuestion(currentQuizItem);
+    scPresentation = presOut ? presOut.presentation : null;
+  }
+  const quickToolsEl = document.getElementById("scArenaQuickTools");
+  if (quickToolsEl) {
+    if (sc && scPresentation) {
+      const toolParts = [];
+      if (scPresentation.goldenQuillThresholdSec) {
+        toolParts.push(`<span class="sc-family-pill" style="color:var(--gold);">🖋️ قلم زر (&lt;${toFaDigits(scPresentation.goldenQuillThresholdSec)} ثانیه)</span>`);
+      }
+      if (scPresentation.crackedArmorArmed) {
+        toolParts.push(`<span class="sc-family-pill" style="color:var(--teal);">🛡️ زره ترکخورده آماده جبران</span>`);
+      }
+      if (scPresentation.categoryClue) {
+        toolParts.push(`<span class="sc-family-pill" style="color:#d8b4fe;">👁️ سرنخ: ${scPresentation.categoryClue}</span>`);
+      }
+      if (scPresentation.canUsePassageReroute) {
+        toolParts.push(`<button type="button" id="btnScPassageReroute" class="sc-passage-btn">🔮 گذر: جابه‌جایی (${toFaDigits(scPresentation.passageReroutesRemaining)})</button>`);
+      }
+      if (toolParts.length > 0) {
+        quickToolsEl.innerHTML = toolParts.join("");
+        quickToolsEl.classList.remove("hidden");
+        quickToolsEl.querySelector("#btnScPassageReroute")?.addEventListener("click", () => {
+          playSelectSound();
+          const pRes = sc.usePassageTransit(currentQuizItem);
+          if (pRes && pRes.ok) {
+            const shifted = quizQueue.shift();
+            if (shifted) quizQueue.push(shifted);
+            updateScorchedCityBattleHud({ pactNotice: "🔮 پیمان گذر: پرسش با احتیاط به انتهای صف منتقل شد." });
+            renderNextQuizQuestion();
+          }
+        });
+      } else {
+        quickToolsEl.innerHTML = "";
+        quickToolsEl.classList.add("hidden");
+      }
+    } else {
+      quickToolsEl.innerHTML = "";
+      quickToolsEl.classList.add("hidden");
+    }
+  }
   const targetWordEl = document.getElementById("stageTargetWord");
   if (targetWordEl) targetWordEl.textContent = currentQuizItem.word;
   selectedOptionIdx = -1;
@@ -11517,8 +13518,12 @@ function renderNextQuizQuestion() {
   // Prompt Text with animated glowing gradient on target word
   const promptEl = document.getElementById("qzPrompt");
   if (promptEl) {
-    const w = (currentStage && currentStage.world) ? currentStage.world : 1;
-    promptEl.innerHTML = formatQuizPrompt(currentQuizItem.word, w, isHellRound, currentQuizItem.prompt, currentQuizItem.tag);
+    if (sc) {
+      promptEl.innerHTML = formatQuizPrompt(currentQuizItem.word, 4, true, currentQuizItem.prompt, currentQuizItem.tag);
+    } else {
+      const w = (currentStage && currentStage.world) ? currentStage.world : 1;
+      promptEl.innerHTML = formatQuizPrompt(currentQuizItem.word, w, isHellRound, currentQuizItem.prompt, currentQuizItem.tag);
+    }
   }
 
   // Render 4 Options
@@ -11527,18 +13532,44 @@ function renderNextQuizQuestion() {
   grid.style.pointerEvents = "";
   grid.classList.remove("answered");
   grid.innerHTML = "";
-  const options = getQuizOptionsForCard(currentQuizItem, currentStage);
+
+  let options;
+  if (sc) {
+    const scRun = sc.getActiveRun();
+    const optRng = sc.createSeededRng(`${(scRun && scRun.seed) || "sc"}-q-${currentQuizItem.word}-${(scRun && scRun.questionsAnsweredInRoom) || 0}`);
+    options = sc.getRoomQuestionOptions(currentQuizItem, (scRun && scRun.poolSnapshot) || currentStage.words, optRng);
+    if (scPresentation && scPresentation.reverseOptions) {
+      options = options.slice().reverse();
+    }
+  } else {
+    options = getQuizOptionsForCard(currentQuizItem, currentStage);
+  }
+
+  // Midnight Eye: eliminate N wrong options cleanly on ON_QUESTION_PRESENT
+  const eliminatedOptIndices = new Set();
+  if (sc && scPresentation && scPresentation.eliminateWrongOptions > 0) {
+    const wrongIndices = options
+      .map((opt, idx) => (opt !== currentQuizItem.correct ? idx : -1))
+      .filter(idx => idx >= 0);
+    for (let i = 0; i < scPresentation.eliminateWrongOptions && i < wrongIndices.length; i++) {
+      eliminatedOptIndices.add(wrongIndices[i]);
+    }
+  }
 
   options.forEach((optText, idx) => {
     const btn = document.createElement("button");
+    const isEliminated = eliminatedOptIndices.has(idx);
     btn.className = "rpg-option-btn";
-    btn.setAttribute("tabindex", "0");
+    if (isEliminated) btn.classList.add("sc-opt-eliminated");
+    btn.disabled = isEliminated;
+    btn.setAttribute("tabindex", isEliminated ? "-1" : "0");
     btn.dataset.correct = (optText === currentQuizItem.correct) ? "true" : "false";
     btn.innerHTML = `<span class="opt-box">${idx + 1}</span> <span class="opt-text">${optText}</span><span class="opt-status-icon"></span>`;
     const faDigits = ["۱", "۲", "۳", "۴"];
     const box = btn.querySelector(".opt-box");
     if (box) box.textContent = faDigits[idx] || (idx + 1);
     btn.addEventListener("click", () => {
+      if (btn.disabled) return;
       const allBtns = grid.querySelectorAll(".rpg-option-btn");
       handleQuizAnswer(btn, optText === currentQuizItem.correct, currentQuizItem, allBtns);
     });
@@ -11651,6 +13682,254 @@ function showFloatingXP(targetEl, amount) {
   }, 750);
 }
 
+function completeScorchedCityRoom() {
+  clearInterval(arenaTimerInterval);
+  const sc = (typeof ScorchedCity !== "undefined" && ScorchedCity) ? ScorchedCity : null;
+  if (!sc) return;
+
+  const evalRes = sc.completeRoom();
+  if (!evalRes) return;
+
+  const run = sc.getActiveRun();
+  const durationSec = Math.max(1, Math.round((Date.now() - battleStartTime) / 1000));
+  const totalAnswers = stageCorrectCount + stageMistakesCount;
+  const accuracyPct = totalAnswers > 0 ? Math.round((stageCorrectCount / totalAnswers) * 100) : 100;
+
+  if (!evalRes.passed) {
+    // Only here can a candle be lost (failed to reach room target score)
+    updateScorchedCityCandlesHUD(evalRes.candlesRemaining);
+    setKnightState("kneel");
+    if (typeof AudioEngine !== "undefined" && typeof AudioEngine.handleBattleDefeat === "function") {
+      AudioEngine.handleBattleDefeat({ fadeMs: 1200 });
+    }
+    document.getElementById("phaseQuiz").classList.add("hidden");
+    document.getElementById("phaseVictory").classList.add("hidden");
+    const defEl = document.getElementById("phaseDefeat");
+    if (defEl) {
+      const titleEl = defEl.querySelector(".arena-modal-title");
+      const descEl = defEl.querySelector(".arena-modal-desc");
+      const retryEl = document.getElementById("btnRetryStage");
+      if (evalRes.gameOver) {
+        if (titleEl) titleEl.textContent = "پایان نبرد شهر سوخته";
+        if (descEl) descEl.textContent = `امتیاز اتاق به حد نصاب ${evalRes.roomTargetScore} نرسید و تمام شمع‌ها خاموش شدند. رکورد کل (${evalRes.roomScore} / جدول مستقل) در لیدربورد شهر سوخته ثبت شد.`;
+        if (retryEl) retryEl.textContent = "شروع ران جدید";
+      } else if (evalRes.preventedCandleLossBy === "threshold_guardian") {
+        if (titleEl) titleEl.textContent = "سپر نگهبان آستانه فعال شد!";
+        if (descEl) descEl.textContent = `با وجود نرسیدن به حد نصاب ${toFaDigits(evalRes.roomTargetScore)}، پیمان «نگهبان آستانه» جلوی از دست رفتن شمع را گرفت (${toFaDigits(evalRes.candlesRemaining)} شمع باقیمانده)!`;
+        if (retryEl) retryEl.textContent = "تکرار همین اتاق (با حفظ شمع)";
+      } else {
+        if (titleEl) titleEl.textContent = "حد نصاب اتاق حاصل نشد (-۱ شمع)";
+        if (descEl) descEl.textContent = `امتیاز شما به حد نصاب ${toFaDigits(evalRes.roomTargetScore)} نرسید و ۱ شمع خاموش شد (${toFaDigits(evalRes.candlesRemaining)} شمع باقیمانده).`;
+        if (retryEl) retryEl.textContent = "تکرار همین اتاق";
+      }
+      defEl.classList.remove("hidden");
+    }
+    document.getElementById("speakerTag").textContent = evalRes.gameOver
+      ? "پایان ران"
+      : (evalRes.preventedCandleLossBy === "threshold_guardian" ? "محافظت شمع" : "کاهش ۱ شمع");
+    return;
+  }
+
+  // Room Passed or Boss Cycle Cleared!
+  if (typeof AudioEngine !== "undefined" && typeof AudioEngine.handleBattleVictory === "function") {
+    AudioEngine.handleBattleVictory({ fadeMs: 600 });
+  } else {
+    playVictorySound();
+  }
+  document.getElementById("gateGlow")?.classList.add("gate-open");
+  setKnightState("kneel");
+  document.getElementById("phaseQuiz").classList.add("hidden");
+  document.getElementById("phaseDefeat")?.classList.add("hidden");
+  document.getElementById("phaseVictory")?.classList.remove("hidden");
+  document.getElementById("speakerTag").textContent = evalRes.bossCycleCompleted ? "فتح دور شهر سوخته" : `عبور از اتاق ${toFaDigits(evalRes.clearedRoom)}`;
+
+  const m = String(Math.floor(durationSec / 60)).padStart(2, "0");
+  const s = String(durationSec % 60).padStart(2, "0");
+  document.getElementById("victoryAccuracy").textContent = `${accuracyPct}% (${stageCorrectCount}/${totalAnswers})`;
+  document.getElementById("victoryTime").textContent = `${m}:${s}`;
+  document.getElementById("victorySpeedBonus").textContent = evalRes.bossCycleCompleted
+    ? `دور ${toFaDigits(evalRes.loopReset.clearedCycle)} کامل شد`
+    : `اتاق بعدی: ${toFaDigits(evalRes.nextRoom)} از ۵`;
+  document.getElementById("victoryTotalScore").textContent = `${evalRes.totalRunScore} امتیاز کل`;
+
+  const flawlessRowEl = document.getElementById("victoryFlawlessRow");
+  const flawlessValEl = document.getElementById("victoryFlawlessVal");
+  if (flawlessRowEl && flawlessValEl) {
+    flawlessRowEl.classList.remove("hidden");
+    flawlessValEl.innerHTML = `<span class="victory-flawless-tag">🔥 +${evalRes.runXp} XP داخل ران (مجزا از لیدربورد اصلی)</span>`;
+  }
+
+  const modeBadgeEl = document.getElementById("victoryModeBadge");
+  if (modeBadgeEl && run) {
+    modeBadgeEl.innerHTML = run.mode === "daily"
+      ? `<span class="badge-status status-pending">چالش روزانه (${run.dateKey}) — جدول مجزا</span>`
+      : `<span class="badge-status status-pending">شهر سوخته استاندارد — جدول مجزا</span>`;
+  }
+
+  const victoryStatsEl = document.getElementById("victoryStats");
+  if (victoryStatsEl) {
+    if (evalRes.bossCycleCompleted) {
+      victoryStatsEl.textContent = `تبریک! باس اتاق ۵ شکست خورد و چرخه به دور ${toFaDigits(evalRes.loopReset.nextCycle)} (اتاق ۱) بازنشانی شد. آمار پایدار شما محفوظ ماند و امتیاز فقط در رده‌بندی شهر سوخته ثبت شد.`;
+    } else if (evalRes.isBossPrepPhase && evalRes.telegraph) {
+      victoryStatsEl.textContent = `اتاق ۴ پاک‌سازی شد! اکنون با پیش‌آگهی کامل «${evalRes.telegraph.bossName}» وارد فاز آماده‌سازی باس اتاق ۵ می‌شوید (آفر تضمین‌شده خانواده کلیدی + ۱ تعویض رایگان).`;
+    } else if (evalRes.earlyKeyFamilyClue) {
+      victoryStatsEl.textContent = `اتاق ۳ پاک‌سازی شد! نشانه اولیه باس اتاق ۵ نمایان شد (خانواده ${evalRes.earlyKeyFamilyClue.nameFa}). پیمان بعدی خود را برگزینید.`;
+    } else if (evalRes.nextRoom === 5) {
+      victoryStatsEl.textContent = `آماده نبرد با باس اتاق ۵! هدف امتیاز پایه ۱۵۰۰ فعال خواهد شد.`;
+    } else {
+      victoryStatsEl.textContent = `اتاق ${toFaDigits(evalRes.clearedRoom)} با موفقیت پاک‌سازی شد. ادامه به انتخاب پیمان و اتاق ${toFaDigits(evalRes.nextRoom)} از ۵.`;
+    }
+  }
+
+  const btnCont = document.getElementById("btnVictoryContinue");
+  if (btnCont) {
+    if (evalRes.bossCycleCompleted) {
+      btnCont.textContent = `شروع دور ${toFaDigits(evalRes.loopReset.nextCycle)}`;
+    } else if (evalRes.isBossPrepPhase) {
+      btnCont.textContent = "تدارک باس اتاق ۵ (انتخاب پیمان)";
+    } else if (evalRes.draftOffer) {
+      btnCont.textContent = `انتخاب پیمان و ورود به اتاق ${toFaDigits(evalRes.nextRoom)}`;
+    } else {
+      btnCont.textContent = `ورود به اتاق ${toFaDigits(evalRes.nextRoom)}`;
+    }
+  }
+}
+
+function handleScorchedCityQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
+  const sc = (typeof ScorchedCity !== "undefined" && ScorchedCity) ? ScorchedCity : null;
+  if (!sc) return;
+
+  const answerDurationSec = currentQuestionRenderTime
+    ? Math.max(0.1, (Date.now() - currentQuestionRenderTime) / 1000)
+    : null;
+  const checkSvg = `<svg viewBox="0 0 24 24" class="opt-icon" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+  const crossSvg = `<svg viewBox="0 0 24 24" class="opt-icon" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+  const knightEl = document.getElementById("knightSprite");
+  const enemyEl = document.getElementById("enemySprite");
+
+  if (isCorrect) {
+    selectedBtn.classList.add("correct");
+    const iconEl = selectedBtn.querySelector(".opt-status-icon");
+    if (iconEl) iconEl.innerHTML = checkSvg;
+    if (allBtns) allBtns.forEach(b => { if (b !== selectedBtn) b.classList.add("dimmed"); });
+
+    stageCorrectCount++;
+    const ansRes = sc.recordCorrectAnswer({ card: item, answerDurationSec });
+    comboCount = ansRes ? ansRes.streakInRoom : (comboCount + 1);
+    updateComboBadge();
+    showFloatingXP(selectedBtn, ansRes ? ansRes.gainedScore : 150);
+    playCorrectSound();
+
+    let pactNotice = null;
+    if (ansRes && Array.isArray(ansRes.firedPacts) && ansRes.firedPacts.length > 0) {
+      const labels = ansRes.firedPacts.map(fp => {
+        const c = sc.getPactCard ? sc.getPactCard(fp.cardId) : null;
+        return c ? c.titleFa : fp.cardId;
+      });
+      pactNotice = `✨ فعال‌سازی پیمان: ${labels.join("، ")} (+${ansRes.flatPactBonus || 0} امتیاز)`;
+    }
+
+    const dXp = document.getElementById("dialogXP");
+    if (dXp && ansRes) dXp.textContent = `${ansRes.runXp} RunXP`;
+
+    playSprite(knightEl, 1, { fps: 10 });
+    setKnightState("attack");
+
+    const tSpark = setTimeout(() => {
+      quizQueue.shift();
+      masteredCount++;
+      updateEnemyHP();
+      updateLocksRow(masteredCount, totalInitialWords);
+      document.getElementById("arenaCounter").textContent = `${masteredCount}/${totalInitialWords}`;
+      updateScorchedCityBattleHud(pactNotice ? { pactNotice } : null);
+
+      if (quizQueue.length === 0) {
+        const proceed = () => {
+          if (currentStage && currentStage.isScorchedBossRoom && typeof ScorchedBossSpritePlayer !== "undefined") {
+            ScorchedBossSpritePlayer.play("death", { fps: 6, holdLast: true });
+          } else {
+            playSprite(enemyEl, 3, { fps: 6, holdLast: true });
+          }
+          const tVic = setTimeout(() => {
+            playSprite(knightEl, 3, { fps: 6, loop: true });
+            const tVicEnd = setTimeout(() => completeScorchedCityRoom(), 550);
+            if (window._arenaCombatTimeouts) window._arenaCombatTimeouts.push(tVicEnd);
+          }, 450);
+          if (window._arenaCombatTimeouts) window._arenaCombatTimeouts.push(tVic);
+        };
+        if (typeof BattleEffects !== "undefined" && typeof BattleEffects.triggerKillMoment === "function") {
+          BattleEffects.triggerKillMoment(proceed);
+        } else {
+          proceed();
+        }
+      } else {
+        if (currentStage && currentStage.isScorchedBossRoom && typeof ScorchedBossSpritePlayer !== "undefined") {
+          ScorchedBossSpritePlayer.play("hit", { fps: 10 });
+        } else {
+          playSprite(enemyEl, 2, { fps: 8 });
+        }
+        const tNext = setTimeout(() => renderNextQuizQuestion(), 600);
+        if (window._arenaCombatTimeouts) window._arenaCombatTimeouts.push(tNext);
+      }
+    }, 200);
+    if (window._arenaCombatTimeouts) window._arenaCombatTimeouts.push(tSpark);
+  } else {
+    if (typeof BattleEffects !== "undefined" && typeof BattleEffects.triggerWrongPulse === "function") {
+      BattleEffects.triggerWrongPulse();
+    }
+    selectedBtn.classList.add("wrong");
+    const iconEl = selectedBtn.querySelector(".opt-status-icon");
+    if (iconEl) iconEl.innerHTML = crossSvg;
+
+    // Guardrail 2: Always reveal correct answer in UI and return item to practice queue (never erase mistake!)
+    if (allBtns) {
+      allBtns.forEach(b => {
+        if (b.dataset.correct === "true") {
+          b.classList.add("correct", "revealed-correct");
+          const cIcon = b.querySelector(".opt-status-icon");
+          if (cIcon) cIcon.innerHTML = checkSvg;
+        } else if (b !== selectedBtn) {
+          b.classList.add("dimmed");
+        }
+      });
+    }
+
+    const wrongRes = sc.recordWrongAnswer(item);
+    comboCount = wrongRes ? (wrongRes.streakInRoom || 0) : 0;
+    stageMistakesCount++;
+    updateComboBadge();
+    playWrongSound();
+
+    // Guardrail 3: Boss & wrong answers NEVER remove candle directly!
+    updateScorchedCityCandlesHUD(wrongRes ? wrongRes.candlesRemaining : 3);
+    updateScorchedCityBattleHud({
+      word: item.word,
+      revealedAnswer: wrongRes ? wrongRes.revealedAnswer : item.correct
+    });
+
+    if (currentStage && currentStage.isScorchedBossRoom && typeof ScorchedBossSpritePlayer !== "undefined") {
+      ScorchedBossSpritePlayer.play("attack", { fps: 10 });
+    } else {
+      playSprite(enemyEl, 1, { fps: 10 });
+    }
+    const tEnemyHit = setTimeout(() => {
+      triggerScreenShake();
+      playSprite(knightEl, 2, { fps: 8 });
+      setKnightState("damage");
+
+      const failed = quizQueue.shift();
+      if (failed) {
+        failed.isRetry = true;
+        quizQueue.push(failed);
+      }
+
+      const tNextWrong = setTimeout(() => renderNextQuizQuestion(), 850);
+      if (window._arenaCombatTimeouts) window._arenaCombatTimeouts.push(tNextWrong);
+    }, 200);
+    if (window._arenaCombatTimeouts) window._arenaCombatTimeouts.push(tEnemyHit);
+  }
+}
+
 function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
   // Lock all options until animation completes
   if (allBtns) allBtns.forEach(b => b.style.pointerEvents = "none");
@@ -11661,6 +13940,11 @@ function handleQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
   }
   const confirmBtn = document.getElementById("btnConfirmAnswer");
   if (confirmBtn) confirmBtn.disabled = true;
+
+  if (activeGameMode === "scorched_city") {
+    handleScorchedCityQuizAnswer(selectedBtn, isCorrect, item, allBtns);
+    return;
+  }
 
   const checkSvg = `<svg viewBox="0 0 24 24" class="opt-icon" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
   const crossSvg = `<svg viewBox="0 0 24 24" class="opt-icon" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
@@ -11878,7 +14162,15 @@ function completeStageDefeat() {
   document.getElementById("phaseQuiz").classList.add("hidden");
   document.getElementById("phaseVictory").classList.add("hidden");
   const defEl = document.getElementById("phaseDefeat");
-  if (defEl) defEl.classList.remove("hidden");
+  if (defEl) {
+    const tEl = defEl.querySelector(".arena-modal-title");
+    const dEl = defEl.querySelector(".arena-modal-desc");
+    const rEl = document.getElementById("btnRetryStage");
+    if (tEl) tEl.textContent = "خاموشی شمع‌های نبرد!";
+    if (dEl) dEl.textContent = "هر ۳ شمع نبرد شما در این مرحله خاموش شدند. برای پیروزی در دوئل واژگان، باید با تمرکز بیشتر دوباره مبارزه کنید.";
+    if (rEl) rEl.textContent = "تلاش مجدد";
+    defEl.classList.remove("hidden");
+  }
   document.getElementById("speakerTag").textContent = "شکست در نبرد";
 }
 
@@ -12046,14 +14338,29 @@ function completeStageVictory() {
   document.getElementById("victoryStats").textContent = isCurrentBattleRanked
     ? "امتیاز این تلاش به صورت قطعی در جدول رده‌بندی ثبت شد!"
     : "این نبرد تمرینی بود؛ رکورد رسمی پیشین شما در جدول رده‌بندی دست‌نخورده باقی ماند.";
+  const btnCont = document.getElementById("btnVictoryContinue");
+  if (btnCont) btnCont.textContent = "ادامه";
 }
 
 document.getElementById("btnBackToMap").addEventListener("click", () => {
   if (typeof AudioEngine !== "undefined" && typeof AudioEngine.dismissJingle === "function") AudioEngine.dismissJingle();
+  if (typeof ScorchedBossSpritePlayer !== "undefined") ScorchedBossSpritePlayer.unmount();
+  activeGameMode = "worlds";
+  document.getElementById("scorchedCityBattleHud")?.classList.add("hidden");
+  document.getElementById("scDraftOverlay")?.classList.add("hidden");
   enterDashboard();
 });
 document.getElementById("btnVictoryContinue").addEventListener("click", () => {
   if (typeof AudioEngine !== "undefined" && typeof AudioEngine.dismissJingle === "function") AudioEngine.dismissJingle();
+  if (activeGameMode === "scorched_city" && typeof ScorchedCity !== "undefined") {
+    const run = ScorchedCity.getActiveRun();
+    if (run && run.status !== "game_over") {
+      startScorchedCityBattle(run.mode, true);
+      return;
+    }
+  }
+  activeGameMode = "worlds";
+  document.getElementById("scorchedCityBattleHud")?.classList.add("hidden");
   enterDashboard();
 });
 
@@ -12061,6 +14368,13 @@ const retryBtn = document.getElementById("btnRetryStage");
 if (retryBtn) {
   retryBtn.addEventListener("click", () => {
     if (typeof AudioEngine !== "undefined" && typeof AudioEngine.dismissJingle === "function") AudioEngine.dismissJingle();
+    if (activeGameMode === "scorched_city" && typeof ScorchedCity !== "undefined") {
+      const run = ScorchedCity.getActiveRun();
+      const modeToStart = (run && run.mode) || selectedScorchedEntryMode || "standard";
+      const shouldResumeRoom = Boolean(run && run.status !== "game_over" && run.candles > 0);
+      startScorchedCityBattle(modeToStart, shouldResumeRoom);
+      return;
+    }
     promptStartBattle(currentStage);
   });
 }
@@ -12068,6 +14382,8 @@ const defBackBtn = document.getElementById("btnDefeatBackToMap");
 if (defBackBtn) {
   defBackBtn.addEventListener("click", () => {
     if (typeof AudioEngine !== "undefined" && typeof AudioEngine.dismissJingle === "function") AudioEngine.dismissJingle();
+    activeGameMode = "worlds";
+    document.getElementById("scorchedCityBattleHud")?.classList.add("hidden");
     enterDashboard();
   });
 }
@@ -12206,29 +14522,128 @@ function updateLeaderboardTabUI() {
   }
 }
 
+let currentScorchedLeaderboardSubMode = "standard"; // "standard" | "daily"
+
 function updateLeaderboardModeUI() {
   const isOverall = currentLeaderboardMode === "overall";
+  const isStage = currentLeaderboardMode === "stage";
+  const isScorched = currentLeaderboardMode === "scorched";
+
   const bOverall = document.getElementById("btnTabLbOverall");
   const bStage = document.getElementById("btnTabLbByStage");
+  const bScorched = document.getElementById("btnTabLbScorched");
   const overallScopeTabs = document.getElementById("lbOverallScopeTabs");
   const stageSelectWrap = document.getElementById("lbStageSelectWrap");
+  const scorchedScopeWrap = document.getElementById("lbScorchedScopeWrap");
 
   if (bOverall) bOverall.className = `capsule-tab ${isOverall ? "active" : ""}`;
-  if (bStage) bStage.className = `capsule-tab ${!isOverall ? "active" : ""}`;
+  if (bStage) bStage.className = `capsule-tab ${isStage ? "active" : ""}`;
+  if (bScorched) bScorched.className = `capsule-tab ${isScorched ? "active" : ""}`;
 
-  if (overallScopeTabs) {
-    if (isOverall) overallScopeTabs.classList.remove("hidden");
-    else overallScopeTabs.classList.add("hidden");
-  }
-  if (stageSelectWrap) {
-    if (!isOverall) stageSelectWrap.classList.remove("hidden");
-    else stageSelectWrap.classList.add("hidden");
+  if (overallScopeTabs) overallScopeTabs.classList.toggle("hidden", !isOverall);
+  if (stageSelectWrap) stageSelectWrap.classList.toggle("hidden", !isStage);
+  if (scorchedScopeWrap) scorchedScopeWrap.classList.toggle("hidden", !isScorched);
+
+  if (isScorched) {
+    const isDaily = currentScorchedLeaderboardSubMode === "daily";
+    const bStd = document.getElementById("btnTabLbScorchedStandard");
+    const bDaily = document.getElementById("btnTabLbScorchedDaily");
+    const badge = document.getElementById("lbScorchedDailyBadge");
+    if (bStd) bStd.className = `capsule-tab ${!isDaily ? "active" : ""}`;
+    if (bDaily) bDaily.className = `capsule-tab ${isDaily ? "active" : ""}`;
+    if (badge) {
+      const todayKey = (typeof ScorchedCity !== "undefined" && ScorchedCity)
+        ? ScorchedCity.getCalendarDateKey()
+        : new Date().toISOString().slice(0, 10);
+      badge.setAttribute("dir", "ltr");
+      badge.textContent = todayKey;
+    }
   }
 }
+
+function renderScorchedCityLeaderboard() {
+  const sc = (typeof ScorchedCity !== "undefined" && ScorchedCity) ? ScorchedCity : null;
+  const mRankEl = document.getElementById("myMajorRank");
+  const gRankEl = document.getElementById("myGlobalRank");
+  const mTotEl = document.getElementById("myMajorTotal");
+  const gTotEl = document.getElementById("myGlobalTotal");
+  const mLabelEl = document.getElementById("myMajorRankLabel");
+  const gLabelEl = document.getElementById("myGlobalRankLabel");
+  const tbody = document.getElementById("studentLeaderboardBody");
+
+  const isDaily = currentScorchedLeaderboardSubMode === "daily";
+  const todayKey = sc ? sc.getCalendarDateKey() : new Date().toISOString().slice(0, 10);
+  const currentUserCode = String(appState.currentUserCode || "");
+
+  if (mLabelEl) mLabelEl.innerHTML = isDaily ? `رتبه من (روزانه <span dir="ltr">${todayKey}</span>)` : "رتبه من (شهر سوخته)";
+  if (gLabelEl) gLabelEl.textContent = "بهترین امتیاز مجزا";
+
+  if (!sc) {
+    if (tbody) tbody.innerHTML = '<div class="leaderboard-empty">ماژول شهر سوخته بارگذاری نشده است.</div>';
+    return;
+  }
+
+  const rankings = isDaily
+    ? sc.leaderboard.getDailyRankings(todayKey)
+    : sc.leaderboard.getStandardRankings();
+
+  const myIdx = rankings.findIndex(e => String(e.code) === currentUserCode);
+  const myEntry = myIdx >= 0 ? rankings[myIdx] : null;
+
+  if (mRankEl) mRankEl.textContent = myIdx >= 0 ? `${myIdx + 1}` : "-";
+  if (mTotEl) mTotEl.textContent = rankings.length > 0 ? `از ${rankings.length} شوالیه` : "بدون رکورد";
+  if (gRankEl) gRankEl.textContent = myEntry ? `${myEntry.score}` : "-";
+  if (gTotEl) gTotEl.innerHTML = myEntry ? `دور ${myEntry.bestLoop || 1} • اتاق ${myEntry.roomReached || 1}` : (isDaily ? `<span dir="ltr">${todayKey}</span>` : "استاندارد");
+
+  if (tbody) {
+    tbody.innerHTML = rankings.map((entry, idx) => {
+      const rank = idx + 1;
+      const isMe = String(entry.code) === currentUserCode;
+      const rankHtml = `<span class="lb-rank-num">${rank}</span>`;
+      const cycleText = `دور ${entry.bestLoop || 1} • اتاق ${entry.roomReached || 1}`;
+      const modeChip = isDaily
+        ? `<span class="lb-badge-tag lb-badge-tag--flawless">📅 روزانه <span dir="ltr">${entry.dateKey || todayKey}</span></span>`
+        : `<span class="lb-badge-tag lb-badge-tag--flawless">⚔️ استاندارد • ${entry.cyclesCleared || 0} چرخه</span>`;
+
+      return `
+        <div class="leaderboard-row ${isMe ? "is-me" : ""}" role="listitem">
+          <div class="lb-col-rank">${rankHtml}</div>
+          <div class="lb-col-info">
+            <div class="lb-row-top">
+              <span class="lb-player-name">${entry.name || "شوالیه"}</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <span class="lb-player-major">${entry.major || "-"} • ${cycleText}</span>
+              ${modeChip}
+            </div>
+          </div>
+          <div class="lb-col-xp">
+            <span class="lb-xp-val">${entry.score}</span>
+            <span class="lb-xp-unit">امتیاز</span>
+          </div>
+        </div>
+      `;
+    }).join("") || `<div class="leaderboard-empty">${isDaily ? `هنوز رکوردی برای چالش روزانه ${todayKey} ثبت نشده است.` : "هنوز رکوردی در شهر سوخته استاندارد ثبت نشده است."}</div>`;
+  }
+}
+window.renderScorchedCityLeaderboard = renderScorchedCityLeaderboard;
+
+function openScorchedCityLeaderboard(subMode = "standard") {
+  currentLeaderboardMode = "scorched";
+  currentScorchedLeaderboardSubMode = (subMode === "daily") ? "daily" : "standard";
+  renderLeaderboardTable();
+  showView("viewLeaderboard");
+}
+window.openScorchedCityLeaderboard = openScorchedCityLeaderboard;
 
 function renderLeaderboardTable() {
   updateLeaderboardModeUI();
   updateLeaderboardTabUI();
+
+  if (currentLeaderboardMode === "scorched") {
+    renderScorchedCityLeaderboard();
+    return;
+  }
 
   const allStudents = Object.values(appState.students)
     .filter(s => s.accountStatus === "approved" || !s.accountStatus);
@@ -12464,6 +14879,24 @@ document.getElementById("btnTabLbOverall")?.addEventListener("click", () => {
 document.getElementById("btnTabLbByStage")?.addEventListener("click", () => {
   currentLeaderboardMode = "stage";
   populateLbStageSelect();
+  updateLeaderboardModeUI();
+  renderLeaderboardTable();
+});
+
+document.getElementById("btnTabLbScorched")?.addEventListener("click", () => {
+  currentLeaderboardMode = "scorched";
+  updateLeaderboardModeUI();
+  renderLeaderboardTable();
+});
+
+document.getElementById("btnTabLbScorchedStandard")?.addEventListener("click", () => {
+  currentScorchedLeaderboardSubMode = "standard";
+  updateLeaderboardModeUI();
+  renderLeaderboardTable();
+});
+
+document.getElementById("btnTabLbScorchedDaily")?.addEventListener("click", () => {
+  currentScorchedLeaderboardSubMode = "daily";
   updateLeaderboardModeUI();
   renderLeaderboardTable();
 });
@@ -13165,14 +15598,38 @@ if (typeof window !== "undefined") {
 (async function init() {
   const splashFallbackTimer = setTimeout(dismissSplashScreen, 2200);
   try {
-    await syncGlobalState("pull");
-    if (appState.currentUserCode) {
-      await fetchStudentRecord(appState.currentUserCode);
-    }
-    if (appState.currentUserCode && appState.students[appState.currentUserCode]) {
-      enterDashboard();
+    const urlParams = (typeof window !== "undefined" && window.location) ? new URLSearchParams(window.location.search) : null;
+    if (urlParams && urlParams.has("guest")) {
+      dismissSplashScreen();
+      enterAsGuest();
+      if (urlParams.get("world") === "4" || urlParams.has("sc_draft")) {
+        switchWorld(4);
+        if (urlParams.has("sc_draft")) {
+          setTimeout(() => {
+            if (typeof ScorchedCity !== "undefined") {
+              const run = ScorchedCity.startNewRun({
+                studentCode: appState.currentUserCode || "guest",
+                grade: getCurrentUserGrade(),
+                mode: "standard",
+                curriculumBank: typeof CURRICULUM_BANK !== "undefined" ? CURRICULUM_BANK : null
+              });
+              run.room = 2;
+              run.pendingDraft = ScorchedCity.generateDraftOffer(run, 1);
+              openScorchedCityDraftOverlay();
+            }
+          }, 350);
+        }
+      }
     } else {
-      showView("viewAuth");
+      await syncGlobalState("pull");
+      if (appState.currentUserCode) {
+        await fetchStudentRecord(appState.currentUserCode);
+      }
+      if (appState.currentUserCode && appState.students[appState.currentUserCode]) {
+        enterDashboard();
+      } else {
+        showView("viewAuth");
+      }
     }
   } catch (err) {
     console.warn("Init encountered error, falling back to auth:", err);
