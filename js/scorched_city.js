@@ -115,7 +115,7 @@
   // ==========================================================================
 
   const MAX_ACTIVE_PACTS = 3;
-  const CARD_ASSETS_DIR = 'assets/scorched_city_cards_final';
+  const CARD_ASSETS_DIR = 'assets/scorched_city_cards_crop';
 
   const PACT_FAMILIES = Object.freeze({
     COMBO: Object.freeze({
@@ -164,13 +164,14 @@
       .replace(/\./g, '٫');
   }
 
-  function getPactCardAssetPath(cardId, level = 1) {
+  function getPactAssetPath(cardId, level = 1) {
     const card = PACT_CARD_MAP.get(cardId);
     const lvl = Math.max(1, Math.min(3, Math.round(Number(level) || 1)));
     const family = card ? card.family : 'combo';
     const slug = card ? card.slug : String(cardId || 'flame_strike');
-    return `${CARD_ASSETS_DIR}/card_${family}_${slug}_l${lvl}.jpg`;
+    return `${CARD_ASSETS_DIR}/card_${family}_${slug}_l${lvl}.webp`;
   }
+  const getPactCardAssetPath = getPactAssetPath;
 
   function getPactLevelRoman(level = 1) {
     const lvl = Math.max(1, Math.min(3, Math.round(Number(level) || 1)));
@@ -397,9 +398,9 @@
   const PACT_CARD_MAP = new Map();
   const PACT_CARDS = Object.freeze(RAW_PACT_CARDS.map(def => {
     const assets = Object.freeze({
-      1: `${CARD_ASSETS_DIR}/card_${def.family}_${def.slug}_l1.jpg`,
-      2: `${CARD_ASSETS_DIR}/card_${def.family}_${def.slug}_l2.jpg`,
-      3: `${CARD_ASSETS_DIR}/card_${def.family}_${def.slug}_l3.jpg`
+      1: `${CARD_ASSETS_DIR}/card_${def.family}_${def.slug}_l1.webp`,
+      2: `${CARD_ASSETS_DIR}/card_${def.family}_${def.slug}_l2.webp`,
+      3: `${CARD_ASSETS_DIR}/card_${def.family}_${def.slug}_l3.webp`
     });
     const frozen = Object.freeze({
       ...def,
@@ -3208,6 +3209,7 @@
     getPactCard,
     getAllPactCards,
     getPactCardsByFamily,
+    getPactAssetPath,
     getPactCardAssetPath,
     getPactLevelRoman,
     getPactShortEffect,

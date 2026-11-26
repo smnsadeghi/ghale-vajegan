@@ -32,7 +32,7 @@ describe('Scorched City (شهر سوخته) — Step 2 Pacts, Draft Cadence & Bo
   });
 
   describe('1. Canonical 12-Card Registry & Disk Image Assets (l1, l2, l3)', () => {
-    it('registers exactly 12 cards across 4 families (3 cards each) with exact Persian names and existing .jpg assets', () => {
+    it('registers exactly 12 cards across 4 families (3 cards each) with exact Persian names and existing .webp assets', () => {
       const cards = ScorchedCity.getAllPactCards();
       assert.equal(cards.length, 12);
 
@@ -70,7 +70,7 @@ describe('Scorched City (شهر سوخته) — Step 2 Pacts, Draft Cadence & Bo
 
           for (const lvl of [1, 2, 3]) {
             const relPath = ScorchedCity.getPactCardAssetPath(cardId, lvl);
-            assert.equal(relPath, `assets/scorched_city_cards_final/card_${family}_${cardId}_l${lvl}.jpg`);
+            assert.equal(relPath, `assets/scorched_city_cards_crop/card_${family}_${cardId}_l${lvl}.webp`);
             assert.ok(fs.existsSync(path.join(PROJECT_DIR, relPath)), `Asset must exist on disk: ${relPath}`);
             assert.ok(swContent.includes(relPath), `Service worker must precache asset: ${relPath}`);
           }
@@ -414,7 +414,7 @@ describe('Scorched City (شهر سوخته) — Step 2 Pacts, Draft Cadence & Bo
       for (const choice of offer.choices) {
         assert.ok(choice.description && choice.description.length > 0 && choice.description.length <= 70, 'Choice must have concise description <= 70 chars');
         assert.equal(typeof choice.tradeOffs, 'string');
-        assert.ok(choice.assetPath && choice.assetPath.endsWith('.jpg'), 'Choice must have canonical assetPath');
+        assert.ok(choice.assetPath && choice.assetPath.endsWith('.webp'), 'Choice must have canonical assetPath');
         assert.ok(choice.nextLevelRoman.match(/^(I|II|III)$/), 'Choice must have nextLevelRoman');
       }
     });
