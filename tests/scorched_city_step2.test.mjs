@@ -391,8 +391,13 @@ describe('Scorched City (شهر سوخته) — Step 2 Pacts, Draft Cadence & Bo
         for (let lvl = 1; lvl <= 3; lvl++) {
           const desc = ScorchedCity.getPactDescription(card.id, lvl);
           const tradeOff = ScorchedCity.getPactTradeOffs(card.id, lvl);
-          assert.ok(desc && typeof desc === 'string' && desc.length > 10, `Card ${card.id} lvl ${lvl} must have rich description`);
-          assert.ok(tradeOff && typeof tradeOff === 'string' && tradeOff.length > 5, `Card ${card.id} lvl ${lvl} must have trade-offs`);
+          assert.ok(desc && typeof desc === 'string' && desc.length > 0 && desc.length <= 70, `Card ${card.id} lvl ${lvl} must have concise description <= 70 chars`);
+          assert.equal(typeof tradeOff, 'string');
+          const lData = card.levels[lvl];
+          if (lData.bonusPoints != null) {
+            const faP = ScorchedCity.toFaDigits(lData.bonusPoints);
+            assert.ok(desc.includes(faP), `Card ${card.id} lvl ${lvl} description must include bonusPoints ${faP}`);
+          }
         }
       }
     });
@@ -407,8 +412,8 @@ describe('Scorched City (شهر سوخته) — Step 2 Pacts, Draft Cadence & Bo
       const offer = ScorchedCity.generateDraftOffer(run, 1);
       assert.ok(offer && offer.choices.length === 3);
       for (const choice of offer.choices) {
-        assert.ok(choice.description && choice.description.length > 10, 'Choice must have rich description');
-        assert.ok(choice.tradeOffs && choice.tradeOffs.length > 5, 'Choice must have trade-offs');
+        assert.ok(choice.description && choice.description.length > 0 && choice.description.length <= 70, 'Choice must have concise description <= 70 chars');
+        assert.equal(typeof choice.tradeOffs, 'string');
         assert.ok(choice.assetPath && choice.assetPath.endsWith('.jpg'), 'Choice must have canonical assetPath');
         assert.ok(choice.nextLevelRoman.match(/^(I|II|III)$/), 'Choice must have nextLevelRoman');
       }

@@ -9140,6 +9140,8 @@ function cleanupArenaTimersAndSprites() {
   if (typeof BattleEffects !== "undefined") {
     BattleEffects.stop();
   }
+  const scArenaEl = document.getElementById("viewArena");
+  if (scArenaEl) scArenaEl.classList.remove("sc-arena");
 }
 window.cleanupArenaTimersAndSprites = cleanupArenaTimersAndSprites;
 
@@ -9398,15 +9400,15 @@ function renderScorchedCityHub(container, user) {
   hubCard.innerHTML = `
     <div class="sc-hub-header">
       <div>
-        <h2 class="sc-hub-title">شهر سوخته — حالت مستقل</h2>
-        <p class="sc-hub-subtitle">۵ اتاق متوالی تا باس • کاملاً مجزا از ۳ جهان و لیدربورد اصلی</p>
+        <h2 class="sc-hub-title">${(sc && sc.SC_COPY) ? sc.SC_COPY.hub.title : "شهر سوخته"}</h2>
+        <p class="sc-hub-subtitle">${(sc && sc.SC_COPY) ? sc.SC_COPY.hub.subtitle : "۵ اتاق، یک باس. جدا از ۳ جهان دیگر."}</p>
       </div>
       <span class="sc-daily-seed-pill" id="scDailySeedPill">📅 <span dir="ltr">${todayKey}</span></span>
     </div>
 
     <div class="sc-mode-tabs" role="tablist">
-      <button type="button" id="btnScModeStandard" class="sc-mode-btn ${selectedScorchedEntryMode === "standard" ? "active" : ""}">⚔️ نبرد استاندارد</button>
-      <button type="button" id="btnScModeDaily" class="sc-mode-btn ${selectedScorchedEntryMode === "daily" ? "active" : ""}">📅 چالش روزانه <span dir="ltr" style="display:inline-block; font-size:0.72rem; opacity:0.85;">${todayKey}</span></button>
+      <button type="button" id="btnScModeStandard" class="sc-mode-btn ${selectedScorchedEntryMode === "standard" ? "active" : ""}">${(sc && sc.SC_COPY) ? sc.SC_COPY.hub.standardMode : "نبرد استاندارد"}</button>
+      <button type="button" id="btnScModeDaily" class="sc-mode-btn ${selectedScorchedEntryMode === "daily" ? "active" : ""}">${(sc && sc.SC_COPY) ? sc.SC_COPY.hub.dailyChallenge : "چالش روزانه"} <span dir="ltr" style="display:inline-block; font-size:0.72rem; opacity:0.85;">${todayKey}</span></button>
     </div>
 
     <div class="sc-room-stepper" aria-label="پیشرفت ۵ اتاق چرخه">${stepsHtml}</div>
@@ -9482,7 +9484,7 @@ function renderScorchedCityHub(container, user) {
       } else {
         return `
           <div class="sc-nefrin-locked-notice" style="margin-top:10px; padding:8px 10px; background:rgba(20,20,28,0.5); border:1px dashed rgba(255,255,255,0.1); border-radius:8px; font-size:0.7rem; color:var(--ink-muted);">
-            🔒 درجه‌های نفرین (۱ تا ۵) پس از ۳ ران و بازگشایی کامل تمامی ۱۰ باس فعال خواهند شد (ران‌های گذرانده: ${toFaDigits(stats.totalRuns || 0)} از ۳).
+            ${(sc && sc.SC_COPY) ? sc.SC_COPY.hub.nefrinLockNotice(stats.totalRuns || 0) : `درجه‌های نفرین پس از ۳ ران باز می‌شوند (${toFaDigits(stats.totalRuns || 0)} از ۳).`}
           </div>
         `;
       }
@@ -9494,7 +9496,7 @@ function renderScorchedCityHub(container, user) {
           <span>📜 ${hasResumableRun && curRoom === 4 ? "پیش‌آگهی رسمی باس اتاق ۵ (اتاق ۴)" : "ساختار باس اتاق ۵"}: ${previewBoss.bossName}</span>
           <span class="font-pixel" style="font-size:0.72rem;" dir="ltr">Target: ${previewBoss.predictedRoom5TargetScore}</span>
         </div>
-        <div>${previewBoss.lawDescription}</div>
+        <div>${previewBoss.lawShortFa || previewBoss.lawDescription}</div>
         ${previewBoss.secondaryMiniRule ? `
           <div style="font-size:0.72rem; color:var(--amber); margin-top:6px; padding:4px 6px; background:rgba(217,112,58,0.12); border-radius:4px;">
             ⚖️ <strong>قانون قرضی (نفرین ۳+):</strong> ${previewBoss.secondaryMiniRule.lawTitle} — ${previewBoss.secondaryMiniRule.lawDescriptionFa}
@@ -9515,11 +9517,11 @@ function renderScorchedCityHub(container, user) {
     <div style="display:flex; flex-direction:column; gap:8px;">
       <button type="button" id="btnScStartOrContinue" class="btn-primary" style="width:100%; min-height:46px; font-size:0.92rem; font-weight:900;">
         ${hasResumableRun
-          ? `ادامه ${selectedScorchedEntryMode === "daily" ? "چالش روزانه" : "نبرد"} (اتاق ${toFaDigits(curRoom)} از ۵ • امتیاز ${toFaDigits(curScore)})`
-          : (selectedScorchedEntryMode === "daily" ? `شروع چالش روزانه (${todayKey})` : "شروع نبرد جدید شهر سوخته")}
+          ? ((sc && sc.SC_COPY) ? sc.SC_COPY.hub.resumeBattle(curRoom) : `ادامه نبرد (اتاق ${toFaDigits(curRoom)} از ۵)`)
+          : ((sc && sc.SC_COPY) ? sc.SC_COPY.hub.startBattle : "شروع نبرد")}
       </button>
       <div style="display:flex; gap:8px;">
-        <button type="button" id="btnScOpenLeaderboard" class="btn-ghost" style="flex:1; min-height:40px; font-size:0.8rem;">جدول رتبه‌های شهر سوخته</button>
+        <button type="button" id="btnScOpenLeaderboard" class="btn-ghost" style="flex:1; min-height:40px; font-size:0.8rem;">${(sc && sc.SC_COPY) ? sc.SC_COPY.hub.leaderboard : "لیدربورد"}</button>
         ${hasResumableRun ? `<button type="button" id="btnScResetRun" class="btn-ghost" style="min-height:40px; font-size:0.8rem; color:var(--ember); border-color:rgba(217,112,58,0.4);">شروع از اول</button>` : ""}
       </div>
     </div>
@@ -12570,23 +12572,27 @@ function updateScorchedCityBattleHud(revealedInfo = null) {
   const modeLabel = run.mode === "daily" ? `روزانه <span dir="ltr">${run.dateKey}</span>` : "استاندارد";
   const multVal = run.roomScoreMultiplier || 1;
   const multTag = multVal !== 1 ? ` • x${multVal}` : "";
-  if (metaEl) metaEl.innerHTML = `دور ${toFaDigits(run.cycle)} • اتاق ${toFaDigits(run.room)} از ۵ • ${modeLabel}${multTag}`;
+  if (metaEl) {
+    const cycleStr = (sc && sc.SC_COPY) ? sc.SC_COPY.battle.cycleCounter(run.cycle) : `دور ${toFaDigits(run.cycle)}`;
+    const roomStr = (sc && sc.SC_COPY) ? sc.SC_COPY.battle.roomCounter(run.room) : `اتاق ${toFaDigits(run.room)}/۵`;
+    metaEl.innerHTML = `${cycleStr} • ${roomStr} • ${modeLabel}${multTag}`;
+  }
   if (scoreEl) scoreEl.textContent = `${run.roomScore} / ${run.roomTargetScore}`;
-  if (runXpEl) runXpEl.textContent = `XP نبرد (ایزوله): ${toFaDigits(run.runXp)}`;
+  if (runXpEl) runXpEl.textContent = `XP: ${toFaDigits(run.runXp)}`;
   if (pactsStrip) pactsStrip.innerHTML = renderScorchedCityPactStripHTML(sc, run);
 
   if (telBanner) {
     if (run.room === 4) {
       const tel = sc.getRoom4BossTelegraph(run);
       if (tel) {
-        telBanner.innerHTML = `<strong>📜 پیش‌آگهی باس اتاق ۵ (${tel.bossName}):</strong> ${tel.lawTitle} — هدف: <span class="font-pixel" dir="ltr">${tel.predictedRoom5TargetScore}</span> | 🔑 ${tel.keyFamilyLabel} | 🧠 ${tel.universalAnswerPath.title}`;
+        telBanner.innerHTML = `<strong>📜 پیش‌آگهی باس اتاق ۵ (${tel.bossName}):</strong> ${tel.lawShortFa || tel.lawTitle} — هدف: <span class="font-pixel" dir="ltr">${tel.predictedRoom5TargetScore}</span> | 🔑 ${tel.keyFamilyLabel} | 🧠 ${tel.universalAnswerPath.title}`;
         telBanner.classList.remove("hidden");
       } else {
         telBanner.classList.add("hidden");
       }
     } else if (run.room === 5 && run.activeBossSlot && run.activeBossSlot.boss) {
       const boss = run.activeBossSlot.boss;
-      telBanner.innerHTML = `<strong>👑 باس اتاق ۵ (${boss.name}):</strong> ${boss.lawTitle} — ${boss.universalAnswerPath.title}`;
+      telBanner.innerHTML = `<strong>👑 باس اتاق ۵ (${boss.name}):</strong> ${boss.lawShortFa || boss.lawTitle} — ${boss.universalAnswerPath.title}`;
       telBanner.classList.remove("hidden");
     } else {
       telBanner.classList.add("hidden");
@@ -12595,7 +12601,9 @@ function updateScorchedCityBattleHud(revealedInfo = null) {
 
   if (revBanner) {
     if (revealedInfo && revealedInfo.revealedAnswer) {
-      revBanner.innerHTML = `💡 پاسخ صحیح «${revealedInfo.word || ""}»: <strong>${revealedInfo.revealedAnswer}</strong> • کارت به صف تمرین بازگشت (بدون حذف خطا)`;
+      revBanner.innerHTML = (sc && sc.SC_COPY)
+        ? sc.SC_COPY.battle.practiceReveal(revealedInfo.revealedAnswer)
+        : `پاسخ درست: ${revealedInfo.revealedAnswer} • به صف تمرین رفت.`;
       revBanner.classList.remove("hidden");
     } else if (revealedInfo && revealedInfo.pactNotice) {
       revBanner.innerHTML = revealedInfo.pactNotice;
@@ -12643,11 +12651,11 @@ function openScorchedCityDraftOverlay(onDone = null) {
   const activeSlots = sc.getActivePactSlots(run);
   const canDoSwap = Boolean(draft.isBossPrep && draft.freeSwapAvailable && !run.bossPrepSwapUsed && activeSlots.length > 0);
   const titleText = draft.isBossPrep
-    ? "آماده‌سازی باس اتاق ۵ (اتاق ۴)"
-    : `انتخاب پیمان پس از اتاق ${toFaDigits(draft.afterRoom)}`;
+    ? ((sc && sc.SC_COPY) ? sc.SC_COPY.draft.bossPrepTitle : "آماده‌سازی باس")
+    : ((sc && sc.SC_COPY) ? sc.SC_COPY.draft.title : "انتخاب پیمان");
   const subText = draft.resolved
-    ? "پیمان انتخاب شد. می‌توانید پیش از ورود به اتاق ۵ یک تعویض رایگان انجام دهید یا نبرد را آغاز کنید."
-    : "۱ کارت از ۳ پیمان زیر را انتخاب کنید (بدون محدودیت زمان • حداکثر ۳ پیمان فعال)";
+    ? ""
+    : (draft.isBossPrep ? "" : ((sc && sc.SC_COPY) ? sc.SC_COPY.draft.subtitle(draft.afterRoom) : `پس از اتاق ${toFaDigits(draft.afterRoom)}`));
 
   let earlyClueHtml = "";
   if (draft.earlyKeyFamilyClue && !draft.isBossPrep) {
@@ -12668,7 +12676,7 @@ function openScorchedCityDraftOverlay(onDone = null) {
     }
     bossPrepHtml = `
       <div class="sc-boss-prep-panel" id="scRoom4BossPrepBanner">
-        <div><strong>📜 قانون کامل باس اتاق ۵ (${tel.bossName}):</strong> ${tel.lawTitle}</div>
+        <div><strong>📜 قانون کامل باس اتاق ۵ (${tel.bossName}):</strong> ${tel.lawShortFa || tel.lawTitle}</div>
         <div style="opacity:0.9;">${tel.lawDescription}</div>
         <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-top:2px;">
           <span>🔑 خانواده کلیدی باس: <strong>${tel.keyFamilyLabel}</strong> (تضمین‌شده در آفر)</span>
@@ -12676,7 +12684,7 @@ function openScorchedCityDraftOverlay(onDone = null) {
         </div>
         ${canDoSwap ? `
           <button type="button" id="btnScToggleBossSwap" class="btn-ghost" style="margin-top:4px; min-height:36px; font-size:0.75rem; border-color:rgba(201,162,77,0.5); color:var(--gold);">
-            🔁 تعویض رایگان ۱ پیمان فعال پیش از باس
+            ${(sc && sc.SC_COPY) ? sc.SC_COPY.draft.freeSwap : "تعویض رایگان"}
           </button>
         ` : (run.bossPrepSwapUsed ? `<div style="color:var(--teal); font-weight:800;">✓ تعویض رایگان اتاق ۴ انجام شد.</div>` : "")}
       </div>
@@ -12688,7 +12696,7 @@ function openScorchedCityDraftOverlay(onDone = null) {
     const newCard = sc.getPactCard(pendingReplaceChoiceCardId);
     replaceBoxHtml = `
       <div class="sc-replace-box" id="scReplacePickerBox">
-        <div>ظرفیت ۳ پیمان پر است. برای افزودن <strong>${newCard ? newCard.titleFa : pendingReplaceChoiceCardId}</strong> کدام پیمان جایگزین شود؟</div>
+        <div>${(sc && sc.SC_COPY) ? sc.SC_COPY.draft.replacePrompt : "کدام پیمان جایگزین شود؟"}</div>
         <div class="sc-swap-row">
           ${activeSlots.map(s => `
             <button type="button" class="btn-ghost sc-replace-slot-btn" data-replace-id="${s.cardId}" style="flex:1; min-height:36px; font-size:0.72rem;">
@@ -12767,8 +12775,12 @@ function openScorchedCityDraftOverlay(onDone = null) {
   function renderSelectedDescriptionHtml(choice) {
     if (!choice) return "";
     const actionLabel = draft.resolved
-      ? (draft.pickedCardId === choice.cardId ? "✓ انتخاب شد" : "پیمان ثبت‌شده")
-      : (choice.action === "upgrade" ? "ارتقای پیمان" : (choice.requiresReplacement ? "نیاز به جایگزینی" : "پیمان جدید"));
+      ? (draft.pickedCardId === choice.cardId ? "انتخاب شد" : "پیمان ثبت‌شده")
+      : (choice.action === "upgrade"
+          ? ((sc && sc.SC_COPY) ? sc.SC_COPY.draft.badges.upgrade : "ارتقا")
+          : (choice.requiresReplacement
+              ? ((sc && sc.SC_COPY) ? sc.SC_COPY.draft.badges.replace : "جایگزینی")
+              : ((sc && sc.SC_COPY) ? sc.SC_COPY.draft.badges.new : "جدید")));
     const tel = draft.bossTelegraph;
     return `
       <div class="sc-pact-desc-header">
@@ -12784,17 +12796,17 @@ function openScorchedCityDraftOverlay(onDone = null) {
           <span class="sc-family-pill" style="color:#fde047; border:1px solid rgba(253,224,71,0.4);">${actionLabel}</span>
         </div>
       </div>
-      <div class="sc-pact-desc-effect">⚡ ${choice.shortEffect}</div>
-      ${choice.description ? `<div class="sc-pact-desc-lore">${choice.description}</div>` : ""}
-      ${choice.tradeOffs ? `<div class="sc-pact-desc-tradeoff">⚠️ ملاحظه رزمی: ${choice.tradeOffs}</div>` : ""}
+      <div class="sc-pact-desc-effect">${choice.description}</div>
+      ${choice.tradeOffs ? `<div class="sc-pact-desc-tradeoff">${choice.tradeOffs}</div>` : `<div class="sc-pact-desc-tradeoff" style="display:none;"></div>`}
+      <div class="sc-pact-desc-lore" style="display:none;"></div>
       ${choice.isBossKeyFamily ? `
         <div class="sc-pact-desc-synergy">
-          🔑 هماهنگ با باس اتاق ۵ ${tel ? `(${tel.bossName})` : ""}: هم‌افزایی ویژه با قانون باس!
+          ${(sc && sc.SC_COPY) ? sc.SC_COPY.draft.badges.bossKey : "کلید باس"}
         </div>
       ` : ""}
       ${choice.immuneToBossSeal ? `
         <div class="sc-pact-desc-synergy" style="border-color:rgba(168,85,247,0.4); color:#d8b4fe; background:rgba(168,85,247,0.12);">
-          🛡️ مصونیت مطلق: این پیمان در برابر قانون مهر و موم باس اتاق ۵ گزندی نمی‌بیند.
+          ${(sc && sc.SC_COPY) ? sc.SC_COPY.draft.badges.immune : "مصون از مهر باس"}
         </div>
       ` : ""}
     `;
@@ -12806,12 +12818,12 @@ function openScorchedCityDraftOverlay(onDone = null) {
     }
     if (!choice) return "انتخاب پیمان";
     if (choice.action === "upgrade") {
-      return `🩸 مُهر و امضای ارتقا به ${choice.nextLevelRoman} (${choice.titleFa})`;
+      return (sc && sc.SC_COPY) ? sc.SC_COPY.draft.upgradeBtn(choice.titleFa, choice.nextLevelRoman) : `ارتقای ${choice.titleFa} به ${choice.nextLevelRoman}`;
     }
     if (choice.requiresReplacement) {
-      return `🩸 انتخاب و جایگزینی با (${choice.titleFa})`;
+      return (sc && sc.SC_COPY) ? sc.SC_COPY.draft.replaceBtn : "جایگزین‌کردن…";
     }
-    return `🩸 مُهر و امضای پیمان با خون (${choice.titleFa})`;
+    return (sc && sc.SC_COPY) ? sc.SC_COPY.draft.pickBtn(choice.titleFa) : `انتخاب ${choice.titleFa}`;
   }
 
   modal.innerHTML = `
@@ -12834,14 +12846,14 @@ function openScorchedCityDraftOverlay(onDone = null) {
     <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
       ${draft.resolved ? `
         <button type="button" id="btnScProceedNextRoom" class="btn-seal-pact" style="background:linear-gradient(135deg, #1e3a1e 0%, #15803d 50%, #14532d 100%); border-color:#22c55e;">
-          ⚔️ ${getConfirmButtonLabel(selectedChoice)}
+          ${getConfirmButtonLabel(selectedChoice)}
         </button>
       ` : `
         <button type="button" id="btnConfirmSealPact" class="btn-seal-pact" ${!selectedChoice ? "disabled" : ""}>
           ${getConfirmButtonLabel(selectedChoice)}
         </button>
         <button type="button" id="btnScSkipDraft" class="btn-ghost" style="width:100%; min-height:36px; font-size:0.75rem;">
-          ادامه بدون انتخاب پیمان (مسیر دانش خالص)
+          ${(sc && sc.SC_COPY) ? sc.SC_COPY.draft.skip : "ادامه بدون پیمان"}
         </button>
       `}
     </div>
@@ -13143,9 +13155,10 @@ function startScorchedCityBattle(entryMode = "standard", resumeExisting = true) 
   updateScorchedCityBattleHud(null);
 
   const dXp1 = document.getElementById("dialogXP");
-  if (dXp1) dXp1.textContent = `${run.runXp} RunXP`;
+  if (dXp1) dXp1.textContent = `${run.runXp} XP`;
 
   showView("viewArena");
+  document.getElementById("viewArena")?.classList.add("sc-arena");
   if (run.pendingDraft) {
     openScorchedCityDraftOverlay(() => startScorchedCityBattle(run.mode, true));
     return;
@@ -13711,15 +13724,21 @@ function completeScorchedCityRoom() {
       const retryEl = document.getElementById("btnRetryStage");
       if (evalRes.gameOver) {
         if (titleEl) titleEl.textContent = "پایان نبرد شهر سوخته";
-        if (descEl) descEl.textContent = `امتیاز اتاق به حد نصاب ${evalRes.roomTargetScore} نرسید و تمام شمع‌ها خاموش شدند. رکورد کل (${evalRes.roomScore} / جدول مستقل) در لیدربورد شهر سوخته ثبت شد.`;
+        if (descEl) descEl.textContent = (sc && sc.SC_COPY)
+          ? sc.SC_COPY.result.runFailed(evalRes.roomScore, evalRes.roomTargetScore)
+          : `امتیاز ${toFaDigits(evalRes.roomScore)} از هدف ${toFaDigits(evalRes.roomTargetScore)} کمتر بود. شمع‌ها خاموش شدند.`;
         if (retryEl) retryEl.textContent = "شروع ران جدید";
       } else if (evalRes.preventedCandleLossBy === "threshold_guardian") {
         if (titleEl) titleEl.textContent = "سپر نگهبان آستانه فعال شد!";
-        if (descEl) descEl.textContent = `با وجود نرسیدن به حد نصاب ${toFaDigits(evalRes.roomTargetScore)}، پیمان «نگهبان آستانه» جلوی از دست رفتن شمع را گرفت (${toFaDigits(evalRes.candlesRemaining)} شمع باقیمانده)!`;
+        if (descEl) descEl.textContent = (sc && sc.SC_COPY)
+          ? sc.SC_COPY.result.guardianSaved
+          : "نگهبان آستانه یک شمع را نجات داد.";
         if (retryEl) retryEl.textContent = "تکرار همین اتاق (با حفظ شمع)";
       } else {
         if (titleEl) titleEl.textContent = "حد نصاب اتاق حاصل نشد (-۱ شمع)";
-        if (descEl) descEl.textContent = `امتیاز شما به حد نصاب ${toFaDigits(evalRes.roomTargetScore)} نرسید و ۱ شمع خاموش شد (${toFaDigits(evalRes.candlesRemaining)} شمع باقیمانده).`;
+        if (descEl) descEl.textContent = (sc && sc.SC_COPY)
+          ? sc.SC_COPY.result.runFailed(evalRes.roomScore, evalRes.roomTargetScore)
+          : `امتیاز ${toFaDigits(evalRes.roomScore)} از هدف ${toFaDigits(evalRes.roomTargetScore)} کمتر بود. شمع‌ها خاموش شدند.`;
         if (retryEl) retryEl.textContent = "تکرار همین اتاق";
       }
       defEl.classList.remove("hidden");
@@ -13769,15 +13788,13 @@ function completeScorchedCityRoom() {
   const victoryStatsEl = document.getElementById("victoryStats");
   if (victoryStatsEl) {
     if (evalRes.bossCycleCompleted) {
-      victoryStatsEl.textContent = `تبریک! باس اتاق ۵ شکست خورد و چرخه به دور ${toFaDigits(evalRes.loopReset.nextCycle)} (اتاق ۱) بازنشانی شد. آمار پایدار شما محفوظ ماند و امتیاز فقط در رده‌بندی شهر سوخته ثبت شد.`;
-    } else if (evalRes.isBossPrepPhase && evalRes.telegraph) {
-      victoryStatsEl.textContent = `اتاق ۴ پاک‌سازی شد! اکنون با پیش‌آگهی کامل «${evalRes.telegraph.bossName}» وارد فاز آماده‌سازی باس اتاق ۵ می‌شوید (آفر تضمین‌شده خانواده کلیدی + ۱ تعویض رایگان).`;
-    } else if (evalRes.earlyKeyFamilyClue) {
-      victoryStatsEl.textContent = `اتاق ۳ پاک‌سازی شد! نشانه اولیه باس اتاق ۵ نمایان شد (خانواده ${evalRes.earlyKeyFamilyClue.nameFa}). پیمان بعدی خود را برگزینید.`;
-    } else if (evalRes.nextRoom === 5) {
-      victoryStatsEl.textContent = `آماده نبرد با باس اتاق ۵! هدف امتیاز پایه ۱۵۰۰ فعال خواهد شد.`;
+      victoryStatsEl.textContent = (sc && sc.SC_COPY)
+        ? sc.SC_COPY.result.bossDefeated(evalRes.loopReset.nextCycle)
+        : `باس شکست خورد. دور ${toFaDigits(evalRes.loopReset.nextCycle)} شروع شد.`;
     } else {
-      victoryStatsEl.textContent = `اتاق ${toFaDigits(evalRes.clearedRoom)} با موفقیت پاک‌سازی شد. ادامه به انتخاب پیمان و اتاق ${toFaDigits(evalRes.nextRoom)} از ۵.`;
+      victoryStatsEl.textContent = (sc && sc.SC_COPY)
+        ? sc.SC_COPY.result.roomCleared(evalRes.clearedRoom)
+        : `اتاق ${toFaDigits(evalRes.clearedRoom)} پاک شد.`;
     }
   }
 
@@ -13826,11 +13843,13 @@ function handleScorchedCityQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
         const c = sc.getPactCard ? sc.getPactCard(fp.cardId) : null;
         return c ? c.titleFa : fp.cardId;
       });
-      pactNotice = `✨ فعال‌سازی پیمان: ${labels.join("، ")} (+${ansRes.flatPactBonus || 0} امتیاز)`;
+      pactNotice = (sc && sc.SC_COPY)
+        ? sc.SC_COPY.battle.pactReceipt(labels.join("، "), ansRes.flatPactBonus || 0)
+        : `${labels.join("، ")} +${toFaDigits(ansRes.flatPactBonus || 0)}`;
     }
 
     const dXp = document.getElementById("dialogXP");
-    if (dXp && ansRes) dXp.textContent = `${ansRes.runXp} RunXP`;
+    if (dXp && ansRes) dXp.textContent = `${ansRes.runXp} XP`;
 
     playSprite(knightEl, 1, { fps: 10 });
     setKnightState("attack");

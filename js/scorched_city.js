@@ -151,6 +151,14 @@
   const PACT_FAMILY_IDS = Object.freeze(['combo', 'greed', 'survival', 'arcane']);
   const LEVEL_ROMAN = Object.freeze({ 1: 'I', 2: 'II', 3: 'III' });
 
+  function toFaDigits(val) {
+    if (val == null) return '';
+    const faDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    return String(val)
+      .replace(/[0-9]/g, d => faDigits[+d])
+      .replace(/\./g, '٫');
+  }
+
   function getPactCardAssetPath(cardId, level = 1) {
     const card = PACT_CARD_MAP.get(cardId);
     const lvl = Math.max(1, Math.min(3, Math.round(Number(level) || 1)));
@@ -417,77 +425,141 @@
     return PACT_CARDS.filter(c => c.family === familyId);
   }
 
-  function getPactShortEffect(cardId, level = 1) {
-    const card = getPactCard(cardId);
-    if (!card) return '';
-    const lvl = Math.max(1, Math.min(3, Math.round(Number(level) || 1)));
-    return card.shortEffectByLevel[lvl] || card.shortEffectByLevel[1] || '';
-  }
+  const SC_COPY = Object.freeze({
+    toFaDigits,
 
-  const PACT_LORE_AND_DETAILS = Object.freeze({
-    flame_strike: {
-      desc: 'افزایش امتیاز ضربات پیاپی؛ با حفظ زنجیره پاسخ‌های درست، امتیاز پایه هر پاسخ درست و ضریب شتاب را تا سقف چشمگیری بالا می‌برد.',
-      tradeOff: 'وابسته به حفظ کمبو؛ با ثبت پاسخ نادرست اثر شتاب قطع می‌شود مگر با شعله پنهان محافظت شود.'
+    hub: Object.freeze({
+      title: 'شهر سوخته',
+      subtitle: '۵ اتاق، یک باس. جدا از ۳ جهان دیگر.',
+      standardMode: 'نبرد استاندارد',
+      dailyChallenge: 'چالش روزانه',
+      startBattle: 'شروع نبرد',
+      resumeBattle: (n) => `ادامه نبرد (اتاق ${toFaDigits(n)} از ۵)`,
+      leaderboard: 'لیدربورد',
+      nefrinLockNotice: (n) => `درجه‌های نفرین پس از ۳ ران باز می‌شوند (${toFaDigits(n)} از ۳).`
+    }),
+
+    draft: Object.freeze({
+      title: 'انتخاب پیمان',
+      subtitle: (n) => `پس از اتاق ${toFaDigits(n)}`,
+      skip: 'ادامه بدون پیمان',
+      bossPrepTitle: 'آماده‌سازی باس',
+      freeSwap: 'تعویض رایگان',
+      replacePrompt: 'کدام پیمان جایگزین شود؟',
+      pickBtn: (name) => `انتخاب ${name}`,
+      upgradeBtn: (name, roman) => `ارتقای ${name} به ${roman}`,
+      replaceBtn: 'جایگزین‌کردن…',
+      badges: Object.freeze({
+        new: 'جدید',
+        upgrade: 'ارتقا',
+        replace: 'جایگزینی',
+        immune: 'مصون از مهر باس',
+        bossKey: 'کلید باس'
+      })
+    }),
+
+    battle: Object.freeze({
+      roomCounter: (n) => `اتاق ${toFaDigits(n)}/۵`,
+      cycleCounter: (n) => `دور ${toFaDigits(n)}`,
+      practiceReveal: (x) => `پاسخ درست: ${x} • به صف تمرین رفت.`,
+      pactReceipt: (name, n) => `${name} +${toFaDigits(n)}`,
+      currency: 'XP'
+    }),
+
+    result: Object.freeze({
+      roomCleared: (n) => `اتاق ${toFaDigits(n)} پاک شد.`,
+      bossDefeated: (n) => `باس شکست خورد. دور ${toFaDigits(n)} شروع شد.`,
+      runFailed: (a, b) => `امتیاز ${toFaDigits(a)} از هدف ${toFaDigits(b)} کمتر بود. شمع‌ها خاموش شدند.`,
+      guardianSaved: 'نگهبان آستانه یک شمع را نجات داد.'
+    }),
+
+    nefrin: Object.freeze({
+      0: 'بدون چالش اضافه.',
+      1: 'هدف امتیاز باس ۵٪ بیشتر.',
+      2: 'هدف امتیاز باس ۱۰٪ بیشتر.',
+      3: 'هدف باس ۱۰٪ بیشتر؛ باس یک قانون کمکی از باس دیگر قرض می‌گیرد.',
+      4: 'همهٔ موارد نفرین ۳ + سوال‌های سخت‌تر (کنایه، ایهام، تاریخ ادبیات).',
+      5: 'همهٔ موارد نفرین ۴ + مهر یک پیمان غیربقا در اتاق ۵.'
+    }),
+
+    bossLaws: Object.freeze({
+      '01_rift_scribe': 'واژه‌های بازتمرین اولویت دارند و پاسخ درستشان ۲۵٪ امتیاز بیشتر می‌گیرد.',
+      '02_cinder_hourglass': 'پاسخ زیر ۵ ثانیه ×۱٫۳ و +۲۵ امتیاز؛ بالای ۹ ثانیه ×۰٫۸۵.',
+      '03_ash_twin': 'کمبوی زوج ×۱٫۳۵؛ کمبوی فرد ×۰٫۹۰.',
+      '04_pact_warden': 'پیمان‌های طمع مهر می‌شوند؛ همهٔ پاسخ‌ها ×۱٫۱.',
+      '05_inverted_mirror_lord': 'ترتیب گزینه‌ها وارونه است؛ جواب درست به خطای قبلی +۳۵ امتیاز؛ کمبو ۵+ ×۱٫۱۸.',
+      '06_furnace_tollkeeper': '۲ پاسخ اول ×۰٫۸۵؛ از کمبو ۳ به بعد ×۱٫۳.',
+      '07_smoke_ember_phantom': 'اولین پاسخ درست بعد از خطا ×۰٫۸۵؛ با کمبو ۳+ ×۱٫۲۵.',
+      '08_cold_wick_sentinel': 'پیمان‌های کمبو مهر می‌شوند؛ همهٔ پاسخ‌ها ×۱٫۱.',
+      '09_ruin_architect': 'هر پاسخ درست چهارم: +۴۰ امتیاز و ×۱٫۲۵.',
+      '10_lord_eternal_pyre': '۳ پاسخ اول ×۰٫۹۵؛ از کمبو ۴ به بعد ×۱٫۳۵ و +۲۰ امتیاز.'
+    }),
+
+    getPactDescription: (cardId, level = 1) => {
+      const card = getPactCard(cardId);
+      if (!card) return '';
+      const lvl = Math.max(1, Math.min(3, Math.round(Number(level) || 1)));
+      const l = (card.levels && card.levels[lvl]) || {};
+      switch (cardId) {
+        case 'flame_strike':
+          return `کمبو ۲+: ${toFaDigits(l.bonusPoints)} امتیاز بیشتر. کمبو ۳+: ضریب +${toFaDigits(l.additiveMult)}.`;
+        case 'golden_strike':
+          return `هر ۳ پاسخ درست پشت‌سرهم: ${toFaDigits(l.bonusPoints)} امتیاز و ${toFaDigits(l.bonusRunXp)} XP.`;
+        case 'ember_chain':
+          return `هر پله کمبو ${toFaDigits(l.streakStepBonus)} امتیاز می‌دهد؛ ${toFaDigits(l.carryStreak)} کمبو به اتاق بعد می‌ماند.`;
+        case 'treasure_hoard':
+          return `هر پاسخ درست ${toFaDigits(l.bonusRunXpPerCorrect)} XP؛ پایان اتاق ${toFaDigits(l.roomEndBonusScore)} امتیاز و ${toFaDigits(l.roomEndBonusXp)} XP.`;
+        case 'extortionist':
+          return `۲ سوال بیشتر و ۱۵٪ هدف بیشتر؛ امتیاز اتاق ×${toFaDigits(l.roomScoreMultiplier)}.`;
+        case 'golden_quill':
+          return `پاسخ درست زیر ۵ ثانیه: ${toFaDigits(l.bonusPoints)} امتیاز.`;
+        case 'threshold_guardian':
+          if (l.retryHeadstartScore > 0 || l.retryRunXp > 0) {
+            return `یک بار در ران، شمع را نجات می‌دهد؛ ${toFaDigits(l.retryHeadstartScore)} امتیاز و ${toFaDigits(l.retryRunXp)} XP.`;
+          }
+          return 'یک بار در ران، شمع را از شکست نجات می‌دهد.';
+        case 'hidden_flame': {
+          const pct = toFaDigits(Math.round((l.streakRetainRatio || 0) * 100));
+          if (l.shelterBonus > 0) {
+            return `اولین خطای هر اتاق: ${pct}٪ کمبو می‌ماند و ${toFaDigits(l.shelterBonus)} امتیاز.`;
+          }
+          return `اولین خطای هر اتاق: ${pct}٪ کمبو می‌ماند.`;
+        }
+        case 'cracked_armor':
+          return `اولین پاسخ درست بعد از خطا: ${toFaDigits(l.recoveryScore)} امتیاز و ${toFaDigits(l.recoveryRunXp)} XP.`;
+        case 'passage':
+          return `هر اتاق ${toFaDigits(l.reroutesPerRoom)} بار سوال سخت را بدون جریمه رد کن؛ پایان اتاق ${toFaDigits(l.roomEndTransitBonus)} امتیاز.`;
+        case 'error_mirror':
+          return `جواب درست به واژهٔ غلط قبلی: ${toFaDigits(l.mirrorBonusPoints)} امتیاز و ضریب +${toFaDigits(l.additiveMult)}.`;
+        case 'midnight_eye': {
+          const scopeMap = {
+            retry_or_early: 'سوال‌های اول و بازتمرین‌ها',
+            retry_and_half: 'نیمی از سوال‌ها و بازتمرین‌ها',
+            all_with_clue: 'همه سوال‌ها + سرنخ دسته'
+          };
+          const scopeText = scopeMap[l.scope] || l.scope || '';
+          return `یک گزینهٔ غلط حذف می‌شود: ${scopeText}.`;
+        }
+        default:
+          return card.shortEffectByLevel[lvl] || '';
+      }
     },
-    golden_strike: {
-      desc: 'آزادسازی ضربه طلایی با هر ۳ پاسخ درست متوالی؛ جهش انفجاری در امتیاز و اندوختن سریع‌تر تجربهٔ ران (RunXP).',
-      tradeOff: 'تنها در مضارب سه پاسخ متوالی فعال می‌شود؛ نیازمند تمرکز و دقت متوالی.'
-    },
-    ember_chain: {
-      desc: 'پیوند اخگرهای اشتعال؛ ارزش هر گام کمبو را افزایش داده و بخشی از کمبو را برای شروع اتاق بعدی ذخیره می‌کند.',
-      tradeOff: 'بیشترین کارایی خود را در ران‌های طولانی و اتاق‌های متوالی نشان می‌دهد.'
-    },
-    treasure_hoard: {
-      desc: 'انباشت گنجینه‌های کهن؛ با هر پاسخ درست به تجربهٔ ران می‌افزاید و در پایان هر اتاق پاداش امتیازی بزرگ اعطا می‌کند.',
-      tradeOff: 'پاداش نقدی و مستقیم برای صعود سریع، بدون ایجاد لایه محافظ برای شمع.'
-    },
-    extortionist: {
-      desc: 'معامله پرریسک با باج‌گیر؛ ۲ پرسش بیشتر به اتاق می‌افزاید و سقف هدف را ۱۵٪ بالا می‌برد، اما کل امتیازات اتاق را با ضریب سنگین ضرب می‌کند!',
-      tradeOff: 'ریسک بالا: نیاز به پاسخگویی به پرسش‌های بیشتر و رسیدن به سقف هدف سخت‌تر، مناسب شوالیه‌های مسلط بر واژگان.'
-    },
-    golden_quill: {
-      desc: 'سرعت و قاطعیت شوالیه‌ای؛ پاسخگویی سریع و قاطع زیر ۵ ثانیه با پاداش امتیازی فوری تشویق می‌شود.',
-      tradeOff: 'درنگ و تردید بیش از ۵ ثانیه پاداش اضافه این پیمان را بی‌اثر می‌کند.'
-    },
-    threshold_guardian: {
-      desc: 'بیمه بقا در آستانه شکست؛ یک‌بار در طول ران چنانچه امتیاز به هدف نرسد، شمع را نجات داده و با امتیاز اولیه فرصت دوباره می‌دهد. مصون از مهر و موم باس!',
-      tradeOff: 'تنها ۱ بار در طول کل ران فعال می‌شود؛ پس از مصرف تا پایان ران غیرفعال می‌گردد.'
-    },
-    hidden_flame: {
-      desc: 'حفظ آتش در تاریکی؛ نخستین اشتباه در هر اتاق کمبوی شما را نابود نکرده و زنجیره حمله را نجات می‌دهد. مصون از مهر و موم باس!',
-      tradeOff: 'تنها روی نخستین خطای هر اتاق عمل می‌کند؛ خطاهای بعدی کمبو را صفر می‌کنند.'
-    },
-    cracked_armor: {
-      desc: 'برخاستن پرقدرت از زخم؛ پس از هر پاسخ اشتباه، نخستین پاسخ درست بعدی با ضربه جبرانی پرقدرت و تجربهٔ ران آزاد می‌شود.',
-      tradeOff: 'تنها پس از ثبت اشتباه و با پاسخ درست بعدی فعال می‌گردد.'
-    },
-    passage: {
-      desc: 'دریچه فرار از مخمصه؛ امکان جابه‌جایی و عبور از پرسش‌های دشوار بدون جریمه، همراه با پاداش عبور در پایان اتاق.',
-      tradeOff: 'تعداد عبور محدود در هر اتاق (۱ یا ۲ بار بر اساس سطح پیمان).'
-    },
-    error_mirror: {
-      desc: 'تبدیل لغزش به پیروزی؛ پاسخ درست به واژه‌هایی که قبلاً در این ران اشتباه شده‌اند، پاداش دوچندان و ضریب کمبو به همراه دارد.',
-      tradeOff: 'تنها بر روی پرسش‌های خطای بازگشتی (صف تمرین) اثرگذار است.'
-    },
-    midnight_eye: {
-      desc: 'بصیرت باطنی در تاریکی؛ یکی از گزینه‌های اشتباه و انحرافی را محو می‌کند تا شانس انتخاب گزینه درست افزایش یابد.',
-      tradeOff: 'تعداد سوالات تحت پوشش به سطح پیمان بستگی دارد.'
-    }
+
+    getPactTradeOffs: () => ''
   });
 
+  function getPactShortEffect(cardId, level = 1) {
+    return SC_COPY.getPactDescription(cardId, level);
+  }
+
+  const PACT_LORE_AND_DETAILS = Object.freeze({});
+
   function getPactDescription(cardId, level = 1) {
-    const card = getPactCard(cardId);
-    if (!card) return '';
-    const lvl = Math.max(1, Math.min(3, Math.round(Number(level) || 1)));
-    const detail = PACT_LORE_AND_DETAILS[cardId];
-    const baseDesc = detail ? detail.desc : '';
-    const effect = card.shortEffectByLevel[lvl] || card.shortEffectByLevel[1] || '';
-    return baseDesc ? `${baseDesc} (${effect})` : effect;
+    return SC_COPY.getPactDescription(cardId, level);
   }
 
   function getPactTradeOffs(cardId, level = 1) {
-    const detail = PACT_LORE_AND_DETAILS[cardId];
-    return detail ? detail.tradeOff : '';
+    return SC_COPY.getPactTradeOffs(cardId, level);
   }
 
   function isPactProtectedFromSeal(cardId) {
@@ -818,6 +890,7 @@
       title: def.title || def.name,
       lawTitle: def.lawTitle,
       lawDescription: def.lawDescription,
+      lawShortFa: def.lawShortFa || (SC_COPY && SC_COPY.bossLaws && SC_COPY.bossLaws[def.id]) || def.lawDescription,
       keyFamily: def.keyFamily,
       keyFamilyLabel: def.keyFamilyLabel || def.keyFamily,
       universalAnswerPath: Object.freeze({ ...def.universalAnswerPath }),
@@ -1262,7 +1335,7 @@
       tier: 0,
       nameFa: 'عادی',
       labelFa: 'بدون نفرین (عادی)',
-      descriptionFa: 'قوانین استاندارد بدون چالش اضافه',
+      descriptionFa: SC_COPY.nefrin[0],
       badgeGlyph: 'عادی',
       bossTargetScoreMultiplier: 1.0
     }),
@@ -1270,7 +1343,7 @@
       tier: 1,
       nameFa: 'نفرین ۱',
       labelFa: 'نفرین ۱: آزمون سرسختی',
-      descriptionFa: '+۵٪ امتیاز هدف باس در اتاق ۵',
+      descriptionFa: SC_COPY.nefrin[1],
       badgeGlyph: 'نفرین ۱',
       bossTargetScoreMultiplier: 1.05
     }),
@@ -1278,7 +1351,7 @@
       tier: 2,
       nameFa: 'نفرین ۲',
       labelFa: 'نفرین ۲: آستانه شعله',
-      descriptionFa: '+۱۰٪ امتیاز هدف باس در اتاق ۵ (+۵٪ نسبت به نفرین ۱)',
+      descriptionFa: SC_COPY.nefrin[2],
       badgeGlyph: 'نفرین ۲',
       bossTargetScoreMultiplier: 1.10
     }),
@@ -1286,7 +1359,7 @@
       tier: 3,
       nameFa: 'نفرین ۳',
       labelFa: 'نفرین ۳: هم‌نشینی سایه‌ها',
-      descriptionFa: 'باس اتاق ۵ قانون کمکی ثانویه‌ای از باس دیگری قرض می‌گیرد (با پیش‌آگهی در اتاق ۴)',
+      descriptionFa: SC_COPY.nefrin[3],
       badgeGlyph: 'نفرین ۳',
       bossTargetScoreMultiplier: 1.10,
       hasSecondaryMiniRule: true
@@ -1295,7 +1368,7 @@
       tier: 4,
       nameFa: 'نفرین ۴',
       labelFa: 'نفرین ۴: آشوب واژگان',
-      descriptionFa: 'ترکیب چالش‌برانگیزتر واژگان با وزن بالاتر بر مفاهیم کنایی، ایهام و تاریخ ادبیات',
+      descriptionFa: SC_COPY.nefrin[4],
       badgeGlyph: 'نفرین ۴',
       bossTargetScoreMultiplier: 1.10,
       hasSecondaryMiniRule: true,
@@ -1305,7 +1378,7 @@
       tier: 5,
       nameFa: 'نفرین ۵',
       labelFa: 'نفرین ۵: مهر سیاه',
-      descriptionFa: 'مهر موقت یک پیمان تصادفی (غیربقا) در شروع اتاق ۵ با اعلام قبلی در پیش‌آگهی اتاق ۴',
+      descriptionFa: SC_COPY.nefrin[5],
       badgeGlyph: 'نفرین ۵',
       bossTargetScoreMultiplier: 1.10,
       hasSecondaryMiniRule: true,
@@ -1749,6 +1822,7 @@
       title: boss.title || boss.name,
       lawTitle: boss.lawTitle,
       lawDescription: boss.lawDescription,
+      lawShortFa: boss.lawShortFa || boss.lawDescription,
       keyFamily: boss.keyFamily,
       keyFamilyLabel: boss.keyFamilyLabel,
       universalAnswerPath: { ...boss.universalAnswerPath },
@@ -2122,6 +2196,7 @@
       bossName: boss.name,
       lawTitle: boss.lawTitle,
       lawDescription: boss.lawDescription,
+      lawShortFa: boss.lawShortFa || boss.lawDescription,
       keyFamily: boss.keyFamily,
       keyFamilyLabel: boss.keyFamilyLabel,
       universalAnswerPath: { ...boss.universalAnswerPath },
@@ -3122,6 +3197,8 @@
     PACT_FAMILIES,
     PACT_FAMILY_IDS,
     PACT_CARDS,
+    toFaDigits,
+    SC_COPY,
     getPactCard,
     getAllPactCards,
     getPactCardsByFamily,
