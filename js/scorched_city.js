@@ -123,33 +123,38 @@
       nameFa: 'کمبو',
       labelFa: 'خانواده کمبو',
       badgeGlyph: 'کمبو',
-      accentHex: '#ef4444'
+      accentHex: '#d9703a'
     }),
     GREED: Object.freeze({
       id: 'greed',
       nameFa: 'طمع',
       labelFa: 'خانواده طمع',
       badgeGlyph: 'طمع',
-      accentHex: '#f59e0b'
+      accentHex: '#c9a24d'
     }),
     SURVIVAL: Object.freeze({
       id: 'survival',
       nameFa: 'بقا',
       labelFa: 'خانواده بقا',
       badgeGlyph: 'بقا',
-      accentHex: '#10b981'
+      accentHex: '#6fb8a8'
     }),
     ARCANE: Object.freeze({
       id: 'arcane',
       nameFa: 'آرکان',
       labelFa: 'خانواده آرکان',
       badgeGlyph: 'راز',
-      accentHex: '#a855f7'
+      accentHex: '#c9777f'
     })
   });
 
   const PACT_FAMILY_IDS = Object.freeze(['combo', 'greed', 'survival', 'arcane']);
   const LEVEL_ROMAN = Object.freeze({ 1: 'I', 2: 'II', 3: 'III' });
+
+  function scIcon(id, cls = '') {
+    const safeCls = cls ? ` ${cls}` : '';
+    return `<svg class="sc-icon${safeCls}" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><use href="#icon-${id}"></use></svg>`;
+  }
 
   function toFaDigits(val) {
     if (val == null) return '';
@@ -3198,6 +3203,7 @@
     PACT_FAMILY_IDS,
     PACT_CARDS,
     toFaDigits,
+    scIcon,
     SC_COPY,
     getPactCard,
     getAllPactCards,

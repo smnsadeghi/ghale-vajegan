@@ -5997,13 +5997,198 @@
       }
     }
 
-    /* ==========================================
-       SCORCHED CITY (شهر سوخته) STANDALONE MODE (STEP 1)
-       ========================================== */
+    /* ==========================================================================
+       SCORCHED CITY (شهر سوخته) DESIGN SYSTEM TOKENS (LAYER 2)
+       ========================================================================== */
+    :root {
+      /* Surface & Structure Tokens */
+      --sc-bg: var(--bg);
+      --sc-surface: var(--surface);
+      --sc-surface-2: var(--surface-elevated);
+      --sc-surface-glass: var(--surface-glass);
+      --sc-border: var(--border-subtle);
+      --sc-border-accent: var(--border-accent);
+      --sc-border-gold: var(--line-gold);
+
+      /* Typography & Contrast Inks */
+      --sc-text: var(--text);
+      --sc-text-muted: var(--text-muted);
+      --sc-ink: var(--ink);
+      --sc-ink-muted: var(--ink-muted);
+
+      /* 4 Family Tokens (Harmonized with Visual Direction) */
+      --sc-family-combo: var(--ember);
+      --sc-family-greed: var(--gold);
+      --sc-family-survival: var(--teal);
+      --sc-family-arcane: var(--rose);
+
+      /* Accent & Semantic Tokens */
+      --sc-accent: var(--gold);
+      --sc-accent-glow: var(--gold-glow);
+      --sc-danger: var(--rose);
+      --sc-danger-bg: rgba(201, 119, 127, 0.12);
+      --sc-danger-border: rgba(201, 119, 127, 0.4);
+      --sc-wine: var(--wine);
+
+      /* Typography Scale (3 Sizes & 2 Weights) */
+      --sc-fs-title: 1rem;
+      --sc-fs-body: 0.85rem;
+      --sc-fs-small: 0.72rem;
+      --sc-fw-normal: 500;
+      --sc-fw-bold: 800;
+    }
+
+    /* Arena isolation: no backdrop-filter allowed inside .sc-arena */
+    .sc-arena,
+    .sc-arena * {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
+    /* ==========================================================================
+       SCORCHED CITY BASE COMPONENTS (Layer 2 Design System)
+       ========================================================================== */
+    .sc-btn {
+      min-height: 48px;
+      border-radius: 10px;
+      background: var(--sc-surface-2);
+      border: 1px solid var(--sc-border);
+      color: var(--sc-text);
+      font-size: var(--sc-fs-body);
+      font-weight: var(--sc-fw-normal);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 16px;
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+      transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+      text-decoration: none;
+      box-sizing: border-box;
+    }
+    .sc-btn:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+    .sc-btn:disabled,
+    .sc-btn.is-disabled {
+      opacity: 0.45;
+      filter: grayscale(0.5);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    .sc-btn:focus-visible {
+      outline: 2px solid var(--sc-accent);
+      outline-offset: 2px;
+    }
+
+    .sc-btn--primary {
+      background: var(--sc-surface-2);
+      border: 1px solid var(--sc-accent);
+      color: var(--sc-accent);
+      font-weight: var(--sc-fw-bold);
+    }
+    .sc-btn--primary:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    .sc-btn--ghost {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--sc-text-muted);
+    }
+    .sc-btn--ghost:hover,
+    .sc-btn--ghost:active {
+      background: rgba(201, 162, 77, 0.08);
+      color: var(--sc-text);
+    }
+
+    .sc-chip {
+      height: 40px;
+      min-height: 40px;
+      border-radius: 8px;
+      background: var(--sc-surface-2);
+      border: 1px solid var(--sc-border);
+      color: var(--sc-text);
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-normal);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 12px;
+      box-sizing: border-box;
+      user-select: none;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .sc-chip:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+    .sc-chip:disabled,
+    .sc-chip.is-disabled {
+      opacity: 0.45;
+      filter: grayscale(0.5);
+    }
+    .sc-chip:focus-visible {
+      outline: 2px solid var(--sc-accent);
+      outline-offset: 2px;
+    }
+
+    .sc-tag {
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-bold);
+      line-height: 1;
+      padding: 3px 6px;
+      border-radius: 4px;
+      background: var(--sc-surface-2);
+      border: 1px solid var(--sc-border);
+      color: var(--sc-text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      box-sizing: border-box;
+    }
+
+    .sc-sheet {
+      border-radius: 12px;
+      background: var(--sc-surface);
+      border: 1px solid var(--sc-border);
+      padding: 16px;
+      box-sizing: border-box;
+    }
+
+    .sc-card {
+      border-radius: 10px;
+      background: var(--sc-surface);
+      border: 1px solid var(--sc-border);
+      padding: 12px;
+      box-sizing: border-box;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .sc-card:active {
+      transform: scale(0.98);
+    }
+    .sc-card.is-selected {
+      border-color: var(--sc-accent);
+      box-shadow: 0 0 16px var(--sc-accent-glow);
+    }
+
+    .sc-icon {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      vertical-align: middle;
+      shape-rendering: crispEdges;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       SCORCHED CITY UI STYLING & MODAL RULES
+       ========================================================================== */
     .stage-wrapper.mode-scorched-city {
-      border-color: rgba(176, 182, 190, 0.42);
-      background: #0a0a0c;
-      box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.78), 0 8px 24px rgba(0, 0, 0, 0.6);
+      border-color: var(--sc-border-accent);
+      background: var(--sc-bg);
+      box-shadow: inset 0 0 20px rgba(5, 4, 3, 0.7), 0 8px 24px rgba(5, 4, 3, 0.6);
     }
 
     .stage-wrapper.mode-scorched-city::after {
@@ -6011,19 +6196,19 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background: linear-gradient(180deg, rgba(10, 10, 12, 0.14) 0%, rgba(10, 10, 12, 0) 35%, rgba(10, 10, 12, 0.32) 100%);
+      background: linear-gradient(180deg, rgba(14, 12, 11, 0.14) 0%, rgba(14, 12, 11, 0) 35%, rgba(14, 12, 11, 0.32) 100%);
       z-index: 2;
     }
 
     .sc-hub-card {
-      background: rgba(18, 17, 17, 0.94);
-      border: 1px solid rgba(176, 182, 190, 0.25);
+      background: var(--sc-surface);
+      border: 1px solid var(--sc-border);
       border-radius: 16px;
       padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 14px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 8px 24px rgba(5, 4, 3, 0.5);
     }
 
     .sc-hub-header {
@@ -6035,15 +6220,16 @@
     }
 
     .sc-hub-title {
-      font-size: 1.05rem;
-      font-weight: 900;
-      color: var(--text, #f1e8d4);
+      font-size: var(--sc-fs-title);
+      font-weight: var(--sc-fw-bold);
+      color: var(--sc-text);
       margin: 0;
     }
 
     .sc-hub-subtitle {
-      font-size: 0.78rem;
-      color: var(--ink-muted, #a39682);
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-normal);
+      color: var(--sc-text-muted);
       margin: 2px 0 0;
     }
 
@@ -6053,11 +6239,11 @@
       gap: 6px;
       padding: 4px 10px;
       border-radius: 9999px;
-      font-size: 0.72rem;
-      font-weight: 800;
-      background: rgba(111, 184, 168, 0.14);
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-bold);
+      background: rgba(111, 184, 168, 0.12);
       border: 1px solid rgba(111, 184, 168, 0.4);
-      color: var(--teal, #6fb8a8);
+      color: var(--sc-family-survival);
       direction: ltr;
     }
 
@@ -6070,20 +6256,20 @@
     .sc-mode-btn {
       padding: 10px 12px;
       border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.03);
-      color: var(--ink-muted);
+      border: 1px solid var(--sc-border);
+      background: var(--sc-surface-2);
+      color: var(--sc-text-muted);
       font-family: inherit;
-      font-size: 0.82rem;
-      font-weight: 800;
+      font-size: var(--sc-fs-body);
+      font-weight: var(--sc-fw-bold);
       cursor: pointer;
       transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
     }
 
     .sc-mode-btn.active {
       background: rgba(217, 112, 58, 0.16);
-      border-color: var(--ember, #d9703a);
-      color: #f4ebe1;
+      border-color: var(--sc-family-combo);
+      color: var(--sc-text);
     }
 
     .sc-room-stepper {
@@ -6095,26 +6281,27 @@
     .sc-room-step {
       padding: 8px 4px;
       border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(12, 12, 14, 0.7);
+      border: 1px solid var(--sc-border);
+      background: var(--sc-surface-2);
       text-align: center;
-      font-size: 0.72rem;
-      color: var(--ink-muted);
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-normal);
+      color: var(--sc-text-muted);
       display: flex;
       flex-direction: column;
       gap: 2px;
     }
 
     .sc-room-step.is-current {
-      border-color: var(--gold, #c9a24d);
+      border-color: var(--sc-accent);
       background: rgba(201, 162, 77, 0.14);
-      color: var(--text, #f1e8d4);
-      font-weight: 800;
+      color: var(--sc-text);
+      font-weight: var(--sc-fw-bold);
     }
 
     .sc-room-step.is-cleared {
-      border-color: rgba(111, 184, 168, 0.45);
-      color: var(--teal, #6fb8a8);
+      border-color: rgba(111, 184, 168, 0.4);
+      color: var(--sc-family-survival);
     }
 
     .sc-room-step.is-boss {
@@ -6130,22 +6317,23 @@
     .sc-metric-box {
       padding: 10px;
       border-radius: 10px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--sc-surface-2);
+      border: 1px solid var(--sc-border);
       display: flex;
       flex-direction: column;
       gap: 2px;
     }
 
     .sc-metric-label {
-      font-size: 0.72rem;
-      color: var(--ink-muted);
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-normal);
+      color: var(--sc-text-muted);
     }
 
     .sc-metric-val {
-      font-size: 0.92rem;
-      font-weight: 900;
-      color: var(--text);
+      font-size: var(--sc-fs-title);
+      font-weight: var(--sc-fw-bold);
+      color: var(--sc-text);
     }
 
     .sc-telegraph-box {
@@ -6156,13 +6344,15 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-      font-size: 0.78rem;
+      font-size: var(--sc-fs-body);
+      font-weight: var(--sc-fw-normal);
       line-height: 1.5;
     }
 
     .sc-telegraph-title {
-      font-weight: 900;
-      color: var(--ember, #d9703a);
+      font-weight: var(--sc-fw-bold);
+      font-size: var(--sc-fs-body);
+      color: var(--sc-family-combo);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -6175,32 +6365,24 @@
       gap: 6px;
     }
 
-    .sc-chip {
-      font-size: 0.7rem;
-      font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 9999px;
-      background: rgba(20, 19, 19, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      color: var(--text);
-    }
-
     .sc-chip--key {
       border-color: rgba(201, 162, 77, 0.5);
-      color: var(--gold, #c9a24d);
+      color: var(--sc-accent);
+      font-weight: var(--sc-fw-bold);
     }
 
     .sc-chip--universal {
       border-color: rgba(111, 184, 168, 0.5);
-      color: var(--teal, #6fb8a8);
+      color: var(--sc-family-survival);
+      font-weight: var(--sc-fw-bold);
     }
 
     .sc-battle-hud {
       margin-bottom: 6px;
       padding: 6px 8px;
       border-radius: 10px;
-      background: rgba(18, 18, 20, 0.92);
-      border: 1px solid rgba(176, 182, 190, 0.28);
+      background: var(--sc-surface);
+      border: 1px solid var(--sc-border);
       display: flex;
       flex-direction: column;
       gap: 4px;
@@ -6212,41 +6394,44 @@
       align-items: center;
       gap: 6px;
       flex-wrap: wrap;
-      font-size: 0.72rem;
-      font-weight: 800;
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-bold);
+      color: var(--sc-text);
     }
 
     .sc-battle-score-pill {
-      color: var(--gold, #c9a24d);
+      color: var(--sc-accent);
       direction: ltr;
     }
 
     .sc-battle-runxp-pill {
-      color: var(--teal, #6fb8a8);
-      font-size: 0.7rem;
+      color: var(--sc-family-survival);
+      font-size: var(--sc-fs-small);
     }
 
     .sc-battle-banner {
       padding: 4px 8px;
       border-radius: 8px;
-      font-size: 0.69rem;
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-normal);
       line-height: 1.38;
-      background: rgba(217, 112, 58, 0.14);
+      background: rgba(217, 112, 58, 0.12);
       border: 1px solid rgba(217, 112, 58, 0.4);
-      color: #f4ebe1;
+      color: var(--sc-text);
     }
 
     .sc-practice-reveal-banner {
       padding: 4px 8px;
       border-radius: 8px;
-      font-size: 0.69rem;
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-normal);
       line-height: 1.38;
-      background: rgba(111, 184, 168, 0.14);
+      background: rgba(111, 184, 168, 0.12);
       border: 1px solid rgba(111, 184, 168, 0.4);
-      color: var(--teal, #6fb8a8);
+      color: var(--sc-family-survival);
     }
 
-    /* Step 2: Active Pacts Bar & Draft / Boss Prep Modal */
+    /* Active Pacts Bar & Draft / Boss Prep Modal */
     .sc-active-pacts-strip {
       display: flex;
       gap: 6px;
@@ -6261,10 +6446,11 @@
       gap: 5px;
       padding: 3px 7px 3px 5px;
       border-radius: 8px;
-      background: rgba(14, 12, 11, 0.92);
-      border: 1px solid rgba(201, 162, 77, 0.35);
-      font-size: 0.68rem;
-      color: #f4ebe1;
+      background: var(--sc-surface-2);
+      border: 1px solid var(--sc-border);
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-normal);
+      color: var(--sc-text);
     }
 
     .sc-pact-chip img {
@@ -6272,21 +6458,22 @@
       height: 28px;
       object-fit: cover;
       border-radius: 4px;
-      border: 1px solid rgba(255,255,255,0.18);
+      border: 1px solid var(--sc-border);
     }
 
     .sc-pact-lvl {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 0.56rem;
+      font-family: inherit;
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-bold);
       padding: 1px 4px;
       border-radius: 4px;
-      background: rgba(201, 162, 77, 0.2);
-      color: var(--gold, #c9a24d);
+      background: rgba(201, 162, 77, 0.18);
+      color: var(--sc-accent);
     }
 
     .sc-pact-chip.is-sealed {
       opacity: 0.48;
-      filter: grayscale(0.8);
+      filter: grayscale(0.85);
       border-style: dashed;
     }
 
@@ -6300,18 +6487,18 @@
     }
 
     .sc-passage-btn {
-      padding: 3px 9px;
+      padding: 4px 10px;
       border-radius: 7px;
-      border: 1px solid rgba(168, 85, 247, 0.55);
-      background: rgba(168, 85, 247, 0.16);
-      color: #e9d5ff;
-      font-size: 0.69rem;
-      font-weight: 800;
+      border: 1px solid var(--sc-family-arcane);
+      background: var(--sc-danger-bg);
+      color: var(--sc-text);
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-bold);
       cursor: pointer;
     }
 
     .sc-passage-btn:hover {
-      background: rgba(168, 85, 247, 0.28);
+      background: rgba(201, 119, 127, 0.22);
     }
 
     .rpg-option-btn.sc-opt-eliminated {
@@ -6328,8 +6515,9 @@
       overflow-y: auto;
       padding: 14px;
       border-radius: 16px;
-      background: linear-gradient(180deg, rgba(20, 18, 16, 0.98) 0%, rgba(12, 11, 10, 0.99) 100%);
-      border: 1px solid rgba(201, 162, 77, 0.35);
+      background: var(--sc-surface);
+      border: 1px solid var(--sc-border-gold);
+      box-shadow: 0 8px 32px rgba(5, 4, 3, 0.8);
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -6344,25 +6532,27 @@
     }
 
     .sc-draft-title {
-      font-size: 0.98rem;
-      font-weight: 900;
-      color: var(--gold, #c9a24d);
+      font-size: var(--sc-fs-title);
+      font-weight: var(--sc-fw-bold);
+      color: var(--sc-accent);
       margin: 0;
     }
 
     .sc-draft-sub {
-      font-size: 0.74rem;
-      color: var(--ink-muted, #b8afa6);
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-normal);
+      color: var(--sc-text-muted);
       margin: 2px 0 0;
     }
 
     .sc-early-clue-banner {
       padding: 8px 10px;
       border-radius: 10px;
-      background: rgba(168, 85, 247, 0.12);
-      border: 1px solid rgba(168, 85, 247, 0.4);
-      font-size: 0.74rem;
-      color: #ede9fe;
+      background: var(--sc-danger-bg);
+      border: 1px solid var(--sc-danger-border);
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-normal);
+      color: var(--sc-text);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -6373,9 +6563,10 @@
       padding: 9px 10px;
       border-radius: 10px;
       background: rgba(217, 112, 58, 0.12);
-      border: 1px solid rgba(217, 112, 58, 0.45);
-      font-size: 0.74rem;
-      color: #fdece2;
+      border: 1px solid rgba(217, 112, 58, 0.4);
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-normal);
+      color: var(--sc-text);
       display: flex;
       flex-direction: column;
       gap: 6px;
@@ -6397,13 +6588,13 @@
       align-items: center;
       padding: 6px;
       border-radius: 12px;
-      background: rgba(22, 18, 16, 0.95);
-      border: 2px solid rgba(255, 255, 255, 0.12);
+      background: var(--sc-surface-2);
+      border: 1px solid var(--sc-border);
       cursor: pointer;
       transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1), border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
       user-select: none;
       touch-action: manipulation;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 4px 12px rgba(5, 4, 3, 0.4);
       min-width: 0;
     }
 
@@ -6412,16 +6603,17 @@
       transform: translateY(-2px);
     }
 
+    /* Glow restricted strictly to selected element */
     .sc-draft-card-box.is-selected {
-      border-color: var(--card-family-color, #c9a24d);
-      background: linear-gradient(180deg, rgba(38, 28, 22, 0.98) 0%, rgba(20, 16, 14, 0.98) 100%);
-      box-shadow: 0 0 16px var(--card-family-glow, rgba(201, 162, 77, 0.4)), 0 6px 18px rgba(0, 0, 0, 0.7);
+      border-color: var(--card-family-color, var(--sc-accent));
+      background: var(--sc-surface-2);
+      box-shadow: 0 0 16px var(--card-family-glow, var(--sc-accent-glow)), 0 6px 18px rgba(5, 4, 3, 0.6);
       transform: translateY(-4px) scale(1.03);
     }
 
     .sc-draft-card-box.is-key-family {
-      border-color: rgba(201, 162, 77, 0.65);
-      box-shadow: 0 0 10px rgba(201, 162, 77, 0.22);
+      border-color: var(--sc-accent);
+      box-shadow: none;
     }
 
     @keyframes scCardFloat0 {
@@ -6461,13 +6653,13 @@
       aspect-ratio: 2 / 2.75;
       border-radius: 8px;
       overflow: hidden;
-      background: #0d0b0a;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
+      background: var(--sc-bg);
+      border: 1px solid var(--sc-border);
+      box-shadow: inset 0 0 8px rgba(5, 4, 3, 0.6);
     }
 
     .sc-draft-card-box.is-selected .sc-card-art-cropper {
-      border-color: var(--card-family-color, #c9a24d);
+      border-color: var(--card-family-color, var(--sc-accent));
     }
 
     img.sc-draft-card-art {
@@ -6481,34 +6673,26 @@
       display: block;
     }
 
+    /* Decorative vignette and card halos removed per rule 5 */
     .sc-card-vignette {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      box-shadow: inset 0 0 12px 3px rgba(10, 8, 8, 0.95);
-      border-radius: 8px;
+      display: none;
     }
 
     .sc-card-family-halo {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      border-radius: 8px;
-      box-shadow: inset 0 0 14px var(--card-family-glow, rgba(201, 162, 77, 0.25));
-      opacity: 0.8;
+      display: none;
     }
 
     .sc-key-family-pill-mini {
       position: absolute;
       top: 4px;
       right: 4px;
-      font-size: 0.60rem;
-      padding: 1px 4px;
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-bold);
+      padding: 1px 5px;
       border-radius: 4px;
-      background: rgba(20, 16, 12, 0.88);
-      border: 1px solid var(--gold, #c9a24d);
-      color: var(--gold, #c9a24d);
-      font-weight: 800;
+      background: var(--sc-surface-2);
+      border: 1px solid var(--sc-accent);
+      color: var(--sc-accent);
       z-index: 2;
       display: flex;
       align-items: center;
@@ -6527,9 +6711,9 @@
     }
 
     .sc-draft-card-title {
-      font-size: 0.78rem;
-      font-weight: 900;
-      color: #f7f1e8;
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-bold);
+      color: var(--sc-text);
       line-height: 1.2;
       white-space: nowrap;
       overflow: hidden;
@@ -6538,8 +6722,7 @@
     }
 
     .sc-draft-card-box.is-selected .sc-draft-card-title {
-      color: #fff;
-      text-shadow: 0 0 8px var(--card-family-glow, rgba(201, 162, 77, 0.5));
+      color: var(--sc-text);
     }
 
     .sc-draft-card-badges {
@@ -6554,12 +6737,12 @@
       width: 100%;
       padding: 10px 12px;
       border-radius: 12px;
-      background: rgba(18, 15, 14, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: var(--sc-surface);
+      border: 1px solid var(--sc-border);
       display: flex;
       flex-direction: column;
       gap: 6px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 14px rgba(5, 4, 3, 0.4);
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
       text-align: right;
     }
@@ -6569,7 +6752,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 6px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid var(--sc-border);
       padding-bottom: 6px;
     }
 
@@ -6580,37 +6763,40 @@
     }
 
     .sc-pact-desc-name {
-      font-size: 0.88rem;
-      font-weight: 900;
-      color: #f7f1e8;
+      font-size: var(--sc-fs-body);
+      font-weight: var(--sc-fw-bold);
+      color: var(--sc-text);
     }
 
     .sc-pact-desc-effect {
-      font-size: 0.74rem;
-      font-weight: 700;
-      color: #ffd88a;
+      font-size: var(--sc-fs-body);
+      font-weight: var(--sc-fw-normal);
+      color: var(--sc-accent);
       line-height: 1.45;
     }
 
     .sc-pact-desc-lore {
-      font-size: 0.70rem;
-      color: #d6cdc3;
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-normal);
+      color: var(--sc-text-muted);
       line-height: 1.45;
     }
 
     .sc-pact-desc-tradeoff {
-      font-size: 0.68rem;
-      color: #fca5a5;
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-normal);
+      color: var(--sc-danger);
       line-height: 1.4;
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.25);
+      background: var(--sc-danger-bg);
+      border: 1px solid var(--sc-danger-border);
       border-radius: 6px;
       padding: 4px 8px;
     }
 
     .sc-pact-desc-synergy {
-      font-size: 0.68rem;
-      color: var(--gold, #c9a24d);
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-normal);
+      color: var(--sc-accent);
       line-height: 1.4;
       background: rgba(201, 162, 77, 0.12);
       border: 1px solid rgba(201, 162, 77, 0.35);
@@ -6621,33 +6807,32 @@
       gap: 4px;
     }
 
+    /* Seal Pact Button: Flat color + polygon clip-path strictly preserved */
     .btn-seal-pact {
       position: relative;
       width: 100%;
-      min-height: 44px;
+      min-height: 48px;
       padding: 8px 16px;
       font-family: inherit;
-      font-size: 0.88rem;
-      font-weight: 900;
-      color: #ffffff;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
-      background: linear-gradient(135deg, #4a080d 0%, #991b1b 50%, #3b0609 100%);
-      border: 1px solid #ef4444;
+      font-size: var(--sc-fs-body);
+      font-weight: var(--sc-fw-bold);
+      color: var(--sc-text);
+      background: var(--sc-wine);
+      border: 1px solid var(--sc-danger);
       clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
-      box-shadow: 0 0 16px rgba(185, 28, 28, 0.45), inset 0 1px 1px rgba(255, 180, 180, 0.35);
+      box-shadow: 0 2px 8px rgba(5, 4, 3, 0.4);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: transform 0.12s ease, filter 0.15s ease, box-shadow 0.15s ease;
+      transition: transform 0.12s ease, filter 0.15s ease;
       user-select: none;
       touch-action: manipulation;
     }
 
     .btn-seal-pact:hover:not(:disabled) {
       filter: brightness(1.15);
-      box-shadow: 0 0 22px rgba(220, 38, 38, 0.65), inset 0 1px 2px rgba(255, 200, 200, 0.5);
     }
 
     .btn-seal-pact:active:not(:disabled) {
@@ -6656,7 +6841,7 @@
     }
 
     .btn-seal-pact:disabled {
-      opacity: 0.55;
+      opacity: 0.45;
       cursor: not-allowed;
       filter: grayscale(0.5);
     }
@@ -6673,7 +6858,7 @@
     .sc-slash-blade {
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.95) 48%, rgba(255, 215, 215, 0.98) 50%, rgba(239, 68, 68, 0.9) 52%, transparent 60%);
+      background: linear-gradient(135deg, transparent 40%, rgba(241, 232, 212, 0.95) 48%, rgba(201, 119, 127, 0.9) 52%, transparent 60%);
       animation: scBladeFlash 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       mix-blend-mode: screen;
     }
@@ -6690,7 +6875,7 @@
     .sc-blood-splat svg {
       width: 85%;
       height: 85%;
-      filter: drop-shadow(0 0 6px rgba(136, 19, 55, 0.9));
+      filter: drop-shadow(0 0 6px var(--sc-wine));
     }
 
     @keyframes scBladeFlash {
@@ -6737,23 +6922,24 @@
     }
 
     .sc-family-pill {
-      font-size: 0.65rem;
-      font-weight: 800;
+      font-size: var(--sc-fs-small);
+      font-weight: var(--sc-fw-bold);
       padding: 2px 6px;
       border-radius: 6px;
-      background: rgba(255, 255, 255, 0.08);
-      color: #e7dfd6;
+      background: var(--sc-surface-2);
+      color: var(--sc-text);
     }
 
     .sc-replace-box {
       padding: 8px 10px;
       border-radius: 10px;
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.4);
+      background: var(--sc-danger-bg);
+      border: 1px solid var(--sc-danger-border);
       display: flex;
       flex-direction: column;
       gap: 6px;
-      font-size: 0.73rem;
+      font-size: var(--sc-fs-small);
+      color: var(--sc-text);
     }
 
     .sc-swap-row {
@@ -6762,7 +6948,7 @@
       flex-wrap: wrap;
     }
 
-    /* Step 3: Lazy-Loaded 512x512 Pixel-Art Scorched City Boss Sprites */
+    /* Lazy-Loaded 512x512 Pixel-Art Scorched City Boss Sprites */
     .stage-wrapper.mode-scorched-city.has-sc-boss {
       height: clamp(220px, 60vw, 312px);
     }
@@ -6790,10 +6976,37 @@
       pointer-events: none;
     }
 
-    .hidden { display: none !important; }
+        .hidden { display: none !important; }
 </style>
 </head>
 <body>
+  <!-- SCORCHED CITY PIXEL-ART 16x16 SVG SPRITE (Layer 2) -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;" id="scSvgSprite" aria-hidden="true">
+    <defs>
+      <symbol id="icon-key" viewBox="0 0 16 16" shape-rendering="crispEdges">
+        <path fill="currentColor" d="M7 2a3 3 0 0 0-3 3c0 1.3.8 2.4 2 2.8V13h2v-2h2V9h-2V7.8A3 3 0 0 0 7 2zm0 2a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+      </symbol>
+      <symbol id="icon-shield" viewBox="0 0 16 16" shape-rendering="crispEdges">
+        <path fill="currentColor" d="M8 1L3 3v5c0 4 3 6.5 5 7 2-.5 5-3 5-7V3L8 1zm0 2.2l3 1.2v3.6c0 2.8-2 4.7-3 5.2-1-.5-3-2.4-3-5.2V4.4l3-1.2z"/>
+      </symbol>
+      <symbol id="icon-lock" viewBox="0 0 16 16" shape-rendering="crispEdges">
+        <path fill="currentColor" d="M5 6V4a3 3 0 0 1 6 0v2h1v8H4V6h1zm2 0h2V4a1 1 0 0 0-2 0v2zm1 3a1.5 1.5 0 0 0-.5 2.9V13h1v-1.1A1.5 1.5 0 0 0 8 9z"/>
+      </symbol>
+      <symbol id="icon-swap" viewBox="0 0 16 16" shape-rendering="crispEdges">
+        <path fill="currentColor" d="M3 4h8v2l3-3-3-3v2H1v2h2zm10 8H5v-2l-3 3 3 3v-2h10v-2z"/>
+      </symbol>
+      <symbol id="icon-skull" viewBox="0 0 16 16" shape-rendering="crispEdges">
+        <path fill="currentColor" d="M4 2h8v2h2v4h-2v2h-1v2H9v2H7v-2H5v-2H4V8H2V4h2V2zm2 4v2h2V6H6zm4 0v2h2V6h-2z"/>
+      </symbol>
+      <symbol id="icon-info" viewBox="0 0 16 16" shape-rendering="crispEdges">
+        <path fill="currentColor" d="M2 2h12v12H2V2zm6 2H6v2h2V4zm0 4H6v6h4v-2H8V8z"/>
+      </symbol>
+      <symbol id="icon-chevron" viewBox="0 0 16 16" shape-rendering="crispEdges">
+        <path fill="currentColor" d="M10 3L5 8l5 5 1.4-1.4L7.8 8l3.6-3.6L10 3z"/>
+      </symbol>
+    </defs>
+  </svg>
+
 
   <!-- APP LAUNCH / SPLASH SCREEN -->
   <div id="appSplashScreen" class="app-splash-screen" aria-hidden="true">
@@ -9339,6 +9552,12 @@ window.switchWorld = switchWorld;
 
 let selectedScorchedEntryMode = "standard"; // "standard" | "daily"
 let selectedScorchedNefrinTier = 0; // 0 (عادی) to 5 (نفرین ۵)
+
+function scIcon(id, cls = "") {
+  const safeCls = cls ? ` ${cls}` : "";
+  return `<svg class="sc-icon${safeCls}" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><use href="#icon-${id}"></use></svg>`;
+}
+window.scIcon = scIcon;
 
 function renderScorchedCityHub(container, user) {
   if (!container) return;
