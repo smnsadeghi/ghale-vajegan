@@ -339,7 +339,13 @@ BEGIN
 END;
 $$;
 
--- 7. Grant execution privileges to anon & authenticated roles
+-- 7. Grant table & execution privileges to anon & authenticated roles
+GRANT USAGE ON SCHEMA public TO anon, authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE gv_students TO anon, authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE gv_notifications TO anon, authenticated;
+GRANT ALL ON SEQUENCE gv_notifications_id_seq TO anon, authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE gv_state TO anon, authenticated;
+
 GRANT EXECUTE ON FUNCTION register_student(TEXT, TEXT, TEXT, TEXT) TO anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION resubmit_student_registration(TEXT, TEXT, TEXT, TEXT) TO anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION teacher_review_student(TEXT, TEXT, TEXT, TEXT) TO anon, authenticated, service_role;

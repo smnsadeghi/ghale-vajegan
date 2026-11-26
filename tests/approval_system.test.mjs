@@ -14,6 +14,7 @@ const htmlContent = fs.readFileSync(path.join(PROJECT_DIR, 'index.html'), 'utf8'
 const swContent = fs.readFileSync(path.join(PROJECT_DIR, 'sw.js'), 'utf8');
 const sqlMigration1 = fs.readFileSync(path.join(PROJECT_DIR, 'supabase/migrations/001_student_approval_system.sql'), 'utf8');
 const sqlMigration2 = fs.readFileSync(path.join(PROJECT_DIR, 'supabase/migrations/002_teacher_delete_student.sql'), 'utf8');
+const sqlMigration4 = fs.readFileSync(path.join(PROJECT_DIR, 'supabase/migrations/004_cross_device_approval_sync.sql'), 'utf8');
 
 // Simulation of the Approval System logic (mirroring RPC & client models)
 class ApprovalSystemSimulator {
@@ -242,6 +243,27 @@ class ApprovalSystemSimulator {
     return Array.from(this.students.values())
       .filter(s => s.account_status === 'approved' || !s.account_status)
       .sort((a, b) => (b.xp || 0) - (a.xp || 0));
+  }
+
+  // RPC 5: get_teacher_students_queue (SECURITY DEFINER)
+  getTeacherStudentsQueue(adminPass) {
+    if (adminPass !== this.TEACHER_PASS) {
+      throw new Error('دسترسی غیرمجاز: رمز عبور دبیر اشتباه است.');
+    }
+    return Array.from(this.students.values()).sort((a, b) => {
+      const tA = a.submitted_at ? new Date(a.submitted_at).getTime() : 0;
+      const tB = b.submitted_at ? new Date(b.submitted_at).getTime() : 0;
+      return tB - tA;
+    });
+  }
+
+  // RPC 6: get_student_status (SECURITY DEFINER)
+  getStudentStatus(phone) {
+    if (!phone || !/^09\d{9}$/.test(phone)) {
+      throw new Error('شماره همراه نامعتبر است.');
+    }
+    const student = this.students.get(phone);
+    return student ? { ...student } : null;
   }
 }
 
@@ -577,5 +599,126 @@ describe('Integration Verification with Production Code (HTML, SW, SQL v4.1.1)',
       htmlContent.includes('accountStatus === "approved"') || htmlContent.includes("accountStatus === 'approved'"),
       'renderLeaderboardTable filters by approved accountStatus'
     );
+  });
+
+  it('7. SQL Migration 004 defines get_teacher_students_queue and get_student_status RPCs and schema grants', () => {
+    assert.ok(sqlMigration4.includes('GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE gv_students TO anon, authenticated;'));
+    assert.ok(sqlMigration4.includes('CREATE OR REPLACE FUNCTION get_teacher_students_queue'));
+    assert.ok(sqlMigration4.includes('CREATE OR REPLACE FUNCTION get_student_status'));
+    assert.ok(sqlMigration4.includes('SECURITY DEFINER'));
+    assert.ok(sqlMigration4.includes("IF p_admin_pass IS DISTINCT FROM '431380'"));
+  });
+
+  it('8. Index.html supports cross-device sync RPCs and status banners', () => {
+    const currentHtml = fs.readFileSync(path.join(PROJECT_DIR, 'index.html'), 'utf8');
+    assert.ok(currentHtml.includes('get_teacher_students_queue'), 'index.html calls get_teacher_students_queue');
+    assert.ok(currentHtml.includes('get_student_status'), 'index.html calls get_student_status');
+    assert.ok(currentHtml.includes('id="teacherSyncStatusBanner"'), 'index.html has teacherSyncStatusBanner');
+    assert.ok(currentHtml.includes('window._lastCloudSyncError'), 'index.html tracks sync error state');
+  });
+});
+
+describe('Student Registration Approval System - Cross-Device Sync & Multi-Client Resilience', () => {
+  let cloudDb;
+
+  beforeEach(() => {
+    cloudDb = new ApprovalSystemSimulator();
+  });
+
+  it('1. Cross-device registration: multiple phones submit, teacher on separate phone pulls full queue via RPC', () => {
+    // Phone 1 (Student A)
+    const phoneA = '09121111111';
+    cloudDb.registerStudent(phoneA, cloudDb.hashPin('1111'), 'سارا محمدی', 'تجربی');
+
+    // Phone 2 (Student B)
+    const phoneB = '09122222222';
+    cloudDb.registerStudent(phoneB, cloudDb.hashPin('2222'), 'علی احمدی', 'ریاضی');
+
+    // Teacher Phone (Empty local cache initially)
+    const teacherLocalState = {};
+
+    // Teacher pulls queue via get_teacher_students_queue
+    const cloudStudents = cloudDb.getTeacherStudentsQueue('431380');
+    assert.equal(cloudStudents.length, 2);
+
+    // Merge into teacher local state
+    cloudStudents.forEach(s => {
+      teacherLocalState[s.code] = s;
+    });
+
+    assert.ok(teacherLocalState[phoneA]);
+    assert.equal(teacherLocalState[phoneA].name, 'سارا محمدی');
+    assert.equal(teacherLocalState[phoneA].account_status, 'pending');
+
+    assert.ok(teacherLocalState[phoneB]);
+    assert.equal(teacherLocalState[phoneB].name, 'علی احمدی');
+    assert.equal(teacherLocalState[phoneB].account_status, 'pending');
+  });
+
+  it('2. Cross-device approval & rejection sync propagates accurately to student devices', () => {
+    const phoneA = '09121111111';
+    const phoneB = '09122222222';
+    cloudDb.registerStudent(phoneA, cloudDb.hashPin('1111'), 'سارا محمدی', 'تجربی');
+    cloudDb.registerStudent(phoneB, cloudDb.hashPin('2222'), 'علی احمدی', 'ریاضی');
+
+    // Teacher reviews students
+    cloudDb.teacherReview('431380', phoneA, 'approved');
+    cloudDb.teacherReview('431380', phoneB, 'rejected', 'عکس پروفایل یا مشخصات ناقص است');
+
+    // Student A checks status from their phone
+    const studentAStatus = cloudDb.getStudentStatus(phoneA);
+    assert.equal(studentAStatus.account_status, 'approved');
+    assert.ok(studentAStatus.reviewed_at);
+
+    // Student B checks status from their phone
+    const studentBStatus = cloudDb.getStudentStatus(phoneB);
+    assert.equal(studentBStatus.account_status, 'rejected');
+    assert.equal(studentBStatus.rejection_reason, 'عکس پروفایل یا مشخصات ناقص است');
+
+    // Student B resubmits from phone
+    const resubmitRes = cloudDb.resubmitRegistration(phoneB, '2222', 'علی احمدی فرد', 'ریاضی');
+    assert.equal(resubmitRes.account_status, 'pending');
+    assert.equal(resubmitRes.resubmission_count, 1);
+
+    // Teacher refreshes queue and observes resubmission
+    const updatedQueue = cloudDb.getTeacherStudentsQueue('431380');
+    const teacherSeenB = updatedQueue.find(s => s.code === phoneB);
+    assert.equal(teacherSeenB.account_status, 'pending');
+    assert.equal(teacherSeenB.resubmission_count, 1);
+    assert.equal(teacherSeenB.name, 'علی احمدی فرد');
+  });
+
+  it('3. RPC authorization: unauthorized attempts to fetch teacher queue fail', () => {
+    assert.throws(
+      () => cloudDb.getTeacherStudentsQueue('wrong_password'),
+      /دسترسی غیرمجاز/
+    );
+  });
+
+  it('4. Single student status check handles valid phone and non-existent records safely', () => {
+    assert.equal(cloudDb.getStudentStatus('09129999999'), null);
+    assert.throws(
+      () => cloudDb.getStudentStatus('12345'),
+      /شماره همراه نامعتبر/
+    );
+  });
+
+  it('5. Leaderboard across devices remains strictly isolated to approved students', () => {
+    const phoneA = '09121111111';
+    const phoneB = '09122222222';
+    cloudDb.registerStudent(phoneA, cloudDb.hashPin('1111'), 'سارا محمدی', 'تجربی');
+    cloudDb.registerStudent(phoneB, cloudDb.hashPin('2222'), 'علی احمدی', 'ریاضی');
+
+    // Neither is approved yet
+    assert.equal(cloudDb.getLeaderboard().length, 0);
+
+    // Teacher approves Student A and awards XP
+    cloudDb.teacherReview('431380', phoneA, 'approved');
+    cloudDb.students.get(phoneA).xp = 450;
+
+    const lb = cloudDb.getLeaderboard();
+    assert.equal(lb.length, 1);
+    assert.equal(lb[0].code, phoneA);
+    assert.equal(lb[0].xp, 450);
   });
 });
