@@ -7003,7 +7003,475 @@
       pointer-events: none;
     }
 
-        .hidden { display: none !important; }
+        /* ==========================================================================
+       SCORCHED CITY ARENA LAYOUT (Layer 5: Zero-Scroll #viewArena.sc-arena)
+       ========================================================================== */
+    #viewArena.sc-arena {
+      position: fixed !important;
+      inset: 0 !important;
+      max-width: 480px !important;
+      margin: 0 auto !important;
+      height: 100dvh !important;
+      max-height: 100dvh !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      overflow: hidden !important;
+      padding: env(safe-area-inset-top, 0px) 12px env(safe-area-inset-bottom, 0px) 12px !important;
+      gap: 0 !important;
+      top: 0 !important;
+      box-sizing: border-box !important;
+    }
+
+    /* Single-row 48px Header */
+    .sc-arena .arena-row-1,
+    .sc-arena .arena-row-2 {
+      display: contents !important;
+    }
+
+    .sc-arena .top-hud.hud-arena {
+      height: 48px !important;
+      min-height: 48px !important;
+      max-height: 48px !important;
+      padding: 0 4px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 6px !important;
+      border-bottom: 1px solid var(--sc-border) !important;
+      flex-shrink: 0 !important;
+      box-sizing: border-box !important;
+      margin: 0 !important;
+    }
+
+    .sc-arena #btnBackToMap {
+      order: 1 !important;
+      min-width: 36px !important;
+      width: 36px !important;
+      height: 36px !important;
+      min-height: 36px !important;
+      flex-shrink: 0 !important;
+      padding: 0 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    .sc-arena #arenaStageTitle {
+      order: 2 !important;
+      flex: 1 1 auto !important;
+      min-width: 0 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      font-size: var(--sc-fs-body) !important;
+      font-weight: var(--sc-fw-bold) !important;
+      color: var(--sc-accent) !important;
+      text-align: right !important;
+      line-height: 1.2 !important;
+    }
+
+    .sc-arena #arenaPlayerChip {
+      display: none !important;
+    }
+
+    .sc-arena #candlesHud {
+      order: 3 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 3px !important;
+      flex-shrink: 0 !important;
+    }
+
+    .sc-arena .hud-candle {
+      width: 14px !important;
+      height: 20px !important;
+    }
+
+    .sc-arena .hud-candle svg {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .sc-arena .arena-counter-wrap {
+      order: 4 !important;
+      padding: 2px 6px !important;
+      border-radius: 9999px !important;
+      background: var(--sc-surface-2) !important;
+      border: 1px solid var(--sc-border) !important;
+      flex-shrink: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+    }
+
+    .sc-arena #arenaCounter {
+      font-size: 0.75rem !important;
+      color: var(--sc-text) !important;
+      line-height: 1 !important;
+    }
+
+    .sc-arena .arena-timer-wrap {
+      order: 5 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+      flex-shrink: 0 !important;
+    }
+
+    .sc-arena #arenaTimer {
+      font-size: 0.82rem !important;
+      color: var(--sc-text) !important;
+    }
+
+    /* Scene clamp(104px, 21dvh, 180px) across all rooms */
+    .sc-arena #stageScene,
+    .sc-arena #stageScene.has-sc-boss,
+    .sc-arena .stage-wrapper.mode-scorched-city.has-sc-boss {
+      height: clamp(104px, 21dvh, 180px) !important;
+      min-height: clamp(104px, 21dvh, 180px) !important;
+      max-height: clamp(104px, 21dvh, 180px) !important;
+      flex-shrink: 0 !important;
+      position: relative !important;
+      overflow: hidden !important;
+      margin: 0 !important;
+    }
+
+    .sc-arena #scBossCanvas {
+      height: 100% !important;
+      max-height: 100% !important;
+      width: auto !important;
+      aspect-ratio: 1 !important;
+      object-fit: contain !important;
+      image-rendering: pixelated !important;
+    }
+
+    .sc-arena .road-obstacle.arena-enemy.is-sc-boss {
+      height: 90% !important;
+      max-height: 90% !important;
+      width: auto !important;
+      bottom: 5% !important;
+    }
+
+    /* Enemy HP Status Bar: 28px, thin bar, XP badge hidden */
+    .sc-arena #enemyHpWrap {
+      height: 28px !important;
+      min-height: 28px !important;
+      max-height: 28px !important;
+      padding: 2px 8px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      gap: 2px !important;
+      background: var(--sc-surface-2) !important;
+      border-top: 1px solid var(--sc-border) !important;
+      border-bottom: 1px solid var(--sc-border) !important;
+      flex-shrink: 0 !important;
+      box-sizing: border-box !important;
+      margin: 0 !important;
+    }
+
+    .sc-arena .enemy-hp-meta {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      font-size: 0.72rem !important;
+      line-height: 1 !important;
+      margin: 0 !important;
+    }
+
+    .sc-arena .enemy-skull-icon,
+    .sc-arena #speakerTag,
+    .sc-arena #hellBonusBadge,
+    .sc-arena #dialogXP {
+      display: none !important;
+    }
+
+    .sc-arena #enemyNameLabel {
+      font-size: 0.75rem !important;
+      font-weight: var(--sc-fw-bold) !important;
+      color: var(--sc-text) !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+
+    .sc-arena #enemyHpNum {
+      font-size: 0.72rem !important;
+      color: var(--sc-text-muted) !important;
+    }
+
+    .sc-arena .enemy-hp-track {
+      height: 4px !important;
+      min-height: 4px !important;
+      max-height: 4px !important;
+      border-radius: 2px !important;
+      background: rgba(0, 0, 0, 0.4) !important;
+      overflow: hidden !important;
+      margin: 0 !important;
+    }
+
+    .sc-arena #enemyHpFill {
+      height: 100% !important;
+    }
+
+    /* Scorched City Battle HUD: 2-row grid (64px) */
+    .sc-arena #scorchedCityBattleHud {
+      height: 64px !important;
+      min-height: 64px !important;
+      max-height: 64px !important;
+      display: grid !important;
+      grid-template-rows: 24px 40px !important;
+      grid-template-columns: 1fr auto !important;
+      padding: 0 4px !important;
+      flex-shrink: 0 !important;
+      position: relative !important;
+      box-sizing: border-box !important;
+      align-items: center !important;
+      margin: 0 !important;
+      gap: 0 !important;
+    }
+
+    .sc-arena .sc-battle-hud-row {
+      grid-row: 1 !important;
+      grid-column: 1 / -1 !important;
+      height: 24px !important;
+      min-height: 24px !important;
+      max-height: 24px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 8px !important;
+      line-height: 1.2 !important;
+    }
+
+    .sc-arena #scBattleRoomMeta {
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      font-size: var(--sc-fs-small) !important;
+      color: var(--sc-text-muted) !important;
+      flex: 1 1 auto !important;
+      min-width: 0 !important;
+    }
+
+    .sc-arena #scBattleScorePill {
+      flex-shrink: 0 !important;
+      font-size: 0.8rem !important;
+      color: var(--sc-accent) !important;
+      font-weight: var(--sc-fw-bold) !important;
+    }
+
+    .sc-arena #scBattleRunXpPill {
+      display: none !important;
+    }
+
+    .sc-arena #scArenaPactsStrip {
+      grid-row: 2 !important;
+      grid-column: 1 !important;
+      height: 40px !important;
+      min-height: 40px !important;
+      max-height: 40px !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+      overflow-x: auto !important;
+      padding: 0 !important;
+    }
+
+    .sc-arena #scArenaQuickTools {
+      grid-row: 2 !important;
+      grid-column: 2 !important;
+      height: 40px !important;
+      min-height: 40px !important;
+      max-height: 40px !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+      margin: 0 !important;
+    }
+
+    /* Banners out of document flow */
+    .sc-arena #scBattleTelegraphBanner {
+      position: absolute !important;
+      right: 124px !important;
+      left: 64px !important;
+      bottom: 6px !important;
+      height: 28px !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+      padding: 2px 8px !important;
+      background: rgba(217, 112, 58, 0.15) !important;
+      border: 1px solid rgba(217, 112, 58, 0.4) !important;
+      border-radius: 6px !important;
+      color: var(--sc-text) !important;
+      font-size: 0.72rem !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      pointer-events: none !important;
+      z-index: 5 !important;
+    }
+
+    .sc-arena #scPracticeRevealBanner {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      z-index: 20 !important;
+      background: var(--sc-surface-2) !important;
+      border: 1px solid var(--sc-danger-border) !important;
+      color: var(--sc-text) !important;
+      border-radius: 8px !important;
+      padding: 6px 10px !important;
+      font-size: var(--sc-fs-small) !important;
+      line-height: 1.35 !important;
+      display: -webkit-box !important;
+      -webkit-line-clamp: 3 !important;
+      -webkit-box-orient: vertical !important;
+      overflow: hidden !important;
+      box-shadow: 0 4px 16px rgba(5, 4, 3, 0.8) !important;
+      pointer-events: auto !important;
+    }
+
+    /* RPG Dialog & Quiz Area */
+    .sc-arena #rpgDialog,
+    .sc-arena .rpg-dialog {
+      padding: 8px 12px !important;
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      background: var(--sc-surface) !important;
+      border-radius: 12px !important;
+      border: 1px solid var(--sc-border) !important;
+      box-shadow: 0 4px 16px rgba(5, 4, 3, 0.5) !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+
+    .sc-arena .rpg-dialog-inner {
+      display: flex !important;
+      flex-direction: column !important;
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      gap: 6px !important;
+      justify-content: space-between !important;
+      height: 100% !important;
+    }
+
+    .sc-arena #phaseQuiz {
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      position: relative !important;
+      gap: 6px !important;
+    }
+
+    .sc-arena .rpg-question {
+      flex: 1 1 auto !important;
+      min-height: 56px !important;
+      max-height: none !important;
+      font-size: clamp(0.85rem, 3.4vw, 1rem) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      padding: 4px 8px !important;
+      position: relative !important;
+      margin: 0 !important;
+      box-sizing: border-box !important;
+    }
+
+    .sc-arena .qz-prompt-text {
+      display: -webkit-box !important;
+      -webkit-line-clamp: 4 !important;
+      -webkit-box-orient: vertical !important;
+      overflow: hidden !important;
+      line-height: 1.35 !important;
+      font-size: inherit !important;
+    }
+
+    .sc-arena #qzOptions {
+      display: grid !important;
+      grid-template-columns: 1fr !important;
+      gap: 8px !important;
+      grid-auto-rows: minmax(48px, auto) !important;
+      width: 100% !important;
+      margin: 0 !important;
+      flex-shrink: 0 !important;
+    }
+
+    .sc-arena .rpg-option-btn {
+      width: 100% !important;
+      min-height: 48px !important;
+      height: auto !important;
+      max-height: none !important;
+      padding: 6px 12px !important;
+      font-family: inherit !important;
+      font-size: 0.85rem !important;
+      font-weight: var(--sc-fw-bold) !important;
+      color: var(--sc-text) !important;
+      background: var(--sc-surface-2) !important;
+      border: 1px solid var(--sc-border) !important;
+      border-radius: 10px !important;
+      box-shadow: 0 2px 8px rgba(5, 4, 3, 0.4) !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      cursor: pointer !important;
+      touch-action: manipulation !important;
+      user-select: none !important;
+      box-sizing: border-box !important;
+      transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease !important;
+    }
+
+    .sc-arena .rpg-option-btn:hover {
+      border-color: var(--sc-accent) !important;
+    }
+
+    .sc-arena .rpg-option-btn.is-long,
+    .sc-arena .rpg-option-btn.is-long .opt-text {
+      font-size: 0.78rem !important;
+    }
+
+    .sc-arena .rpg-option-btn .opt-box {
+      width: 22px !important;
+      height: 22px !important;
+      min-width: 22px !important;
+      border-radius: 6px !important;
+      background: rgba(201, 162, 77, 0.12) !important;
+      border: 1px solid var(--sc-border) !important;
+      color: var(--sc-accent) !important;
+      font-size: 0.8rem !important;
+      font-weight: var(--sc-fw-bold) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-shrink: 0 !important;
+    }
+
+    .sc-arena .rpg-option-btn .opt-text {
+      flex: 1 1 auto !important;
+      text-align: right !important;
+      line-height: 1.25 !important;
+      display: -webkit-box !important;
+      -webkit-line-clamp: 2 !important;
+      -webkit-box-orient: vertical !important;
+      overflow: hidden !important;
+      color: var(--sc-text) !important;
+      font-size: 0.85rem !important;
+    }
+
+    .sc-arena .rpg-option-btn.is-long .opt-text {
+      font-size: 0.78rem !important;
+    }
+
+    .hidden { display: none !important; }
 </style>
 </head>
 <body>
@@ -12831,14 +13299,16 @@ function updateScorchedCityBattleHud(revealedInfo = null) {
     if (run.room === 4) {
       const tel = sc.getRoom4BossTelegraph(run);
       if (tel) {
-        telBanner.innerHTML = `<strong>📜 پیش‌آگهی باس اتاق ۵ (${tel.bossName}):</strong> ${tel.lawShortFa || tel.lawTitle} — هدف: <span class="font-pixel" dir="ltr">${tel.predictedRoom5TargetScore}</span> | 🔑 ${tel.keyFamilyLabel} | 🧠 ${tel.universalAnswerPath.title}`;
+        telBanner.innerHTML = `${scIcon('icon-key')} باس: ${tel.bossName} · ${tel.lawTitle}`;
+        telBanner.title = `${tel.bossName}: ${tel.lawShortFa || tel.lawTitle} (هدف: ${tel.predictedRoom5TargetScore})`;
         telBanner.classList.remove("hidden");
       } else {
         telBanner.classList.add("hidden");
       }
     } else if (run.room === 5 && run.activeBossSlot && run.activeBossSlot.boss) {
       const boss = run.activeBossSlot.boss;
-      telBanner.innerHTML = `<strong>👑 باس اتاق ۵ (${boss.name}):</strong> ${boss.lawShortFa || boss.lawTitle} — ${boss.universalAnswerPath.title}`;
+      telBanner.innerHTML = `${scIcon('icon-key')} باس: ${boss.name} · ${boss.lawTitle}`;
+      telBanner.title = `${boss.name}: ${boss.lawShortFa || boss.lawTitle}`;
       telBanner.classList.remove("hidden");
     } else {
       telBanner.classList.add("hidden");
@@ -13889,6 +14359,7 @@ function renderNextQuizQuestion() {
     const btn = document.createElement("button");
     const isEliminated = eliminatedOptIndices.has(idx);
     btn.className = "rpg-option-btn";
+    if (optText && optText.length > 50) btn.classList.add("is-long");
     if (isEliminated) btn.classList.add("sc-opt-eliminated");
     btn.disabled = isEliminated;
     btn.setAttribute("tabindex", isEliminated ? "-1" : "0");

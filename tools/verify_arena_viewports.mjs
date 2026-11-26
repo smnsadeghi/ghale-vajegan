@@ -227,6 +227,49 @@ for (const vp of viewports) {
   console.log(`Screenshot saved to: ${outPath}`);
 }
 
+// Also verify Scorched City Battle Viewport Zero-Scroll
+console.log('\n--- Verifying Scorched City Battle Viewports ---');
+await send('Runtime.evaluate', {
+  expression: `(function() {
+    startScorchedCityBattle('standard', false);
+  })()`
+});
+
+for (const vp of [
+  { name: '360x640', width: 360, height: 640 },
+  { name: '390x667', width: 390, height: 667 },
+  { name: '390x844', width: 390, height: 844 }
+]) {
+  await send('Emulation.setDeviceMetricsOverride', {
+    width: vp.width,
+    height: vp.height,
+    deviceScaleFactor: 2,
+    mobile: true
+  });
+  await send('Emulation.setVisibleSize', { width: vp.width, height: vp.height });
+  await new Promise(r => setTimeout(r, 400));
+
+  const scMetrics = await send('Runtime.evaluate', {
+    expression: `(function() {
+      const arena = document.getElementById('viewArena');
+      const dialog = document.getElementById('rpgDialog');
+      return {
+        viewport: '${vp.name}',
+        arenaScrollHeight: arena ? arena.scrollHeight : 0,
+        arenaClientHeight: arena ? arena.clientHeight : 0,
+        dialogScrollHeight: dialog ? dialog.scrollHeight : 0,
+        dialogClientHeight: dialog ? dialog.clientHeight : 0,
+        hasScArena: arena ? arena.classList.contains('sc-arena') : false
+      };
+    })()`,
+    returnByValue: true
+  });
+
+  const scData = scMetrics.result.value;
+  const noScroll = scData.arenaScrollHeight <= scData.arenaClientHeight && scData.dialogScrollHeight <= scData.dialogClientHeight;
+  console.log(`Scorched City ${vp.name}: Arena=${scData.arenaScrollHeight}/${scData.arenaClientHeight}, Dialog=${scData.dialogScrollHeight}/${scData.dialogClientHeight} -> Zero-Scroll: ${noScroll}`);
+}
+
 ws.close();
 chrome.kill();
 server.close();
