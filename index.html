@@ -6508,20 +6508,31 @@
       pointer-events: none;
     }
 
+    #scDraftOverlay {
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     .sc-draft-modal {
       width: 100%;
       max-width: 440px;
-      max-height: 88vh;
-      overflow-y: auto;
-      padding: 14px;
-      border-radius: 16px;
+      height: 100dvh;
+      max-height: 100dvh;
+      overflow: hidden;
+      padding: max(8px, env(safe-area-inset-top, 8px)) 12px max(8px, env(safe-area-inset-bottom, 8px)) 12px;
+      border-radius: 0;
+      border: none;
       background: var(--sc-surface);
-      border: 1px solid var(--sc-border-gold);
       box-shadow: 0 8px 32px rgba(5, 4, 3, 0.8);
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      justify-content: space-between;
+      gap: 6px;
       text-align: right;
+      box-sizing: border-box;
     }
 
     .sc-draft-header {
@@ -6529,6 +6540,7 @@
       justify-content: space-between;
       align-items: flex-start;
       gap: 8px;
+      flex-shrink: 0;
     }
 
     .sc-draft-title {
@@ -6536,6 +6548,7 @@
       font-weight: var(--sc-fw-bold);
       color: var(--sc-accent);
       margin: 0;
+      line-height: 1.2;
     }
 
     .sc-draft-sub {
@@ -6543,33 +6556,36 @@
       font-weight: var(--sc-fw-normal);
       color: var(--sc-text-muted);
       margin: 2px 0 0;
+      line-height: 1.2;
     }
 
     .sc-early-clue-banner {
-      padding: 8px 10px;
-      border-radius: 10px;
+      padding: 4px 8px;
+      border-radius: 8px;
       background: var(--sc-danger-bg);
       border: 1px solid var(--sc-danger-border);
       font-size: var(--sc-fs-small);
-      font-weight: var(--sc-fw-normal);
       color: var(--sc-text);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      gap: 6px;
+      flex-shrink: 0;
+      line-height: 1.2;
     }
 
     .sc-boss-prep-panel {
-      padding: 9px 10px;
-      border-radius: 10px;
+      padding: 6px 10px;
+      border-radius: 8px;
       background: rgba(217, 112, 58, 0.12);
       border: 1px solid rgba(217, 112, 58, 0.4);
       font-size: var(--sc-fs-small);
-      font-weight: var(--sc-fw-normal);
       color: var(--sc-text);
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
+      flex-shrink: 0;
+      line-height: 1.25;
     }
 
     .sc-draft-cards-row {
@@ -6577,7 +6593,9 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
       width: 100%;
-      margin: 4px 0 2px;
+      margin: 0;
+      flex-shrink: 1;
+      align-items: start;
     }
 
     .sc-draft-card-box,
@@ -6586,74 +6604,44 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 6px;
-      border-radius: 12px;
+      padding: 4px;
+      border-radius: 10px;
       background: var(--sc-surface-2);
       border: 1px solid var(--sc-border);
       cursor: pointer;
-      transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1), border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      transition: transform 0.15s ease, opacity 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
       user-select: none;
       touch-action: manipulation;
       box-shadow: 0 4px 12px rgba(5, 4, 3, 0.4);
       min-width: 0;
+      opacity: 0.65;
     }
 
     .sc-draft-card-box:hover {
       border-color: rgba(201, 162, 77, 0.45);
-      transform: translateY(-2px);
     }
 
-    /* Glow restricted strictly to selected element */
     .sc-draft-card-box.is-selected {
       border-color: var(--card-family-color, var(--sc-accent));
+      border-width: 2px;
       background: var(--sc-surface-2);
       box-shadow: 0 0 16px var(--card-family-glow, var(--sc-accent-glow)), 0 6px 18px rgba(5, 4, 3, 0.6);
-      transform: translateY(-4px) scale(1.03);
+      transform: translateY(-4px);
+      opacity: 1;
     }
 
     .sc-draft-card-box.is-key-family {
       border-color: var(--sc-accent);
-      box-shadow: none;
-    }
-
-    @keyframes scCardFloat0 {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-3px); }
-    }
-    @keyframes scCardFloat1 {
-      0%, 100% { transform: translateY(-2px); }
-      50% { transform: translateY(1.5px); }
-    }
-    @keyframes scCardFloat2 {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-3px); }
-    }
-
-    .sc-draft-card-box:nth-child(1):not(.is-selected) {
-      animation: scCardFloat0 4.0s ease-in-out infinite;
-    }
-    .sc-draft-card-box:nth-child(2):not(.is-selected) {
-      animation: scCardFloat1 4.6s ease-in-out infinite;
-    }
-    .sc-draft-card-box:nth-child(3):not(.is-selected) {
-      animation: scCardFloat2 4.2s ease-in-out infinite;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .sc-draft-card-box:nth-child(1),
-      .sc-draft-card-box:nth-child(2),
-      .sc-draft-card-box:nth-child(3) {
-        animation: none !important;
-      }
     }
 
     .sc-card-art-cropper {
       position: relative;
       width: 100%;
-      aspect-ratio: 2 / 2.75;
-      border-radius: 8px;
+      aspect-ratio: 2 / 3;
+      max-height: clamp(90px, 18dvh, 140px);
+      border-radius: 6px;
       overflow: hidden;
-      background: var(--sc-bg);
+      background: var(--sc-surface);
       border: 1px solid var(--sc-border);
       box-shadow: inset 0 0 8px rgba(5, 4, 3, 0.6);
     }
@@ -6666,47 +6654,66 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transform: scale(1.44);
-      transform-origin: center center;
-      image-rendering: pixelated;
-      image-rendering: crisp-edges;
       display: block;
     }
 
-    /* Decorative vignette and card halos removed per rule 5 */
-    .sc-card-vignette {
-      display: none;
-    }
-
+    /* Decorative vignette, card halos and floating animations removed */
+    .sc-card-vignette,
     .sc-card-family-halo {
-      display: none;
+      display: none !important;
     }
 
-    .sc-key-family-pill-mini {
+    .sc-card-badge-status {
       position: absolute;
       top: 4px;
       right: 4px;
-      font-size: var(--sc-fs-small);
+      font-size: 0.62rem;
       font-weight: var(--sc-fw-bold);
-      padding: 1px 5px;
+      padding: 1px 4px;
       border-radius: 4px;
-      background: var(--sc-surface-2);
-      border: 1px solid var(--sc-accent);
-      color: var(--sc-accent);
+      background: rgba(10, 8, 7, 0.85);
+      border: 1px solid var(--sc-border);
+      color: var(--sc-text);
       z-index: 2;
+      line-height: 1.2;
+    }
+
+    .sc-card-top-icons {
+      position: absolute;
+      top: 4px;
+      left: 4px;
       display: flex;
       align-items: center;
-      gap: 2px;
-      line-height: 1.2;
+      gap: 3px;
+      z-index: 2;
+    }
+
+    .sc-key-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--sc-accent);
+      box-shadow: 0 0 6px var(--sc-accent-glow);
+      display: inline-block;
+    }
+
+    .sc-shield-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      color: #a855f7;
+      filter: drop-shadow(0 0 3px rgba(168, 85, 247, 0.8));
     }
 
     .sc-draft-card-meta {
       width: 100%;
-      margin-top: 6px;
+      margin-top: 4px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
+      gap: 2px;
       text-align: center;
     }
 
@@ -6721,30 +6728,34 @@
       max-width: 100%;
     }
 
-    .sc-draft-card-box.is-selected .sc-draft-card-title {
-      color: var(--sc-text);
-    }
-
-    .sc-draft-card-badges {
+    .sc-draft-card-subline {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 4px;
-      flex-wrap: wrap;
+      font-size: 0.7rem;
+    }
+
+    .sc-family-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
     }
 
     .sc-pact-desc-panel {
       width: 100%;
-      padding: 10px 12px;
-      border-radius: 12px;
+      padding: 6px 10px;
+      border-radius: 8px;
       background: var(--sc-surface);
       border: 1px solid var(--sc-border);
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 3px;
       box-shadow: 0 4px 14px rgba(5, 4, 3, 0.4);
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
       text-align: right;
+      flex-shrink: 0;
+      box-sizing: border-box;
     }
 
     .sc-pact-desc-header {
@@ -6752,8 +6763,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 6px;
+      padding-bottom: 3px;
       border-bottom: 1px solid var(--sc-border);
-      padding-bottom: 6px;
     }
 
     .sc-pact-desc-title-group {
@@ -6766,60 +6777,30 @@
       font-size: var(--sc-fs-body);
       font-weight: var(--sc-fw-bold);
       color: var(--sc-text);
+      line-height: 1.2;
     }
 
     .sc-pact-desc-effect {
-      font-size: var(--sc-fs-body);
-      font-weight: var(--sc-fw-normal);
-      color: var(--sc-accent);
-      line-height: 1.45;
-    }
-
-    .sc-pact-desc-lore {
-      font-size: var(--sc-fs-small);
-      font-weight: var(--sc-fw-normal);
-      color: var(--sc-text-muted);
-      line-height: 1.45;
-    }
-
-    .sc-pact-desc-tradeoff {
-      font-size: var(--sc-fs-small);
-      font-weight: var(--sc-fw-normal);
-      color: var(--sc-danger);
-      line-height: 1.4;
-      background: var(--sc-danger-bg);
-      border: 1px solid var(--sc-danger-border);
-      border-radius: 6px;
-      padding: 4px 8px;
-    }
-
-    .sc-pact-desc-synergy {
       font-size: var(--sc-fs-small);
       font-weight: var(--sc-fw-normal);
       color: var(--sc-accent);
-      line-height: 1.4;
-      background: rgba(201, 162, 77, 0.12);
-      border: 1px solid rgba(201, 162, 77, 0.35);
-      border-radius: 6px;
-      padding: 4px 8px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      line-height: 1.35;
+      margin: 0;
     }
 
     /* Seal Pact Button: Flat color + polygon clip-path strictly preserved */
     .btn-seal-pact {
       position: relative;
       width: 100%;
-      min-height: 48px;
-      padding: 8px 16px;
+      min-height: 40px;
+      padding: 6px 14px;
       font-family: inherit;
       font-size: var(--sc-fs-body);
       font-weight: var(--sc-fw-bold);
       color: var(--sc-text);
       background: var(--sc-wine);
       border: 1px solid var(--sc-danger);
-      clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+      clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
       box-shadow: 0 2px 8px rgba(5, 4, 3, 0.4);
       cursor: pointer;
       display: flex;
@@ -6829,6 +6810,7 @@
       transition: transform 0.12s ease, filter 0.15s ease;
       user-select: none;
       touch-action: manipulation;
+      flex-shrink: 0;
     }
 
     .btn-seal-pact:hover:not(:disabled) {
@@ -6844,6 +6826,51 @@
       opacity: 0.45;
       cursor: not-allowed;
       filter: grayscale(0.5);
+    }
+
+    .sc-btn-skip-draft {
+      background: transparent;
+      border: none;
+      color: var(--sc-text-muted);
+      font-size: var(--sc-fs-small);
+      cursor: pointer;
+      padding: 2px 6px;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .sc-btn-skip-draft:hover {
+      color: var(--sc-text);
+    }
+
+    .sc-list-item-row {
+      min-height: 44px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: var(--sc-surface-2);
+      border: 1px solid var(--sc-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease;
+      box-sizing: border-box;
+      width: 100%;
+      text-align: right;
+    }
+
+    .sc-list-item-row:hover {
+      border-color: var(--sc-accent);
+      background: rgba(201, 162, 77, 0.08);
+    }
+
+    .sc-list-item-row.is-selected {
+      border-color: var(--sc-accent);
+      border-width: 2px;
+      background: rgba(201, 162, 77, 0.15);
     }
 
     .sc-blood-seal-overlay {
@@ -12833,10 +12860,10 @@ function updateScorchedCityBattleHud(revealedInfo = null) {
   }
 }
 
-let pendingReplaceChoiceCardId = null;
-let isBossPrepSwapPanelOpen = false;
-let selectedBossSwapDiscardId = null;
-let selectedDraftCardId = null;
+var pendingReplaceChoiceCardId = null;
+var isBossPrepSwapPanelOpen = false;
+var selectedBossSwapDiscardId = null;
+var selectedDraftCardId = null;
 
 function openScorchedCityDraftOverlay(onDone = null) {
   const sc = (typeof ScorchedCity !== "undefined" && ScorchedCity) ? ScorchedCity : null;
@@ -12867,22 +12894,199 @@ function openScorchedCityDraftOverlay(onDone = null) {
   document.getElementById("phaseVictory")?.classList.add("hidden");
   document.getElementById("phaseDefeat")?.classList.add("hidden");
 
+  const copy = (sc && sc.SC_COPY) ? sc.SC_COPY.draft : {
+    title: 'انتخاب پیمان',
+    subtitle: (n) => `پس از اتاق ${toFaDigits(n)}`,
+    skip: 'ادامه بدون پیمان',
+    bossPrepTitle: 'آماده‌سازی باس',
+    freeSwap: 'تعویض رایگان',
+    replacePrompt: 'کدام پیمان جایگزین شود؟',
+    pickBtn: (name) => `انتخاب ${name}`,
+    upgradeBtn: (name, roman) => `ارتقای ${name} به ${roman}`,
+    replaceBtn: 'جایگزین‌کردن…',
+    badges: { new: 'جدید', upgrade: 'ارتقا', replace: 'جایگزینی', immune: 'مصون از مهر باس', bossKey: 'کلید باس' }
+  };
+
   const activeSlots = sc.getActivePactSlots(run);
   const canDoSwap = Boolean(draft.isBossPrep && draft.freeSwapAvailable && !run.bossPrepSwapUsed && activeSlots.length > 0);
-  const titleText = draft.isBossPrep
-    ? ((sc && sc.SC_COPY) ? sc.SC_COPY.draft.bossPrepTitle : "آماده‌سازی باس")
-    : ((sc && sc.SC_COPY) ? sc.SC_COPY.draft.title : "انتخاب پیمان");
-  const subText = draft.resolved
-    ? ""
-    : (draft.isBossPrep ? "" : ((sc && sc.SC_COPY) ? sc.SC_COPY.draft.subtitle(draft.afterRoom) : `پس از اتاق ${toFaDigits(draft.afterRoom)}`));
+
+  // VIEW 1: REPLACE PICKER VIEW (when 3 slots full and user picked a 4th distinct card)
+  if (pendingReplaceChoiceCardId) {
+    const newCard = sc.getPactCard(pendingReplaceChoiceCardId);
+    const newCardAsset = sc.getPactAssetPath ? sc.getPactAssetPath(newCard.id, 1) : (newCard.assets ? newCard.assets[1] : '');
+    modal.innerHTML = `
+      <div class="sc-draft-header">
+        <div>
+          <h3 class="sc-draft-title">${copy.replaceBtn.replace('…', '')}</h3>
+          <p class="sc-draft-sub">${copy.replacePrompt}</p>
+        </div>
+        <span class="sc-pact-counter">${toFaDigits(activeSlots.length)}/۳</span>
+      </div>
+
+      <div class="sc-replace-box" id="scReplacePickerBox" style="flex:1; display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px; padding:6px 10px; background:var(--sc-surface-2); border-radius:8px; border:1px solid var(--sc-border);">
+          <img src="./${newCardAsset}" alt="${newCard.titleFa}" style="width:28px; height:42px; object-fit:cover; border-radius:4px; flex-shrink:0;">
+          <div style="flex:1; font-size:var(--sc-fs-small);">
+            <div>پیمان جدید: <strong style="color:var(--sc-accent);">${newCard.titleFa}</strong> (I)</div>
+            <div style="color:var(--sc-text-muted); font-size:0.75rem;">${sc.getPactShortEffect(newCard.id, 1)}</div>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:6px; flex:1;">
+          <div style="font-size:var(--sc-fs-small); color:var(--sc-text-muted);">پیمان فعال برای خروج را لمس کنید:</div>
+          ${activeSlots.map(s => `
+            <button type="button" class="sc-list-item-row sc-replace-slot-btn" data-replace-id="${s.cardId}">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <img src="./${s.assetPath}" alt="${s.titleFa}" style="width:26px; height:38px; object-fit:cover; border-radius:4px;">
+                <div>
+                  <div style="font-weight:bold; color:var(--sc-text); font-size:var(--sc-fs-small);">${s.titleFa}</div>
+                  <div style="font-size:0.7rem; color:var(--sc-text-muted);">${s.shortEffect}</div>
+                </div>
+              </div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span class="sc-tag" style="color:${s.familyInfo ? s.familyInfo.accentHex : 'var(--sc-accent)'};">${s.familyInfo ? s.familyInfo.nameFa : ''}</span>
+                <span class="sc-pact-lvl">${s.levelRoman}</span>
+              </div>
+            </button>
+          `).join('')}
+        </div>
+
+        <button type="button" id="btnCancelReplace" class="sc-btn sc-btn-outline" style="width:100%; min-height:38px;">
+          بازگشت به گزینه‌ها
+        </button>
+      </div>
+    `;
+
+    modal.querySelectorAll('.sc-replace-slot-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        playSelectSound();
+        const replaceId = btn.dataset.replaceId;
+        if (!pendingReplaceChoiceCardId) return;
+        sc.selectDraftCard(pendingReplaceChoiceCardId, replaceId);
+        pendingReplaceChoiceCardId = null;
+        const latestRun = sc.getActiveRun();
+        if (latestRun && latestRun.pendingDraft && latestRun.pendingDraft.isBossPrep) {
+          openScorchedCityDraftOverlay(onDone);
+        } else {
+          overlay.classList.add("hidden");
+          if (typeof onDone === "function") onDone();
+          else startScorchedCityBattle(run.mode, true);
+        }
+      });
+    });
+
+    modal.querySelector('#btnCancelReplace')?.addEventListener('click', () => {
+      playSelectSound();
+      pendingReplaceChoiceCardId = null;
+      openScorchedCityDraftOverlay(onDone);
+    });
+    return;
+  }
+
+  // VIEW 2: BOSS PREP FREE SWAP VIEW
+  if (canDoSwap && isBossPrepSwapPanelOpen) {
+    const allCards = sc.getAllPactCards();
+    const ownedIds = new Set(activeSlots.map(s => s.cardId));
+    const swapCandidates = allCards.filter(c => !ownedIds.has(c.id));
+    if (!selectedBossSwapDiscardId || !ownedIds.has(selectedBossSwapDiscardId)) {
+      selectedBossSwapDiscardId = activeSlots[0] ? activeSlots[0].cardId : null;
+    }
+
+    modal.innerHTML = `
+      <div class="sc-draft-header">
+        <div>
+          <h3 class="sc-draft-title">${copy.freeSwap}</h3>
+          <p class="sc-draft-sub">تعویض رایگان اتاق ۴ با یک پیمان تراز I</p>
+        </div>
+        <button type="button" id="btnCancelBossSwap" class="sc-btn sc-btn-sm sc-btn-outline">بازگشت</button>
+      </div>
+
+      <div class="sc-boss-prep-panel" id="scBossSwapPanel" style="flex:1; display:flex; flex-direction:column; justify-content:space-between; gap:6px;">
+        <div>
+          <div style="font-size:var(--sc-fs-small); color:var(--sc-text-muted); margin-bottom:3px;">۱) پیمان برای خروج:</div>
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            ${activeSlots.map(s => `
+              <button type="button" class="sc-list-item-row sc-swap-discard-btn ${selectedBossSwapDiscardId === s.cardId ? 'is-selected' : ''}" data-discard-id="${s.cardId}">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <img src="./${s.assetPath}" alt="${s.titleFa}" style="width:22px; height:32px; object-fit:cover; border-radius:3px;">
+                  <span style="font-weight:bold; font-size:var(--sc-fs-small);">${s.titleFa}</span>
+                  <span class="sc-pact-lvl">${s.levelRoman}</span>
+                </div>
+                <span class="sc-tag" style="color:${s.familyInfo ? s.familyInfo.accentHex : 'var(--sc-accent)'};">${s.familyInfo ? s.familyInfo.nameFa : ''}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div style="flex:1; display:flex; flex-direction:column;">
+          <div style="font-size:var(--sc-fs-small); color:var(--sc-text-muted); margin-bottom:3px;">۲) پیمان جایگزین جدید (تراز I):</div>
+          <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:5px; flex:1; max-height:210px; overflow-y:auto;">
+            ${swapCandidates.map(c => {
+              const isKeyFam = (c.family === draft.guaranteedKeyFamily);
+              const cardAsset = sc.getPactAssetPath ? sc.getPactAssetPath(c.id, 1) : (c.assets ? c.assets[1] : '');
+              return `
+                <button type="button" class="sc-list-item-row sc-swap-acquire-btn" data-new-id="${c.id}" style="${isKeyFam ? 'border-color:var(--sc-accent); background:rgba(201,162,77,0.12);' : ''}">
+                  <div style="display:flex; align-items:center; gap:6px; overflow:hidden;">
+                    <img src="./${cardAsset}" alt="${c.titleFa}" style="width:20px; height:30px; object-fit:cover; border-radius:3px; flex-shrink:0;">
+                    <div style="font-size:0.75rem; text-align:right; overflow:hidden;">
+                      <div style="font-weight:bold; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${isKeyFam ? scIcon('icon-key') + ' ' : ''}${c.titleFa}</div>
+                      <div style="font-size:0.65rem; color:${c.familyInfo ? c.familyInfo.accentHex : 'var(--sc-text-muted)'};">${c.familyInfo ? c.familyInfo.nameFa : ''}</div>
+                    </div>
+                  </div>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </div>
+
+        <button type="button" id="btnScToggleBossSwap" class="sc-btn sc-btn-outline" style="width:100%; min-height:36px;">
+          انصراف و بازگشت به درافت
+        </button>
+      </div>
+    `;
+
+    modal.querySelectorAll('.sc-swap-discard-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        playSelectSound();
+        selectedBossSwapDiscardId = btn.dataset.discardId;
+        openScorchedCityDraftOverlay(onDone);
+      });
+    });
+
+    modal.querySelectorAll('.sc-swap-acquire-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        playSelectSound();
+        const newId = btn.dataset.newId;
+        if (selectedBossSwapDiscardId && newId) {
+          sc.performBossPrepFreeSwap(selectedBossSwapDiscardId, newId);
+          isBossPrepSwapPanelOpen = false;
+          selectedBossSwapDiscardId = null;
+          openScorchedCityDraftOverlay(onDone);
+        }
+      });
+    });
+
+    const closeSwap = () => {
+      playSelectSound();
+      isBossPrepSwapPanelOpen = false;
+      openScorchedCityDraftOverlay(onDone);
+    };
+    modal.querySelector('#btnCancelBossSwap')?.addEventListener('click', closeSwap);
+    modal.querySelector('#btnScToggleBossSwap')?.addEventListener('click', closeSwap);
+    return;
+  }
+
+  // VIEW 3: NORMAL DRAFT VIEW (Room 1, 2, 3, 4)
+  const titleText = draft.isBossPrep ? copy.bossPrepTitle : copy.title;
+  const subText = draft.resolved ? "" : (draft.isBossPrep ? "" : copy.subtitle(draft.afterRoom));
 
   let earlyClueHtml = "";
   if (draft.earlyKeyFamilyClue && !draft.isBossPrep) {
     const clue = draft.earlyKeyFamilyClue;
     earlyClueHtml = `
       <div class="sc-early-clue-banner" id="scRoom3EarlyClue">
-        <span>🔮 نشانه اولیه باس (پایان اتاق ۳): <strong>خانواده ${clue.nameFa}</strong></span>
-        <span class="sc-family-pill" style="border:1px solid ${clue.accentHex}; color:${clue.accentHex};">🔑 ${clue.badgeGlyph}</span>
+        <span>${scIcon('icon-key')} خانواده کلیدی باس: <strong>${clue.nameFa}</strong></span>
+        <span class="sc-tag" style="border-color:${clue.accentHex}; color:${clue.accentHex};">${clue.badgeGlyph}</span>
       </div>
     `;
   }
@@ -12895,64 +13099,18 @@ function openScorchedCityDraftOverlay(onDone = null) {
     }
     bossPrepHtml = `
       <div class="sc-boss-prep-panel" id="scRoom4BossPrepBanner">
-        <div><strong>📜 قانون کامل باس اتاق ۵ (${tel.bossName}):</strong> ${tel.lawShortFa || tel.lawTitle}</div>
-        <div style="opacity:0.9;">${tel.lawDescription}</div>
-        <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-top:2px;">
-          <span>🔑 خانواده کلیدی باس: <strong>${tel.keyFamilyLabel}</strong> (تضمین‌شده در آفر)</span>
-          <span>🎯 هدف اتاق ۵: <strong class="font-pixel" dir="ltr">${tel.predictedRoom5TargetScore}</strong></span>
+        <div><strong>قانون باس (${tel.bossName}):</strong> ${tel.lawShortFa || tel.lawTitle}</div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span>هدف: <strong dir="ltr">${toFaDigits(tel.predictedRoom5TargetScore)}</strong></span>
+          <span style="color:var(--sc-accent);">${scIcon('icon-key')} کلید: <strong>${tel.keyFamilyLabel}</strong></span>
         </div>
-        ${canDoSwap ? `
-          <button type="button" id="btnScToggleBossSwap" class="btn-ghost" style="margin-top:4px; min-height:36px; font-size:0.75rem; border-color:rgba(201,162,77,0.5); color:var(--gold);">
-            ${(sc && sc.SC_COPY) ? sc.SC_COPY.draft.freeSwap : "تعویض رایگان"}
-          </button>
-        ` : (run.bossPrepSwapUsed ? `<div style="color:var(--teal); font-weight:800;">✓ تعویض رایگان اتاق ۴ انجام شد.</div>` : "")}
-      </div>
-    `;
-  }
-
-  let replaceBoxHtml = "";
-  if (pendingReplaceChoiceCardId) {
-    const newCard = sc.getPactCard(pendingReplaceChoiceCardId);
-    replaceBoxHtml = `
-      <div class="sc-replace-box" id="scReplacePickerBox">
-        <div>${(sc && sc.SC_COPY) ? sc.SC_COPY.draft.replacePrompt : "کدام پیمان جایگزین شود؟"}</div>
-        <div class="sc-swap-row">
-          ${activeSlots.map(s => `
-            <button type="button" class="btn-ghost sc-replace-slot-btn" data-replace-id="${s.cardId}" style="flex:1; min-height:36px; font-size:0.72rem;">
-              جایگزینی با ${s.titleFa} (${s.levelRoman})
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
+          ${canDoSwap ? `
+            <button type="button" id="btnScToggleBossSwap" class="sc-btn sc-btn-sm sc-btn-outline" style="min-height:28px; font-size:0.72rem; padding:2px 8px;">
+              ${scIcon('icon-swap')} ${copy.freeSwap}
             </button>
-          `).join("")}
-          <button type="button" id="btnCancelReplace" class="btn-ghost" style="min-height:36px; font-size:0.72rem;">انصراف</button>
+          ` : (run.bossPrepSwapUsed ? `<span class="sc-tag" style="color:var(--sc-success);">تعویض انجام شد</span>` : `<span></span>`)}
         </div>
-      </div>
-    `;
-  }
-
-  let swapPanelHtml = "";
-  if (canDoSwap && isBossPrepSwapPanelOpen) {
-    const allCards = sc.getAllPactCards();
-    const ownedIds = new Set(activeSlots.map(s => s.cardId));
-    const swapCandidates = allCards.filter(c => !ownedIds.has(c.id));
-    swapPanelHtml = `
-      <div class="sc-replace-box" style="border-color:rgba(201,162,77,0.55); background:rgba(201,162,77,0.08);" id="scBossSwapPanel">
-        <div><strong>۱) پیمان فعلی برای خروج را انتخاب کنید:</strong></div>
-        <div class="sc-swap-row">
-          ${activeSlots.map(s => `
-            <button type="button" class="btn-ghost sc-swap-discard-btn" data-discard-id="${s.cardId}" style="flex:1; min-height:34px; font-size:0.71rem; ${selectedBossSwapDiscardId === s.cardId ? "border-color:var(--gold); color:var(--gold);" : ""}">
-              خروج: ${s.titleFa} (${s.levelRoman})
-            </button>
-          `).join("")}
-        </div>
-        ${selectedBossSwapDiscardId ? `
-          <div style="margin-top:4px;"><strong>۲) پیمان جایگزین جدید (سطح I) را برگزینید:</strong></div>
-          <div class="sc-swap-row" style="max-height:130px; overflow-y:auto;">
-            ${swapCandidates.map(c => `
-              <button type="button" class="btn-ghost sc-swap-acquire-btn" data-new-id="${c.id}" style="min-height:32px; font-size:0.7rem; ${c.family === (draft.guaranteedKeyFamily) ? "border-color:var(--gold);" : ""}">
-                ${c.family === draft.guaranteedKeyFamily ? "🔑 " : ""}${c.titleFa} (${c.familyInfo.nameFa})
-              </button>
-            `).join("")}
-          </div>
-        ` : ""}
       </div>
     `;
   }
@@ -12966,6 +13124,10 @@ function openScorchedCityDraftOverlay(onDone = null) {
   const cardsHtml = choices.map(ch => {
     const isSelected = (selectedChoice && selectedChoice.cardId === ch.cardId);
     const familyHex = (ch.familyInfo && ch.familyInfo.accentHex) ? ch.familyInfo.accentHex : '#c9a24d';
+    const actionBadgeLabel = ch.action === 'upgrade'
+      ? copy.badges.upgrade
+      : (ch.requiresReplacement ? copy.badges.replace : copy.badges.new);
+
     return `
       <div class="sc-draft-card-box sc-draft-card ${ch.isBossKeyFamily ? "is-key-family" : ""} ${isSelected ? "is-selected" : ""}"
            data-card-id="${ch.cardId}"
@@ -12975,15 +13137,17 @@ function openScorchedCityDraftOverlay(onDone = null) {
            style="--card-family-color: ${familyHex}; --card-family-glow: ${familyHex}55;">
         <div class="sc-card-art-cropper">
           <img class="sc-draft-card-art" src="./${ch.assetPath}" alt="${ch.titleFa}">
-          <div class="sc-card-vignette"></div>
-          <div class="sc-card-family-halo"></div>
-          ${ch.isBossKeyFamily ? `<div class="sc-key-family-pill-mini">🔑 کلیدی</div>` : ""}
+          <div class="sc-card-badge-status">${actionBadgeLabel}</div>
+          <div class="sc-card-top-icons">
+            ${ch.isBossKeyFamily ? `<span class="sc-key-dot" title="${copy.badges.bossKey}"></span>` : ""}
+            ${ch.immuneToBossSeal ? `<span class="sc-shield-badge" title="${copy.badges.immune}">${scIcon('icon-shield')}</span>` : ""}
+          </div>
           <div class="sc-blood-seal-overlay" id="bloodOverlay_${ch.cardId}"></div>
         </div>
         <div class="sc-draft-card-meta">
           <div class="sc-draft-card-title">${ch.titleFa}</div>
-          <div class="sc-draft-card-badges">
-            <span class="sc-family-pill" style="color:${familyHex}; border:1px solid ${familyHex}55;">${ch.familyInfo ? ch.familyInfo.nameFa : ""}</span>
+          <div class="sc-draft-card-subline">
+            <span class="sc-family-dot" style="background:${familyHex};"></span>
             <span class="sc-pact-lvl">${ch.nextLevelRoman}</span>
           </div>
         </div>
@@ -12993,41 +13157,19 @@ function openScorchedCityDraftOverlay(onDone = null) {
 
   function renderSelectedDescriptionHtml(choice) {
     if (!choice) return "";
-    const actionLabel = draft.resolved
-      ? (draft.pickedCardId === choice.cardId ? "انتخاب شد" : "پیمان ثبت‌شده")
-      : (choice.action === "upgrade"
-          ? ((sc && sc.SC_COPY) ? sc.SC_COPY.draft.badges.upgrade : "ارتقا")
-          : (choice.requiresReplacement
-              ? ((sc && sc.SC_COPY) ? sc.SC_COPY.draft.badges.replace : "جایگزینی")
-              : ((sc && sc.SC_COPY) ? sc.SC_COPY.draft.badges.new : "جدید")));
-    const tel = draft.bossTelegraph;
+    const familyHex = (choice.familyInfo && choice.familyInfo.accentHex) ? choice.familyInfo.accentHex : 'var(--sc-accent)';
     return `
       <div class="sc-pact-desc-header">
         <div class="sc-pact-desc-title-group">
-          <span>${choice.familyInfo ? (choice.familyInfo.badgeGlyph || "📜") : "📜"}</span>
+          <span class="sc-family-dot" style="background:${familyHex};"></span>
           <span class="sc-pact-desc-name">${choice.titleFa}</span>
           <span class="sc-pact-lvl">${choice.nextLevelRoman}</span>
         </div>
-        <div style="display:flex; gap:4px; align-items:center;">
-          <span class="sc-family-pill" style="color:${choice.familyInfo ? choice.familyInfo.accentHex : "var(--gold)"}; border:1px solid ${choice.familyInfo ? choice.familyInfo.accentHex : "var(--gold)"}66;">
-            ${choice.familyInfo ? choice.familyInfo.nameFa : ""}
-          </span>
-          <span class="sc-family-pill" style="color:#fde047; border:1px solid rgba(253,224,71,0.4);">${actionLabel}</span>
-        </div>
+        <span class="sc-tag" style="color:${familyHex}; border-color:${familyHex}55;">
+          ${choice.familyInfo ? choice.familyInfo.nameFa : ""}
+        </span>
       </div>
       <div class="sc-pact-desc-effect">${choice.description}</div>
-      ${choice.tradeOffs ? `<div class="sc-pact-desc-tradeoff">${choice.tradeOffs}</div>` : `<div class="sc-pact-desc-tradeoff" style="display:none;"></div>`}
-      <div class="sc-pact-desc-lore" style="display:none;"></div>
-      ${choice.isBossKeyFamily ? `
-        <div class="sc-pact-desc-synergy">
-          ${(sc && sc.SC_COPY) ? sc.SC_COPY.draft.badges.bossKey : "کلید باس"}
-        </div>
-      ` : ""}
-      ${choice.immuneToBossSeal ? `
-        <div class="sc-pact-desc-synergy" style="border-color:rgba(168,85,247,0.4); color:#d8b4fe; background:rgba(168,85,247,0.12);">
-          ${(sc && sc.SC_COPY) ? sc.SC_COPY.draft.badges.immune : "مصون از مهر باس"}
-        </div>
-      ` : ""}
     `;
   }
 
@@ -13037,12 +13179,12 @@ function openScorchedCityDraftOverlay(onDone = null) {
     }
     if (!choice) return "انتخاب پیمان";
     if (choice.action === "upgrade") {
-      return (sc && sc.SC_COPY) ? sc.SC_COPY.draft.upgradeBtn(choice.titleFa, choice.nextLevelRoman) : `ارتقای ${choice.titleFa} به ${choice.nextLevelRoman}`;
+      return copy.upgradeBtn(choice.titleFa, choice.nextLevelRoman);
     }
     if (choice.requiresReplacement) {
-      return (sc && sc.SC_COPY) ? sc.SC_COPY.draft.replaceBtn : "جایگزین‌کردن…";
+      return copy.replaceBtn;
     }
-    return (sc && sc.SC_COPY) ? sc.SC_COPY.draft.pickBtn(choice.titleFa) : `انتخاب ${choice.titleFa}`;
+    return copy.pickBtn(choice.titleFa);
   }
 
   modal.innerHTML = `
@@ -13051,28 +13193,26 @@ function openScorchedCityDraftOverlay(onDone = null) {
         <h3 class="sc-draft-title">${titleText}</h3>
         <p class="sc-draft-sub">${subText}</p>
       </div>
-      <span class="sc-pact-lvl">${toFaDigits(activeSlots.length)}/3</span>
+      <span class="sc-pact-counter">${toFaDigits(activeSlots.length)}/۳</span>
     </div>
     <div class="sc-active-pacts-strip">${renderScorchedCityPactStripHTML(sc, run)}</div>
     ${earlyClueHtml}
     ${bossPrepHtml}
-    ${replaceBoxHtml}
-    ${swapPanelHtml}
     <div class="sc-draft-cards-row" id="scDraftCardsRow">${cardsHtml}</div>
     <div class="sc-pact-desc-panel" id="scPactDescriptionPanel">
       ${renderSelectedDescriptionHtml(selectedChoice)}
     </div>
-    <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
+    <div style="display:flex; flex-direction:column; gap:4px; margin-top:2px; flex-shrink:0;">
       ${draft.resolved ? `
-        <button type="button" id="btnScProceedNextRoom" class="btn-seal-pact" style="background:linear-gradient(135deg, #1e3a1e 0%, #15803d 50%, #14532d 100%); border-color:#22c55e;">
+        <button type="button" id="btnScProceedNextRoom" class="btn-seal-pact" style="background:var(--sc-success); border-color:var(--sc-success);">
           ${getConfirmButtonLabel(selectedChoice)}
         </button>
       ` : `
         <button type="button" id="btnConfirmSealPact" class="btn-seal-pact" ${!selectedChoice ? "disabled" : ""}>
           ${getConfirmButtonLabel(selectedChoice)}
         </button>
-        <button type="button" id="btnScSkipDraft" class="btn-ghost" style="width:100%; min-height:36px; font-size:0.75rem;">
-          ${(sc && sc.SC_COPY) ? sc.SC_COPY.draft.skip : "ادامه بدون پیمان"}
+        <button type="button" id="btnScSkipDraft" class="sc-btn-skip-draft">
+          ${copy.skip}
         </button>
       `}
     </div>
@@ -13167,54 +13307,11 @@ function openScorchedCityDraftOverlay(onDone = null) {
     });
   }
 
-  modal.querySelectorAll(".sc-replace-slot-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      playSelectSound();
-      const replaceId = btn.dataset.replaceId;
-      if (!pendingReplaceChoiceCardId) return;
-      sc.selectDraftCard(pendingReplaceChoiceCardId, replaceId);
-      pendingReplaceChoiceCardId = null;
-      const latestRun = sc.getActiveRun();
-      if (latestRun && latestRun.pendingDraft && latestRun.pendingDraft.isBossPrep) {
-        openScorchedCityDraftOverlay(onDone);
-      } else {
-        overlay.classList.add("hidden");
-        if (typeof onDone === "function") onDone();
-        else startScorchedCityBattle(run.mode, true);
-      }
-    });
-  });
-
-  modal.querySelector("#btnCancelReplace")?.addEventListener("click", () => {
-    pendingReplaceChoiceCardId = null;
-    openScorchedCityDraftOverlay(onDone);
-  });
-
   modal.querySelector("#btnScToggleBossSwap")?.addEventListener("click", () => {
     playSelectSound();
-    isBossPrepSwapPanelOpen = !isBossPrepSwapPanelOpen;
+    isBossPrepSwapPanelOpen = true;
     selectedBossSwapDiscardId = activeSlots[0] ? activeSlots[0].cardId : null;
     openScorchedCityDraftOverlay(onDone);
-  });
-
-  modal.querySelectorAll(".sc-swap-discard-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      selectedBossSwapDiscardId = btn.dataset.discardId;
-      openScorchedCityDraftOverlay(onDone);
-    });
-  });
-
-  modal.querySelectorAll(".sc-swap-acquire-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      playSelectSound();
-      const newId = btn.dataset.newId;
-      if (selectedBossSwapDiscardId && newId) {
-        sc.performBossPrepFreeSwap(selectedBossSwapDiscardId, newId);
-        isBossPrepSwapPanelOpen = false;
-        selectedBossSwapDiscardId = null;
-        openScorchedCityDraftOverlay(onDone);
-      }
-    });
   });
 
   modal.querySelector("#btnScProceedNextRoom")?.addEventListener("click", () => {

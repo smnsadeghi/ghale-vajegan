@@ -423,16 +423,13 @@ describe('Scorched City (شهر سوخته) — Step 2 Pacts, Draft Cadence & Bo
       // 1. Seamless card framing
       assert.ok(htmlContent.includes('sc-draft-cards-row'), 'Must use 3-card horizontal grid .sc-draft-cards-row');
       assert.ok(htmlContent.includes('sc-card-art-cropper'), 'Must frame artwork in .sc-card-art-cropper');
-      assert.ok(htmlContent.includes('transform: scale(1.44)'), 'Must scale artwork by 1.44 to crop outer gray borders');
-      assert.ok(htmlContent.includes('image-rendering: pixelated'), 'Must use crisp pixelated image rendering');
-      assert.ok(htmlContent.includes('sc-card-vignette'), 'Must use .sc-card-vignette for dark gothic edge blending');
+      assert.ok(htmlContent.includes('object-fit: cover'), 'Must fit artwork with object-fit: cover');
+      assert.ok(!htmlContent.includes('transform: scale(1.44)'), 'Must not scale artwork by 1.44');
 
       // 2. Clear title below artwork + dedicated description panel on tap
       assert.ok(htmlContent.includes('sc-draft-card-title'), 'Title must be placed below artwork');
       assert.ok(htmlContent.includes('id="scPactDescriptionPanel"'), 'Must provide dedicated #scPactDescriptionPanel');
       assert.ok(htmlContent.includes('sc-pact-desc-effect'), 'Panel must include .sc-pact-desc-effect');
-      assert.ok(htmlContent.includes('sc-pact-desc-lore'), 'Panel must include .sc-pact-desc-lore');
-      assert.ok(htmlContent.includes('sc-pact-desc-tradeoff'), 'Panel must include .sc-pact-desc-tradeoff');
 
       // 3. Subtle animations & Gothic bladed blood-seal feedback
       assert.ok(htmlContent.includes('btn-seal-pact'), 'Must style gothic bladed button .btn-seal-pact');
