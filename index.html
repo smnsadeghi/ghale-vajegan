@@ -7350,7 +7350,7 @@
           <div class="sc-battle-hud-row">
             <span id="scBattleRoomMeta">دور ۱ • اتاق ۱ از ۵</span>
             <span id="scBattleScorePill" class="sc-battle-score-pill font-pixel" dir="ltr">0 / 300</span>
-            <span id="scBattleRunXpPill" class="sc-battle-runxp-pill">XP نبرد: ۰</span>
+            <span id="scBattleRunXpPill" class="sc-battle-runxp-pill">XP ران: ۰</span>
           </div>
           <div id="scArenaPactsStrip" class="sc-active-pacts-strip"></div>
           <div id="scArenaQuickTools" class="sc-arena-quick-tools hidden"></div>
@@ -9419,8 +9419,8 @@ function renderScorchedCityHub(container, user) {
         <span class="sc-metric-val">دور ${toFaDigits(curCycle)} • اتاق ${toFaDigits(curRoom)} از ۵</span>
       </div>
       <div class="sc-metric-box">
-        <span class="sc-metric-label">XP داخل ران (ایزوله)</span>
-        <span class="sc-metric-val" style="color:var(--teal);">${toFaDigits(curRunXp)} XP نبرد • 🕯️ ${toFaDigits(curCandles)}</span>
+        <span class="sc-metric-label">XP ران</span>
+        <span class="sc-metric-val" style="color:var(--teal);">${toFaDigits(curRunXp)} XP ران • 🕯️ ${toFaDigits(curCandles)}</span>
       </div>
       <div class="sc-metric-box">
         <span class="sc-metric-label">${selectedScorchedEntryMode === "daily" ? "بهترین رکورد امروز" : "بهترین رکورد استاندارد"}</span>
@@ -12578,7 +12578,7 @@ function updateScorchedCityBattleHud(revealedInfo = null) {
     metaEl.innerHTML = `${cycleStr} • ${roomStr} • ${modeLabel}${multTag}`;
   }
   if (scoreEl) scoreEl.textContent = `${run.roomScore} / ${run.roomTargetScore}`;
-  if (runXpEl) runXpEl.textContent = `XP: ${toFaDigits(run.runXp)}`;
+  if (runXpEl) runXpEl.textContent = `XP ران: ${toFaDigits(run.runXp)}`;
   if (pactsStrip) pactsStrip.innerHTML = renderScorchedCityPactStripHTML(sc, run);
 
   if (telBanner) {
@@ -13155,7 +13155,7 @@ function startScorchedCityBattle(entryMode = "standard", resumeExisting = true) 
   updateScorchedCityBattleHud(null);
 
   const dXp1 = document.getElementById("dialogXP");
-  if (dXp1) dXp1.textContent = `${run.runXp} XP`;
+  if (dXp1) dXp1.textContent = `${run.runXp} XP ران`;
 
   showView("viewArena");
   document.getElementById("viewArena")?.classList.add("sc-arena");
@@ -13775,7 +13775,7 @@ function completeScorchedCityRoom() {
   const flawlessValEl = document.getElementById("victoryFlawlessVal");
   if (flawlessRowEl && flawlessValEl) {
     flawlessRowEl.classList.remove("hidden");
-    flawlessValEl.innerHTML = `<span class="victory-flawless-tag">🔥 +${evalRes.runXp} XP داخل ران (مجزا از لیدربورد اصلی)</span>`;
+    flawlessValEl.innerHTML = `<span class="victory-flawless-tag">+${toFaDigits(evalRes.runXp)} XP ران</span>`;
   }
 
   const modeBadgeEl = document.getElementById("victoryModeBadge");
@@ -13849,7 +13849,7 @@ function handleScorchedCityQuizAnswer(selectedBtn, isCorrect, item, allBtns) {
     }
 
     const dXp = document.getElementById("dialogXP");
-    if (dXp && ansRes) dXp.textContent = `${ansRes.runXp} XP`;
+    if (dXp && ansRes) dXp.textContent = `${ansRes.runXp} XP ران`;
 
     playSprite(knightEl, 1, { fps: 10 });
     setKnightState("attack");

@@ -463,7 +463,7 @@
       cycleCounter: (n) => `دور ${toFaDigits(n)}`,
       practiceReveal: (x) => `پاسخ درست: ${x} • به صف تمرین رفت.`,
       pactReceipt: (name, n) => `${name} +${toFaDigits(n)}`,
-      currency: 'XP'
+      currency: 'XP ران'
     }),
 
     result: Object.freeze({
@@ -504,18 +504,18 @@
         case 'flame_strike':
           return `کمبو ۲+: ${toFaDigits(l.bonusPoints)} امتیاز بیشتر. کمبو ۳+: ضریب +${toFaDigits(l.additiveMult)}.`;
         case 'golden_strike':
-          return `هر ۳ پاسخ درست پشت‌سرهم: ${toFaDigits(l.bonusPoints)} امتیاز و ${toFaDigits(l.bonusRunXp)} XP.`;
+          return `هر ۳ پاسخ درست پشت‌سرهم: ${toFaDigits(l.bonusPoints)} امتیاز و ${toFaDigits(l.bonusRunXp)} XP ران.`;
         case 'ember_chain':
           return `هر پله کمبو ${toFaDigits(l.streakStepBonus)} امتیاز می‌دهد؛ ${toFaDigits(l.carryStreak)} کمبو به اتاق بعد می‌ماند.`;
         case 'treasure_hoard':
-          return `هر پاسخ درست ${toFaDigits(l.bonusRunXpPerCorrect)} XP؛ پایان اتاق ${toFaDigits(l.roomEndBonusScore)} امتیاز و ${toFaDigits(l.roomEndBonusXp)} XP.`;
+          return `هر پاسخ درست ${toFaDigits(l.bonusRunXpPerCorrect)} XP ران؛ پایان اتاق ${toFaDigits(l.roomEndBonusScore)} امتیاز و ${toFaDigits(l.roomEndBonusXp)} XP ران.`;
         case 'extortionist':
           return `۲ سوال بیشتر و ۱۵٪ هدف بیشتر؛ امتیاز اتاق ×${toFaDigits(l.roomScoreMultiplier)}.`;
         case 'golden_quill':
           return `پاسخ درست زیر ۵ ثانیه: ${toFaDigits(l.bonusPoints)} امتیاز.`;
         case 'threshold_guardian':
           if (l.retryHeadstartScore > 0 || l.retryRunXp > 0) {
-            return `یک بار در ران، شمع را نجات می‌دهد؛ ${toFaDigits(l.retryHeadstartScore)} امتیاز و ${toFaDigits(l.retryRunXp)} XP.`;
+            return `یک بار در ران، شمع را نجات می‌دهد؛ ${toFaDigits(l.retryHeadstartScore)} امتیاز و ${toFaDigits(l.retryRunXp)} XP ران.`;
           }
           return 'یک بار در ران، شمع را از شکست نجات می‌دهد.';
         case 'hidden_flame': {
@@ -526,7 +526,7 @@
           return `اولین خطای هر اتاق: ${pct}٪ کمبو می‌ماند.`;
         }
         case 'cracked_armor':
-          return `اولین پاسخ درست بعد از خطا: ${toFaDigits(l.recoveryScore)} امتیاز و ${toFaDigits(l.recoveryRunXp)} XP.`;
+          return `اولین پاسخ درست بعد از خطا: ${toFaDigits(l.recoveryScore)} امتیاز و ${toFaDigits(l.recoveryRunXp)} XP ران.`;
         case 'passage':
           return `هر اتاق ${toFaDigits(l.reroutesPerRoom)} بار سوال سخت را بدون جریمه رد کن؛ پایان اتاق ${toFaDigits(l.roomEndTransitBonus)} امتیاز.`;
         case 'error_mirror':
